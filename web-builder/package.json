@@ -1,9 +1,9 @@
 {
-  "name": "@bridged.xyz/jsx-builder",
+  "name": "@bridged.xyz/web-builder",
   "version": "0.0.1",
   "description": "jsx syntex tree builder for web applications. react, vue, svelte, etc..",
   "main": "index.js",
-  "repository": "https://github.com/bridgedxyz/jsx-builder.git",
+  "repository": "https://github.com/bridgedxyz/web-builder.git",
   "author": "bridged.xyz, softmarshmallow <woojoo@softmarshmallow.com>",
   "license": "MIT",
   "private": false
