@@ -2,9 +2,19 @@
   "name": "@bridged.xyz/web-builder",
   "version": "0.0.1",
   "description": "jsx syntex tree builder for web applications. react, vue, svelte, etc..",
+  "workspaces": [
+    "packages/*",
+    "svelte",
+    "react",
+    "vue",
+    "vanilla"
+  ],
   "main": "index.js",
   "repository": "https://github.com/bridgedxyz/web-builder.git",
   "author": "bridged.xyz, softmarshmallow <woojoo@softmarshmallow.com>",
   "license": "MIT",
-  "private": false
+  "dependencies": {
+    "typescript": "^4.0.5"
+  },
+  "private": true
 }

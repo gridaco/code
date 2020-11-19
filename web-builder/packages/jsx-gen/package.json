@@ -1,0 +1,11 @@
+{
+    "name": "jsx-gen",
+    "version": "0.0.0",
+    "license": "MIT",
+    "author": "bridged.xyz <softmarshmallow>",
+    "dependencies": {
+        "immutable": "^4.0.0-rc.12",
+        "preact": "^10.5.7",
+        "preact-render-to-string": "^5.1.12"
+    }
+}
