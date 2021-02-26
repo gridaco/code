@@ -1,0 +1,1 @@
+> Branding resources directory for design-to-code project
