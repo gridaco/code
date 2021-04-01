@@ -2,7 +2,7 @@
     "name": "vanilla",
     "version": "0.0.0",
     "dependencies": {
-        "jsx-gen": "0.0.0",
+        "@web-builder/jsx": "0.0.0",
         "preact": "^10.5.7"
     }
 }

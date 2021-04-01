@@ -1,11 +1,10 @@
 {
-    "name": "jsx-gen",
+    "name": "@web-builder/jsx",
     "version": "0.0.0",
     "license": "MIT",
     "author": "bridged.xyz <softmarshmallow>",
-    "dependencies": {
-        "immutable": "^4.0.0-rc.12",
-        "preact": "^10.5.7",
-        "preact-render-to-string": "^5.1.12"
+    "dependencies": {},
+    "devDependencies": {
+        "typescript": "^4.2.3"
     }
 }

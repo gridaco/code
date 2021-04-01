@@ -1,17 +1,14 @@
 # web-builder
+
 jsx syntex tree builder for web applications. react, vue, svelte, etc..
 
-
+> A [CoLI](coli.codes) Based Technology
 
 ## installation
 
 ```shell
 yarn add @bridged.xyz/web-builder
 ```
-
-
-
-
 
 ## platforms
 
@@ -24,11 +21,25 @@ yarn add @bridged.xyz/web-builder
 - mui
 - tailwind css
 - bootstrap
+- [reflect](https://reflect-ui.com)
 
+## Usage
 
+```
+new Component()
+```
+
+```tsx
+<Component style={{ color: CSS.black }}>
+  <Child />
+</Component>
+
+// <>
+```
 
 ## references
 
-css-builder
-
-jsx-builder
+- [flutter builder for building flutter applications dynamically](https://github.com/bridgedxyz/flutter-builder)
+- Built with [CoLI](https://coli.codes/)
+- css-builder
+- jsx-builder
