@@ -7,3 +7,4 @@ ts requires h function for create element, which in this case, we are extracting
 - https://preactjs.com/guide/v8/api-reference/#-preact.h-/-preact.createelement-
 - https://github.com/alexmingoia/jsx-transform
 - https://babeljs.io/docs/en/babel-plugin-transform-react-jsx
+- https://www.npmjs.com/package/react-reconciler
