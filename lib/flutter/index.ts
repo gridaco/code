@@ -15,7 +15,7 @@ import {
   Size,
   MediaQuery,
 } from "@bridged.xyz/flutter-builder/lib";
-import { roundNumber } from "@reflect.bridged.xyz/uiutils/lib/pixels";
+import { roundNumber } from "@reflect-ui/uiutils/lib/pixels";
 import { makeSafelyAsStackList } from "./utils/make-as-safe-list";
 import { makeDivider } from "./make/divider.make";
 import { detectIfButton } from "@reflect.bridged.xyz/detection/lib/button.detection";
@@ -27,7 +27,7 @@ import { makeIllustImage } from "./make/image.make";
 import { notEmpty } from "@bridged.xyz/design-sdk/lib/utils";
 import { makeRowColumn } from "./make/column-row.make";
 import { makeStack } from "./make/stack.make";
-import { Axis as ReflectAxis } from "@reflect.bridged.xyz/core/lib";
+import { Axis as ReflectAxis } from "@reflect-ui/core/lib";
 import { detectIfChip } from "@reflect.bridged.xyz/detection/lib/chip.detection";
 import { makeChip } from "./make/chip.make";
 

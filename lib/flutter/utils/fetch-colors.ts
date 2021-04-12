@@ -1,8 +1,10 @@
 import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
 import { retrieveFill } from "@bridged.xyz/design-sdk/lib/utils";
-import { calculateContrastRatio } from "@reflect.bridged.xyz/uiutils/lib";
-import { converters } from "@reflect.bridged.xyz/core/lib"
-export function retrieveFlutterColors(sceneNode: Array<ReflectSceneNode>): Array<contrastedColor> {
+import { calculateContrastRatio } from "@reflect-ui/uiutils/lib";
+import { converters } from "@reflect-ui/core/lib";
+export function retrieveFlutterColors(
+  sceneNode: Array<ReflectSceneNode>
+): Array<contrastedColor> {
   const selectedChildren = deepFlatten(sceneNode);
 
   const colorStr: Array<contrastedColor> = [];
@@ -71,8 +73,9 @@ function convertColor(fills: ReadonlyArray<Paint>): contrastedColor | null {
   return null;
 }
 
-
-export function deepFlatten(arr: Array<ReflectSceneNode>): Array<ReflectSceneNode> {
+export function deepFlatten(
+  arr: Array<ReflectSceneNode>
+): Array<ReflectSceneNode> {
   let result: Array<ReflectSceneNode> = [];
 
   arr.forEach((d) => {

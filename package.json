@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "main": "lib/index.js",
     "dependencies": {
-        "@reflect.bridged.xyz/linter": "^0.0.3",
+        "@reflect-ui/lint": "0.0.5-rc",
         "@bridged.xyz/design-sdk": "^0.1.0",
         "@bridged.xyz/flutter-builder": "^1.23.0-7.0.pre.40"
     },

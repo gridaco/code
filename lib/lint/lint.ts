@@ -1,6 +1,6 @@
 import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes";
-import { ReflectLintFeedback } from "@reflect.bridged.xyz/linter/lib/feedbacks/feedback";
-import { DefaultSeectionLintRunner } from "@reflect.bridged.xyz/linter/lib/linter";
+import { ReflectLintFeedback } from "@reflect-ui/lint/lib/feedbacks/feedback";
+import { DefaultSeectionLintRunner } from "@reflect-ui/lint/lib/linter";
 
 export function runLints(
   node: ReflectSceneNode

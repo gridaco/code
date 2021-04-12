@@ -2,12 +2,9 @@ import { ReflectTextNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
 import { SizedBox, Text, Widget } from "@bridged.xyz/flutter-builder/lib";
 import { makeText } from "../make/text.make";
 import { WidgetBuilder } from "./default.builder";
-import { roundNumber } from "@reflect.bridged.xyz/uiutils/lib/pixels";
+import { roundNumber } from "@reflect-ui/uiutils/lib/pixels";
 export class TextBuilder extends WidgetBuilder {
-  constructor(args: {
-    child?: Widget,
-    node: ReflectTextNode
-  }) {
+  constructor(args: { child?: Widget; node: ReflectTextNode }) {
     super(args);
   }
 
@@ -16,7 +13,7 @@ export class TextBuilder extends WidgetBuilder {
     // step 2. process text auto resize
     this.child = this.wrapTextAutoResize(
       makeText(this.node as ReflectTextNode)
-    )
+    );
     return this;
   }
 
@@ -31,8 +28,8 @@ export class TextBuilder extends WidgetBuilder {
       return new SizedBox({
         child: child,
         width: roundNumber(this.node.width),
-        height: roundNumber(this.node.height)
-      })
+        height: roundNumber(this.node.height),
+      });
     }
 
     // if HEIGHT set, HEIGHT will be calculated automatically, but width won't
@@ -40,11 +37,10 @@ export class TextBuilder extends WidgetBuilder {
     else if ((this.node as ReflectTextNode).textAutoResize === "HEIGHT") {
       return new SizedBox({
         child: child,
-        width: this.node.width
-      })
+        width: this.node.width,
+      });
     }
 
     return child;
   }
 }
-

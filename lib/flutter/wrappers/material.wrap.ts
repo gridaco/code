@@ -4,18 +4,27 @@ import {
   ReflectEllipseNode,
   ReflectFrameNode,
   ReflectSceneNode,
-  mixed
+  mixed,
 } from "@bridged.xyz/design-sdk/lib/nodes/types";
-import { converters } from "@reflect.bridged.xyz/core/lib"
-import { BorderRadiusGeometry, ShapeBorder, Colors, Color, Container, Widget } from "@bridged.xyz/flutter-builder/lib";
+import { converters } from "@reflect-ui/core/lib";
+import {
+  BorderRadiusGeometry,
+  ShapeBorder,
+  Colors,
+  Color,
+  Container,
+  Widget,
+} from "@bridged.xyz/flutter-builder/lib";
 import { makeColor } from "../make/color.make";
 import { makeShape as makeShape } from "../make/shape.make";
 import { makeBorderRadius } from "../make/border-radius.make";
 import { wrapWithPadding } from "./padding.wrap";
 
 // https://api.flutter.dev/flutter/material/Material-class.html
-export function wrapWithMaterial(node: ReflectRectangleNode | ReflectEllipseNode | ReflectFrameNode,
-  child: Widget): Widget {
+export function wrapWithMaterial(
+  node: ReflectRectangleNode | ReflectEllipseNode | ReflectFrameNode,
+  child: Widget
+): Widget {
   // ignore the view when size is zero or less
   // while technically it shouldn't get less than 0, due to rounding errors,
   // it can get to values like: -0.000004196293048153166
@@ -29,7 +38,8 @@ export function wrapWithMaterial(node: ReflectRectangleNode | ReflectEllipseNode
   const [elevation, shadowColor] = flutterElevationAndShadowColor(node);
   const padChild = child ? `child: ${wrapWithPadding(node, child)}` : "";
 
-  const materialAttr = color + elevation + shadowColor + shape + clip + padChild;
+  const materialAttr =
+    color + elevation + shadowColor + shape + clip + padChild;
 
   const material: Widget = Widget.prebuilt(`Material(${materialAttr})`);
 
@@ -40,14 +50,15 @@ export function wrapWithMaterial(node: ReflectRectangleNode | ReflectEllipseNode
     return new Container({
       child: material,
       color: color,
-
-    })
+    });
   }
 
   return material;
 }
 
-function materialColor(node: ReflectRectangleNode | ReflectEllipseNode | ReflectFrameNode): Color {
+function materialColor(
+  node: ReflectRectangleNode | ReflectEllipseNode | ReflectFrameNode
+): Color {
   const color = makeColor(node.fills);
   if (!color) {
     return Colors.transparent;
@@ -55,7 +66,9 @@ function materialColor(node: ReflectRectangleNode | ReflectEllipseNode | Reflect
   return color;
 }
 
-function materialShape(node: ReflectRectangleNode | ReflectEllipseNode | ReflectFrameNode): ShapeBorder | BorderRadiusGeometry {
+function materialShape(
+  node: ReflectRectangleNode | ReflectEllipseNode | ReflectFrameNode
+): ShapeBorder | BorderRadiusGeometry {
   if (node.type === "ELLIPSE" || node.strokes?.length > 0) {
     return makeShape(node);
   } else {
@@ -74,9 +87,9 @@ function getClipping(node: ReflectSceneNode): string {
   return clip ? "clipBehavior: Clip.antiAlias, " : "";
 }
 
-
-
-function flutterElevationAndShadowColor(node: ReflectSceneNode): [string, string] {
+function flutterElevationAndShadowColor(
+  node: ReflectSceneNode
+): [string, string] {
   let elevation = "";
   let shadowColor = "";
 
@@ -90,7 +103,7 @@ function flutterElevationAndShadowColor(node: ReflectSceneNode): [string, string
         dropShadow[0].color,
         dropShadow[0].color.a
       )}), `;
-      elevation = `elevation: ${(dropShadow[0].radius)}, `;
+      elevation = `elevation: ${dropShadow[0].radius}, `;
     }
   }
 
