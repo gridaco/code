@@ -26,7 +26,7 @@ export function wrapWithPositioned(
   }
 
   // check if view is in a stack. Group and Frames must have more than 1 element
-  if (node.parent.isRelative === true) {
+  if ("isRelative" in node.parent && node.parent.isRelative === true) {
     const pos = retrieveAbsolutePosOrMakeWidget(node, child);
     if (pos instanceof Widget) {
       return pos;
