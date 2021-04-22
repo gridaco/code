@@ -45,20 +45,26 @@ let targetId: string;
 let scrollable: boolean;
 export function buildApp(sceneNode: ReflectSceneNode): AppBuildResult {
   scrollable = true; // init to true.
+  console.log(`start building flutter app`);
   targetId = sceneNode.id;
+  const rootWidget = generateWidget(sceneNode);
+  console.log(`built app complete`);
+  console.log("result is..", rootWidget);
   return {
-    widget: generateWidget(sceneNode),
+    widget: rootWidget,
     scrollable: scrollable,
   };
 }
 
-export function generateWidget(
+function generateWidget(
   sceneNode: ReflectSceneNode,
   parentIdSrc: string = ""
 ): Widget {
+  console.log(`parentId = parentIdSrc;`);
   parentId = parentIdSrc;
+  console.log(`setCurrentNode(sceneNode);`);
   setCurrentNode(sceneNode);
-
+  console.log(`let result = flutterWidgetGenerator(sceneNode);`);
   let result = flutterWidgetGenerator(sceneNode);
 
   if (Array.isArray(result)) {
@@ -71,6 +77,7 @@ export function generateWidget(
 function flutterWidgetGenerator(
   sceneNode: ReadonlyArray<ReflectSceneNode> | ReflectSceneNode
 ): Array<Widget> | Widget {
+  console.log(`flutterWidgetGenerator handling scene node -`, sceneNode);
   if (Array.isArray(sceneNode) && sceneNode.length > 0) {
     // explicit type casting
     sceneNode = sceneNode as ReadonlyArray<ReflectSceneNode>;
@@ -82,7 +89,9 @@ function flutterWidgetGenerator(
     let widgets: Array<Widget> = [];
 
     console.log(
-      `widget generator:: targetting list of nodes children of ${sceneNode[0].parent?.toString()}. total count of ${sceneLen}`
+      `widget generator::
+      targetting list of nodes children of parent:{${sceneNode[0].parent?.toString()}}.
+      total count of ${sceneLen}`
     );
 
     sceneNode.forEach((node, index) => {
@@ -105,7 +114,9 @@ function flutterWidgetGenerator(
     // explicit type casting
     sceneNode = sceneNode as ReflectSceneNode;
     console.log(
-      `widget generator:: targetting single node ${sceneNode.toString()} child of ${sceneNode.parent?.toString()}`
+      `widget generator::
+      targetting single node ${sceneNode.toString()}
+      this is child of ${sceneNode.parent?.toString()}`
     );
 
     return handleNode(sceneNode);
@@ -168,6 +179,13 @@ function flutterWidgetGenerator(
 }
 
 function setCurrentNode(node: { id: string }) {
+  console.log(
+    `
+    ----------
+    flutter app generation: targetting current processing node to ${node.id}
+    ----------
+    `
+  );
   // TODO - move this to build process's instance
   currentBuildingNodeId = node.id;
 }
