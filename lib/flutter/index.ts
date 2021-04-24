@@ -24,12 +24,12 @@ import { detectIfIcon } from "@reflect.bridged.xyz/detection/lib/icon.detection"
 import { makeDynamicIcon } from "./make/icon.make";
 import { detectIfIllust } from "@reflect.bridged.xyz/detection/lib/illust.detection";
 import { makeIllustImage } from "./make/image.make";
-import { notEmpty } from "@bridged.xyz/design-sdk/lib/utils";
 import { makeRowColumn } from "./make/column-row.make";
 import { makeStack } from "./make/stack.make";
 import { Axis as ReflectAxis } from "@reflect-ui/core/lib";
 import { detectIfChip } from "@reflect.bridged.xyz/detection/lib/chip.detection";
 import { makeChip } from "./make/chip.make";
+import { array } from "@reflect-ui/uiutils";
 
 let parentId = "";
 const DEFAULT_COMPONENT_NAME = "Component";
@@ -103,7 +103,7 @@ function flutterWidgetGenerator(
     });
 
     // filter empty widgets
-    widgets = widgets.filter((w) => notEmpty(w));
+    widgets = widgets.filter((w) => array.filters.notEmpty(w));
     if (widgets.length == 1) {
       // console.log("flutterWidgetGenerator complete", widgets[0])
       return widgets[0];

@@ -28,7 +28,7 @@ import {
 import { roundNumber } from "@reflect-ui/uiutils/lib/pixels";
 import { makeBoxDecoration } from "../make/box-decoration.make";
 import { roundDouble } from "../convert/double.convert";
-import { notEmpty } from "@bridged.xyz/design-sdk/lib/utils";
+import { array } from "@reflect-ui/uiutils";
 
 export function wrapWithContainer(
   node:
@@ -50,7 +50,9 @@ export function wrapWithContainer(
   const propBoxDecoration =
     node instanceof ReflectGroupNode ? undefined : makeBoxDecoration(node);
   // if option passed, use option's value
-  const propSize = notEmpty(options?.size) ? options.size : convertToSize(node);
+  const propSize = array.filters.notEmpty(options?.size)
+    ? options.size
+    : convertToSize(node);
   console.log("propSize", propSize);
 
   // todo Image, Gradient & multiple fills
