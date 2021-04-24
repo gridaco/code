@@ -4,6 +4,8 @@
     "main": "lib/index.js",
     "dependencies": {
         "@reflect-ui/lint": "0.0.5-rc",
+        "@reflect-ui/detection": "0.1.1",
+        "@reflect-ui/uiutils": "0.0.8",
         "@bridged.xyz/design-sdk": "^0.1.0",
         "@bridged.xyz/flutter-builder": "^1.23.0-7.0.pre.40"
     },
