@@ -18,16 +18,13 @@ import {
 import { roundNumber } from "@reflect-ui/uiutils/lib/pixels";
 import { makeSafelyAsStackList } from "./utils/make-as-safe-list";
 import { makeDivider } from "./make/divider.make";
-import { detectIfButton } from "@reflect.bridged.xyz/detection/lib/button.detection";
+import { detectIf } from "@reflect.bridged.xyz/detection";
 import { makeButton } from "./make/button.make";
-import { detectIfIcon } from "@reflect.bridged.xyz/detection/lib/icon.detection";
 import { makeDynamicIcon } from "./make/icon.make";
-import { detectIfIllust } from "@reflect.bridged.xyz/detection/lib/illust.detection";
 import { makeIllustImage } from "./make/image.make";
 import { makeRowColumn } from "./make/column-row.make";
 import { makeStack } from "./make/stack.make";
 import { Axis as ReflectAxis } from "@reflect-ui/core/lib";
-import { detectIfChip } from "@reflect.bridged.xyz/detection/lib/chip.detection";
 import { makeChip } from "./make/chip.make";
 import { array } from "@reflect-ui/uiutils";
 
@@ -128,25 +125,25 @@ function flutterWidgetGenerator(
       `starting handling node ${node.toString()} type of ${node.type}`
     );
 
-    const chipDetectionResult = detectIfChip(node);
+    const chipDetectionResult = detectIf.chip(node);
     if (chipDetectionResult.result) {
       console.log("this node is detected as Chip", node.name);
       return makeChip(chipDetectionResult.data);
     }
 
-    const buttonDetectionResult = detectIfButton(node);
+    const buttonDetectionResult = detectIf.button(node);
     if (buttonDetectionResult.result) {
       console.log("this node is detected as button.", node.name);
       return makeButton(buttonDetectionResult.data);
     }
 
-    const iconDetectionResult = detectIfIcon(node);
+    const iconDetectionResult = detectIf.icon(node);
     if (iconDetectionResult.result) {
       console.log("this node is detected as an icon.", node.name);
       return makeDynamicIcon(node);
     }
 
-    const illustDetectionResult = detectIfIllust(node);
+    const illustDetectionResult = detectIf.illust(node);
     if (illustDetectionResult.result) {
       console.log("this node is detected as an illust.", node.name);
       return makeIllustImage(node);
