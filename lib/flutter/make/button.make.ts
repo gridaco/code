@@ -1,4 +1,4 @@
-import { manifests } from "@reflect.bridged.xyz/detection";
+import { manifests } from "@reflect-ui/detection";
 import {
   Color,
   FlatButton,

@@ -1,4 +1,4 @@
-import { detectIf } from "@reflect.bridged.xyz/detection";
+import { detectIf } from "@reflect-ui/detection";
 import { isRouteAction } from "../interpreter/action.interpret";
 
 export function makeRoutes(): Array<string> {

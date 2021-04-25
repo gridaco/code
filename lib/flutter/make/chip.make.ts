@@ -5,7 +5,7 @@ import {
   Text,
 } from "@bridged.xyz/flutter-builder/lib";
 import { Snippet } from "@bridged.xyz/flutter-builder/lib/builder/buildable-tree";
-import { manifests } from "@reflect.bridged.xyz/detection";
+import { manifests } from "@reflect-ui/detection";
 import { makeBorderRadius } from ".";
 import { makeBorderSide } from "./border-side.make";
 import { makeColor } from "./color.make";
