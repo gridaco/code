@@ -2,6 +2,7 @@
     "name": "core",
     "version": "0.0.1",
     "main": "lib/index.js",
+    "homepage": "https://designto.codes",
     "dependencies": {
         "@reflect-ui/lint": "0.0.5-rc",
         "@reflect-ui/detection": "0.1.1",
