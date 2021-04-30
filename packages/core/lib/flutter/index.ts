@@ -15,7 +15,6 @@ import {
   Size,
   MediaQuery,
 } from "@bridged.xyz/flutter-builder/lib";
-import { roundNumber } from "@reflect-ui/uiutils/lib/pixels";
 import { makeSafelyAsStackList } from "./utils/make-as-safe-list";
 import { makeDivider } from "./make/divider.make";
 import { detectIf } from "@reflect-ui/detection";
@@ -26,7 +25,7 @@ import { makeRowColumn } from "./make/column-row.make";
 import { makeStack } from "./make/stack.make";
 import { Axis as ReflectAxis } from "@reflect-ui/core/lib";
 import { makeChip } from "./make/chip.make";
-import { array } from "@reflect-ui/uiutils";
+import { array, roundNumber } from "@reflect-ui/uiutils";
 
 let parentId = "";
 const DEFAULT_COMPONENT_NAME = "Component";

@@ -1,6 +1,6 @@
 import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
 import { retrieveFill } from "@bridged.xyz/design-sdk/lib/utils";
-import { calculateContrastRatio } from "@reflect-ui/uiutils/lib";
+import { calculateContrastRatio } from "@reflect-ui/uiutils";
 import { converters } from "@reflect-ui/core/lib";
 export function retrieveFlutterColors(
   sceneNode: Array<ReflectSceneNode>

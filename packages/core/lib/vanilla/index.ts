@@ -12,7 +12,7 @@ import {
 } from "@bridged.xyz/design-sdk/lib/nodes";
 import { TextManifest, ImageManifest } from "@reflect-ui/core/lib";
 import { converters } from "@reflect-ui/core/lib";
-import { ImageRepository } from "core/lib/assets-repository";
+import { ImageRepository } from "../assets-repository";
 import { makeCGRect } from "./make";
 
 const vanillaImageRepo = new ImageRepository("vanilla-image-repository");

@@ -1,5 +1,5 @@
 import { double } from "@bridged.xyz/flutter-builder/lib";
-import { roundNumber } from "@reflect-ui/uiutils/lib";
+import { roundNumber } from "@reflect-ui/uiutils";
 
 export function roundDouble(double: double): double {
   if (typeof double === "number") {

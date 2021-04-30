@@ -2,7 +2,7 @@ import { ReflectTextNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
 import { SizedBox, Text, Widget } from "@bridged.xyz/flutter-builder/lib";
 import { makeText } from "../make/text.make";
 import { WidgetBuilder } from "./default.builder";
-import { roundNumber } from "@reflect-ui/uiutils/lib/pixels";
+import { roundNumber } from "@reflect-ui/uiutils";
 export class TextBuilder extends WidgetBuilder {
   constructor(args: { child?: Widget; node: ReflectTextNode }) {
     super(args);

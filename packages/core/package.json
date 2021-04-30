@@ -1,0 +1,16 @@
+{
+    "name": "@designto.codes/core",
+    "version": "0.0.1",
+    "main": "lib/index.js",
+    "homepage": "https://designto.codes",
+    "dependencies": {
+        "@bridged.xyz/design-sdk": "^0.1.0",
+        "@reflect-ui/detection": "0.1.1",
+        "@bridged.xyz/flutter-builder": "^1.23.0-7.0.pre.40"
+    },
+    "files": [
+        "README.md",
+        "lib/**/*.ts",
+        "lib/**/*.js"
+    ]
+}

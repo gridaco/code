@@ -5,7 +5,7 @@ import {
   ReflectSceneNode,
   ReflectSceneNodeType,
 } from "@bridged.xyz/design-sdk/lib/nodes/types";
-import { roundNumber } from "@reflect-ui/uiutils/lib/pixels";
+import { roundNumber } from "@reflect-ui/uiutils";
 import { makeColor } from "./color.make";
 
 // generate the border, when it exists

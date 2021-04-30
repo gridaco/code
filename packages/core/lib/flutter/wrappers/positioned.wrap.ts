@@ -7,7 +7,7 @@ import {
 } from "@bridged.xyz/flutter-builder/lib";
 import { coordinates } from "@bridged.xyz/design-sdk/lib/utils/coordinates";
 import { commonPosition } from "@bridged.xyz/design-sdk/lib/utils/common-position";
-import { roundNumber } from "@reflect-ui/uiutils/lib/pixels";
+import { roundNumber } from "@reflect-ui/uiutils";
 import { makeSaflyAsSingle } from "../utils/make-as-safe-single";
 export function wrapWithPositioned(
   node: ReflectSceneNode,
