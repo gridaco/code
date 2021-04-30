@@ -1,9 +1,9 @@
-import { ImageRepository } from "@designto.codes/core/lib/assets-repository";
+import { repo_assets } from "@bridged.xyz/design-sdk";
 
 export abstract class BuildProcess {
   readonly id: string;
   readonly processes: Array<BuildProcess> = [];
-  imageAssetRepository: ImageRepository;
+  imageAssetRepository: repo_assets.ImageRepository;
 
   constructor() {
     this.id = Date.now().toString();

@@ -1,14 +1,11 @@
 import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes";
 import { Icons } from "@bridged.xyz/flutter-builder/lib";
 import { IconData } from "@bridged.xyz/flutter-builder/lib/widgets/icon-data";
-import {
-  ImageRepositories,
-  TemporaryImageAsset,
-} from "@designto.codes/core/lib/assets-repository";
+import { repo_assets } from "@bridged.xyz/design-sdk";
 
 export function interpretIcon(
   node: ReflectSceneNode
-): IconData | TemporaryImageAsset {
+): IconData | repo_assets.TemporaryImageAsset {
   try {
     // regex is valid, but does not work at this point. inspect this, make it live again.
     // const re = /(?<=mdi_)(.*?)*/g // finds **mdi_** pattern
@@ -23,7 +20,7 @@ export function interpretIcon(
     );
   }
 
-  const asset = ImageRepositories.current.addImage({
+  const asset = repo_assets.ImageRepositories.current.addImage({
     key: node.id,
     hash: null,
   });

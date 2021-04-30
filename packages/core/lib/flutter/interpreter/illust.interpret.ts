@@ -1,11 +1,10 @@
 import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes";
-import {
-  ImageRepositories,
-  TemporaryImageAsset,
-} from "@designto.codes/core/lib/assets-repository";
+import { repo_assets } from "@bridged.xyz/design-sdk";
 
-export function interpretIllust(node: ReflectSceneNode): TemporaryImageAsset {
-  const asset = ImageRepositories.current.addImage({
+export function interpretIllust(
+  node: ReflectSceneNode
+): repo_assets.TemporaryImageAsset {
+  const asset = repo_assets.ImageRepositories.current.addImage({
     key: node.id,
     hash: undefined,
   });
