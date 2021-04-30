@@ -4,7 +4,7 @@ import {
   Alignment,
   Positioned,
   Widget,
-} from "@bridged.xyz/flutter-builder/lib";
+} from "@bridged.xyz/flutter-builder";
 import { coordinates } from "@bridged.xyz/design-sdk/lib/utils/coordinates";
 import { commonPosition } from "@bridged.xyz/design-sdk/lib/utils/common-position";
 import { roundNumber } from "@reflect-ui/uiutils";

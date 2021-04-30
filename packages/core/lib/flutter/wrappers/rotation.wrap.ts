@@ -1,4 +1,4 @@
-import { Widget, Transform } from "@bridged.xyz/flutter-builder/lib";
+import { Widget, Transform } from "@bridged.xyz/flutter-builder";
 import { IReflectLayoutMixin } from "@bridged.xyz/design-sdk/lib/nodes/types/mixins";
 
 /**

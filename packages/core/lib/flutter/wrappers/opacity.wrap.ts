@@ -1,4 +1,4 @@
-import { Opacity, Widget } from "@bridged.xyz/flutter-builder/lib";
+import { Opacity, Widget } from "@bridged.xyz/flutter-builder";
 import { IReflectBlendMixin } from "@bridged.xyz/design-sdk/lib/nodes/types/mixins";
 
 /**

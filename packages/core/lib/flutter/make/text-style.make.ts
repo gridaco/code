@@ -5,7 +5,8 @@ import {
   TextDecoration,
   TextStyle as FLTextStyle,
   Theme,
-} from "@bridged.xyz/flutter-builder/lib";
+  Snippet,
+} from "@bridged.xyz/flutter-builder";
 import {
   TextStyle as RFTextStyle,
   FontStyle as RFFontStyle,
@@ -14,7 +15,6 @@ import {
 import { ReflectTextNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
 import { makeColor } from ".";
 import { TextStyleRepository } from "@bridged.xyz/design-sdk/lib/figma";
-import { Snippet } from "@bridged.xyz/flutter-builder/lib/builder/buildable-tree";
 
 /**
  * get the code of Text#style (text-style) via the name of the defined textstyle.

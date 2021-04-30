@@ -17,7 +17,7 @@ import {
   Color,
   BoxDecoration,
   Size,
-} from "@bridged.xyz/flutter-builder/lib";
+} from "@bridged.xyz/flutter-builder";
 import { makeBoxDecoration } from "../make/box-decoration.make";
 import { roundDouble } from "../convert/double.convert";
 import { array } from "@reflect-ui/uiutils";

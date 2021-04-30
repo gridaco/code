@@ -1,9 +1,7 @@
-import { Border } from "@bridged.xyz/flutter-builder/lib";
+import { Border } from "@bridged.xyz/flutter-builder";
 import {
   ReflectDefaultShapeMixin,
-  ReflectGroupNode,
   ReflectSceneNode,
-  ReflectSceneNodeType,
 } from "@bridged.xyz/design-sdk/lib/nodes/types";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { makeColor } from "./color.make";

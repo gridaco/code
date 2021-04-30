@@ -6,7 +6,7 @@
     "dependencies": {
         "@bridged.xyz/design-sdk": "^0.1.0",
         "@reflect-ui/detection": "0.1.1",
-        "@bridged.xyz/flutter-builder": "^1.23.0-7.0.pre.40"
+        "@bridged.xyz/flutter-builder": "^1.23.0-7.0.pre.42"
     },
     "files": [
         "README.md",

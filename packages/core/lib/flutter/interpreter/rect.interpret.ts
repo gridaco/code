@@ -3,12 +3,18 @@ import {
   Gradient,
   BoxDecoration,
   Color,
-} from "@bridged.xyz/flutter-builder/lib";
+} from "@bridged.xyz/flutter-builder";
 import { makeColorFromRGBO } from "../make/color.make";
 import { interpretGradient } from "./gradient.interpret";
 import { interpretRectCorner } from "./corner.interpret";
-import { roundNumber } from "@reflect-ui/uiutils/lib/pixels";
+import { roundNumber } from "@reflect-ui/uiutils";
 import { ReflectRectangleNode } from "@bridged.xyz/design-sdk/lib/nodes";
+import {
+  GradientPaint,
+  ImagePaint,
+  Paint,
+  SolidPaint,
+} from "@bridged.xyz/design-sdk/lib/figma/types/v1";
 export function interpretRect(rect: ReflectRectangleNode): Container {
   const fills = rect.fills as Array<Paint>;
   const fillsCount = fills.length;

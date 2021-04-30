@@ -1,6 +1,5 @@
 import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes";
-import { Icons } from "@bridged.xyz/flutter-builder/lib";
-import { IconData } from "@bridged.xyz/flutter-builder/lib/widgets/icon-data";
+import { Icons, IconData } from "@bridged.xyz/flutter-builder";
 import { repo_assets } from "@bridged.xyz/design-sdk";
 
 export function interpretIcon(

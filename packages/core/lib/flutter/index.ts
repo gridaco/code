@@ -14,7 +14,7 @@ import {
   Stack,
   Size,
   MediaQuery,
-} from "@bridged.xyz/flutter-builder/lib";
+} from "@bridged.xyz/flutter-builder";
 import { makeSafelyAsStackList } from "./utils/make-as-safe-list";
 import { makeDivider } from "./make/divider.make";
 import { detectIf } from "@reflect-ui/detection";

@@ -1,12 +1,13 @@
+import { Figma } from "@bridged.xyz/design-sdk";
 import { retrieveFill } from "@bridged.xyz/design-sdk/lib/utils";
-import { Color, Colors } from "@bridged.xyz/flutter-builder/lib";
+import { Color, Colors } from "@bridged.xyz/flutter-builder";
 import { converters } from "@reflect-ui/core/lib";
 
 /**
  * Retrieve the SOLID color for Flutter when existent, otherwise ""
  */
 export function makeColor(
-  fills: ReadonlyArray<Paint> | Paint
+  fills: ReadonlyArray<Figma.Paint> | Figma.Paint
 ): Color | undefined {
   const fill = retrieveFill(fills);
 
@@ -19,7 +20,7 @@ export function makeColor(
   return undefined;
 }
 
-export function makeColorFromRGBO(color: RGB, opacity: number): Color {
+export function makeColorFromRGBO(color: Figma.RGB, opacity: number): Color {
   try {
     if (color.r + color.g + color.b === 0 && opacity === 0) {
       return Colors.transparent;

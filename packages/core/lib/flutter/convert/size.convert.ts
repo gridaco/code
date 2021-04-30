@@ -1,8 +1,7 @@
 import { nodeWidthHeight } from "@bridged.xyz/design-sdk/lib/utils/node-width-height";
 import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
-import { double, Double, Size } from "@bridged.xyz/flutter-builder/lib";
+import { double, Size } from "@bridged.xyz/flutter-builder";
 import { roundNumber } from "@reflect-ui/uiutils";
-import { Snippet } from "@bridged.xyz/flutter-builder/lib/builder/buildable-tree";
 
 /**
  * converts size for flutter, with autolayout manifest.

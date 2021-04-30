@@ -4,7 +4,7 @@ import {
   MainAxisSize,
   Row,
   Widget,
-} from "@bridged.xyz/flutter-builder/lib";
+} from "@bridged.xyz/flutter-builder";
 import { Axis as ReflectAxis } from "@reflect-ui/core/lib";
 import { interpretCrossAxisAlignment } from "../interpreter/cross-axis-alignment.interpret";
 import { interpretMainAxisAlignment } from "../interpreter/main-axis-alignment.interpreter";

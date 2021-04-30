@@ -1,5 +1,5 @@
 import { TextAlign as RFTextAlign } from "@reflect-ui/core/lib";
-import { TextAlign as FLTextAlign } from "@bridged.xyz/flutter-builder/lib";
+import { TextAlign as FLTextAlign } from "@bridged.xyz/flutter-builder";
 
 export function interpretTextAlign(textalign: RFTextAlign): FLTextAlign {
   // only undefined in testing

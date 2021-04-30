@@ -4,9 +4,9 @@ import {
   FlatButton,
   RoundedRectangleBorder,
   Text,
-} from "@bridged.xyz/flutter-builder/lib";
+  Snippet,
+} from "@bridged.xyz/flutter-builder";
 import { makeColor } from "./color.make";
-import { Snippet } from "@bridged.xyz/flutter-builder/lib/builder/buildable-tree";
 import { makeBorderRadius } from "./border-radius.make";
 import { makeBorderSide } from "./border-side.make";
 import { makeDynamicIcon, makeIcon } from "./icon.make";

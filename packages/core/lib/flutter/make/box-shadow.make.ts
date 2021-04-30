@@ -1,14 +1,15 @@
-import { BoxShadow, Offset } from "@bridged.xyz/flutter-builder/lib";
+import { BoxShadow, Offset } from "@bridged.xyz/flutter-builder";
 import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { makeColorFromRGBO } from "./color.make";
+import { Figma } from "@bridged.xyz/design-sdk";
 
 export function makeBoxShadow(node: ReflectSceneNode): Array<BoxShadow> {
   let boxShadows: Array<BoxShadow> = [];
 
   if (node.effects?.length > 0) {
-    const shadows: Array<ShadowEffect> = node.effects.filter(
-      (d): d is ShadowEffect =>
+    const shadows: Array<Figma.ShadowEffect> = node.effects.filter(
+      (d): d is Figma.ShadowEffect =>
         (d.type === "DROP_SHADOW" || d.type === "INNER_SHADOW") && d.visible
     );
 
@@ -17,7 +18,7 @@ export function makeBoxShadow(node: ReflectSceneNode): Array<BoxShadow> {
       return undefined;
     }
 
-    shadows.forEach(function (d: ShadowEffect) {
+    shadows.forEach(function (d: Figma.ShadowEffect) {
       let boxShadow: BoxShadow;
       if (d.type == "DROP_SHADOW") {
         boxShadow = new BoxShadow({

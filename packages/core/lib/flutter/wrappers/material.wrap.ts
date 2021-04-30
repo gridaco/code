@@ -14,11 +14,12 @@ import {
   Color,
   Container,
   Widget,
-} from "@bridged.xyz/flutter-builder/lib";
+} from "@bridged.xyz/flutter-builder";
 import { makeColor } from "../make/color.make";
 import { makeShape as makeShape } from "../make/shape.make";
 import { makeBorderRadius } from "../make/border-radius.make";
 import { wrapWithPadding } from "./padding.wrap";
+import { Figma } from "@bridged.xyz/design-sdk";
 
 // https://api.flutter.dev/flutter/material/Material-class.html
 export function wrapWithMaterial(
@@ -94,8 +95,9 @@ function flutterElevationAndShadowColor(
   let shadowColor = "";
 
   if (node.effects?.length > 0) {
-    const dropShadow: Array<ShadowEffect> = node.effects.filter(
-      (d): d is ShadowEffect => d.type === "DROP_SHADOW" && d.visible !== false
+    const dropShadow: Array<Figma.ShadowEffect> = node.effects.filter(
+      (d): d is Figma.ShadowEffect =>
+        d.type === "DROP_SHADOW" && d.visible !== false
     );
 
     if (dropShadow.length > 0 && dropShadow[0].type === "DROP_SHADOW") {

@@ -1,4 +1,4 @@
-import { double } from "@bridged.xyz/flutter-builder/lib";
+import { double } from "@bridged.xyz/flutter-builder";
 import { roundNumber } from "@reflect-ui/uiutils";
 
 export function roundDouble(double: double): double {

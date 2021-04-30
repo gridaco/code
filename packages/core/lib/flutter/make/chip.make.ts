@@ -3,13 +3,13 @@ import {
   RoundedRectangleBorder,
   TextStyle,
   Text,
-} from "@bridged.xyz/flutter-builder/lib";
-import { Snippet } from "@bridged.xyz/flutter-builder/lib/builder/buildable-tree";
+  Chip,
+  Snippet,
+} from "@bridged.xyz/flutter-builder";
 import { manifests } from "@reflect-ui/detection";
 import { makeBorderRadius } from ".";
 import { makeBorderSide } from "./border-side.make";
 import { makeColor } from "./color.make";
-import { Chip } from "@bridged.xyz/flutter-builder/lib";
 import { makeDynamicIcon } from "./icon.make";
 
 export function makeChip(manifest: manifests.DetectedChipManifest) {

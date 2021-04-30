@@ -1,4 +1,4 @@
-import { CrossAxisAlignment } from "@bridged.xyz/flutter-builder/lib";
+import { CrossAxisAlignment } from "@bridged.xyz/flutter-builder";
 import { CrossAxisAlignment as ReflectCrossAxisAlginment } from "@reflect-ui/core/lib";
 /**
  * returns CrossAxisAlignment by counterAxisAlignItems
