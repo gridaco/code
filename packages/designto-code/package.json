@@ -1,5 +1,5 @@
 {
-    "name": "@designto.codes/core",
+    "name": "@designto/codes",
     "version": "0.0.1",
     "main": "lib/index.js",
     "homepage": "https://designto.codes",

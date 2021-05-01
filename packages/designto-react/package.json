@@ -1,0 +1,10 @@
+{
+  "name": "@designto/react",
+  "version": "0.0.0",
+  "description": "design to react",
+  "main": "dist/index.js",
+  "repository": "https://github.com/bridgedxyz/design-to-code",
+  "author": "Bridged authors",
+  "license": "Apache 2.0",
+  "private": false
+}
