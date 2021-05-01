@@ -6,7 +6,7 @@ import {
   ReflectGroupNode,
 } from "@bridged.xyz/design-sdk/lib/nodes/types";
 import { makeEdgeInsets } from "../make";
-import { nearestValue } from "@designto.codes/core/lib/utils/convert";
+import { array } from "@reflect-ui/uiutils";
 import {
   Container,
   Widget,
@@ -20,7 +20,6 @@ import {
 } from "@bridged.xyz/flutter-builder";
 import { makeBoxDecoration } from "../make/box-decoration.make";
 import { roundDouble } from "../convert/double.convert";
-import { array } from "@reflect-ui/uiutils";
 
 export function wrapWithContainer(
   node:
@@ -86,7 +85,9 @@ type GradientDirection = {
 };
 
 export function gradientDirection(angle: number): GradientDirection {
-  switch (nearestValue(angle, [-180, -135, -90, -45, 0, 45, 90, 135, 180])) {
+  switch (
+    array.nearestValue(angle, [-180, -135, -90, -45, 0, 45, 90, 135, 180])
+  ) {
     case 0:
       return { begin: Alignment.centerLeft, end: Alignment.centerRight };
     case 45:
