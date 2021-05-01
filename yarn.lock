@@ -136,10 +136,10 @@
     "@babel/helper-validator-identifier" "^7.14.0"
     to-fast-properties "^2.0.0"
 
-"@bridged.xyz/base-sdk@0.0.1-17":
-  version "0.0.1-17"
-  resolved "https://registry.yarnpkg.com/@bridged.xyz/base-sdk/-/base-sdk-0.0.1-17.tgz#6c7a5abe87be4ef01ebdf3e9e7d0810431191bb9"
-  integrity sha512-oS9gIRUMFUMfe6JvgX/yyvtZtvysn3tfOLjz5IYLY0/5T1aTLAyeXMsA2bXNhZYoCoZ1kAZuVQQEfzfNAdS/Ww==
+"@bridged.xyz/base-sdk@0.0.1-19":
+  version "0.0.1-19"
+  resolved "https://registry.yarnpkg.com/@bridged.xyz/base-sdk/-/base-sdk-0.0.1-19.tgz#743fcdf0402455474f0e53fb1b7b4baa6e0dd7fb"
+  integrity sha512-di4YNgM/aPDOwijaQfRpUBI1iQr12UXIFqkYbu4heJBoLkUNllU7qB4JBiPxRAKx0X/hWuyyeV2TqASaNj++7Q==
   dependencies:
     aws-sdk "^2.783.0"
     axios "^0.21.0"
