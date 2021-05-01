@@ -35,7 +35,7 @@ export function interpretImageFills(
 
   const hostedImage = repo_assets.ImageRepositories.current.addImage({
     key: currentBuildingNodeId,
-    hash: image.hash,
+    hash: image?.hash,
   });
 
   // this will give image provider `Image.network("https://domain.com/image.png")`
