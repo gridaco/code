@@ -4,9 +4,10 @@
     "main": "lib/index.js",
     "homepage": "https://designto.codes",
     "dependencies": {
+        "@designto/token": "0.0.0",
         "@designto/flutter": "0.0.1",
         "@designto/react": "0.0.0",
-        "@designto/token": "0.0.0",
+        "@designto/web": "0.0.0",
         "@bridged.xyz/design-sdk": "^0.1.0",
         "@reflect-ui/detection": "0.1.1",
         "@bridged.xyz/flutter-builder": "^1.23.0-7.0.pre.42"

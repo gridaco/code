@@ -1,15 +1,12 @@
 # design-to-code
+
 Design to code engine. A design ✌️ code standard.
 
 > Bridged's Design to code core library.
 
-
-
 ## Demo
 
 for the demo, please visit [assistant](https://github.com/bridgedxyz/assistant)
-
-
 
 ## What does it mean?
 
@@ -27,3 +24,6 @@ The term `code` here stands for some language or syntax tree that is adoptable f
 
 Taking more deeper look, Reflect Core DSL represents the layout, component, data, styling as a single tree.
 
+### How does it work?
+
+Read [how-it-all-works.md](./how-it-all-works.md)

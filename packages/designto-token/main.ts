@@ -1,5 +1,4 @@
 import { nodes } from "@bridged.xyz/design-sdk";
-function toReact() {}
 
 // 1. column
 // 2. row

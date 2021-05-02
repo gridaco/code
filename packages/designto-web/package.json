@@ -1,0 +1,13 @@
+{
+  "name": "@designto/web",
+  "version": "0.0.0",
+  "description": "design to web (styles and html/jsx)",
+  "main": "dist/index.js",
+  "repository": "https://github.com/bridgedxyz/design-to-code",
+  "author": "Bridged authors",
+  "license": "Apache 2.0",
+  "private": false,
+  "dependencies": {
+    "@reflect-ui/core": "0.0.2-rc.7"
+  }
+}

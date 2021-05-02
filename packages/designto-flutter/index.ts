@@ -1,12 +1,6 @@
 import { nodes } from "@bridged.xyz/design-sdk";
 import { TextBuilder, WidgetBuilder } from "./builders";
-import {
-  SizedBox,
-  Widget,
-  Stack,
-  Size,
-  MediaQuery,
-} from "@bridged.xyz/flutter-builder";
+import * as flutter from "@bridged.xyz/flutter-builder";
 import { makeSafelyAsStackList } from "./utils/make-as-safe-list";
 import { makeDivider } from "./make/divider.make";
 import { detectIf } from "@reflect-ui/detection";
@@ -23,7 +17,7 @@ let parentId = "";
 export let currentBuildingNodeId: string;
 
 interface AppBuildResult {
-  widget: Widget;
+  widget: flutter.Widget;
   scrollable: boolean;
 }
 
@@ -46,15 +40,13 @@ export function buildApp(sceneNode: nodes.ReflectSceneNode): AppBuildResult {
 function generateWidget(
   sceneNode: nodes.ReflectSceneNode,
   parentIdSrc: string = ""
-): Widget {
-  console.log(`parentId = parentIdSrc;`);
+): flutter.Widget {
   parentId = parentIdSrc;
-  console.log(`setCurrentNode(sceneNode);`);
   setCurrentNode(sceneNode);
-  console.log(`let result = flutterWidgetGenerator(sceneNode);`);
   let result = flutterWidgetGenerator(sceneNode);
 
   if (Array.isArray(result)) {
+    // this won't happen
     throw "result cannot be in array form.";
   }
 
@@ -63,7 +55,7 @@ function generateWidget(
 
 function flutterWidgetGenerator(
   sceneNode: ReadonlyArray<nodes.ReflectSceneNode> | nodes.ReflectSceneNode
-): Array<Widget> | Widget {
+): Array<flutter.Widget> | flutter.Widget {
   console.log(`flutterWidgetGenerator handling scene node -`, sceneNode);
   if (Array.isArray(sceneNode) && sceneNode.length > 0) {
     // explicit type casting
@@ -73,7 +65,7 @@ function flutterWidgetGenerator(
     const sceneLen = sceneNode.length;
 
     // initialize output widgets array
-    let widgets: Array<Widget> = [];
+    let widgets: Array<flutter.Widget> = [];
 
     console.log(
       `widget generator::
@@ -109,7 +101,7 @@ function flutterWidgetGenerator(
     return handleNode(sceneNode);
   }
 
-  function handleNode(node: nodes.ReflectSceneNode): Widget {
+  function handleNode(node: nodes.ReflectSceneNode): flutter.Widget {
     setCurrentNode(node);
     console.log(
       `starting handling node ${node.toString()} type of ${node.type}`
@@ -177,7 +169,7 @@ function setCurrentNode(node: { id: string }) {
   currentBuildingNodeId = node.id;
 }
 
-function flutterGroupHandler(node: nodes.ReflectGroupNode): Widget {
+function flutterGroupHandler(node: nodes.ReflectGroupNode): flutter.Widget {
   console.log(
     `group handler :: making ${node} as a stack with its children count of ${node.childrenCount}`
   );
@@ -193,14 +185,17 @@ function flutterContainer(
     | nodes.ReflectGroupNode
     | nodes.ReflectRectangleNode
     | nodes.ReflectEllipseNode,
-  child?: Widget
-): Widget {
+  child?: flutter.Widget
+): flutter.Widget {
   const builder = new WidgetBuilder({ child: child, node: node });
 
   const isBuildRoot = targetId === node.id;
   const sizeOptions = isBuildRoot
     ? {
-        size: new Size(MediaQuery.of().size.width, undefined).addComment(
+        size: new flutter.Size(
+          flutter.MediaQuery.of().size.width,
+          undefined
+        ).addComment(
           'container building for target root node. making the width with "MediaQuery.of().size.width"'
         ),
       }
@@ -213,7 +208,7 @@ function flutterContainer(
   return builder.child;
 }
 
-function flutterText(node: nodes.ReflectTextNode): Widget {
+function flutterText(node: nodes.ReflectTextNode): flutter.Widget {
   const builder = new TextBuilder({
     child: undefined,
     node: node,
@@ -224,15 +219,15 @@ function flutterText(node: nodes.ReflectTextNode): Widget {
   return builder.child;
 }
 
-function flutterFrame(node: nodes.ReflectFrameNode): Widget {
+function flutterFrame(node: nodes.ReflectFrameNode): flutter.Widget {
   console.log(`start handling frame node ${node.toString()} and its children`);
   const children = flutterWidgetGenerator(node.children);
 
   if (node.children.length === 1) {
     // if there is only one child, there is no need for Container or Row. Padding works indepdently of them.
-    return flutterContainer(node, children as Widget);
+    return flutterContainer(node, children as flutter.Widget);
   } else if (node.layoutMode !== undefined) {
-    const rowColumn = makeRowColumn(node, children as Array<Widget>);
+    const rowColumn = makeRowColumn(node, children as Array<flutter.Widget>);
     return flutterContainer(node, rowColumn);
   } else {
     // node.layoutMode === "NONE" && node.children.length > 1
@@ -247,7 +242,7 @@ function flutterFrame(node: nodes.ReflectFrameNode): Widget {
 
     return flutterContainer(
       node,
-      new Stack({
+      new flutter.Stack({
         children: makeSafelyAsStackList(children),
       })
     );
@@ -258,7 +253,7 @@ function addSpacingIfNeeded(
   node: nodes.ReflectSceneNode,
   index: number,
   length: number
-): Widget | undefined {
+): flutter.Widget | undefined {
   if (
     node.parent instanceof nodes.ReflectFrameNode &&
     node.parent.layoutMode !== undefined
@@ -267,12 +262,12 @@ function addSpacingIfNeeded(
     // Don't add the SizedBox at last value. In Figma, itemSpacing CAN be negative; here it can't.
     if (node.parent.itemSpacing > 0 && index < length - 1) {
       if (node.parent.layoutMode === ReflectAxis.horizontal) {
-        return new SizedBox({
+        return new flutter.SizedBox({
           width: roundNumber(node.parent.itemSpacing),
         });
       } else {
         // node.parent.layoutMode === "VERTICAL"
-        return new SizedBox({
+        return new flutter.SizedBox({
           height: roundNumber(node.parent.itemSpacing),
         });
       }
