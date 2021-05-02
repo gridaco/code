@@ -6,31 +6,25 @@ import {
   ReflectTextNode,
 } from "@bridged.xyz/design-sdk/lib/nodes/types";
 
-import { double, Size, Widget } from "@bridged.xyz/flutter-builder";
+import { Size, Widget } from "@bridged.xyz/flutter-builder";
 import { wrapWithContainer } from "../wrappers/container.wrap";
 import { wrapWithOpacity } from "../wrappers/opacity.wrap";
 import { wrapWithPositioned } from "../wrappers/positioned.wrap";
 import { wrapWithRotation } from "../wrappers/rotation.wrap";
 import { wrapWithVisibility } from "../wrappers/visibility.wrap";
 
+type WidgetBuildCompatNode =
+  | ReflectRectangleNode
+  | ReflectEllipseNode
+  | ReflectFrameNode
+  | ReflectGroupNode
+  | ReflectTextNode;
+
 export class WidgetBuilder {
   child: Widget;
-  node:
-    | ReflectRectangleNode
-    | ReflectEllipseNode
-    | ReflectFrameNode
-    | ReflectGroupNode
-    | ReflectTextNode;
+  node: WidgetBuildCompatNode;
 
-  constructor(args: {
-    node:
-      | ReflectRectangleNode
-      | ReflectEllipseNode
-      | ReflectFrameNode
-      | ReflectGroupNode
-      | ReflectTextNode;
-    child?: Widget;
-  }) {
+  constructor(args: { node: WidgetBuildCompatNode; child?: Widget }) {
     this.child = args.child;
     this.node = args.node;
   }

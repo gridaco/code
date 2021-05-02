@@ -1,12 +1,4 @@
-import {
-  ReflectEllipseNode,
-  ReflectFrameNode,
-  ReflectRectangleNode,
-  ReflectGroupNode,
-  ReflectTextNode,
-  ReflectSceneNode,
-  ReflectLineNode,
-} from "@bridged.xyz/design-sdk/lib/nodes";
+import { nodes } from "@bridged.xyz/design-sdk";
 import { TextBuilder, WidgetBuilder } from "./builders";
 import {
   SizedBox,
@@ -28,7 +20,6 @@ import { makeChip } from "./make/chip.make";
 import { array, roundNumber } from "@reflect-ui/uiutils";
 
 let parentId = "";
-const DEFAULT_COMPONENT_NAME = "Component";
 export let currentBuildingNodeId: string;
 
 interface AppBuildResult {
@@ -39,7 +30,7 @@ interface AppBuildResult {
 // the target root widget tree
 let targetId: string;
 let scrollable: boolean;
-export function buildApp(sceneNode: ReflectSceneNode): AppBuildResult {
+export function buildApp(sceneNode: nodes.ReflectSceneNode): AppBuildResult {
   scrollable = true; // init to true.
   console.log(`start building flutter app`);
   targetId = sceneNode.id;
@@ -53,7 +44,7 @@ export function buildApp(sceneNode: ReflectSceneNode): AppBuildResult {
 }
 
 function generateWidget(
-  sceneNode: ReflectSceneNode,
+  sceneNode: nodes.ReflectSceneNode,
   parentIdSrc: string = ""
 ): Widget {
   console.log(`parentId = parentIdSrc;`);
@@ -71,12 +62,12 @@ function generateWidget(
 }
 
 function flutterWidgetGenerator(
-  sceneNode: ReadonlyArray<ReflectSceneNode> | ReflectSceneNode
+  sceneNode: ReadonlyArray<nodes.ReflectSceneNode> | nodes.ReflectSceneNode
 ): Array<Widget> | Widget {
   console.log(`flutterWidgetGenerator handling scene node -`, sceneNode);
   if (Array.isArray(sceneNode) && sceneNode.length > 0) {
     // explicit type casting
-    sceneNode = sceneNode as ReadonlyArray<ReflectSceneNode>;
+    sceneNode = sceneNode as ReadonlyArray<nodes.ReflectSceneNode>;
 
     // count of input nodes
     const sceneLen = sceneNode.length;
@@ -108,7 +99,7 @@ function flutterWidgetGenerator(
     return widgets;
   } else {
     // explicit type casting
-    sceneNode = sceneNode as ReflectSceneNode;
+    sceneNode = sceneNode as nodes.ReflectSceneNode;
     console.log(
       `widget generator::
       targetting single node ${sceneNode.toString()}
@@ -118,7 +109,7 @@ function flutterWidgetGenerator(
     return handleNode(sceneNode);
   }
 
-  function handleNode(node: ReflectSceneNode): Widget {
+  function handleNode(node: nodes.ReflectSceneNode): Widget {
     setCurrentNode(node);
     console.log(
       `starting handling node ${node.toString()} type of ${node.type}`
@@ -149,26 +140,26 @@ function flutterWidgetGenerator(
     }
 
     if (
-      node instanceof ReflectRectangleNode ||
-      node instanceof ReflectEllipseNode
+      node instanceof nodes.ReflectRectangleNode ||
+      node instanceof nodes.ReflectEllipseNode
     ) {
       console.log(
         `this node ${node.toString()} is a rect || ellipse. making it as a empty container`
       );
       return flutterContainer(node, undefined);
-    } else if (node instanceof ReflectLineNode) {
+    } else if (node instanceof nodes.ReflectLineNode) {
       console.log(
         `this node ${node.toString()} is a line. making it as a divider`
       );
       return makeDivider(node);
-    } else if (node instanceof ReflectGroupNode) {
+    } else if (node instanceof nodes.ReflectGroupNode) {
       console.log(
         `this node ${node.toString()} is a group. handling with group handler`
       );
       return flutterGroupHandler(node);
-    } else if (node instanceof ReflectFrameNode) {
+    } else if (node instanceof nodes.ReflectFrameNode) {
       return flutterFrame(node);
-    } else if (node instanceof ReflectTextNode) {
+    } else if (node instanceof nodes.ReflectTextNode) {
       return flutterText(node);
     }
   }
@@ -186,7 +177,7 @@ function setCurrentNode(node: { id: string }) {
   currentBuildingNodeId = node.id;
 }
 
-function flutterGroupHandler(node: ReflectGroupNode): Widget {
+function flutterGroupHandler(node: nodes.ReflectGroupNode): Widget {
   console.log(
     `group handler :: making ${node} as a stack with its children count of ${node.childrenCount}`
   );
@@ -198,10 +189,10 @@ function flutterGroupHandler(node: ReflectGroupNode): Widget {
 
 function flutterContainer(
   node:
-    | ReflectFrameNode
-    | ReflectGroupNode
-    | ReflectRectangleNode
-    | ReflectEllipseNode,
+    | nodes.ReflectFrameNode
+    | nodes.ReflectGroupNode
+    | nodes.ReflectRectangleNode
+    | nodes.ReflectEllipseNode,
   child?: Widget
 ): Widget {
   const builder = new WidgetBuilder({ child: child, node: node });
@@ -222,7 +213,7 @@ function flutterContainer(
   return builder.child;
 }
 
-function flutterText(node: ReflectTextNode): Widget {
+function flutterText(node: nodes.ReflectTextNode): Widget {
   const builder = new TextBuilder({
     child: undefined,
     node: node,
@@ -233,7 +224,7 @@ function flutterText(node: ReflectTextNode): Widget {
   return builder.child;
 }
 
-function flutterFrame(node: ReflectFrameNode): Widget {
+function flutterFrame(node: nodes.ReflectFrameNode): Widget {
   console.log(`start handling frame node ${node.toString()} and its children`);
   const children = flutterWidgetGenerator(node.children);
 
@@ -264,12 +255,12 @@ function flutterFrame(node: ReflectFrameNode): Widget {
 }
 
 function addSpacingIfNeeded(
-  node: ReflectSceneNode,
+  node: nodes.ReflectSceneNode,
   index: number,
   length: number
 ): Widget | undefined {
   if (
-    node.parent instanceof ReflectFrameNode &&
+    node.parent instanceof nodes.ReflectFrameNode &&
     node.parent.layoutMode !== undefined
   ) {
     // check if itemSpacing is set and if it isn't the last value.
