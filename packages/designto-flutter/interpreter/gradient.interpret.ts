@@ -1,6 +1,6 @@
 import { Gradient, LinearGradient, Color } from "@bridged.xyz/flutter-builder";
 import { roundNumber } from "@reflect-ui/uiutils";
-import { gradientAngle } from "@bridged.xyz/design-sdk/lib/utils/color";
+import { color_utils } from "@bridged.xyz/design-sdk";
 import { makeColorFromRGBO } from "../make/color.make";
 import { gradientDirection } from "../wrappers/container.wrap";
 import { GradientPaint } from "@bridged.xyz/design-sdk/lib/figma/types/v1";
@@ -9,7 +9,7 @@ export function interpretGradient(gradient: GradientPaint): Gradient {
   // TODO Handle transform percisely.
   // https://www.figma.com/plugin-docs/api/Transform/
   // https://www.mathworks.com/discovery/affine-transformation.html
-  const direction = gradientDirection(gradientAngle(gradient));
+  const direction = gradientDirection(color_utils.gradientAngle(gradient));
   console.log("start making gradient with", gradient.gradientStops);
 
   let stopPoints: Array<number> = [];
