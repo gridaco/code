@@ -577,11 +577,6 @@
   resolved "https://registry.yarnpkg.com/@next/react-refresh-utils/-/react-refresh-utils-10.0.3.tgz#276bec60eae18768f96baf8a52f668f657f50ab4"
   integrity sha512-XtzzPX2R4+MIyu1waEQUo2tiNwWVEkmObA6pboRCDTPOs4Ri8ckaIE08lN5A5opyF6GVN+IEq/J8KQrgsePsZQ==
 
-"@reflect-ui/core@0.0.2-rc.5.local":
-  version "0.0.2-rc.5.local"
-  resolved "https://registry.yarnpkg.com/@reflect-ui/core/-/core-0.0.2-rc.5.local.tgz#c1c50574166aabd5f6dde190a05ab5486465b0f6"
-  integrity sha512-NEz8WvibGyxS2a1KiDKTNt3B3T/WsXeG0kkVDh2/G9YUV9t6qx/zJcVvv0w6Gqa4zfg2fojnJwbSg1j0KF+tqA==
-
 "@reflect-ui/namings@0.0.3":
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/@reflect-ui/namings/-/namings-0.0.3.tgz#6e9fd4809dd5c9d2a996516236c71b99ea93fbcb"
