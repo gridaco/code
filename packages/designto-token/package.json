@@ -6,5 +6,8 @@
   "repository": "https://github.com/bridgedxyz/design-to-code",
   "author": "Bridged authors",
   "license": "Apache 2.0",
-  "private": false
+  "private": false,
+  "dependencies": {
+    "@reflect-ui/core": "0.0.2-rc.7"
+  }
 }

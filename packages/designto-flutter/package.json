@@ -1,6 +1,6 @@
 {
   "name": "@designto/flutter",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "design to flutter",
   "main": "dist/index.js",
   "repository": "https://github.com/bridgedxyz/design-to-code",

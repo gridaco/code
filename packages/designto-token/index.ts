@@ -1,3 +1,4 @@
+import { nodes } from "@bridged.xyz/design-sdk";
 function toReact() {}
 
 // 1. column
@@ -17,4 +18,18 @@ function toReact() {}
 function row() {
   "flex-direction: row";
   "display: flex";
+}
+
+function interpretReflectNodesToWidgetTree(node: nodes.ReflectSceneNode) {
+  switch (node.type) {
+    case nodes.ReflectSceneNodeType.component:
+      break;
+    case nodes.ReflectSceneNodeType.ellipse:
+      break;
+    case nodes.ReflectSceneNodeType.rectangle:
+      break;
+
+    default:
+      break;
+  }
 }
