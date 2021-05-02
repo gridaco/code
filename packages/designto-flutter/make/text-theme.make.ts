@@ -2,11 +2,11 @@ import {
   TextStyleRepository,
   TextThemeStyles,
 } from "@bridged.xyz/design-sdk/lib/figma";
-import { TextTheme, TextStyle } from "@bridged.xyz/flutter-builder";
+import * as flutter from "@bridged.xyz/flutter-builder";
 import { makeTextStyleFromDesign } from "./text-style.make";
 
-export function makeTextTheme(): TextTheme {
-  function buildTextStyle(style: TextThemeStyles): TextStyle {
+export function makeTextTheme(): flutter.TextTheme {
+  function buildTextStyle(style: TextThemeStyles): flutter.TextStyle {
     try {
       return makeTextStyleFromDesign(
         TextStyleRepository.getDefaultDesignTextStyleFromRegistry(style)
@@ -16,7 +16,7 @@ export function makeTextTheme(): TextTheme {
     }
   }
 
-  return new TextTheme({
+  return new flutter.TextTheme({
     headline1: buildTextStyle(TextThemeStyles.headline1),
     headline2: buildTextStyle(TextThemeStyles.headline2),
     headline3: buildTextStyle(TextThemeStyles.headline3),

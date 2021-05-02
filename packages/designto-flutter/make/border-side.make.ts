@@ -1,5 +1,5 @@
 import { ReflectDefaultShapeMixin } from "@bridged.xyz/design-sdk/lib/nodes";
-import { BorderSide } from "@bridged.xyz/flutter-builder";
+import * as flutter from "@bridged.xyz/flutter-builder";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { makeColor } from "./color.make";
 
@@ -9,7 +9,7 @@ export function makeBorderSide(node: ReflectDefaultShapeMixin) {
     return undefined;
   }
 
-  return new BorderSide({
+  return new flutter.BorderSide({
     color: makeColor(node.strokes),
     width: roundNumber(node.strokeWeight),
   });

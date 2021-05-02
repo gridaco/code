@@ -1,6 +1,6 @@
 import { Figma } from "@bridged.xyz/design-sdk";
 import { retrieveFill } from "@bridged.xyz/design-sdk/lib/utils";
-import { Color, Colors } from "@bridged.xyz/flutter-builder";
+import * as flutter from "@bridged.xyz/flutter-builder";
 import { converters } from "@reflect-ui/core/lib";
 
 /**
@@ -8,7 +8,7 @@ import { converters } from "@reflect-ui/core/lib";
  */
 export function makeColor(
   fills: ReadonlyArray<Figma.Paint> | Figma.Paint
-): Color | undefined {
+): flutter.Color | undefined {
   const fill = retrieveFill(fills);
 
   if (fill?.type === "SOLID") {
@@ -20,19 +20,22 @@ export function makeColor(
   return undefined;
 }
 
-export function makeColorFromRGBO(color: Figma.RGB, opacity: number): Color {
+export function makeColorFromRGBO(
+  color: Figma.RGB,
+  opacity: number
+): flutter.Color {
   try {
     if (color.r + color.g + color.b === 0 && opacity === 0) {
-      return Colors.transparent;
+      return flutter.Colors.transparent;
     }
     if (color.r + color.g + color.b === 0 && opacity === 1) {
-      return Colors.black;
+      return flutter.Colors.black;
     }
     if (color.r + color.g + color.b === 3 && opacity === 1) {
-      return Colors.white;
+      return flutter.Colors.white;
     }
 
-    return Color.fromHex(converters.color.rgbTo8hex(color, opacity));
+    return flutter.Color.fromHex(converters.color.rgbTo8hex(color, opacity));
   } catch (e) {
     console.error(
       `error while converting color to rgba color:${color}, opacity:${opacity}`,

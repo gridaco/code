@@ -1,13 +1,14 @@
-import { Text } from "@bridged.xyz/flutter-builder";
-import { ReflectTextNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
+import * as flutter from "@bridged.xyz/flutter-builder";
+import { nodes } from "@bridged.xyz/design-sdk";
 import { makeTextStyle } from "./text-style.make";
 import { interpretTextAlign } from "../interpreter/text-align.interpreter";
+import { string_utils } from "@designto/token";
 
 /**
  * makes Text from TextNode
  * @param node text node from desing
  */
-export function makeText(node: ReflectTextNode): Text {
+export function makeText(node: nodes.ReflectTextNode): flutter.Text {
   const textAlign = interpretTextAlign(node.textAlignHorizontal);
 
   //#region get text content
@@ -27,38 +28,11 @@ export function makeText(node: ReflectTextNode): Text {
   }
 
   //#endregion
-  const escapedText = escapeDartString(text);
+  const escapedText = string_utils.escapeString(text, "dart");
   const textStyle = makeTextStyle(node);
 
-  return new Text(escapedText, {
+  return new flutter.Text(escapedText, {
     style: textStyle,
     textAlign: textAlign,
   });
-}
-
-function escapeDartString(text: string): string {
-  console.log(text, text.replace("\n", "\\n"));
-
-  // \ -> \\
-  text = text.split("\\").join("\\\\");
-
-  // \n -> \\n
-  text = text.split("\n").join("\\n");
-
-  // \r -> \\n
-  text = text.split("\r").join("\\r");
-
-  // \t -> \\t
-  text = text.split("\t").join("\\t");
-
-  // $ -> \$''"
-  text = text.split("$").join("\\$");
-
-  // " -> \"
-  text = text.split('"').join('\\"');
-
-  // ' -> \'
-  text = text.split("'").join("\\'");
-
-  return text;
 }

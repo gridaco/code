@@ -1,24 +1,19 @@
-import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes";
-import {
-  BoxFit,
-  Icon,
-  Icons,
-  Image,
-  IconData,
-  Snippet,
-} from "@bridged.xyz/flutter-builder";
+import { nodes } from "@bridged.xyz/design-sdk";
+import * as flutter from "@bridged.xyz/flutter-builder";
 import { makeColor } from ".";
 import { interpretIcon } from "../interpreter/icon.interpreter";
 
-export function makeDynamicIcon(node: ReflectSceneNode): Icon | Image {
+export function makeDynamicIcon(
+  node: nodes.ReflectSceneNode
+): flutter.Icon | flutter.Image {
   const iconContent = interpretIcon(node);
-  if (iconContent instanceof IconData) {
+  if (iconContent instanceof flutter.IconData) {
     return makeIcon(node, iconContent);
   } else {
-    return Image.network(iconContent.url, {
+    return flutter.Image.network(iconContent.url, {
       width: node.width,
       height: node.height,
-      fit: BoxFit.cover as Snippet,
+      fit: flutter.BoxFit.cover as flutter.Snippet,
     })
       .addComment("Detected as Icon")
       .addComment(
@@ -27,28 +22,30 @@ export function makeDynamicIcon(node: ReflectSceneNode): Icon | Image {
   }
 }
 
-export function makeIcon(node: ReflectSceneNode, icon: IconData) {
+export function makeIcon(node: nodes.ReflectSceneNode, icon: flutter.IconData) {
   let fills = node.primaryFill;
 
-  return new Icon(icon, {
+  return new flutter.Icon(icon, {
     size: node.width,
     color: makeColor(fills),
   });
 }
 
-export function makePlaceholderIcon(node: ReflectSceneNode): Icon {
-  return makeIcon(node, Snippet.fromStatic("Icons.add"));
+export function makePlaceholderIcon(
+  node: nodes.ReflectSceneNode
+): flutter.Icon {
+  return makeIcon(node, flutter.Snippet.fromStatic("Icons.add"));
 }
 
 /**
  * builds icon widget if value is hold by flutter built-in material icons
  * @param iconName
  */
-export function makeMaterialIcon(iconName: string): Icon {
+export function makeMaterialIcon(iconName: string): flutter.Icon {
   try {
-    return new Icon(Icons.fromName(iconName));
+    return new flutter.Icon(flutter.Icons.fromName(iconName));
   } catch (e) {
     // return default icon
-    return new Icon(Snippet.fromStatic("Icons.add"));
+    return new flutter.Icon(flutter.Snippet.fromStatic("Icons.add"));
   }
 }

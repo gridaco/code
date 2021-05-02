@@ -1,12 +1,8 @@
-import {
-  ReflectDefaultShapeMixin,
-  ReflectLineNode,
-  ReflectRectangleNode,
-} from "@bridged.xyz/design-sdk/lib/nodes";
-import { Divider, VerticalDivider } from "@bridged.xyz/flutter-builder";
+import { nodes } from "@bridged.xyz/design-sdk";
+import * as flutter from "@bridged.xyz/flutter-builder";
 import { makeColor } from "./color.make";
 
-export function makeDivider(node: ReflectDefaultShapeMixin) {
+export function makeDivider(node: nodes.ReflectDefaultShapeMixin) {
   // todo migrate this to detection logic
   if (node.rotation !== 0) {
     return;
@@ -14,11 +10,11 @@ export function makeDivider(node: ReflectDefaultShapeMixin) {
   // node.strokeCap
   // todo implement
 
-  if (node instanceof ReflectRectangleNode) {
+  if (node instanceof nodes.ReflectRectangleNode) {
     // Case 1 has fill, and stroke
     // Case 2 has 0 height, has stroke
     // Case 3 has no stroke, height > 0 && has fill
-    return new Divider({
+    return new flutter.Divider({
       // don't use node.height -- for line, it's always 0
       height: node.strokeWeight,
       color: makeColor(node.fills),
@@ -27,8 +23,8 @@ export function makeDivider(node: ReflectDefaultShapeMixin) {
   }
 
   // TODO - wrap with sized box if size is special
-  if (node instanceof ReflectLineNode) {
-    new Divider({
+  if (node instanceof nodes.ReflectLineNode) {
+    new flutter.Divider({
       // don't use node.height -- for line, it's always 0
       height: node.strokeWeight,
       color: makeColor(node.fills),
@@ -37,9 +33,9 @@ export function makeDivider(node: ReflectDefaultShapeMixin) {
   }
 }
 
-export function makeVerticalDivider(node: ReflectDefaultShapeMixin) {
+export function makeVerticalDivider(node: nodes.ReflectDefaultShapeMixin) {
   // TODO - this is not fully implemented
-  return new VerticalDivider({
+  return new flutter.VerticalDivider({
     width: node.width,
     color: makeColor(node.fills),
     thickness: node.strokeWeight,

@@ -1,20 +1,19 @@
-import {
-  Scaffold,
-  SingleChildScrollView,
-  Widget,
-} from "@bridged.xyz/flutter-builder";
+import * as flutter from "@bridged.xyz/flutter-builder";
 
-export function makeScreen(child: Widget, scrollable?: boolean): Scaffold {
-  let wrapped: Widget;
+export function makeScreen(
+  child: flutter.Widget,
+  scrollable?: boolean
+): flutter.Scaffold {
+  let wrapped: flutter.Widget;
   if (scrollable) {
-    wrapped = new SingleChildScrollView({
+    wrapped = new flutter.SingleChildScrollView({
       child: child,
     });
   } else {
     wrapped = child;
   }
 
-  return new Scaffold({
+  return new flutter.Scaffold({
     body: wrapped,
   });
 }

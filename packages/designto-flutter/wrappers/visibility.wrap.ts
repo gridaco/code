@@ -1,15 +1,15 @@
-import { Widget, Visibility } from "@bridged.xyz/flutter-builder";
-import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
+import * as flutter from "@bridged.xyz/flutter-builder";
+import { nodes } from "@bridged.xyz/design-sdk";
 
 /**
  * Wrap widget with visibility if possible
  */
 export function wrapWithVisibility(
-  node: ReflectSceneNode,
-  child: Widget
-): Widget {
+  node: nodes.ReflectSceneNode,
+  child: flutter.Widget
+): flutter.Widget {
   if (node.visible !== undefined && node.visible === false && child) {
-    return new Visibility({
+    return new flutter.Visibility({
       visible: node.visible,
       child: child,
     });

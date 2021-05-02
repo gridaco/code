@@ -1,19 +1,13 @@
-import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
-import {
-  Align,
-  Alignment,
-  Positioned,
-  Widget,
-} from "@bridged.xyz/flutter-builder";
-import { coordinates } from "@bridged.xyz/design-sdk/lib/utils/coordinates";
-import { commonPosition } from "@bridged.xyz/design-sdk/lib/utils/common-position";
+import { nodes } from "@bridged.xyz/design-sdk";
+import * as flutter from "@bridged.xyz/flutter-builder";
+import { utils } from "@bridged.xyz/design-sdk";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { makeSaflyAsSingle } from "../utils/make-as-safe-single";
 export function wrapWithPositioned(
-  node: ReflectSceneNode,
-  child: Widget,
+  node: nodes.ReflectSceneNode,
+  child: flutter.Widget,
   parentId: string = ""
-): Widget {
+): flutter.Widget {
   console.log(
     `wrap:positioned :: wrapping node ${node.toString()} with Positioned with child ${
       child?.name
@@ -28,16 +22,16 @@ export function wrapWithPositioned(
   // check if view is in a stack. Group and Frames must have more than 1 element
   if ("isRelative" in node.parent && node.parent.isRelative === true) {
     const pos = retrieveAbsolutePosOrMakeWidget(node, child);
-    if (pos instanceof Widget) {
+    if (pos instanceof flutter.Widget) {
       return pos;
     } else {
       // this is necessary because Group have absolute position, while Frame is relative.
       // output is always going to be relative to the parent.
-      const [parentX, parentY] = coordinates(node.parent);
+      const [parentX, parentY] = utils.coordinates(node.parent);
 
       const diffX = node.x - parentX;
       const diffY = node.y - parentY;
-      return new Positioned({
+      return new flutter.Positioned({
         left: roundNumber(diffX),
         top: roundNumber(diffY),
         child: makeSaflyAsSingle(child),
@@ -50,19 +44,19 @@ export function wrapWithPositioned(
 
 type Absolute = "Absolute";
 function retrieveAbsolutePosOrMakeWidget(
-  node: ReflectSceneNode,
-  child: Widget
-): Widget | Absolute {
-  const positionedAlign = (align: string): Positioned => {
-    return Positioned.fill({
-      child: new Align({
-        alignment: Alignment[align],
+  node: nodes.ReflectSceneNode,
+  child: flutter.Widget
+): flutter.Widget | Absolute {
+  const positionedAlign = (align: string): flutter.Positioned => {
+    return flutter.Positioned.fill({
+      child: new flutter.Align({
+        alignment: flutter.Alignment[align],
         child: child,
       }),
     }).addComment(`wrap:positioned of ${node.toString()}`);
   };
 
-  switch (commonPosition(node)) {
+  switch (utils.commonPosition(node)) {
     case "":
       return child;
     case "Absolute":

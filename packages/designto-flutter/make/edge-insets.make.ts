@@ -1,20 +1,22 @@
-import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
-import { commonPadding } from "@bridged.xyz/design-sdk/lib/utils/common-padding";
-import { EdgeInsets, EdgeInsetsGeometry } from "@bridged.xyz/flutter-builder";
+import { nodes } from "@bridged.xyz/design-sdk";
+import { utils } from "@bridged.xyz/design-sdk";
+import * as flutter from "@bridged.xyz/flutter-builder";
 
 // This must happen before Stack or after the Positioned, but not before.
-export function makeEdgeInsets(node: ReflectSceneNode): EdgeInsetsGeometry {
+export function makeEdgeInsets(
+  node: nodes.ReflectSceneNode
+): flutter.EdgeInsetsGeometry {
   if (!("layoutMode" in node)) {
     return undefined;
   }
 
-  const padding = commonPadding(node);
+  const padding = utils.commonPadding(node);
   if (!padding) {
     return undefined;
   }
 
   if ("all" in padding) {
-    return EdgeInsets.all(padding.all);
+    return flutter.EdgeInsets.all(padding.all);
   }
 
   // horizontal and vertical, as the default AutoLayout
@@ -28,7 +30,7 @@ export function makeEdgeInsets(node: ReflectSceneNode): EdgeInsetsGeometry {
     const propVerticalPadding: number =
       padding.vertical > 0 ? padding.vertical : undefined;
 
-    return EdgeInsets.symmetric({
+    return flutter.EdgeInsets.symmetric({
       horizontal: propHorizontalPadding,
       vertical: propVerticalPadding,
     });
@@ -44,7 +46,7 @@ export function makeEdgeInsets(node: ReflectSceneNode): EdgeInsetsGeometry {
     return undefined;
   }
 
-  return EdgeInsets.only({
+  return flutter.EdgeInsets.only({
     left: getOnlyIfNotZero(padding.left),
     right: getOnlyIfNotZero(padding.right),
     top: getOnlyIfNotZero(padding.top),

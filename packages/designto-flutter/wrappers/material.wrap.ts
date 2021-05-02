@@ -1,31 +1,20 @@
 import { convertToSize } from "../convert/size.convert";
-import {
-  ReflectRectangleNode,
-  ReflectEllipseNode,
-  ReflectFrameNode,
-  ReflectSceneNode,
-  mixed,
-} from "@bridged.xyz/design-sdk/lib/nodes/types";
+import { Figma, nodes } from "@bridged.xyz/design-sdk";
 import { converters } from "@reflect-ui/core/lib";
-import {
-  BorderRadiusGeometry,
-  ShapeBorder,
-  Colors,
-  Color,
-  Container,
-  Widget,
-} from "@bridged.xyz/flutter-builder";
+import * as flutter from "@bridged.xyz/flutter-builder";
 import { makeColor } from "../make/color.make";
 import { makeShape as makeShape } from "../make/shape.make";
 import { makeBorderRadius } from "../make/border-radius.make";
 import { wrapWithPadding } from "./padding.wrap";
-import { Figma } from "@bridged.xyz/design-sdk";
 
 // https://api.flutter.dev/flutter/material/Material-class.html
 export function wrapWithMaterial(
-  node: ReflectRectangleNode | ReflectEllipseNode | ReflectFrameNode,
-  child: Widget
-): Widget {
+  node:
+    | nodes.ReflectRectangleNode
+    | nodes.ReflectEllipseNode
+    | nodes.ReflectFrameNode,
+  child: flutter.Widget
+): flutter.Widget {
   // ignore the view when size is zero or less
   // while technically it shouldn't get less than 0, due to rounding errors,
   // it can get to values like: -0.000004196293048153166
@@ -42,13 +31,15 @@ export function wrapWithMaterial(
   const materialAttr =
     color + elevation + shadowColor + shape + clip + padChild;
 
-  const material: Widget = Widget.prebuilt(`Material(${materialAttr})`);
+  const material: flutter.Widget = flutter.Widget.prebuilt(
+    `Material(${materialAttr})`
+  );
 
   const containerAttr = convertToSize(node);
 
   if (containerAttr) {
     // return `Container(${containerAttr}child: ${material}), `;
-    return new Container({
+    return new flutter.Container({
       child: material,
       color: color,
     });
@@ -58,18 +49,24 @@ export function wrapWithMaterial(
 }
 
 function materialColor(
-  node: ReflectRectangleNode | ReflectEllipseNode | ReflectFrameNode
-): Color {
+  node:
+    | nodes.ReflectRectangleNode
+    | nodes.ReflectEllipseNode
+    | nodes.ReflectFrameNode
+): flutter.Color {
   const color = makeColor(node.fills);
   if (!color) {
-    return Colors.transparent;
+    return flutter.Colors.transparent;
   }
   return color;
 }
 
 function materialShape(
-  node: ReflectRectangleNode | ReflectEllipseNode | ReflectFrameNode
-): ShapeBorder | BorderRadiusGeometry {
+  node:
+    | nodes.ReflectRectangleNode
+    | nodes.ReflectEllipseNode
+    | nodes.ReflectFrameNode
+): flutter.ShapeBorder | flutter.BorderRadiusGeometry {
   if (node.type === "ELLIPSE" || node.strokes?.length > 0) {
     return makeShape(node);
   } else {
@@ -77,10 +74,10 @@ function materialShape(
   }
 }
 
-function getClipping(node: ReflectSceneNode): string {
+function getClipping(node: nodes.ReflectSceneNode): string {
   let clip = false;
-  if (node instanceof ReflectFrameNode) {
-    if (node.cornerRadius != mixed && node.cornerRadius !== 0) {
+  if (node instanceof nodes.ReflectFrameNode) {
+    if (node.cornerRadius != nodes.mixed && node.cornerRadius !== 0) {
       clip = node.clipsContent;
     }
   }
@@ -89,7 +86,7 @@ function getClipping(node: ReflectSceneNode): string {
 }
 
 function flutterElevationAndShadowColor(
-  node: ReflectSceneNode
+  node: nodes.ReflectSceneNode
 ): [string, string] {
   let elevation = "";
   let shadowColor = "";

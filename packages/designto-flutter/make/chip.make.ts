@@ -1,11 +1,4 @@
-import {
-  Color,
-  RoundedRectangleBorder,
-  TextStyle,
-  Text,
-  Chip,
-  Snippet,
-} from "@bridged.xyz/flutter-builder";
+import * as flutter from "@bridged.xyz/flutter-builder";
 import { manifests } from "@reflect-ui/detection";
 import { makeBorderRadius } from ".";
 import { makeBorderSide } from "./border-side.make";
@@ -14,18 +7,18 @@ import { makeDynamicIcon } from "./icon.make";
 
 export function makeChip(manifest: manifests.DetectedChipManifest) {
   console.log({ manifest });
-  var content = new Text(manifest.content?.characters);
-  const color: Color = makeColor(manifest.base.fills);
-  const textColor: Color = makeColor(manifest.content?.fills);
+  var content = new flutter.Text(manifest.content?.characters);
+  const color: flutter.Color = makeColor(manifest.base.fills);
+  const textColor: flutter.Color = makeColor(manifest.content?.fills);
   const height = manifest.base.height;
-  const shape = new RoundedRectangleBorder({
+  const shape = new flutter.RoundedRectangleBorder({
     borderRadius: makeBorderRadius(manifest.base),
     side: makeBorderSide(manifest.base),
   });
-  const onSelected = Snippet.fromStatic(
+  const onSelected = flutter.Snippet.fromStatic(
     '(){ print("Chip onSelected"); }'
   ) as any;
-  const onDeleted = Snippet.fromStatic(
+  const onDeleted = flutter.Snippet.fromStatic(
     '(){ print("Chip onSelected"); }'
   ) as any;
 
@@ -44,11 +37,11 @@ export function makeChip(manifest: manifests.DetectedChipManifest) {
     trailingWidget = icon;
   }
 
-  return new Chip({
+  return new flutter.Chip({
     // onSelected : onSelected,
     onDeleted: onDeleted,
     label: content,
-    labelStyle: new TextStyle({ color: textColor }),
+    labelStyle: new flutter.TextStyle({ color: textColor }),
     backgroundColor: color,
     shape,
     avartar: leadingWidget,

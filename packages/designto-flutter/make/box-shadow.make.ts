@@ -1,11 +1,13 @@
-import { BoxShadow, Offset } from "@bridged.xyz/flutter-builder";
+import * as flutter from "@bridged.xyz/flutter-builder";
 import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { makeColorFromRGBO } from "./color.make";
 import { Figma } from "@bridged.xyz/design-sdk";
 
-export function makeBoxShadow(node: ReflectSceneNode): Array<BoxShadow> {
-  let boxShadows: Array<BoxShadow> = [];
+export function makeBoxShadow(
+  node: ReflectSceneNode
+): Array<flutter.BoxShadow> {
+  let boxShadows: Array<flutter.BoxShadow> = [];
 
   if (node.effects?.length > 0) {
     const shadows: Array<Figma.ShadowEffect> = node.effects.filter(
@@ -19,25 +21,25 @@ export function makeBoxShadow(node: ReflectSceneNode): Array<BoxShadow> {
     }
 
     shadows.forEach(function (d: Figma.ShadowEffect) {
-      let boxShadow: BoxShadow;
+      let boxShadow: flutter.BoxShadow;
       if (d.type == "DROP_SHADOW") {
-        boxShadow = new BoxShadow({
+        boxShadow = new flutter.BoxShadow({
           color: makeColorFromRGBO(d.color, d.color.a),
           blurRadius: requiredNumber(d.radius),
           spreadRadius: requiredNumber(d.spread),
-          offset: requiredOffset(new Offset(d.offset.x, d.offset.y)),
+          offset: requiredOffset(new flutter.Offset(d.offset.x, d.offset.y)),
         });
       } else if (d.type == "INNER_SHADOW") {
         // handling inner shadow
         // https://stackoverflow.com/a/55096682/5463235
 
-        boxShadow = new BoxShadow({
+        boxShadow = new flutter.BoxShadow({
           color: makeColorFromRGBO(d.color, d.color.a),
           blurRadius: requiredNumber(d.radius),
           // multiply -1 * blur for spread
           // TODO inspect this logic again.
           spreadRadius: requiredNumber((d.spread + d.radius) * -1),
-          offset: requiredOffset(new Offset(d.offset.x, d.offset.y)),
+          offset: requiredOffset(new flutter.Offset(d.offset.x, d.offset.y)),
         });
       }
 
@@ -60,7 +62,7 @@ function requiredNumber(number: number): number {
 /**
  * returns undefined, if offset is redundant.
  */
-function requiredOffset(offset: Offset): Offset {
+function requiredOffset(offset: flutter.Offset): flutter.Offset {
   if (offset.dx == 0 && offset.dy == 0) {
     return undefined;
   }

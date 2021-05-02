@@ -1,12 +1,14 @@
-import { Container, Widget } from "@bridged.xyz/flutter-builder";
+import * as flutter from "@bridged.xyz/flutter-builder";
 
-export function makeSaflyAsSingle(maybeWidget: Array<Widget> | Widget): Widget {
+export function makeSaflyAsSingle(
+  maybeWidget: Array<flutter.Widget> | flutter.Widget
+): flutter.Widget {
   if (Array.isArray(maybeWidget)) {
-    return new Container();
+    return new flutter.Container();
   } else {
-    if (maybeWidget instanceof Widget) {
+    if (maybeWidget instanceof flutter.Widget) {
       return maybeWidget;
     }
   }
-  return new Container();
+  return new flutter.Container();
 }

@@ -1,18 +1,17 @@
-import { Widget, Padding } from "@bridged.xyz/flutter-builder";
-import {
-  ReflectFrameNode,
-  ReflectEllipseNode,
-  ReflectRectangleNode,
-} from "@bridged.xyz/design-sdk/lib/nodes/types";
+import * as flutter from "@bridged.xyz/flutter-builder";
+import { nodes } from "@bridged.xyz/design-sdk";
 import { makeEdgeInsets } from "../make/edge-insets.make";
 
 export function wrapWithPadding(
-  node: ReflectFrameNode | ReflectEllipseNode | ReflectRectangleNode,
-  child: Widget
-): Widget {
+  node:
+    | nodes.ReflectFrameNode
+    | nodes.ReflectEllipseNode
+    | nodes.ReflectRectangleNode,
+  child: flutter.Widget
+): flutter.Widget {
   const padding = makeEdgeInsets(node);
   if (padding) {
-    return new Padding({
+    return new flutter.Padding({
       padding: padding,
       child: child,
     });

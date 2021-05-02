@@ -1,18 +1,6 @@
-import {
-  Color,
-  FontStyle,
-  FontWeight,
-  TextDecoration,
-  TextStyle as FLTextStyle,
-  Theme,
-  Snippet,
-} from "@bridged.xyz/flutter-builder";
-import {
-  TextStyle as RFTextStyle,
-  FontStyle as RFFontStyle,
-  TextDecoration as RFTextDecoration,
-} from "@reflect-ui/core";
-import { ReflectTextNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
+import * as flutter from "@bridged.xyz/flutter-builder";
+import * as core from "@reflect-ui/core";
+import { nodes } from "@bridged.xyz/design-sdk";
 import { makeColor } from ".";
 import { TextStyleRepository } from "@bridged.xyz/design-sdk/lib/figma";
 
@@ -21,22 +9,24 @@ import { TextStyleRepository } from "@bridged.xyz/design-sdk/lib/figma";
  * I.E, "H1" will give you "Theme.of(context).textTheme.headline1"
  * @param textStyleName
  */
-function getThemedTextStyleByName(textStyleName: string): FLTextStyle {
+function getThemedTextStyleByName(textStyleName: string): flutter.TextStyle {
   const styleDef = TextStyleRepository.getStyleDefFromTextStyleName(
     textStyleName
   );
-  return Theme.of().textTheme[styleDef] as FLTextStyle;
+  return flutter.Theme.of().textTheme[styleDef] as flutter.TextStyle;
 }
 
-export function makeTextStyleFromDesign(style: RFTextStyle): FLTextStyle {
-  let decoration: TextDecoration = makeTextDecoration(style.decoration);
+export function makeTextStyleFromDesign(
+  style: core.TextStyle
+): flutter.TextStyle {
+  let decoration: flutter.TextDecoration = makeTextDecoration(style.decoration);
   const fontFamily: string = style.fontFamily;
-  const fontWeight: FontWeight = FontWeight[style.fontWeight];
+  const fontWeight: flutter.FontWeight = flutter.FontWeight[style.fontWeight];
   // percentage is not supported
   const letterSpacing = style.letterSpacing;
   const fontStyle = makeFontStyle(style.fontStyle);
 
-  return new FLTextStyle({
+  return new flutter.TextStyle({
     fontSize: style.fontSize,
     fontWeight: fontWeight,
     fontFamily: fontFamily,
@@ -47,27 +37,27 @@ export function makeTextStyleFromDesign(style: RFTextStyle): FLTextStyle {
 }
 
 // TODO lineSpacing
-export function makeTextStyle(node: ReflectTextNode): FLTextStyle {
-  const fontColor: Color = makeColor(node.fills);
+export function makeTextStyle(node: nodes.ReflectTextNode): flutter.TextStyle {
+  const fontColor: flutter.Color = makeColor(node.fills);
 
   let fontSize: number;
   if (node.fontSize) {
     fontSize = node.fontSize;
   }
 
-  const decoration: TextDecoration = makeTextDecoration(
+  const decoration: flutter.TextDecoration = makeTextDecoration(
     node.textStyle.decoration
   );
-  let fontStyle: FontStyle = makeFontStyle(node.textStyle.fontStyle);
+  let fontStyle: flutter.FontStyle = makeFontStyle(node.textStyle.fontStyle);
 
   let fontFamily: string;
   if (node.textStyle) {
     fontFamily = node.textStyle.fontFamily;
   }
 
-  let fontWeight: FontWeight;
+  let fontWeight: flutter.FontWeight;
   if (node.textStyle) {
-    fontWeight = FontWeight[`${node.textStyle.fontWeight}`];
+    fontWeight = flutter.FontWeight[`${node.textStyle.fontWeight}`];
   }
 
   let letterSpacing: number;
@@ -87,7 +77,7 @@ export function makeTextStyle(node: ReflectTextNode): FLTextStyle {
   }
 
   // make and return new text style
-  return new FLTextStyle({
+  return new flutter.TextStyle({
     color: fontColor,
     fontSize: fontSize,
     fontWeight: fontWeight,
@@ -98,24 +88,24 @@ export function makeTextStyle(node: ReflectTextNode): FLTextStyle {
   });
 }
 
-export function makeFontStyle(style: RFFontStyle): FontStyle {
+export function makeFontStyle(style: core.FontStyle): flutter.FontStyle {
   switch (style) {
-    case RFFontStyle.italic:
-      return FontStyle.italic as Snippet;
-    case RFFontStyle.normal:
+    case core.FontStyle.italic:
+      return flutter.FontStyle.italic as flutter.Snippet;
+    case core.FontStyle.normal:
       return; // not returning any value, since normal is a default value.
   }
 }
 
 export function makeTextDecoration(
-  textDecoration: RFTextDecoration
-): TextDecoration {
+  textDecoration: core.TextDecoration
+): flutter.TextDecoration {
   if (!textDecoration) {
     return;
   }
-  let decoration: TextDecoration;
-  if (textDecoration === RFTextDecoration.underline) {
-    decoration = TextDecoration.underline as Snippet;
+  let decoration: flutter.TextDecoration;
+  if (textDecoration === core.TextDecoration.underline) {
+    decoration = flutter.TextDecoration.underline as flutter.Snippet;
   }
   return decoration;
 }
