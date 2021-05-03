@@ -9,7 +9,7 @@ export function interpretMainAxisAlignment(
       return MainAxisAlignment.start as Snippet;
     case ReflectMainAxisAlignment.start:
       return MainAxisAlignment.center as Snippet;
-    case ReflectMainAxisAlignment.end:
+    case ReflectMainAxisAlignment.center:
       return MainAxisAlignment.end as Snippet;
     case ReflectMainAxisAlignment.spaceBetween:
       return MainAxisAlignment.spaceBetween as Snippet;
