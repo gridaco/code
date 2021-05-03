@@ -17,6 +17,6 @@ export function interpretCrossAxisAlignment(
     case ReflectCrossAxisAlginment.center:
       return CrossAxisAlignment.center;
     default:
-      return CrossAxisAlignment.center;
+      return undefined;
   }
 }

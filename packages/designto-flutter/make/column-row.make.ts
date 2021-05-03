@@ -15,8 +15,11 @@ export function makeRowColumn(
   const rowOrColumn: RowOrColumn =
     node.layoutMode === ReflectAxis.horizontal ? "Row" : "Column";
 
-  const mainAxisAlignment = interpretMainAxisAlignment(node.mainAxisAlignment);
-  const mainAxisSize: flutter.MainAxisSize = interpretMainAxisSize(node);
+  const _mainAxisAlignment = interpretMainAxisAlignment(node.mainAxisAlignment);
+  const _mainAxisSize: flutter.MainAxisSize = interpretMainAxisSize(node);
+  const _crossAxisAlignment = interpretCrossAxisAlignment(
+    node.crossAxisAlignment
+  );
 
   // safely make childeren as list type
   children = makeSafelyAsList<flutter.Widget>(children);
@@ -25,18 +28,16 @@ export function makeRowColumn(
     case "Row":
       return new flutter.Row({
         children: children,
-        mainAxisSize: mainAxisSize,
-        mainAxisAlignment: mainAxisAlignment,
+        mainAxisSize: _mainAxisSize,
+        mainAxisAlignment: _mainAxisAlignment,
+        crossAxisAlignment: _crossAxisAlignment,
       });
     case "Column":
-      const crossAxisAlignment = interpretCrossAxisAlignment(
-        node.crossAxisAlignment
-      );
       return new flutter.Column({
         children: children,
-        mainAxisSize: mainAxisSize,
-        mainAxisAlignment: mainAxisAlignment,
-        crossAxisAlignment: crossAxisAlignment,
+        mainAxisSize: _mainAxisSize,
+        mainAxisAlignment: _mainAxisAlignment,
+        crossAxisAlignment: _crossAxisAlignment,
       });
   }
 }
