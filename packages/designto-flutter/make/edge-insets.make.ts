@@ -11,6 +11,7 @@ export function makeEdgeInsets(
   }
 
   const padding = utils.commonPadding(node);
+
   if (!padding) {
     return undefined;
   }

@@ -51,3 +51,26 @@ _This is called [Reflect UI](https://reflect-ui.com)_
 - Is it representable by pure flutter?
 
 - How much does it have conpatibility with graphics library? e.g. Skia
+
+## Tokens
+
+**layouts** _(the latest version can be found at reflect-core)_
+
+- column
+- row
+- grid
+- stack
+- table
+- list view
+
+**container**
+
+- container
+
+**positioning / sizing**
+
+- align
+- center
+- sizedbox
+- expanded
+- transform

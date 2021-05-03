@@ -5,9 +5,10 @@ export function interpretRadius(radius: IRadius): Radius {
   if (typeof radius == "number") {
     return Radius.circular(radius as number);
   } else {
-    console.warn(
-      "elliptical radius is not supported. returning undefined instead"
-    );
+    // TODO
+    // console.warn(
+    //   "elliptical radius is not supported. returning undefined instead"
+    // );
     return;
   }
 }

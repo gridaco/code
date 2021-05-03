@@ -23,101 +23,50 @@ export function wrapWithContainer(
   }
 
   // ignore for Groups
-  const propBoxDecoration =
+  const _boxDecoration =
     node instanceof nodes.ReflectGroupNode
       ? undefined
       : makeBoxDecoration(node);
+
   // if option passed, use option's value
-  const propSize = array.filters.notEmpty(options?.size)
+  const _size = array.filters.notEmpty(options?.size)
     ? options.size
     : convertToSize(node);
-  console.log("propSize", propSize);
+  // console.log("propSize", _size);
 
   // todo Image, Gradient & multiple fills
 
-  let propPadding: flutter.EdgeInsetsGeometry;
+  let _padding: flutter.EdgeInsetsGeometry;
   if (node instanceof nodes.ReflectFrameNode) {
-    propPadding = makeEdgeInsets(node);
+    _padding = makeEdgeInsets(node);
   }
 
-  if (propSize || propBoxDecoration) {
+  if (_size || _boxDecoration) {
     // Container is a container if [propSize] or [propBoxDecoration] are set.
     // console.log("wrapping with container. child - ", child)
     return new flutter.Container({
-      width: roundDouble(propSize.width),
-      height: roundDouble(propSize.height),
+      width: roundDouble(_size.width),
+      height: roundDouble(_size.height),
       child: child,
-      padding: propPadding,
+      padding: _padding,
+      // region : decoration or color
+      // flutter only either one of two, but not both. providing both will raise error on flutter runtime.
       decoration:
-        propBoxDecoration instanceof flutter.BoxDecoration
-          ? propBoxDecoration
+        _boxDecoration instanceof flutter.BoxDecoration
+          ? _boxDecoration
           : undefined,
       color:
-        propBoxDecoration instanceof flutter.Color
-          ? propBoxDecoration
-          : undefined,
+        _boxDecoration instanceof flutter.Color ? _boxDecoration : undefined,
+      // endregion : decoration or color
     });
-  } else if (propPadding) {
+  } else if (_padding) {
     // console.log("wrapping with padding")
     return new flutter.Padding({
-      padding: propPadding,
+      padding: _padding,
       child: child,
     });
     // if there is just a padding, add Padding
   } else {
     return child;
-  }
-}
-
-type GradientDirection = {
-  begin: flutter.AlignmentGeometry;
-  end: flutter.AlignmentGeometry;
-};
-
-export function gradientDirection(angle: number): GradientDirection {
-  switch (
-    array.nearestValue(angle, [-180, -135, -90, -45, 0, 45, 90, 135, 180])
-  ) {
-    case 0:
-      return {
-        begin: flutter.Alignment.centerLeft,
-        end: flutter.Alignment.centerRight,
-      };
-    case 45:
-      return {
-        begin: flutter.Alignment.topLeft,
-        end: flutter.Alignment.bottomRight,
-      };
-    case 90:
-      return {
-        begin: flutter.Alignment.topCenter,
-        end: flutter.Alignment.bottomCenter,
-      };
-    case 135:
-      return {
-        begin: flutter.Alignment.topRight,
-        end: flutter.Alignment.bottomLeft,
-      };
-    case -45:
-      return {
-        begin: flutter.Alignment.bottomLeft,
-        end: flutter.Alignment.topRight,
-      };
-    case -90:
-      return {
-        begin: flutter.Alignment.bottomCenter,
-        end: flutter.Alignment.topCenter,
-      };
-    case -135:
-      return {
-        begin: flutter.Alignment.bottomRight,
-        end: flutter.Alignment.topLeft,
-      };
-    default:
-      // when 180 or -180
-      return {
-        begin: flutter.Alignment.centerRight,
-        end: flutter.Alignment.centerLeft,
-      };
   }
 }
