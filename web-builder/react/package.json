@@ -1,0 +1,8 @@
+{
+    "name": "@coli.codes/react-builder",
+    "description": "Bridged's React code builder for development automation built uppon coli",
+    "version": "0.0.0",
+    "license": "Apache 2.0",
+    "homepage": "https://coli.codes/react",
+    "author": "Bridged Authors"
+}
