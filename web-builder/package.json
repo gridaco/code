@@ -1,13 +1,19 @@
 {
-  "name": "@bridged.xyz/web-builder",
+  "name": "coli-web-builder",
   "version": "0.0.1",
   "description": "jsx syntex tree builder for web applications. react, vue, svelte, etc..",
   "workspaces": [
-    "packages/*",
-    "svelte",
+    "web-builder",
+    "css",
+    "html",
+    "jsx",
+    "preact",
     "react",
-    "vue",
-    "vanilla"
+    "styled",
+    "styles",
+    "svelte",
+    "vanilla",
+    "vue"
   ],
   "main": "index.js",
   "repository": "https://github.com/bridgedxyz/web-builder.git",

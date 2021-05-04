@@ -7,7 +7,7 @@ jsx syntex tree builder for web applications. react, vue, svelte, etc..
 ## installation
 
 ```shell
-yarn add @bridged.xyz/web-builder
+yarn add @coli.codes/web-builder
 ```
 
 ## platforms
