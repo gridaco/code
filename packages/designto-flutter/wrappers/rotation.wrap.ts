@@ -1,5 +1,5 @@
 import * as flutter from "@bridged.xyz/flutter-builder";
-import { nodes } from "@bridged.xyz/design-sdk";
+import { nodes } from "@design-sdk/core";
 
 /**
  * https://api.flutter.dev/flutter/widgets/Transform-class.html

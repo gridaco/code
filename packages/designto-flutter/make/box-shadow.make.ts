@@ -1,8 +1,8 @@
 import * as flutter from "@bridged.xyz/flutter-builder";
-import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
+import { ReflectSceneNode } from "@design-sdk/core/nodes";
+import { Figma } from "@design-sdk/figma";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { makeColorFromRGBO } from "./color.make";
-import { Figma } from "@bridged.xyz/design-sdk";
 
 export function makeBoxShadow(
   node: ReflectSceneNode

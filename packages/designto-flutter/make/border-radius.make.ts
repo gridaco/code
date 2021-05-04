@@ -2,7 +2,7 @@ import * as flutter from "@bridged.xyz/flutter-builder";
 import {
   ReflectEllipseNode,
   IReflectCornerMixin,
-} from "@bridged.xyz/design-sdk/lib/nodes/types";
+} from "@design-sdk/core/nodes";
 import { interpretRadius } from "../interpreter/radius.interpret";
 import * as core from "@reflect-ui/core";
 

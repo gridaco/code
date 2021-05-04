@@ -1,5 +1,6 @@
-import { nodes } from "@bridged.xyz/design-sdk";
-import { retrieveFill } from "@bridged.xyz/design-sdk/lib/utils";
+import { nodes } from "@design-sdk/core";
+import { Figma } from "@design-sdk/figma";
+import { retrieveFill } from "@design-sdk/core/utils";
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { interpretGradient } from "../interpreter/gradient.interpret";
 import { interpretImageFills } from "../interpreter/image.interpret";
@@ -7,7 +8,6 @@ import { makeBorderRadius } from "./border-radius.make";
 import { makeBorder } from "./border.make";
 import { makeBoxShadow } from "./box-shadow.make";
 import { makeColorFromRGBO } from "./color.make";
-import { Figma } from "@bridged.xyz/design-sdk";
 
 export function makeBoxDecoration(
   node:

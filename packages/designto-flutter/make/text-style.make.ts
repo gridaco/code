@@ -1,8 +1,8 @@
 import * as flutter from "@bridged.xyz/flutter-builder";
 import * as core from "@reflect-ui/core";
-import { nodes } from "@bridged.xyz/design-sdk";
+import { nodes } from "@design-sdk/core";
 import { makeColor } from ".";
-import { TextStyleRepository } from "@bridged.xyz/design-sdk/lib/figma";
+import { TextStyleRepository } from "@design-sdk/figma";
 
 /**
  * get the code of Text#style (text-style) via the name of the defined textstyle.

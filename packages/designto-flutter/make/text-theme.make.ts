@@ -1,7 +1,4 @@
-import {
-  TextStyleRepository,
-  TextThemeStyles,
-} from "@bridged.xyz/design-sdk/lib/figma";
+import { TextStyleRepository, TextThemeStyles } from "@design-sdk/figma";
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { makeTextStyleFromDesign } from "./text-style.make";
 

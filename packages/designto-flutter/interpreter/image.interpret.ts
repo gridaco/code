@@ -1,14 +1,12 @@
-import { ReflectDefaultShapeMixin } from "@bridged.xyz/design-sdk/lib/nodes";
+import { ReflectDefaultShapeMixin } from "@design-sdk/core/nodes";
 import { ImageProvider, NetworkImage } from "@bridged.xyz/flutter-builder";
 import {
   retrieveImageFill,
   retrievePrimaryImageFill,
-} from "@bridged.xyz/design-sdk/lib/utils/retrieve-image-fills";
-import { repo_assets } from "@bridged.xyz/design-sdk";
+} from "@design-sdk/core/utils/retrieve-image-fills";
+import { repo_assets } from "@design-sdk/core";
 import { currentBuildingNodeId } from "..";
-import { Figma } from "@bridged.xyz/design-sdk/lib/figma";
-
-// TODO - make this non async. It's too costly. generate preview image url local algorythm, upload syncronously.
+import { Figma } from "@design-sdk/figma";
 
 /**
  * finds the primary image in shape node, upload it to temporary hosting. returns the ImageProvider with hosted image.
@@ -33,10 +31,12 @@ export function interpretImageFills(
     image = retrieveImageFill(fills as Figma.ImagePaint);
   }
 
-  const hostedImage = repo_assets.ImageRepositories.current.addImage({
-    key: currentBuildingNodeId,
-    hash: image?.hash,
-  });
+  const hostedImage = repo_assets.MainImageRepository.instance.current.addImage(
+    {
+      key: currentBuildingNodeId,
+      hash: image?.hash,
+    }
+  );
 
   // this will give image provider `Image.network("https://domain.com/image.png")`
   return new NetworkImage(hostedImage.url);

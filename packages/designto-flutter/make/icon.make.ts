@@ -1,4 +1,4 @@
-import { nodes } from "@bridged.xyz/design-sdk";
+import { nodes } from "@design-sdk/core";
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { makeColor } from ".";
 import { interpretIcon } from "../interpreter/icon.interpreter";

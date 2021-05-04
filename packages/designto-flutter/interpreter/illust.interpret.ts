@@ -1,10 +1,9 @@
-import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes";
-import { repo_assets } from "@bridged.xyz/design-sdk";
+import { repo_assets, nodes } from "@design-sdk/core";
 
 export function interpretIllust(
-  node: ReflectSceneNode
+  node: nodes.ReflectSceneNode
 ): repo_assets.TemporaryImageAsset {
-  const asset = repo_assets.ImageRepositories.current.addImage({
+  const asset = repo_assets.MainImageRepository.instance.current.addImage({
     key: node.id,
     hash: undefined,
   });

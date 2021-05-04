@@ -1,5 +1,5 @@
 import { convertToSize } from "../convert";
-import { nodes } from "@bridged.xyz/design-sdk";
+import { nodes } from "@design-sdk/core";
 import { makeEdgeInsets } from "../make";
 import { array } from "@reflect-ui/uiutils";
 import * as flutter from "@bridged.xyz/flutter-builder";

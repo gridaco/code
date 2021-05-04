@@ -1,5 +1,4 @@
-import { nodes } from "@bridged.xyz/design-sdk";
-import { utils } from "@bridged.xyz/design-sdk";
+import { nodes, utils } from "@design-sdk/core";
 import * as flutter from "@bridged.xyz/flutter-builder";
 
 // This must happen before Stack or after the Positioned, but not before.

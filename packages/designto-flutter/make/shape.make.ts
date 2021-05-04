@@ -1,5 +1,5 @@
 import * as flutter from "@bridged.xyz/flutter-builder";
-import { nodes } from "@bridged.xyz/design-sdk";
+import { nodes } from "@design-sdk/core";
 import { makeBorderRadius } from "./border-radius.make";
 import { makeColor } from "./color.make";
 
