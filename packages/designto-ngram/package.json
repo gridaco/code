@@ -1,0 +1,10 @@
+{
+  "name": "@designto/ngram",
+  "version": "0.0.0",
+  "description": "ngram algorithm for design to code",
+  "main": "dist/index.js",
+  "repository": "https://github.com/bridgedxyz/design-to-code",
+  "author": "Bridged authors",
+  "license": "Apache 2.0",
+  "private": false
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@designto/stem",
+  "version": "0.0.0",
+  "description": "stemming for design. just like in nlp.",
+  "main": "dist/index.js",
+  "repository": "https://github.com/bridgedxyz/design-to-code",
+  "author": "Bridged authors",
+  "license": "Apache 2.0",
+  "private": false
+}
