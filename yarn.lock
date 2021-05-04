@@ -309,10 +309,10 @@
     "@babel/helper-validator-identifier" "^7.14.0"
     to-fast-properties "^2.0.0"
 
-"@bridged.xyz/base-sdk@0.0.1-19":
-  version "0.0.1-19"
-  resolved "https://registry.yarnpkg.com/@bridged.xyz/base-sdk/-/base-sdk-0.0.1-19.tgz#743fcdf0402455474f0e53fb1b7b4baa6e0dd7fb"
-  integrity sha512-di4YNgM/aPDOwijaQfRpUBI1iQr12UXIFqkYbu4heJBoLkUNllU7qB4JBiPxRAKx0X/hWuyyeV2TqASaNj++7Q==
+"@bridged.xyz/base-sdk@0.0.2-1":
+  version "0.0.2-1"
+  resolved "https://registry.yarnpkg.com/@bridged.xyz/base-sdk/-/base-sdk-0.0.2-1.tgz#fda11a9e6a97977b6ace4b307362350e1f660197"
+  integrity sha512-r6/7pnUrs9cx2sAmdzoSP1kyoWSZinX8oTrSo8OMc99YTHa/xMvU9aA18Y2oWGmCOvejUac0qcmxNaT5gXsC9w==
   dependencies:
     aws-sdk "^2.783.0"
     axios "^0.21.0"
@@ -1032,13 +1032,6 @@ aws-sdk@^2.783.0:
     url "0.10.3"
     uuid "3.3.2"
     xml2js "0.4.19"
-
-axios@^0.19.0:
-  version "0.19.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
-  integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
-  dependencies:
-    follow-redirects "1.5.10"
 
 axios@^0.21.0:
   version "0.21.1"
@@ -1940,13 +1933,6 @@ debug@4, debug@^4.1.0:
   dependencies:
     ms "2.1.2"
 
-debug@=3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
-  integrity sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==
-  dependencies:
-    ms "2.0.0"
-
 debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -2394,13 +2380,6 @@ figgy-pudding@^3.5.1:
   resolved "https://registry.yarnpkg.com/figgy-pudding/-/figgy-pudding-3.5.2.tgz#b4eee8148abb01dcf1d1ac34367d59e12fa61d6e"
   integrity sha512-0btnI/H8f2pavGMN8w40mlSKOfTK2SVJmBfBeVIj3kNw0swwgzyRq0d5TJVOwodFmtvpPeWPN/MCcfuWF0Ezbw==
 
-figma-js@^1.13.0:
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/figma-js/-/figma-js-1.13.0.tgz#0656b99875c8c0cd2b9a5cb8a1c031d14ebc6f4e"
-  integrity sha512-YBYxKHzZ3vfjxU2RldJ6ZWGaXGrXlqwef7lKgpDIIMr2dAG4xNkwLj31UiQhw1kzdkABhxiDJBJgVGMKwEogfA==
-  dependencies:
-    axios "^0.19.0"
-
 file-uri-to-path@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz#553a7b8446ff6f684359c445f1e37a05dacc33dd"
@@ -2483,13 +2462,6 @@ flush-write-stream@^1.0.0:
   dependencies:
     inherits "^2.0.3"
     readable-stream "^2.3.6"
-
-follow-redirects@1.5.10:
-  version "1.5.10"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.5.10.tgz#7b7a9f9aea2fdff36786a94ff643ed07f4ff5e2a"
-  integrity sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==
-  dependencies:
-    debug "=3.1.0"
 
 follow-redirects@^1.10.0:
   version "1.14.0"
