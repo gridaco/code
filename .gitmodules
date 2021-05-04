@@ -10,3 +10,6 @@
 [submodule "packages/reflect-core"]
 	path = packages/reflect-core
 	url = https://github.com/bridgedxyz/reflect-core-ts
+[submodule "packages/coli-web-builder"]
+	path = packages/coli-web-builder
+	url = https://github.com/bridgedxyz/coli-web-builder
