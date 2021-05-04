@@ -41,9 +41,8 @@ export function wrapWithContainer(
     _padding = makeEdgeInsets(node);
   }
 
+  // Container is a container if [_size] or [_boxDecoration] are set.
   if (_size || _boxDecoration) {
-    // Container is a container if [propSize] or [propBoxDecoration] are set.
-    // console.log("wrapping with container. child - ", child)
     return new flutter.Container({
       width: roundDouble(_size.width),
       height: roundDouble(_size.height),
