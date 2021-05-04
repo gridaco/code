@@ -57,7 +57,7 @@ function retrieveAbsolutePosOrMakeWidget(
   };
 
   switch (utils.commonPosition(node)) {
-    case "":
+    case "None":
       return child;
     case "Absolute":
       return "Absolute";
