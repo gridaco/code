@@ -3,5 +3,5 @@
     "version": "0.0.1",
     "main": "lib/index.js",
     "homepage": "https://designto.codes",
-    "description": "linting & design cleanup for designto.codes"
+    "description": "linting & design cleanup for designto.codes (normalization)"
 }
