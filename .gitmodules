@@ -1,9 +1,3 @@
-[submodule "packages/flutter-builder"]
-	path = packages/flutter-builder
-	url = https://github.com/bridgedxyz/flutter-builder
-[submodule "packages/web-builder"]
-	path = packages/web-builder
-	url = https://github.com/bridgedxyz/web-builder
 [submodule "packages/reflect-detection"]
 	path = packages/reflect-detection
 	url = https://github.com/bridgedxyz/reflect-detection
