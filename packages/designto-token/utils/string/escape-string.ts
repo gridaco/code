@@ -11,8 +11,6 @@ export function escapeString(text: string, lang: "dart" | "js") {
 }
 
 function escapeDartString(text: string): string {
-  console.log(text, text.replace("\n", "\\n"));
-
   // \ -> \\
   text = text.split("\\").join("\\\\");
 
