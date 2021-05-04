@@ -1,8 +1,5 @@
 {
     "name": "vanilla",
     "version": "0.0.0",
-    "dependencies": {
-        "@web-builder/jsx": "0.0.0",
-        "preact": "^10.5.7"
-    }
+    "dependencies": {}
 }
