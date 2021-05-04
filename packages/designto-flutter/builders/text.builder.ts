@@ -1,4 +1,4 @@
-import { ReflectTextNode } from "@bridged.xyz/design-sdk/lib/nodes/types";
+import { ReflectTextNode } from "@design-sdk/core/nodes";
 import { SizedBox, Text, Widget } from "@bridged.xyz/flutter-builder";
 import { makeText } from "../make/text.make";
 import { WidgetBuilder } from "./default.builder";

@@ -8,7 +8,7 @@
         "@designto/flutter": "0.0.1",
         "@designto/react": "0.0.0",
         "@designto/web": "0.0.0",
-        "@bridged.xyz/design-sdk": "^0.1.0",
+        "@design-sdk/universal": "0.0.0",
         "@reflect-ui/detection": "0.1.1",
         "@bridged.xyz/flutter-builder": "^1.23.0-7.0.pre.42"
     },

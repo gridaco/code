@@ -1,4 +1,4 @@
-import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes";
+import { ReflectSceneNode } from "@design-sdk/core/nodes";
 import { MainAxisSize } from "@bridged.xyz/flutter-builder";
 
 export function interpretMainAxisSize(node: ReflectSceneNode): MainAxisSize {

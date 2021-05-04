@@ -1,4 +1,4 @@
-import { Figma } from "@bridged.xyz/design-sdk";
+import { Figma } from "@design-sdk/figma";
 // interpret https://www.figma.com/plugin-docs/api/Action/
 export function isRouteAction(reaction: Figma.Reaction) {
   const validTrigger =

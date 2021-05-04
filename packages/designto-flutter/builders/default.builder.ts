@@ -4,7 +4,7 @@ import {
   ReflectFrameNode,
   ReflectGroupNode,
   ReflectTextNode,
-} from "@bridged.xyz/design-sdk/lib/nodes/types";
+} from "@design-sdk/core/nodes";
 
 import { Size, Widget } from "@bridged.xyz/flutter-builder";
 import { wrapWithContainer } from "../wrappers/container.wrap";

@@ -1,4 +1,4 @@
-import { nodes } from "@bridged.xyz/design-sdk";
+import { nodes } from "@design-sdk/core";
 import { TextBuilder, WidgetBuilder } from "./builders";
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { makeSafelyAsStackList } from "./utils/make-as-safe-list";

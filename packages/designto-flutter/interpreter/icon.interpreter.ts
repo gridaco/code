@@ -1,6 +1,6 @@
-import { ReflectSceneNode } from "@bridged.xyz/design-sdk/lib/nodes";
+import { ReflectSceneNode } from "@design-sdk/core/nodes";
 import { Icons, IconData } from "@bridged.xyz/flutter-builder";
-import { repo_assets } from "@bridged.xyz/design-sdk";
+import { repo_assets } from "@design-sdk/core";
 
 export function interpretIcon(
   node: ReflectSceneNode
@@ -19,7 +19,7 @@ export function interpretIcon(
     );
   }
 
-  const asset = repo_assets.ImageRepositories.current.addImage({
+  const asset = repo_assets.MainImageRepository.instance.current.addImage({
     key: node.id,
     hash: null,
   });

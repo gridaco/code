@@ -1,4 +1,4 @@
-import { ReflectRectangleNode } from "@bridged.xyz/design-sdk/lib/nodes";
+import { ReflectRectangleNode } from "@design-sdk/core/nodes";
 import {
   BorderRadiusGeometry,
   BorderRadius,

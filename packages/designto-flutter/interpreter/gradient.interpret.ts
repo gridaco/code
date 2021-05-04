@@ -1,9 +1,9 @@
 import { Gradient, LinearGradient, Color } from "@bridged.xyz/flutter-builder";
 import { roundNumber } from "@reflect-ui/uiutils";
-import { color_utils } from "@bridged.xyz/design-sdk";
+import { color_utils } from "@design-sdk/core";
+import { GradientPaint } from "@design-sdk/figma";
 import { makeColorFromRGBO } from "../make/color.make";
 import { interpretGradientDirection } from "./gradient-direction.interpret";
-import { GradientPaint } from "@bridged.xyz/design-sdk/lib/figma/types/v1";
 
 export function interpretGradient(gradient: GradientPaint): Gradient {
   // TODO Handle transform percisely.

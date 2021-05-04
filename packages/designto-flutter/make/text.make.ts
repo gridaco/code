@@ -1,5 +1,5 @@
 import * as flutter from "@bridged.xyz/flutter-builder";
-import { nodes } from "@bridged.xyz/design-sdk";
+import { nodes } from "@design-sdk/figma";
 import { makeTextStyle } from "./text-style.make";
 import { interpretTextAlign } from "../interpreter/text-align.interpreter";
 import { string_utils } from "@designto/token";

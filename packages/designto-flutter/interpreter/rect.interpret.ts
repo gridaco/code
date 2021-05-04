@@ -8,13 +8,13 @@ import { makeColorFromRGBO } from "../make/color.make";
 import { interpretGradient } from "./gradient.interpret";
 import { interpretRectCorner } from "./corner.interpret";
 import { roundNumber } from "@reflect-ui/uiutils";
-import { ReflectRectangleNode } from "@bridged.xyz/design-sdk/lib/nodes";
+import { ReflectRectangleNode } from "@design-sdk/core/nodes";
 import {
   GradientPaint,
   ImagePaint,
   Paint,
   SolidPaint,
-} from "@bridged.xyz/design-sdk/lib/figma/types/v1";
+} from "@design-sdk/figma";
 export function interpretRect(rect: ReflectRectangleNode): Container {
   const fills = rect.fills as Array<Paint>;
   const fillsCount = fills.length;

@@ -1,4 +1,4 @@
-import { nodes } from "@bridged.xyz/design-sdk";
+import { nodes } from "@design-sdk/core";
 import { fromRectangle } from "./container";
 
 function row() {

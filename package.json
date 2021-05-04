@@ -7,6 +7,8 @@
     "workspaces": [
         "editor",
         "packages/*",
-        "packages/coli/packages/*"
+        "packages/design-sdk/*",
+        "packages/coli/packages/*",
+        "packages/coli-web-builder/*"
     ]
 }

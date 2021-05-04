@@ -1,6 +1,6 @@
 import { detectIf } from "@reflect-ui/detection";
 import { isRouteAction } from "../interpreter/action.interpret";
-import { Figma } from "@bridged.xyz/design-sdk";
+import { Figma } from "@design-sdk/figma";
 export function makeRoutes(): Array<string> {
   const routes = Array<string>();
   const allScreenReactions = fetchAllActionsGlobal({

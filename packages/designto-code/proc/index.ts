@@ -1,4 +1,4 @@
-import { repo_assets } from "@bridged.xyz/design-sdk";
+import { repo_assets } from "@design-sdk/core";
 
 export abstract class BuildProcess {
   readonly id: string;

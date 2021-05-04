@@ -1,5 +1,5 @@
 import { convertToSize } from "../convert/size.convert";
-import { Figma, nodes } from "@bridged.xyz/design-sdk";
+import { Figma, nodes } from "@design-sdk/figma";
 import { converters } from "@reflect-ui/core/lib";
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { makeColor } from "../make/color.make";
