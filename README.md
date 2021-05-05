@@ -27,3 +27,7 @@ Taking more deeper look, Reflect Core DSL represents the layout, component, data
 ### How does it work?
 
 Read [how-it-all-works.md](./how-it-all-works.md)
+
+### Visualization
+
+![Bridged's design to code. design node visualization snapshot](./branding/example-visualization-design-nodes.png)
