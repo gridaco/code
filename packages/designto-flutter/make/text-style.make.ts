@@ -17,7 +17,7 @@ function getThemedTextStyleByName(textStyleName: string): flutter.TextStyle {
 }
 
 export function makeTextStyleFromDesign(
-  style: core.TextStyle
+  style: core.ITextStyle
 ): flutter.TextStyle {
   let decoration: flutter.TextDecoration = makeTextDecoration(style.decoration);
   const fontFamily: string = style.fontFamily;
