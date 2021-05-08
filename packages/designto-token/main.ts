@@ -11,6 +11,9 @@ import { tokenizeVector, tokenizeBitmap } from "./graphics";
  * Main function for converting reflect design node tree to reflect widget token tree
  */
 export function tokenize(node: nodes.ReflectSceneNode): Widget {
+  if (!node) {
+    throw "A valid design node should be passed in order to tokenize it into a reflect widget.";
+  }
   return interpretReflectNodesToWidgetTree(node);
 }
 

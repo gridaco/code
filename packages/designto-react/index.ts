@@ -8,5 +8,8 @@ export function buildReactApp(
 }
 
 export function buildReactWidget(widget: Widget) {
+  if (!widget) {
+    throw "A valid reflect widget manifest should be passed as an input. none was passed.";
+  }
   return buildReactWidgetFromReflectWidget(widget);
 }
