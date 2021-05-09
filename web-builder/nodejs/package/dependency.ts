@@ -1,8 +1,19 @@
-import { Version } from "./version";
+import { TVersion } from "./version";
+
+/**
+ * dependencies structure
+ * ```
+ * dependencies: {
+ *    "a": "latest",
+ *    "b": "latest"
+ * }
+ * ```
+ */
+export type Dependencies = { [key: string]: TVersion };
 
 export interface SingleDependency {
-  dependency: string;
-  version: Version;
+  name: string;
+  version: TVersion;
 }
 
 // export interface
