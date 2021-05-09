@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "description": "jsx syntex tree builder for web applications. react, vue, svelte, etc..",
   "workspaces": [
+    "core",
+    "nodejs",
     "web-builder",
     "css",
     "html",

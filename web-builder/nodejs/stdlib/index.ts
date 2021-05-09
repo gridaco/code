@@ -211,7 +211,7 @@ const MATERIAL_UI_STYLES: StandardLibraryManifest = {
 /// endregion material-ui (react)
 ///
 
-export const standard_libraries: { [key: string]: StandardLibraryManifest } = {
+export const standard_libraries = {
   // ts
   typescript: TYPESCRIPT,
 

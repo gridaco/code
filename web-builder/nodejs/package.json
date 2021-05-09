@@ -1,5 +1,6 @@
 {
     "name": "@coli.codes/nodejs-builder",
+    "version": "0.0.0",
     "dependencies": {
         "semver": "^7.3.5"
     }
