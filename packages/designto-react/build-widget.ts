@@ -1,14 +1,15 @@
 import * as core from "@reflect-ui/core";
 import * as react from "@coli.codes/react-builder";
+import { IWidgetWithStyle } from "@coli.codes/web-builder-core/widget-with-style";
 
 export function buildReactWidgetFromReflectWidget(
   widget: core.Widget
-): react.Widget {
+): IWidgetWithStyle {
   const _reactWidgetChildren = widget.children?.map((c) =>
     buildReactWidgetFromReflectWidget(c)
   );
 
-  let thisReactWidget: react.Widget;
+  let thisReactWidget: IWidgetWithStyle;
   if (widget instanceof core.Column) {
     thisReactWidget = new react.Column();
   } else if (widget instanceof core.Row) {
