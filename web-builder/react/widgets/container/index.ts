@@ -1,12 +1,12 @@
-import { JSX, JSXElementLike } from "coli";
-import { CSSStyleDeclaration } from "coli/lib/languages/css";
+import { JSX, JSXElementLike, css } from "coli";
+
 import { ReactWidget } from "../widget";
 
 export class Container extends ReactWidget {
-  buildStyle(): CSSStyleDeclaration {
+  buildStyle(): css.CSSStyleDeclaration {
     throw new Error("Method not implemented.");
   }
   buildJsx(): JSXElementLike {
-    return JSX.div().make()
+    return JSX.div().make();
   }
 }

@@ -1,9 +1,8 @@
-import { JSXElement } from "coli";
-import { CSSStyleDeclaration } from "coli/lib/languages/css";
+import { JSXElement, css } from "coli";
 import { ReactMultiChildWidget } from "../widget";
 
 export class Row extends ReactMultiChildWidget {
-  buildStyle(): CSSStyleDeclaration {
+  buildStyle(): css.CSSStyleDeclaration {
     throw new Error("Method not implemented.");
   }
   buildJsx(): JSXElement {
