@@ -1,6 +1,9 @@
-export const CRA_TYPESCRIPT_PACKAGE_PRESET = `
+import { PackageManifest } from "../../package";
+
+/**
+ * ```
 {
-  "name": "react-typescript",
+  "name": "@packages.bridged.xyz/react-typescript",
   "version": "0.0.0",
   "description": "Bridged React Typescript Preset",
   "keywords": [
@@ -31,4 +34,13 @@ export const CRA_TYPESCRIPT_PACKAGE_PRESET = `
     "not ie <= 11",
     "not op_mini all"
   ]
-}`;
+}
+ * ```
+ */
+export const CRA_TYPESCRIPT_PACKAGE_PRESET: PackageManifest = new PackageManifest(
+  {
+    name: "@packages.bridged.xyz/react-typescript",
+    description: "Bridged React Typescript Preset",
+    version: "0.0.0",
+  }
+);

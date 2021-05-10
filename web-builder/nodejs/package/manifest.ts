@@ -27,7 +27,7 @@ export class PackageManifest implements IPackageManifest {
     version?: TVersion;
     main?: string;
     dependencies?: Dependencies;
-    devDependencies: Dependencies;
+    devDependencies?: Dependencies;
   }) {
     this.name = params.name;
     this.description = params.description;
