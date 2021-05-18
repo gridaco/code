@@ -1,8 +1,8 @@
-# design-to-code
+# Design to code
 
 Design to code engine. A design ✌️ code standard.
 
-> Bridged's Design to code core library.
+> Bridged's Design to code core library. Convert your figma, sketch and adobe xd design to flutter, react, vue and more.
 
 ## Demo
 
