@@ -8,6 +8,18 @@ Design to code engine. A design ✌️ code standard.
 
 for the demo, please visit [assistant](https://github.com/bridgedxyz/assistant)
 
+For the fully integrated working demo, visit [bridged.xyz](https://bridged.xyz)
+
+### Run it your own
+
+```
+git clone https://github.com/bridgedxyz/design-to-code.git
+
+cd design-to-code
+yarn
+yarn editor
+```
+
 ## What does it mean?
 
 ### By "design". What does it mean?
