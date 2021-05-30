@@ -309,10 +309,10 @@
     "@babel/helper-validator-identifier" "^7.14.0"
     to-fast-properties "^2.0.0"
 
-"@base-sdk/base@0.1.0-1":
-  version "0.1.0-1"
-  resolved "https://registry.yarnpkg.com/@base-sdk/base/-/base-0.1.0-1.tgz#aaf84625698693f9690b85c46f453c69910ca5a3"
-  integrity sha512-NOIzgg8kDMQ3xeWFWEZmJyI3ty+xDqF7AUqtiWMDFfCYL0ybENCovyURc/LqGaeBCOzjPdDGWmWdhZE4qu12XQ==
+"@base-sdk/base@0.1.0-2":
+  version "0.1.0-2"
+  resolved "https://registry.yarnpkg.com/@base-sdk/base/-/base-0.1.0-2.tgz#ddb1219c06c1e8c6ed6e8a5be8f09b4be9fc8f6c"
+  integrity sha512-diEIW9t//gHz5K3V0UC8i1BwVHUzU7Z011YT8PzRqkYDrE25vD3resLNbQB5AGmoxETdjLxaLRnAcS3FTKF2vg==
   dependencies:
     "@base-sdk/build" "0.1.0-2"
     "@base-sdk/core" "0.1.0"
