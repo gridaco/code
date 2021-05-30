@@ -2,6 +2,10 @@
 
 > We first convert the input design to tokens
 
+## Tokenize = Detection + Formation
+
+Tokenize package uses reflec-detection internally, reflect raw node as input, reflect widget nodes(tokens) as output
+
 ## How is the token designed?
 
 We had two options to design the general architecture of this. first one was to accpeting all property-like nodes as a token as well, second was to accept the token as a container and others as a property in a more intuitive way.

@@ -9,17 +9,20 @@ import {
   VerticalDirection,
 } from "@reflect-ui/core";
 
-function fromFrame(frame: nodes.ReflectFrameNode): core.LayoutRepresntatives {
+function fromFrame(
+  frame: nodes.ReflectFrameNode,
+  children: Array<core.Widget>
+): core.LayoutRepresntatives {
   if (frame.isAutoLayout) {
     switch (frame.layoutMode) {
       case Axis.horizontal:
         return new Row({
-          children: [],
+          children: children,
         });
         break;
       case Axis.vertical:
         return new Column({
-          children: [],
+          children: children,
         });
         break;
       default:
@@ -32,7 +35,11 @@ function fromFrame(frame: nodes.ReflectFrameNode): core.LayoutRepresntatives {
     }
   }
 
-  return new Stack();
+  // else, stack.
+  // todo - use constructor
+  const stack = new Stack();
+  stack.children = children;
+  return stack;
 }
 
 function fromGroup(group: nodes.ReflectGroupNode): core.LayoutRepresntatives {

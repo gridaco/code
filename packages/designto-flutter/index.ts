@@ -28,7 +28,7 @@ export function buildApp(sceneNode: nodes.ReflectSceneNode): AppBuildResult {
   scrollable = true; // init to true.
   console.log(`start building flutter app`);
   targetId = sceneNode.id;
-  const rootWidget = generateWidget(sceneNode);
+  const rootWidget = generateRootWidget(sceneNode);
   console.log(`built app complete`);
   console.log("result is..", rootWidget);
   return {
@@ -37,7 +37,7 @@ export function buildApp(sceneNode: nodes.ReflectSceneNode): AppBuildResult {
   };
 }
 
-function generateWidget(
+function generateRootWidget(
   sceneNode: nodes.ReflectSceneNode,
   parentIdSrc: string = ""
 ): flutter.Widget {
@@ -84,6 +84,7 @@ function flutterWidgetGenerator(
     // filter empty widgets
     widgets = widgets.filter((w) => array.filters.notEmpty(w));
     if (widgets.length == 1) {
+      // TODO - inspect this logic - is it safe?
       // console.log("flutterWidgetGenerator complete", widgets[0])
       return widgets[0];
     }
