@@ -1,9 +1,9 @@
-import { JSX, JSXElementLike } from "coli";
-import { css } from "coli";
-import { ReactWidgets } from "..";
+import { JSX, JSXElementLike, css } from "coli";
+
 import { ReactMultiChildWidget } from "../widget";
 
-export class Column extends ReactMultiChildWidget {
+import type { ReactWidgets } from "..";
+export class Stack extends ReactMultiChildWidget {
   constructor(p: { children: Array<ReactWidgets> }) {
     super(p);
   }

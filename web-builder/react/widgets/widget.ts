@@ -9,7 +9,9 @@ import {
 export abstract class ReactWidget extends WidgetWithStyle {}
 
 export abstract class ReactMultiChildWidget extends MultiChildWidgetWithStyle {
-  constructor() {
+  readonly children: Array<ReactWidget> = [];
+  constructor(p: { children: Array<ReactWidget> }) {
     super();
+    this.children = p.children;
   }
 }
