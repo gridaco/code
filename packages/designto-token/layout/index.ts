@@ -42,8 +42,13 @@ function fromFrame(
   return stack;
 }
 
-function fromGroup(group: nodes.ReflectGroupNode): core.LayoutRepresntatives {
-  return undefined;
+function fromGroup(
+  group: nodes.ReflectGroupNode,
+  children: Array<core.Widget>
+): core.LayoutRepresntatives {
+  const stack = new Stack();
+  stack.children = children;
+  return stack;
 }
 
 export const tokenizeLayout = {

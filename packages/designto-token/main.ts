@@ -71,17 +71,28 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
       break;
 
     case nodes.ReflectNodeType.frame:
-      const frame = node as nodes.ReflectFrameNode;
+      const _frame = node as nodes.ReflectFrameNode;
       tokenizedTarget = tokenizeLayout.fromFrame(
-        frame,
-        handleChildren(frame.children)
+        _frame,
+        handleChildren(_frame.children)
       );
       break;
 
     case nodes.ReflectNodeType.star:
       tokenizedTarget = tokenizeVector.fromStar();
+      break;
+
     case nodes.ReflectNodeType.poligon:
       tokenizedTarget = tokenizeVector.fromPoligon();
+      break;
+
+    case nodes.ReflectNodeType.group:
+      const _group = node as nodes.ReflectGroupNode;
+      tokenizedTarget = tokenizeLayout.fromGroup(
+        _group,
+        handleChildren(_group.children)
+      );
+      break;
 
     case nodes.ReflectNodeType.line:
     default:
