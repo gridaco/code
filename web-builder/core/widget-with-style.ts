@@ -23,10 +23,24 @@ export abstract class WidgetWithStyle
 export abstract class MultiChildWidgetWithStyle
   extends MultiChildWidget
   implements IWidgetWithStyle {
+  readonly children: Array<IWidgetWithStyle> = [];
+
   constructor() {
     super();
   }
   abstract buildStyle(): css.CSSStyleDeclaration;
 
-  abstract buildJsx(): JSXElementLike;
+  buildJsx(): JSXElementLike {
+    const children = this.buildChildrenJsx();
+    const container = this.buildContainingJsx(children);
+    return container;
+  }
+
+  abstract buildContainingJsx(children: Array<JSXElementLike>): JSXElementLike;
+
+  buildChildrenJsx(): Array<JSXElementLike> {
+    return this.children?.map((c) => {
+      return c.buildJsx();
+    });
+  }
 }

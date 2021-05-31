@@ -15,6 +15,10 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
 
   const _jsxStr = stringfy(jsx, {
     language: "tsx",
+    formatter: {
+      use: "pritter",
+      parser: "typescript",
+    },
   });
 
   return _jsxStr;

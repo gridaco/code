@@ -1,11 +1,14 @@
-import { JSXElement, css } from "coli";
 import { ReactMultiChildWidget } from "../widget";
+import { JSX, JSXElementLike, css } from "coli";
 
 export class Row extends ReactMultiChildWidget {
-  buildStyle(): css.CSSStyleDeclaration {
-    throw new Error("Method not implemented.");
+  buildContainingJsx(children: JSXElementLike[]): JSXElementLike {
+    return JSX.div({
+      children: children,
+    }).make();
   }
-  buildJsx(): JSXElement {
+
+  buildStyle(): css.CSSStyleDeclaration {
     throw new Error("Method not implemented.");
   }
 }
