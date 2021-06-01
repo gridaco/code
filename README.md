@@ -42,4 +42,16 @@ Read [how-it-all-works.md](./how-it-all-works.md)
 
 ### Visualization
 
+![](./branding/shot-1.png)
+
+![](./branding/shot-1.png)
+
+![](./branding/shot-2.png)
+
+![](./branding/shot-3.png)
+
+![](./branding/shot-4.png)
+
+![](./branding/shot-5.png)
+
 ![Bridged's design to code. design node visualization snapshot](./branding/example-visualization-design-nodes.png)
