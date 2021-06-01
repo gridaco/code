@@ -22,3 +22,9 @@ export const BUTTON_IMPORT = {
   named: IMPORT_BUTTON_NAMED,
   default: IMPORT_BUTTON_DEFAULT,
 };
+
+export const TEXT_IMPORT = {
+  name: "Typography",
+  named: ".",
+  default: "/typography",
+};
