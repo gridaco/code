@@ -4,6 +4,7 @@ import { ReactMultiChildWidget } from "../widget";
 
 import type { ReactWidgets } from "..";
 export class Stack extends ReactMultiChildWidget {
+  readonly _type = "stack";
   constructor(p: { children: Array<ReactWidgets> }) {
     super(p);
   }

@@ -2,6 +2,8 @@ export * from "./column";
 export * from "./container";
 export * from "./row";
 export * from "./stack";
+export * from "./error-widget";
+export * from "./text";
 
 export * from "./widget";
 

@@ -4,6 +4,7 @@ import { ReactWidgets } from "..";
 import { ReactMultiChildWidget } from "../widget";
 
 export class Column extends ReactMultiChildWidget {
+  readonly _type = "column";
   constructor(p: { children: Array<ReactWidgets> }) {
     super(p);
   }
@@ -14,8 +15,5 @@ export class Column extends ReactMultiChildWidget {
   }
   buildStyle(): css.CSSStyleDeclaration {
     throw new Error("Method not implemented.");
-  }
-  buildJsx(): JSXElementLike {
-    return JSX.div().make();
   }
 }
