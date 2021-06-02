@@ -2,9 +2,6 @@ export class Widget {
   constructor() {}
 }
 
-export class MultiChildWidget extends Widget {
-  constructor() {
-    super();
-  }
+export interface IMultiChildWidget {
   children: Widget[];
 }

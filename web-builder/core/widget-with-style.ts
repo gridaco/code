@@ -1,9 +1,10 @@
-import { Widget, MultiChildWidget } from "./widget";
+import { Widget, IMultiChildWidget } from "./widget";
 import { css, JSXElementLike } from "coli";
+import { ColiObjectLike } from "@coli.codes/builder";
 
 export interface IWidgetWithStyle {
   buildStyle(): css.CSSStyleDeclaration;
-  buildJsx(): JSXElementLike;
+  buildJsx(): ColiObjectLike<JSXElementLike>;
 }
 
 /**
@@ -11,18 +12,20 @@ export interface IWidgetWithStyle {
  */
 export abstract class WidgetWithStyle
   extends Widget
-  implements IWidgetWithStyle {
+  implements IWidgetWithStyle
+{
   abstract buildStyle(): css.CSSStyleDeclaration;
 
-  abstract buildJsx(): JSXElementLike;
+  abstract buildJsx(): ColiObjectLike<JSXElementLike>;
 }
 
 /**
  * Since html based framework's widget can be represented withou any style definition, this WidgetWithStyle class indicates, that the sub instance of this class will contain style data within it.
  */
 export abstract class MultiChildWidgetWithStyle
-  extends MultiChildWidget
-  implements IWidgetWithStyle {
+  extends WidgetWithStyle
+  implements IWidgetWithStyle, IMultiChildWidget
+{
   readonly children: Array<IWidgetWithStyle> = [];
 
   constructor() {
@@ -30,15 +33,17 @@ export abstract class MultiChildWidgetWithStyle
   }
   abstract buildStyle(): css.CSSStyleDeclaration;
 
-  buildJsx(): JSXElementLike {
+  buildJsx(): ColiObjectLike<JSXElementLike> {
     const children = this.buildChildrenJsx();
     const container = this.buildContainingJsx(children);
     return container;
   }
 
-  abstract buildContainingJsx(children: Array<JSXElementLike>): JSXElementLike;
+  abstract buildContainingJsx(
+    children: Array<ColiObjectLike<JSXElementLike>>
+  ): ColiObjectLike<JSXElementLike>;
 
-  buildChildrenJsx(): Array<JSXElementLike> {
+  buildChildrenJsx(): Array<ColiObjectLike<JSXElementLike>> {
     return this.children?.map((c) => {
       return c.buildJsx();
     });
