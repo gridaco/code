@@ -42,7 +42,7 @@ export class StyledComponentDeclaration extends VariableDeclaration {
 export function declareStyledComponentVariable(
   widgetConfig: WidgetWithStyle
 ): StyledComponentDeclaration {
-  const varname = nameVariable(undefined, {
+  const varname = nameVariable(widgetConfig.key.name, {
     case: NameCases.pascal,
   });
 

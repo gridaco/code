@@ -1,4 +1,4 @@
-import { Widget, IMultiChildWidget } from "./widget";
+import { Widget, IMultiChildWidget, WidgetKey } from "./widget";
 import { css, JSXElementLike } from "coli";
 import { ColiObjectLike } from "@coli.codes/builder";
 
@@ -26,10 +26,10 @@ export abstract class MultiChildWidgetWithStyle
   extends WidgetWithStyle
   implements IWidgetWithStyle, IMultiChildWidget
 {
-  readonly children: Array<IWidgetWithStyle> = [];
+  readonly children: Array<WidgetWithStyle> = [];
 
-  constructor() {
-    super();
+  constructor({ key }: { key: WidgetKey }) {
+    super({ key: key });
   }
   abstract buildStyle(): css.CSSStyleDeclaration;
 
