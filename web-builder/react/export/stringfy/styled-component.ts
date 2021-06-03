@@ -11,8 +11,6 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
   widget: IWidgetWithStyle
 ): string {
   const jsx = widget.buildJsx();
-  // const style = widget.buildStyle();
-
   const _jsxStr = stringfy(jsx, {
     language: "tsx",
     formatter: {

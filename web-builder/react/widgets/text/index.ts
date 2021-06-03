@@ -1,6 +1,7 @@
 import { ReflectReactWidget } from "../reflect";
 import { TEXT_IMPORT } from "@coli.codes/reflect-web-builder";
 import { css, JSX, JSXText } from "coli";
+import { CssNamedColor } from "@coli.codes/core/css/css-color";
 
 export class ReflectText extends ReflectReactWidget {
   readonly imports: string = TEXT_IMPORT.named;
@@ -19,6 +20,11 @@ export class ReflectText extends ReflectReactWidget {
   }
 
   buildStyle(): css.CSSStyleDeclaration {
-    throw new Error("Method not implemented.");
+    const _css = new css.CSSStyleDeclaration();
+
+    // text color
+    _css.color = CssNamedColor.black.name;
+
+    return _css;
   }
 }

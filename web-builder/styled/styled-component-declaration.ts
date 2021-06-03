@@ -7,7 +7,8 @@ import {
   VariableDeclaration,
 } from "coli";
 import { WidgetWithStyle } from "@coli.codes/web-builder-core";
-
+import { SyntaxKind } from "@coli.codes/core/ast/syntax-kind";
+import { nameVariable, NameCases } from "@coli.codes/naming";
 export class StyledComponentDeclaration extends VariableDeclaration {
   static styledIdentifier = new Identifier("styled");
 
@@ -19,7 +20,7 @@ export class StyledComponentDeclaration extends VariableDeclaration {
   ) {
     super(name, {
       initializer: StyledComponentDeclaration.makeinitializer(),
-      kind: "const",
+      kind: SyntaxKind.LetKeyword,
     });
   }
 
@@ -41,7 +42,11 @@ export class StyledComponentDeclaration extends VariableDeclaration {
 export function declareStyledComponentVariable(
   widgetConfig: WidgetWithStyle
 ): StyledComponentDeclaration {
-  return new StyledComponentDeclaration("Wrapper", {
+  const varname = nameVariable(undefined, {
+    case: NameCases.pascal,
+  });
+
+  return new StyledComponentDeclaration(varname.name, {
     style: widgetConfig.buildStyle(),
   });
 }
