@@ -3,6 +3,7 @@ import * as react from "@coli.codes/react-builder";
 import { IWidgetWithStyle } from "@coli.codes/web-builder-core/widget-with-style";
 import { ReactWidget } from "@coli.codes/react-builder";
 import { makeAsStyled } from "@web-builder/styled";
+import { keyFromWidget } from "@coli.codes/web-builder-core";
 
 export function buildReactWidgetFromReflectWidget(
   widget: core.Widget
@@ -16,33 +17,31 @@ export function buildReactWidgetFromReflectWidget(
   let thisReactWidget: ReactWidget;
   if (widget instanceof core.Column) {
     thisReactWidget = new react.Column({
-      // id: widget.id,
-      // originname: widget.originname,
+      key: keyFromWidget(widget),
       children: handleChildren(widget.children),
     });
   } else if (widget instanceof core.Row) {
     thisReactWidget = new react.Row({
-      // id: widget.id,
-      // originname: widget.originname,
+      key: keyFromWidget(widget),
       children: handleChildren(widget.children),
     });
   } else if (widget instanceof core.Stack) {
     thisReactWidget = new react.Stack({
-      // id: widget.id,
-      // originname: widget.originname,
+      key: keyFromWidget(widget),
       children: handleChildren(widget.children),
     });
   } else if (widget instanceof core.Text) {
     thisReactWidget = new react.ReflectText({
-      // id: widget.id,
-      // originname: widget.originname,
+      key: keyFromWidget(widget),
       data: widget.data,
     });
     console.warn("PING");
     makeAsStyled(thisReactWidget); // test code
   } else {
     // todo - handle case more specific
-    thisReactWidget = new react.ErrorWidget("unknown");
+    thisReactWidget = new react.ErrorWidget({
+      key: keyFromWidget(widget),
+    });
   }
 
   return thisReactWidget;

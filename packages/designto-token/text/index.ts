@@ -1,5 +1,6 @@
 import { nodes } from "@design-sdk/core";
 import { Text, TextStyle } from "@reflect-ui/core";
+import { keyFromNode } from "../key";
 
 /**
  * creates ReflectTextWidget from ReflectTextNode. can be RichText or Simple Text
@@ -11,6 +12,7 @@ export function fromText(node: nodes.ReflectTextNode): Text {
   // if () //
 
   return new Text({
+    key: keyFromNode(node),
     data: node.characters,
     style: new TextStyle({
       fontFamily: node.fontName.family,
