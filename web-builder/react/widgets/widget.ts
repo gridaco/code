@@ -1,4 +1,5 @@
 import { ColiObjectLike } from "@coli.codes/builder";
+import { WidgetKey } from "@coli.codes/web-builder-core";
 import {
   WidgetWithStyle,
   MultiChildWidgetWithStyle,
@@ -16,8 +17,8 @@ export abstract class ReactMultiChildWidget
 {
   readonly children: Array<ReactWidget> = [];
   tag: string;
-  constructor(p: { children: Array<ReactWidget> }) {
-    super();
+  constructor(p: { key: WidgetKey; children: Array<ReactWidget> }) {
+    super({ key: p.key });
     this.children = p.children;
   }
 

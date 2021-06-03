@@ -1,3 +1,4 @@
+import { WidgetKey } from "@coli.codes/web-builder-core";
 import { JSX, JSXElementLike } from "coli";
 import { css } from "coli";
 import { ReactWidgets } from "..";
@@ -5,7 +6,7 @@ import { ReactMultiChildWidget } from "../widget";
 
 export class Column extends ReactMultiChildWidget {
   readonly _type = "column";
-  constructor(p: { children: Array<ReactWidgets> }) {
+  constructor(p: { key: WidgetKey; children: Array<ReactWidgets> }) {
     super(p);
   }
   buildContainingJsx(children: JSXElementLike[]): JSXElementLike {

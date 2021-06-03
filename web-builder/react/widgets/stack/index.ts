@@ -3,9 +3,10 @@ import { JSX, JSXElementLike, css } from "coli";
 import { ReactMultiChildWidget } from "../widget";
 
 import type { ReactWidgets } from "..";
+import { WidgetKey } from "@coli.codes/web-builder-core";
 export class Stack extends ReactMultiChildWidget {
   readonly _type = "stack";
-  constructor(p: { children: Array<ReactWidgets> }) {
+  constructor(p: { key: WidgetKey; children: Array<ReactWidgets> }) {
     super(p);
   }
 
