@@ -1,5 +1,6 @@
 import { ReactMultiChildWidget } from "../widget";
 import { JSX, JSXElementLike, css } from "coli";
+import { CSSProperties } from "@coli.codes/css";
 
 export class Row extends ReactMultiChildWidget {
   readonly _type = "row";
@@ -9,7 +10,7 @@ export class Row extends ReactMultiChildWidget {
     }).make();
   }
 
-  buildStyle(): css.CSSStyleDeclaration {
+  buildStyle(): CSSProperties {
     throw new Error("Method not implemented.");
   }
 }

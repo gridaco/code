@@ -1,12 +1,11 @@
+import { CSSProperties } from "@coli.codes/css";
 import { WidgetKey } from "@coli.codes/web-builder-core";
 import { JSX, JSXElementLike } from "coli";
-import { css } from "coli";
-import { ReactWidgets } from "..";
-import { ReactMultiChildWidget } from "../widget";
+import { ReactMultiChildWidget, ReactWidget } from "../widget";
 
 export class Column extends ReactMultiChildWidget {
   readonly _type = "column";
-  constructor(p: { key: WidgetKey; children: Array<ReactWidgets> }) {
+  constructor(p: { key: WidgetKey; children: Array<ReactWidget> }) {
     super(p);
   }
   buildContainingJsx(children: JSXElementLike[]): JSXElementLike {
@@ -14,7 +13,7 @@ export class Column extends ReactMultiChildWidget {
       children: children,
     }).make();
   }
-  buildStyle(): css.CSSStyleDeclaration {
+  buildStyle(): CSSProperties {
     throw new Error("Method not implemented.");
   }
 }

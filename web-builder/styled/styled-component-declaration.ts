@@ -9,22 +9,25 @@ import {
 import { WidgetWithStyle } from "@coli.codes/web-builder-core";
 import { SyntaxKind } from "@coli.codes/core/ast/syntax-kind";
 import { nameVariable, NameCases } from "@coli.codes/naming";
+import { CSSProperties, buildCssStandard } from "@coli.codes/css";
+
 export class StyledComponentDeclaration extends VariableDeclaration {
   static styledIdentifier = new Identifier("styled");
 
   constructor(
     readonly name: string,
     params: {
-      style: string | css.CSSStyleDeclaration;
+      style: CSSProperties;
     }
   ) {
     super(name, {
-      initializer: StyledComponentDeclaration.makeinitializer(),
+      initializer: StyledComponentDeclaration.makeinitializer(params.style),
       kind: SyntaxKind.LetKeyword,
     });
   }
 
-  static makeinitializer(): TaggedTemplateExpression {
+  static makeinitializer(style: CSSProperties): TaggedTemplateExpression {
+    const stylestring = buildCssStandard(style);
     return new TaggedTemplateExpression(
       new PropertyAccessExpression(
         StyledComponentDeclaration.styledIdentifier,

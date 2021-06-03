@@ -1,3 +1,4 @@
+import { CSSProperties } from "@coli.codes/css";
 import { WidgetKey } from "@coli.codes/web-builder-core";
 import { JSX, JSXElementLike, css, JSXText } from "coli";
 
@@ -7,7 +8,7 @@ export class ErrorWidget extends ReactWidget {
   constructor(p: { key: WidgetKey }) {
     super(p);
   }
-  buildStyle(): css.CSSStyleDeclaration {
+  buildStyle(): CSSProperties {
     throw new Error("Method not implemented.");
   }
   buildJsx(): JSXElementLike {

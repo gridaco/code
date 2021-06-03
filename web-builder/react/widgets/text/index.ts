@@ -1,8 +1,8 @@
 import { ReflectReactWidget } from "../reflect";
 import { TEXT_IMPORT } from "@coli.codes/reflect-web-builder";
-import { css, JSX, JSXText } from "coli";
-import { CssNamedColor } from "@coli.codes/core/css/css-color";
+import { JSX, JSXText } from "coli";
 import { WidgetKey } from "@coli.codes/web-builder-core";
+import { CSSProperties } from "@coli.codes/css";
 
 export class ReflectText extends ReflectReactWidget {
   readonly imports: string = TEXT_IMPORT.named;
@@ -20,12 +20,9 @@ export class ReflectText extends ReflectReactWidget {
     }).make();
   }
 
-  buildStyle(): css.CSSStyleDeclaration {
-    const _css = new css.CSSStyleDeclaration();
-
-    // text color
-    _css.color = CssNamedColor.black.name;
-
-    return _css;
+  buildStyle(): CSSProperties {
+    return <CSSProperties>{
+      color: "black", // todo set text color
+    };
   }
 }

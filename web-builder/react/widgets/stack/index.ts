@@ -1,12 +1,11 @@
 import { JSX, JSXElementLike, css } from "coli";
 
-import { ReactMultiChildWidget } from "../widget";
-
-import type { ReactWidgets } from "..";
+import { ReactMultiChildWidget, ReactWidget } from "../widget";
 import { WidgetKey } from "@coli.codes/web-builder-core";
+import { CSSProperties } from "@coli.codes/css";
 export class Stack extends ReactMultiChildWidget {
   readonly _type = "stack";
-  constructor(p: { key: WidgetKey; children: Array<ReactWidgets> }) {
+  constructor(p: { key: WidgetKey; children: Array<ReactWidget> }) {
     super(p);
   }
 
@@ -16,7 +15,7 @@ export class Stack extends ReactMultiChildWidget {
     }).make();
   }
 
-  buildStyle(): css.CSSStyleDeclaration {
+  buildStyle(): CSSProperties {
     throw new Error("Method not implemented.");
   }
 }
