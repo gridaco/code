@@ -9,7 +9,9 @@ export class ErrorWidget extends ReactWidget {
     super(p);
   }
   buildStyle(): CSSProperties {
-    throw new Error("Method not implemented.");
+    return {
+      color: "red",
+    };
   }
   buildJsx(): JSXElementLike {
     return JSX.div({

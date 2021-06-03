@@ -16,6 +16,6 @@ export class Stack extends ReactMultiChildWidget {
   }
 
   buildStyle(): CSSProperties {
-    throw new Error("Method not implemented.");
+    return {};
   }
 }

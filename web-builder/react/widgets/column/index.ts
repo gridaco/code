@@ -14,6 +14,9 @@ export class Column extends ReactMultiChildWidget {
     }).make();
   }
   buildStyle(): CSSProperties {
-    throw new Error("Method not implemented.");
+    return {
+      display: "flex",
+      "flex-direction": "column",
+    };
   }
 }

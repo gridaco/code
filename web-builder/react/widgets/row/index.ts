@@ -11,6 +11,9 @@ export class Row extends ReactMultiChildWidget {
   }
 
   buildStyle(): CSSProperties {
-    throw new Error("Method not implemented.");
+    return {
+      display: "flex",
+      "flex-direction": "row",
+    };
   }
 }

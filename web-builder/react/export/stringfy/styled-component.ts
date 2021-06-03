@@ -1,5 +1,6 @@
-import { IWidgetWithStyle } from "@coli.codes/web-builder-core/widget-with-style";
 import { stringfy } from "@coli.codes/export-string";
+import { makeAsStyled } from "@web-builder/styled";
+import { ReactWidget } from "../../widgets";
 
 /**
  * styled components pattern with either emotion or styled-component
@@ -8,8 +9,11 @@ import { stringfy } from "@coli.codes/export-string";
  * @returns
  */
 export function stringfyReactWidget_STYLED_COMPONENTS(
-  widget: IWidgetWithStyle
+  widget: ReactWidget
 ): string {
+  const styled = makeAsStyled(widget);
+  console.log("styled", styled);
+
   const jsx = widget.buildJsx();
   const _jsxStr = stringfy(jsx, {
     language: "tsx",

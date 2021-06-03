@@ -7,6 +7,6 @@ export class ReflectButton extends ReflectReactWidget {
   readonly tag: string = BUTTON_IMPORT.name;
 
   buildStyle(): CSSProperties {
-    throw new Error("Method not implemented.");
+    return {};
   }
 }

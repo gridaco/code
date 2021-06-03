@@ -6,7 +6,7 @@ import { ReactWidget } from "../widget";
 
 export class Container extends ReactWidget {
   buildStyle(): CSSProperties {
-    throw new Error("Method not implemented.");
+    return {};
   }
   buildJsx(): ColiObjectLike<JSXElementLike> {
     return JSX.div().make();

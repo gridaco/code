@@ -34,9 +34,7 @@ export class StyledComponentDeclaration extends VariableDeclaration {
         "div"
       ),
       {
-        template: new ast.TemplateLiteral(`
-              margin: 60px 20px;
-            `),
+        template: new ast.TemplateLiteral(stylestring),
       }
     );
   }
