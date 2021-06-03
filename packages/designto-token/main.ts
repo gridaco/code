@@ -58,6 +58,13 @@ function handleChildren(nodes: Array<nodes.ReflectSceneNode>): Array<Widget> {
 }
 
 function handleNode(node: nodes.ReflectSceneNode): Widget {
+  if (!node.type) {
+    console.error(
+      "cannot handle unknown type of node. node.type was undefined or null"
+    );
+    return;
+  }
+
   let tokenizedTarget: Widget;
   switch (node.type as string) {
     case nodes.ReflectNodeType.rectangle:
