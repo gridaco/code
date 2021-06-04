@@ -9,13 +9,15 @@ import { JSX, JSXElementLike } from "coli";
 /**
  * React Widget that requires no additional custom import rather than react
  */
-export abstract class ReactWidget extends WidgetWithStyle {}
+export abstract class ReactWidget extends WidgetWithStyle {
+  children: ReactWidget[];
+}
 
 export abstract class ReactMultiChildWidget
   extends ReactWidget
   implements MultiChildWidgetWithStyle
 {
-  readonly children: Array<ReactWidget> = [];
+  readonly children: ReactWidget[] = [];
   tag: string;
   constructor(p: { key: WidgetKey; children: Array<ReactWidget> }) {
     super({ key: p.key });

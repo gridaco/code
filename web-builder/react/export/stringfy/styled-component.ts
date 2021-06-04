@@ -1,4 +1,4 @@
-import { stringfy } from "@coli.codes/export-string";
+import { stringfy, format } from "@coli.codes/export-string";
 import { makeAsStyled } from "@web-builder/styled";
 import { ReactWidget } from "../../widgets";
 
@@ -11,17 +11,32 @@ import { ReactWidget } from "../../widgets";
 export function stringfyReactWidget_STYLED_COMPONENTS(
   widget: ReactWidget
 ): string {
+  widget.children?.map((c) => {
+    // c.buildJsx()
+  });
   const styled = makeAsStyled(widget);
   console.log("styled", styled);
 
   const jsx = widget.buildJsx();
+
   const _jsxStr = stringfy(jsx, {
     language: "tsx",
-    formatter: {
-      use: "pritter",
-      parser: "typescript",
-    },
   });
 
-  return _jsxStr;
+  const finalFile = `
+import React from "react"
+import styled from "@emotion/styled"
+
+export function Component(){
+  return (${_jsxStr});
+}x
+
+// styles
+${styled}
+`;
+
+  return format(finalFile, {
+    use: "pritter",
+    parser: "typescript",
+  });
 }

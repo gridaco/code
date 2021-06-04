@@ -17,6 +17,7 @@ export type WidgetKeyLike = WidgetKey;
 
 export class Widget {
   readonly key: WidgetKeyLike;
+  children?: Widget[];
   constructor({ key }: { key: WidgetKey }) {
     this.key = key;
   }
