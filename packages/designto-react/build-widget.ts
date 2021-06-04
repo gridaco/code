@@ -1,8 +1,6 @@
 import * as core from "@reflect-ui/core";
 import * as react from "@coli.codes/react-builder";
-import { IWidgetWithStyle } from "@coli.codes/web-builder-core/widget-with-style";
 import { ReactWidget } from "@coli.codes/react-builder";
-import { makeAsStyled } from "@web-builder/styled";
 import { keyFromWidget } from "@coli.codes/web-builder-core";
 
 export function buildReactWidgetFromReflectWidget(
@@ -35,8 +33,6 @@ export function buildReactWidgetFromReflectWidget(
       key: keyFromWidget(widget),
       data: widget.data,
     });
-    console.warn("PING");
-    makeAsStyled(thisReactWidget); // test code
   } else {
     // todo - handle case more specific
     thisReactWidget = new react.ErrorWidget({
