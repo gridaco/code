@@ -2,6 +2,10 @@
     "name": "@coli.codes/nodejs-builder",
     "version": "0.0.0",
     "dependencies": {
+        "assert": "^2.0.0",
         "semver": "^7.3.5"
+    },
+    "devDependencies": {
+        "@types/node": "^15.12.1"
     }
 }

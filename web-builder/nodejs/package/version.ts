@@ -1,5 +1,5 @@
 import * as semver from "semver";
-import * as assert from "assert";
+import assert from "assert";
 
 export type TVersion = string | "latest";
 
