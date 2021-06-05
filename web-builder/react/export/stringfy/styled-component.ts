@@ -1,4 +1,5 @@
 import { handle } from "@coli.codes/builder";
+import { ExportAssignment } from "@coli.codes/core/assignment/export-assignment";
 import { stringfy } from "@coli.codes/export-string";
 import { ScopedVariableNamer } from "@coli.codes/naming";
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
@@ -30,6 +31,7 @@ import {
   ReactWidget,
   WidgetKeyId,
 } from "../../widgets.native";
+import { ReactComponentExportResult } from "../export-result";
 
 const IMPORT_DEFAULT_STYLED_FROM_EMOTION_STYLED = new Import()
   .importDefault("styled")
@@ -49,7 +51,7 @@ const imports = [
  */
 export function stringfyReactWidget_STYLED_COMPONENTS(
   component: ReactWidget
-): string {
+): ReactComponentExportResult {
   const componentName = component.key.name;
   const styledComponentNamer = new ScopedVariableNamer(
     component.key.id,
@@ -85,6 +87,9 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
       });
 
       const config = getStyledConfigById(widget.key.id);
+      if (widget instanceof ReactTextChildWidget) {
+        return buildTextChildJsx(widget, config);
+      }
       return new JSXElement({
         openingElement: new JSXOpeningElement(config.tag),
         closingElement: new JSXClosingElement(config.tag),
@@ -123,7 +128,11 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
     },
   });
 
-  return final;
+  return {
+    code: final,
+    componentName: componentFunction.id.name,
+    dependencies: ["@emotion/styled", "react"],
+  };
 }
 
 function buildReactComponentFile(p: {
@@ -141,6 +150,7 @@ function buildReactComponentFile(p: {
   file.import(...imports);
   file.declare(component);
   file.declare(...styleVariables);
+  file.export(new ExportAssignment(component.id));
 
   return file;
 }

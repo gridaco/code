@@ -6,7 +6,8 @@ import { TextOverflow } from "@reflect-ui/core/lib/text-overflow";
 import {
   convertToCssFontWeight,
   CSSProperties,
-  makeCssColorValue,
+  color,
+  px,
 } from "@coli.codes/css";
 import { JSX } from "coli";
 import { RGBA } from "@reflect-ui/core/lib/color";
@@ -19,6 +20,8 @@ export class Text extends ReactTextChildWidget {
   overflow: TextOverflow;
   style: core.ITextStyle;
   alignment: core.TextAlign;
+  width: number;
+  height: number;
 
   constructor(p: {
     key: WidgetKey;
@@ -26,6 +29,8 @@ export class Text extends ReactTextChildWidget {
     overflow: TextOverflow;
     style: core.ITextStyle;
     alignment: core.TextAlign;
+    width: number;
+    height: number;
   }) {
     super(p);
 
@@ -34,20 +39,24 @@ export class Text extends ReactTextChildWidget {
     this.overflow = p.overflow;
     this.style = p.style;
     this.alignment = p.alignment;
+    this.width = p.width;
+    this.height = p.height;
   }
 
   styleData(): CSSProperties {
     return <CSSProperties>{
       // todo - name conversion not handled properly.
-      color: makeCssColorValue((this.style.color as any) as RGBA),
+      color: color((this.style.color as any) as RGBA),
       "text-overflow": this.overflow,
-      "font-size": `${this.style.fontSize}px`,
+      "font-size": px(this.style.fontSize),
       "font-family": this.style.fontFamily,
       "font-weight": convertToCssFontWeight(this.style.fontWeight),
       "letter-spacing": this.style.letterSpacing,
       "line-height": this.style.lineHeight,
       "word-spacing": this.style.wordSpacing,
       "text-align": this.alignment,
+      "min-height": px(this.height),
+      width: px(this.width),
     };
   }
 
