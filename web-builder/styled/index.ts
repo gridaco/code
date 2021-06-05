@@ -1,5 +1,6 @@
 import { ColiObjectLike, handle } from "@coli.codes/builder";
 import { CSSProperties } from "@coli.codes/css";
+import { ScopedVariableNamer } from "@coli.codes/naming";
 import { WidgetWithStyle } from "@coli.codes/web-builder-core";
 import { JSXAtrributes, JSXIdentifier } from "coli";
 import {
@@ -22,7 +23,8 @@ export interface StyledComponentJSXElementConfig {
  */
 export function buildStyledComponentConfig(
   widget: WidgetWithStyle,
-  preferences?: {
+  preferences: {
+    namer: ScopedVariableNamer;
     transformRootName: boolean;
     context: {
       root: boolean;
@@ -31,10 +33,14 @@ export function buildStyledComponentConfig(
 ): StyledComponentJSXElementConfig {
   const config = widget.jsxConfig();
 
-  const namePref: NamePreference = preferences.context.root &&
-    preferences.transformRootName && {
-      overrideKeyName: "root wrapper " + widget.key.name,
-    };
+  const namePref: NamePreference = {
+    namer: preferences.namer,
+    overrideKeyName:
+      preferences.context.root &&
+      preferences.transformRootName &&
+      "root wrapper " + widget.key.name,
+  };
+
   const styledVar = declareStyledComponentVariable(widget, {
     name: namePref,
   });

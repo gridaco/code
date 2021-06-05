@@ -1,6 +1,5 @@
 import {
   ast,
-  css,
   Html5IdentifierNames,
   Identifier,
   PropertyAccessExpression,
@@ -9,9 +8,14 @@ import {
 } from "coli";
 import { WidgetWithStyle } from "@coli.codes/web-builder-core";
 import { SyntaxKind } from "@coli.codes/core/ast/syntax-kind";
-import { nameVariable, NameCases } from "@coli.codes/naming";
+import {
+  nameVariable,
+  NameCases,
+  ScopedVariableNamer,
+} from "@coli.codes/naming";
 import { CSSProperties, buildCssStandard } from "@coli.codes/css";
 import { handle } from "@coli.codes/builder";
+import { formatStyledTempplateString } from "./formatter";
 
 export class StyledComponentDeclaration extends VariableDeclaration {
   static styledIdentifier = new Identifier("styled");
@@ -40,13 +44,14 @@ export class StyledComponentDeclaration extends VariableDeclaration {
     html5tag: Html5IdentifierNames
   ): TaggedTemplateExpression {
     const stylestring = buildCssStandard(style);
+    const formatedStyleStringWithTab = formatStyledTempplateString(stylestring);
     return new TaggedTemplateExpression(
       new PropertyAccessExpression(
         StyledComponentDeclaration.styledIdentifier,
         html5tag
       ),
       {
-        template: new ast.TemplateLiteral(stylestring),
+        template: new ast.TemplateLiteral(formatedStyleStringWithTab),
       }
     );
   }
@@ -56,13 +61,14 @@ export class StyledComponentDeclaration extends VariableDeclaration {
  * component variable declration naming preference
  */
 export interface NamePreference {
+  namer: ScopedVariableNamer;
   overrideKeyName?: string;
   overrideFinalName?: string;
 }
 
 export function declareStyledComponentVariable(
   widgetConfig: WidgetWithStyle,
-  preferences?: {
+  preferences: {
     name?: NamePreference;
   }
 ): StyledComponentDeclaration {
@@ -70,17 +76,15 @@ export function declareStyledComponentVariable(
 
   /// region name
   let varname: string;
-  if (preferences?.name) {
-    const namePref = preferences.name;
-    if (namePref.overrideFinalName) {
-      varname = namePref.overrideFinalName;
-    } else if (namePref.overrideKeyName) {
-      varname = nameVariable(namePref.overrideKeyName, {
-        case: NameCases.pascal,
-      }).name;
-    }
+  const namePref = preferences.name;
+  if (namePref.overrideFinalName) {
+    varname = namePref.overrideFinalName;
+  } else if (namePref.overrideKeyName) {
+    varname = nameVariable(namePref.overrideKeyName, {
+      case: NameCases.pascal,
+    }).name;
   } else {
-    varname = nameVariable(widgetConfig.key.name, {
+    varname = namePref.namer.nameit(widgetConfig.key.name, {
       case: NameCases.pascal,
     }).name;
   }

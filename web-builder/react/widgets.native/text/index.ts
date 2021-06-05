@@ -3,7 +3,11 @@ import { PropertiesHyphen } from "csstype";
 import { ReactTextChildWidget } from "../../widgets/widget";
 import * as core from "@reflect-ui/core";
 import { TextOverflow } from "@reflect-ui/core/lib/text-overflow";
-import { CSSProperties, makeCssColorValue } from "@coli.codes/css";
+import {
+  convertToCssFontWeight,
+  CSSProperties,
+  makeCssColorValue,
+} from "@coli.codes/css";
 import { JSX } from "coli";
 import { RGBA } from "@reflect-ui/core/lib/color";
 
@@ -34,6 +38,9 @@ export class Text extends ReactTextChildWidget {
       // todo - name conversion not handled properly.
       color: makeCssColorValue((this.style.color as any) as RGBA),
       "text-overflow": this.overflow,
+      "font-size": `${this.style.fontSize}px`,
+      "font-family": this.style.fontFamily,
+      "font-weight": convertToCssFontWeight(this.style.fontWeight),
     };
   }
 

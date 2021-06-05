@@ -1,11 +1,11 @@
 import { handle } from "@coli.codes/builder";
-import { stringfy, format } from "@coli.codes/export-string";
+import { stringfy } from "@coli.codes/export-string";
+import { ScopedVariableNamer } from "@coli.codes/naming";
 import { JSXElementConfig } from "@coli.codes/web-builder-core";
 import {
   buildStyledComponentConfig,
   StyledComponentJSXElementConfig,
 } from "@web-builder/styled";
-import { StyledComponentDeclaration } from "@web-builder/styled/styled-component-declaration";
 import {
   BlockStatement,
   FunctionDeclaration,
@@ -18,7 +18,6 @@ import {
   JSXOpeningElement,
   JSXText,
   Return,
-  ReturnStatement,
   SourceFile,
   VariableDeclaration,
 } from "coli";
@@ -51,11 +50,14 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
   component: ReactWidget
 ): string {
   const componentName = component.key.name;
-
+  const styledComponentNamer = new ScopedVariableNamer(component.key.id);
   // buildWidgetExportable(component);
 
   const styledConfigWidgetMap: StyledConfigWidgetMap = getWidgetStyledConfigMap(
-    component
+    component,
+    {
+      namer: styledComponentNamer,
+    }
   );
 
   function getStyledConfigById(id: string): StyledComponentJSXElementConfig {
@@ -66,6 +68,10 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
     function jsxBuilder(widget: ReactWidget) {
       const children = widget.children?.map((comp) => {
         const config = getStyledConfigById(comp.key.id);
+        if (comp instanceof ReactTextChildWidget) {
+          return buildTextChildJsx(comp, config);
+        }
+
         const childrenJSX = comp.children?.map((cc) => jsxBuilder(cc));
         return new JSXElement({
           openingElement: new JSXOpeningElement(config.tag),
@@ -137,7 +143,10 @@ function buildReactComponentFile(p: {
 
 type StyledConfigWidgetMap = Map<WidgetKeyId, StyledComponentJSXElementConfig>;
 function getWidgetStyledConfigMap(
-  rootWidget: ReactWidget
+  rootWidget: ReactWidget,
+  preferences: {
+    namer: ScopedVariableNamer;
+  }
 ): StyledConfigWidgetMap {
   const styledConfigWidgetMap: StyledConfigWidgetMap = new Map();
 
@@ -146,6 +155,7 @@ function getWidgetStyledConfigMap(
     const id = w.key.id;
     const styledConfig = buildStyledComponentConfig(w, {
       transformRootName: true,
+      namer: preferences.namer,
       context: {
         root: isRoot,
       },
@@ -185,7 +195,7 @@ export function buildWidgetExportable(widget: ReactWidget) {
     //
   } else if (widget instanceof ReactTextChildWidget) {
     const text = widget.text;
-    jsx = buildTextChildJsx(widget);
+    jsx = buildTextChildJsx(widget, jsxconfg);
     //
   }
 
@@ -194,16 +204,19 @@ export function buildWidgetExportable(widget: ReactWidget) {
 
 function handleWidget(widget: ReactWidget) {}
 
-function buildTextChildJsx(textchildwidget: ReactTextChildWidget) {
-  const config = textchildwidget.jsxConfig();
+function buildTextChildJsx(
+  textchildwidget: ReactTextChildWidget,
+  config: JSXElementConfig
+) {
   const text = textchildwidget.text;
   const tag = handle<JSXIdentifier>(config.tag);
 
+  const jsxtext = new JSXText(text);
   return new JSXElement({
     openingElement: new JSXOpeningElement(tag, {
       atrributes: config.attributes,
     }),
-    children: new JSXText(text),
+    children: jsxtext,
     closingElement: new JSXClosingElement(tag),
   });
 }
