@@ -14,7 +14,7 @@ import {
   ReactSingleChildWidget,
   ReactTextChildWidget,
   ReactWidget,
-} from "../../widgets";
+} from "../../widgets.native";
 import { ReactComponentExportable } from "../exportable";
 
 export function buildWidgetExportable(widget: ReactWidget) {

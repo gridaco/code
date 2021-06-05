@@ -1,4 +1,4 @@
-import { ReactWidget } from "./widget";
+import { ReactWidget } from "../widgets/widget";
 import { ImportDeclaration, Import, JSX, JSXElementLike } from "coli";
 import { JSXElementConfig, WidgetKey } from "@coli.codes/web-builder-core";
 import { ColiObjectLike } from "@coli.codes/builder";

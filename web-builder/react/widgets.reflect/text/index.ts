@@ -1,4 +1,4 @@
-import { ReflectReactWidget } from "../reflect";
+import { ReflectReactWidget } from "../reflect-widget";
 import { TEXT_IMPORT } from "@coli.codes/reflect-web-builder";
 import { JSX, JSXText } from "coli";
 import { WidgetKey } from "@coli.codes/web-builder-core";

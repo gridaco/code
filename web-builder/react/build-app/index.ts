@@ -1,4 +1,4 @@
-import { Widget } from "../widgets";
+import { Widget } from "../widgets.native";
 import { react_imports } from "./import-specifications";
 import {
   packages,

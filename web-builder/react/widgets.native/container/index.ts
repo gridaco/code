@@ -3,7 +3,7 @@ import { CSSProperties } from "@coli.codes/css";
 import { JSXElementConfig } from "@coli.codes/web-builder-core";
 import { JSX, JSXElementLike, css } from "coli";
 
-import { ReactWidget } from "../widget";
+import { ReactWidget } from "../../widgets/widget";
 
 export class Container extends ReactWidget {
   styleData(): CSSProperties {

@@ -1,4 +1,4 @@
-import { ReactMultiChildWidget, ReactWidget } from "../widget";
+import { ReactMultiChildWidget, ReactWidget } from "../../widgets/widget";
 import { JSX, JSXElementLike, css } from "coli";
 import { CSSProperties } from "@coli.codes/css";
 import {

@@ -1,4 +1,4 @@
-import { ReflectReactWidget } from "../reflect";
+import { ReflectReactWidget } from "../../widgets.reflect/reflect-widget";
 import { BUTTON_IMPORT } from "@coli.codes/reflect-web-builder";
 import { css } from "coli";
 import { CSSProperties } from "@coli.codes/css";

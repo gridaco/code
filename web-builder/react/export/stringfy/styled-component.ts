@@ -29,7 +29,7 @@ import {
   ReactTextChildWidget,
   ReactWidget,
   WidgetKeyId,
-} from "../../widgets";
+} from "../../widgets.native";
 
 const IMPORT_DEFAULT_STYLED_FROM_EMOTION_STYLED = new Import()
   .importDefault("styled")
@@ -66,7 +66,7 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
     function jsxBuilder(widget: ReactWidget) {
       const children = widget.children?.map((comp) => {
         const config = getStyledConfigById(comp.key.id);
-        const childrenJSX = jsxBuilder(comp);
+        const childrenJSX = comp.children?.map((cc) => jsxBuilder(cc));
         return new JSXElement({
           openingElement: new JSXOpeningElement(config.tag),
           closingElement: new JSXClosingElement(config.tag),

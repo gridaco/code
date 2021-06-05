@@ -1,7 +1,7 @@
 import { CSSProperties } from "@coli.codes/css";
 import { WidgetKey } from "@coli.codes/web-builder-core";
 import { JSX, JSXElementLike } from "coli";
-import { ReactMultiChildWidget, ReactWidget } from "../widget";
+import { ReactMultiChildWidget, ReactWidget } from "../../widgets/widget";
 
 export class Column extends ReactMultiChildWidget {
   readonly _type = "column";

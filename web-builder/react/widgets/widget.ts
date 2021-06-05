@@ -45,11 +45,11 @@ export abstract class ReactSingleChildWidget extends ReactWidget {
  */
 export abstract class ReactTextChildWidget extends ReactWidget {
   readonly text: string;
-  constructor(p: { key: WidgetKey; text: string }) {
+  constructor(p: { key: WidgetKey; data: string }) {
     super({
       key: p.key,
     });
 
-    this.text = p.text;
+    this.text = p.data;
   }
 }

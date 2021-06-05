@@ -1,6 +1,6 @@
 import { JSX, JSXElementLike, css } from "coli";
 
-import { ReactMultiChildWidget, ReactWidget } from "../widget";
+import { ReactMultiChildWidget, ReactWidget } from "../../widgets/widget";
 import { JSXElementConfig, WidgetKey } from "@coli.codes/web-builder-core";
 import { CSSProperties } from "@coli.codes/css";
 export class Stack extends ReactMultiChildWidget {
@@ -11,7 +11,7 @@ export class Stack extends ReactMultiChildWidget {
 
   jsxConfig(): JSXElementConfig {
     return <JSXElementConfig>{
-      tag: JSX.identifier("Stack"),
+      tag: JSX.identifier("div"),
     };
   }
 
