@@ -1,10 +1,13 @@
 import { Widget } from "@reflect-ui/core";
 import { buildReactWidgetFromReflectWidget } from "./build-widget";
-import { stringfyReactWidget_STYLED_COMPONENTS } from "@coli.codes/react-builder";
-import { IWidgetWithStyle } from "@coli.codes/web-builder-core/widget-with-style";
+import {
+  buildWidgetExportable,
+  ReactWidget,
+  stringfyReactWidget_STYLED_COMPONENTS,
+} from "@coli.codes/react-builder";
 
 export function buildReactApp(
-  widget: IWidgetWithStyle,
+  widget: ReactWidget,
   options: { template: "cra" | "nextjs" }
 ): string {
   const strigfiedMainWidget = stringfyReactWidget_STYLED_COMPONENTS(widget);
