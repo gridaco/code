@@ -1,4 +1,4 @@
-import { PackageManifest } from "../../package";
+import { PackageManifest } from "../../package/manifest";
 
 /**
  * ```

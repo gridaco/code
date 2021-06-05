@@ -1,27 +1,59 @@
+import { ColiObjectLike, handle } from "@coli.codes/builder";
+import { CSSProperties } from "@coli.codes/css";
 import { WidgetWithStyle } from "@coli.codes/web-builder-core";
-import { ColiBuilder, JSXElement } from "coli";
-import { JSX } from "@coli.codes/builder";
-import { stringfy } from "@coli.codes/export-string";
-import { declareStyledComponentVariable } from "./styled-component-declaration";
+import { JSXAtrributes, JSXIdentifier } from "coli";
+import {
+  declareStyledComponentVariable,
+  NamePreference,
+  StyledComponentDeclaration,
+} from "./styled-component-declaration";
 
-export function makeAsStyled(styled: WidgetWithStyle) {
-  const jsx = styled.buildJsx();
+export interface StyledComponentJSXElementConfig {
+  tag: JSXIdentifier;
+  attributes?: JSXAtrributes;
+  style: CSSProperties;
+  styledComponent: StyledComponentDeclaration;
+}
 
-  const styledVar = declareStyledComponentVariable(styled);
-  const styledTextTest = stringfy(styledVar, {
-    language: "typescript",
+/**
+ *
+ * @param widget
+ * @returns
+ */
+export function buildStyledComponentConfig(
+  widget: WidgetWithStyle,
+  preferences?: {
+    transformRootName: boolean;
+    context: {
+      root: boolean;
+    };
+  }
+): StyledComponentJSXElementConfig {
+  const config = widget.jsxConfig();
+
+  const namePref: NamePreference = preferences.context.root &&
+    preferences.transformRootName && {
+      overrideKeyName: "root wrapper " + widget.key.name,
+    };
+  const styledVar = declareStyledComponentVariable(widget, {
+    name: namePref,
   });
-  console.log("styled", styledTextTest);
-  if (jsx instanceof ColiBuilder) {
-    return (jsx as JSX).copyWith({
-      identifier: styledVar.id,
-    });
-  } else if (jsx instanceof JSXElement) {
-    jsx.changeTag(styledVar.id);
+
+  // rename tag as styled component
+  // e.g. `div` to `Wrapper`
+  if (config.tag instanceof JSXIdentifier) {
+    config.tag.rename(styledVar.id.name);
   } else {
     console.error(
-      `unhandled styled component conversion of widget type of ${typeof jsx}`,
-      jsx
+      `unhandled styled component conversion of widget type of ${typeof config}`,
+      config
     );
   }
+
+  return {
+    tag: handle(config.tag),
+    attributes: config.attributes,
+    style: widget.styleData(),
+    styledComponent: styledVar,
+  };
 }

@@ -14,13 +14,11 @@ export class ReflectText extends ReflectReactWidget {
     this.data = p.data;
   }
 
-  buildJsx() {
-    return JSX.tag(this.tag, {
-      children: [new JSXText(this.data)],
-    }).make();
+  attributes() {
+    throw new Error("Method not implemented.");
   }
 
-  buildStyle(): CSSProperties {
+  styleData(): CSSProperties {
     return <CSSProperties>{
       color: "black", // todo set text color
     };

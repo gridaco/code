@@ -1,7 +1,7 @@
 import { JSX, JSXElementLike, css } from "coli";
 
 import { ReactMultiChildWidget, ReactWidget } from "../widget";
-import { WidgetKey } from "@coli.codes/web-builder-core";
+import { JSXElementConfig, WidgetKey } from "@coli.codes/web-builder-core";
 import { CSSProperties } from "@coli.codes/css";
 export class Stack extends ReactMultiChildWidget {
   readonly _type = "stack";
@@ -9,13 +9,13 @@ export class Stack extends ReactMultiChildWidget {
     super(p);
   }
 
-  buildContainingJsx(children: JSXElementLike[]): JSXElementLike {
-    return JSX.div({
-      children: children,
-    }).make();
+  jsxConfig(): JSXElementConfig {
+    return <JSXElementConfig>{
+      tag: JSX.identifier("Stack"),
+    };
   }
 
-  buildStyle(): CSSProperties {
+  styleData(): CSSProperties {
     return {};
   }
 }

@@ -22,7 +22,7 @@ export class StyledComponentDeclaration extends VariableDeclaration {
   ) {
     super(name, {
       initializer: StyledComponentDeclaration.makeinitializer(params.style),
-      kind: SyntaxKind.LetKeyword,
+      kind: SyntaxKind.ConstKeyword,
     });
   }
 
@@ -40,14 +40,39 @@ export class StyledComponentDeclaration extends VariableDeclaration {
   }
 }
 
-export function declareStyledComponentVariable(
-  widgetConfig: WidgetWithStyle
-): StyledComponentDeclaration {
-  const varname = nameVariable(widgetConfig.key.name, {
-    case: NameCases.pascal,
-  });
+/**
+ * component variable declration naming preference
+ */
+export interface NamePreference {
+  overrideKeyName?: string;
+  overrideFinalName?: string;
+}
 
-  return new StyledComponentDeclaration(varname.name, {
-    style: widgetConfig.buildStyle(),
+export function declareStyledComponentVariable(
+  widgetConfig: WidgetWithStyle,
+  preferences?: {
+    name?: NamePreference;
+  }
+): StyledComponentDeclaration {
+  /// region name
+  let varname: string;
+  if (preferences?.name) {
+    const namePref = preferences.name;
+    if (namePref.overrideFinalName) {
+      varname = namePref.overrideFinalName;
+    } else if (namePref.overrideKeyName) {
+      varname = nameVariable(namePref.overrideKeyName, {
+        case: NameCases.pascal,
+      }).name;
+    }
+  } else {
+    varname = nameVariable(widgetConfig.key.name, {
+      case: NameCases.pascal,
+    }).name;
+  }
+  ///
+
+  return new StyledComponentDeclaration(varname, {
+    style: widgetConfig.styleData(),
   });
 }

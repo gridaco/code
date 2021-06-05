@@ -1,11 +1,16 @@
 import { Widget, IMultiChildWidget, WidgetKey } from "./widget";
-import { css, JSXElementLike } from "coli";
-import { ColiObjectLike } from "@coli.codes/builder";
+import { JSXAtrributes, JSXIdentifier } from "coli";
 import { CSSProperties } from "@coli.codes/css";
+import { ColiObjectLike } from "@coli.codes/builder";
+
+export interface JSXElementConfig {
+  tag: ColiObjectLike<JSXIdentifier>;
+  attributes?: JSXAtrributes;
+}
 
 export interface IWidgetWithStyle {
-  buildStyle(): CSSProperties;
-  buildJsx(): ColiObjectLike<JSXElementLike>;
+  styleData(): CSSProperties;
+  jsxConfig(): JSXElementConfig;
 }
 
 /**
@@ -13,11 +18,10 @@ export interface IWidgetWithStyle {
  */
 export abstract class WidgetWithStyle
   extends Widget
-  implements IWidgetWithStyle
-{
-  abstract buildStyle(): CSSProperties;
+  implements IWidgetWithStyle {
+  abstract styleData(): CSSProperties;
 
-  abstract buildJsx(): ColiObjectLike<JSXElementLike>;
+  abstract jsxConfig(): JSXElementConfig;
 }
 
 /**
@@ -25,28 +29,13 @@ export abstract class WidgetWithStyle
  */
 export abstract class MultiChildWidgetWithStyle
   extends WidgetWithStyle
-  implements IWidgetWithStyle, IMultiChildWidget
-{
+  implements IWidgetWithStyle, IMultiChildWidget {
   readonly children: Array<WidgetWithStyle> = [];
 
   constructor({ key }: { key: WidgetKey }) {
     super({ key: key });
   }
-  abstract buildStyle(): CSSProperties;
+  abstract styleData(): CSSProperties;
 
-  buildJsx(): ColiObjectLike<JSXElementLike> {
-    const children = this.buildChildrenJsx();
-    const container = this.buildContainingJsx(children);
-    return container;
-  }
-
-  abstract buildContainingJsx(
-    children: Array<ColiObjectLike<JSXElementLike>>
-  ): ColiObjectLike<JSXElementLike>;
-
-  buildChildrenJsx(): Array<ColiObjectLike<JSXElementLike>> {
-    return this.children?.map((c) => {
-      return c.buildJsx();
-    });
-  }
+  abstract jsxConfig(): JSXElementConfig;
 }

@@ -8,12 +8,14 @@ export class Column extends ReactMultiChildWidget {
   constructor(p: { key: WidgetKey; children: Array<ReactWidget> }) {
     super(p);
   }
-  buildContainingJsx(children: JSXElementLike[]): JSXElementLike {
-    return JSX.div({
-      children: children,
-    }).make();
+
+  jsxConfig() {
+    return {
+      tag: JSX.identifier("div"),
+    };
   }
-  buildStyle(): CSSProperties {
+
+  styleData(): CSSProperties {
     return {
       display: "flex",
       "flex-direction": "column",
