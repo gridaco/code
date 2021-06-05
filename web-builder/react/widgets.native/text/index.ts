@@ -18,12 +18,14 @@ export class Text extends ReactTextChildWidget {
   data: string;
   overflow: TextOverflow;
   style: core.ITextStyle;
+  alignment: core.TextAlign;
 
   constructor(p: {
     key: WidgetKey;
     data: string;
     overflow: TextOverflow;
     style: core.ITextStyle;
+    alignment: core.TextAlign;
   }) {
     super(p);
 
@@ -31,6 +33,7 @@ export class Text extends ReactTextChildWidget {
     this.data = p.data;
     this.overflow = p.overflow;
     this.style = p.style;
+    this.alignment = p.alignment;
   }
 
   styleData(): CSSProperties {
@@ -41,6 +44,10 @@ export class Text extends ReactTextChildWidget {
       "font-size": `${this.style.fontSize}px`,
       "font-family": this.style.fontFamily,
       "font-weight": convertToCssFontWeight(this.style.fontWeight),
+      "letter-spacing": this.style.letterSpacing,
+      "line-height": this.style.lineHeight,
+      "word-spacing": this.style.wordSpacing,
+      "text-align": this.alignment,
     };
   }
 
