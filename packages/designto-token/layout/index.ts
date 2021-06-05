@@ -14,29 +14,40 @@ function fromFrame(
   frame: nodes.ReflectFrameNode,
   children: Array<core.Widget>
 ): core.LayoutRepresntatives {
+  const _key = keyFromNode(frame);
+
   if (frame.isAutoLayout) {
     switch (frame.layoutMode) {
       case Axis.horizontal:
         return new Row({
-          key: keyFromNode(frame),
+          key: _key,
           children: children,
+          crossAxisAlignment: frame.crossAxisAlignment,
+          mainAxisAlignment: frame.mainAxisAlignment,
           boxShadow: frame.primaryShadow,
+          padding: frame.padding,
         });
         break;
       case Axis.vertical:
         return new Column({
-          key: keyFromNode(frame),
+          key: _key,
           children: children,
+          crossAxisAlignment: frame.crossAxisAlignment,
+          mainAxisAlignment: frame.mainAxisAlignment,
           boxShadow: frame.primaryShadow,
+          padding: frame.padding,
         });
         break;
       default:
         console.info(`Frame: "${frame.name}" fallback to flex`);
         return new Flex({
-          key: keyFromNode(frame),
+          key: _key,
           direction: Axis.vertical,
+          crossAxisAlignment: frame.crossAxisAlignment,
+          mainAxisAlignment: frame.mainAxisAlignment,
           verticalDirection: VerticalDirection.down,
           boxShadow: frame.primaryShadow,
+          padding: frame.padding,
         });
         break;
     }
@@ -46,11 +57,12 @@ function fromFrame(
   // todo - use constructor
   // todo - also convert as container if single child
   const stack = new Stack({
-    key: keyFromNode(frame),
+    key: _key,
     children: children,
     width: frame.width,
     height: frame.height,
     boxShadow: frame.primaryShadow,
+    padding: frame.padding,
   });
   return stack;
 }

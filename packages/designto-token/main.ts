@@ -101,6 +101,7 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
       );
       break;
 
+    case nodes.ReflectNodeType.ellipse:
     case nodes.ReflectNodeType.line:
     default:
       console.error(`${node.type} is not yet handled by "@designto/token"`);

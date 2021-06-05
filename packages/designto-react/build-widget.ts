@@ -6,10 +6,14 @@ import { keyFromWidget } from "@coli.codes/web-builder-core";
 export function buildReactWidgetFromReflectWidget(
   widget: core.Widget
 ): ReactWidget {
-  const handleChildren = (children: Array<core.Widget>): Array<ReactWidget> => {
+  const handleChildren = (children: core.Widget[]): ReactWidget[] => {
     return children?.map((c) => {
-      return buildReactWidgetFromReflectWidget(c);
+      return handleChild(c);
     });
+  };
+
+  const handleChild = (child: core.Widget): ReactWidget => {
+    return buildReactWidgetFromReflectWidget(child);
   };
 
   const _key = keyFromWidget(widget);
@@ -30,7 +34,7 @@ export function buildReactWidgetFromReflectWidget(
   } else if (widget instanceof core.Stack) {
     thisReactWidget = new react.Stack({
       ...widget,
-      children: handleChildren(widget.children),
+      children: handleChildren(widget.children as []),
       key: _key,
     });
   } else if (widget instanceof core.Text) {
