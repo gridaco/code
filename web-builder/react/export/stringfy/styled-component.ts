@@ -1,6 +1,7 @@
 import { handle } from "@coli.codes/builder";
 import { stringfy } from "@coli.codes/export-string";
 import { ScopedVariableNamer } from "@coli.codes/naming";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
 import { JSXElementConfig } from "@coli.codes/web-builder-core";
 import {
   buildStyledComponentConfig,
@@ -50,7 +51,10 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
   component: ReactWidget
 ): string {
   const componentName = component.key.name;
-  const styledComponentNamer = new ScopedVariableNamer(component.key.id);
+  const styledComponentNamer = new ScopedVariableNamer(
+    component.key.id,
+    ReservedKeywordPlatformPresets.react
+  );
   // buildWidgetExportable(component);
 
   const styledConfigWidgetMap: StyledConfigWidgetMap = getWidgetStyledConfigMap(
