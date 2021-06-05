@@ -2,11 +2,13 @@ import { boxshadow, CSSProperties } from "@coli.codes/css";
 import { WidgetKey } from "@coli.codes/web-builder-core";
 import {
   CrossAxisAlignment,
+  EdgeInsets,
   MainAxisAlignment,
   VerticalDirection,
 } from "@reflect-ui/core";
 import { MainAxisSize } from "@reflect-ui/core/lib/main-axis-size";
 import { JSX, JSXElementLike } from "coli";
+import { padding } from "../../../styles";
 import { ReactMultiChildWidget, ReactWidget } from "../../widgets/widget";
 
 export class Column extends ReactMultiChildWidget {
@@ -16,6 +18,8 @@ export class Column extends ReactMultiChildWidget {
   mainAxisSize?: MainAxisSize;
   crossAxisAlignment?: CrossAxisAlignment;
   verticalDirection?: VerticalDirection;
+  margin?: EdgeInsets;
+  padding?: EdgeInsets;
 
   constructor(p: {
     key: WidgetKey;
@@ -24,6 +28,8 @@ export class Column extends ReactMultiChildWidget {
     mainAxisSize?: MainAxisSize;
     crossAxisAlignment?: CrossAxisAlignment;
     verticalDirection?: VerticalDirection;
+    margin?: EdgeInsets;
+    padding?: EdgeInsets;
   }) {
     super(p);
 
@@ -31,6 +37,9 @@ export class Column extends ReactMultiChildWidget {
     this.mainAxisSize = p.mainAxisSize;
     this.crossAxisAlignment = p.crossAxisAlignment;
     this.verticalDirection = p.verticalDirection;
+
+    this.margin = p.margin;
+    this.padding = p.padding;
   }
 
   jsxConfig() {
@@ -45,6 +54,7 @@ export class Column extends ReactMultiChildWidget {
       "flex-direction": "column",
       "align-items": this.crossAxisAlignment,
       "box-shadow": boxshadow(this.boxShadow),
+      ...padding(this.padding),
     };
   }
 }
