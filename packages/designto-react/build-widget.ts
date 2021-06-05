@@ -17,24 +17,27 @@ export function buildReactWidgetFromReflectWidget(
   let thisReactWidget: ReactWidget;
   if (widget instanceof core.Column) {
     thisReactWidget = new react.Column({
-      key: _key,
+      ...widget,
       children: handleChildren(widget.children),
+      key: _key,
     });
   } else if (widget instanceof core.Row) {
     thisReactWidget = new react.Row({
-      key: _key,
+      ...widget,
       children: handleChildren(widget.children),
+      key: _key,
     });
   } else if (widget instanceof core.Stack) {
     thisReactWidget = new react.Stack({
-      key: _key,
+      ...widget,
       children: handleChildren(widget.children),
+      key: _key,
     });
   } else if (widget instanceof core.Text) {
     thisReactWidget = new react.Text({
       ...widget,
-      key: _key,
       data: widget.data,
+      key: _key,
     });
   } else {
     // todo - handle case more specific

@@ -1,18 +1,16 @@
 import { Widget } from "@reflect-ui/core";
 import { buildReactWidgetFromReflectWidget } from "./build-widget";
 import {
-  buildWidgetExportable,
   ReactWidget,
   stringfyReactWidget_STYLED_COMPONENTS,
 } from "@coli.codes/react-builder";
+import { ReactComponentExportResult } from "@coli.codes/react-builder/export/export-result";
 
 export function buildReactApp(
   widget: ReactWidget,
   options: { template: "cra" | "nextjs" }
-): string {
-  const strigfiedMainWidget = stringfyReactWidget_STYLED_COMPONENTS(widget);
-
-  return strigfiedMainWidget;
+): ReactComponentExportResult {
+  return stringfyReactWidget_STYLED_COMPONENTS(widget);
 }
 
 export function buildReactWidget(widget: Widget) {
