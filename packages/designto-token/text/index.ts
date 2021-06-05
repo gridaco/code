@@ -14,6 +14,7 @@ export function fromText(node: nodes.ReflectTextNode): Text {
   return new Text({
     key: keyFromNode(node),
     data: node.characters,
+    alignment: node.textAlignHorizontal,
     style: new TextStyle({
       fontFamily: node.fontName.family,
       fontSize: node.fontSize,
@@ -22,6 +23,8 @@ export function fromText(node: nodes.ReflectTextNode): Text {
       // lineheight
       // letter spacing
     }),
+    width: node.width,
+    height: node.height,
   });
 }
 

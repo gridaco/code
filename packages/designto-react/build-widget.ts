@@ -12,31 +12,37 @@ export function buildReactWidgetFromReflectWidget(
     });
   };
 
+  const _key = keyFromWidget(widget);
+
   let thisReactWidget: ReactWidget;
   if (widget instanceof core.Column) {
     thisReactWidget = new react.Column({
-      key: keyFromWidget(widget),
+      ...widget,
       children: handleChildren(widget.children),
+      key: _key,
     });
   } else if (widget instanceof core.Row) {
     thisReactWidget = new react.Row({
-      key: keyFromWidget(widget),
+      ...widget,
       children: handleChildren(widget.children),
+      key: _key,
     });
   } else if (widget instanceof core.Stack) {
     thisReactWidget = new react.Stack({
-      key: keyFromWidget(widget),
+      ...widget,
       children: handleChildren(widget.children),
+      key: _key,
     });
   } else if (widget instanceof core.Text) {
-    thisReactWidget = new react.ReflectText({
-      key: keyFromWidget(widget),
+    thisReactWidget = new react.Text({
+      ...widget,
       data: widget.data,
+      key: _key,
     });
   } else {
     // todo - handle case more specific
     thisReactWidget = new react.ErrorWidget({
-      key: keyFromWidget(widget),
+      key: _key,
     });
   }
 

@@ -20,12 +20,14 @@ function fromFrame(
         return new Row({
           key: keyFromNode(frame),
           children: children,
+          boxShadow: frame.primaryShadow,
         });
         break;
       case Axis.vertical:
         return new Column({
           key: keyFromNode(frame),
           children: children,
+          boxShadow: frame.primaryShadow,
         });
         break;
       default:
@@ -34,6 +36,7 @@ function fromFrame(
           key: keyFromNode(frame),
           direction: Axis.vertical,
           verticalDirection: VerticalDirection.down,
+          boxShadow: frame.primaryShadow,
         });
         break;
     }
@@ -44,8 +47,11 @@ function fromFrame(
   // todo - also convert as container if single child
   const stack = new Stack({
     key: keyFromNode(frame),
+    children: children,
+    width: frame.width,
+    height: frame.height,
+    boxShadow: frame.primaryShadow,
   });
-  stack.children = children;
   return stack;
 }
 
@@ -53,8 +59,13 @@ function fromGroup(
   group: nodes.ReflectGroupNode,
   children: Array<core.Widget>
 ): core.LayoutRepresntatives {
+  console.log("group", group);
   const stack = new Stack({
     key: keyFromNode(group),
+    children: children,
+    width: group.width,
+    height: group.height,
+    boxShadow: group.primaryShadow,
   });
   stack.children = children;
   return stack;
