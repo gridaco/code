@@ -15,6 +15,7 @@ export class Row extends ReactMultiChildWidget {
 
   margin?: EdgeInsets;
   padding?: EdgeInsets;
+  // background: Image | Color
 
   constructor({
     key,

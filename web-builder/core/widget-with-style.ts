@@ -3,13 +3,13 @@ import { JSXAtrributes, JSXIdentifier } from "coli";
 import { CSSProperties } from "@coli.codes/css";
 import { ColiObjectLike } from "@coli.codes/builder";
 import {
+  EdgeInsets,
   IBoxShadowWidget,
   IEdgeInsetsWidget,
   IPositionedWidget,
   IWHStyleWidget,
 } from "@reflect-ui/core";
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
-import { EdgeInsetsGeometry } from "@reflect-ui/core/lib/ui/edge-insets-geomatry";
 
 export interface JSXElementConfig {
   tag: ColiObjectLike<JSXIdentifier>;
@@ -43,8 +43,8 @@ export abstract class WidgetWithStyle
   boxShadow?: BoxShadowManifest;
 
   // IEdgeInsetsWidget
-  margin?: EdgeInsetsGeometry;
-  padding?: EdgeInsetsGeometry;
+  margin?: EdgeInsets;
+  padding?: EdgeInsets;
 
   abstract styleData(): CSSProperties;
 
