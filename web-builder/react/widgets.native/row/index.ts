@@ -1,6 +1,7 @@
 import { ReactMultiChildWidget, ReactWidget } from "../../widgets/widget";
-import { JSX, JSXElementLike, css } from "coli";
-import { boxshadow, CSSProperties, px } from "@coli.codes/css";
+import { JSX } from "coli";
+import { CSSProperties } from "@coli.codes/css";
+import * as css from "@web-builder/styles";
 import {
   JSXElementConfig,
   Widget,
@@ -50,7 +51,7 @@ export class Row extends ReactMultiChildWidget {
     return {
       display: "flex",
       "flex-direction": "row",
-      "box-shadow": boxshadow(this.boxShadow),
+      "box-shadow": css.boxshadow(this.boxShadow),
       ...padding(this.padding),
     };
   }

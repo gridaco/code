@@ -1,5 +1,6 @@
-import { CSSProperties, px } from "@coli.codes/css";
+import { CSSProperties } from "@coli.codes/css";
 import { EdgeInsets } from "@reflect-ui/core";
+import { px } from "../dimensions";
 
 export function padding(padding: EdgeInsets): CSSProperties {
   return {

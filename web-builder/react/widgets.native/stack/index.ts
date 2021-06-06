@@ -1,8 +1,9 @@
-import { JSX, JSXElementLike, css } from "coli";
+import { JSX } from "coli";
 
 import { ReactMultiChildWidget, ReactWidget } from "../../widgets/widget";
 import { JSXElementConfig, WidgetKey } from "@coli.codes/web-builder-core";
-import { boxshadow, CSSProperties, px } from "@coli.codes/css";
+import { CSSProperties } from "@coli.codes/css";
+import * as css from "@web-builder/styles";
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
 export class Stack extends ReactMultiChildWidget {
   readonly _type = "stack";
@@ -32,9 +33,9 @@ export class Stack extends ReactMultiChildWidget {
 
   styleData(): CSSProperties {
     return {
-      width: px(this.width),
-      height: px(this.height),
-      "box-shadow": boxshadow(this.boxShadow),
+      width: css.px(this.width),
+      height: css.px(this.height),
+      "box-shadow": css.boxshadow(this.boxShadow),
     };
   }
 }

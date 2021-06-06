@@ -3,14 +3,10 @@ import { PropertiesHyphen } from "csstype";
 import { ReactTextChildWidget } from "../../widgets/widget";
 import * as core from "@reflect-ui/core";
 import { TextOverflow } from "@reflect-ui/core/lib/text-overflow";
-import {
-  convertToCssFontWeight,
-  CSSProperties,
-  color,
-  px,
-} from "@coli.codes/css";
+import { CSSProperties } from "@coli.codes/css";
 import { JSX } from "coli";
 import { RGBA } from "@reflect-ui/core/lib/color";
+import * as css from "@web-builder/styles";
 
 export class Text extends ReactTextChildWidget {
   _type: "Text";
@@ -46,17 +42,17 @@ export class Text extends ReactTextChildWidget {
   styleData(): CSSProperties {
     return <CSSProperties>{
       // todo - name conversion not handled properly.
-      color: color((this.style.color as any) as RGBA),
+      color: css.color((this.style.color as any) as RGBA),
       "text-overflow": this.overflow,
-      "font-size": px(this.style.fontSize),
+      "font-size": css.px(this.style.fontSize),
       "font-family": this.style.fontFamily,
-      "font-weight": convertToCssFontWeight(this.style.fontWeight),
+      "font-weight": css.convertToCssFontWeight(this.style.fontWeight),
       "letter-spacing": this.style.letterSpacing,
       "line-height": this.style.lineHeight,
       "word-spacing": this.style.wordSpacing,
       "text-align": this.alignment,
-      "min-height": px(this.height),
-      width: px(this.width),
+      "min-height": css.px(this.height),
+      width: css.px(this.width),
     };
   }
 

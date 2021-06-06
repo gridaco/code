@@ -1,4 +1,4 @@
-import { boxshadow, CSSProperties } from "@coli.codes/css";
+import { CSSProperties } from "@coli.codes/css";
 import { WidgetKey } from "@coli.codes/web-builder-core";
 import {
   CrossAxisAlignment,
@@ -10,6 +10,7 @@ import { MainAxisSize } from "@reflect-ui/core/lib/main-axis-size";
 import { JSX, JSXElementLike } from "coli";
 import { padding } from "../../../styles";
 import { ReactMultiChildWidget, ReactWidget } from "../../widgets/widget";
+import * as css from "@web-builder/styles";
 
 export class Column extends ReactMultiChildWidget {
   readonly _type = "column";
@@ -53,7 +54,7 @@ export class Column extends ReactMultiChildWidget {
       display: "flex",
       "flex-direction": "column",
       "align-items": this.crossAxisAlignment,
-      "box-shadow": boxshadow(this.boxShadow),
+      "box-shadow": css.boxshadow(this.boxShadow),
       ...padding(this.padding),
     };
   }
