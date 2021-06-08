@@ -2,11 +2,14 @@ import { CSSProperties } from "@coli.codes/css";
 import { JSXElementConfig, WidgetKey } from "@coli.codes/web-builder-core";
 import { JSX, JSXElementLike, css, JSXText } from "coli";
 
-import { ReactWidget } from "../../widgets/widget";
+import { ReactTextChildWidget, ReactWidget } from "../../widgets/widget";
 
-export class ErrorWidget extends ReactWidget {
-  constructor(p: { key: WidgetKey }) {
-    super(p);
+export class ErrorWidget extends ReactTextChildWidget {
+  constructor(p: { key: WidgetKey; errorMessage: string }) {
+    super({
+      key: p.key,
+      data: p.errorMessage,
+    });
   }
   styleData(): CSSProperties {
     return {

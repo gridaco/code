@@ -18,6 +18,9 @@ export class Row extends ReactMultiChildWidget {
   padding?: EdgeInsets;
   // background: Image | Color
 
+  // indicates the spacing between items
+  itemSpacing?: number | undefined;
+
   constructor({
     key,
     children,
