@@ -38,7 +38,7 @@ export function buildStyledComponentConfig(
     overrideKeyName:
       preferences.context.root &&
       preferences.transformRootName &&
-      "root wrapper " + widget.key.name,
+      "root wrapper " + widget.key.name, // RootWrapper${name}
   };
 
   const styledVar = declareStyledComponentVariable(widget, {
