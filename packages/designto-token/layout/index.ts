@@ -15,6 +15,7 @@ function fromFrame(
   children: Array<core.Widget>
 ): core.LayoutRepresntatives {
   const _key = keyFromNode(frame);
+  const _background = [frame.primaryColor];
 
   if (frame.isAutoLayout) {
     switch (frame.layoutMode) {
@@ -26,6 +27,7 @@ function fromFrame(
           mainAxisAlignment: frame.mainAxisAlignment,
           boxShadow: frame.primaryShadow,
           padding: frame.padding,
+          background: _background,
         });
         break;
       case Axis.vertical:
@@ -36,6 +38,7 @@ function fromFrame(
           mainAxisAlignment: frame.mainAxisAlignment,
           boxShadow: frame.primaryShadow,
           padding: frame.padding,
+          background: _background,
         });
         break;
       default:
@@ -48,6 +51,7 @@ function fromFrame(
           verticalDirection: VerticalDirection.down,
           boxShadow: frame.primaryShadow,
           padding: frame.padding,
+          background: _background,
         });
         break;
     }
@@ -63,6 +67,7 @@ function fromFrame(
     height: frame.height,
     boxShadow: frame.primaryShadow,
     padding: frame.padding,
+    background: _background,
   });
   return stack;
 }
