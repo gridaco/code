@@ -2,7 +2,7 @@ import * as flutter from "@bridged.xyz/flutter-builder";
 import { nodes } from "@design-sdk/figma";
 import { makeTextStyle } from "./text-style.make";
 import { interpretTextAlign } from "../interpreter/text-align.interpreter";
-import { string_utils } from "@designto/token";
+import { escapeDartString } from "@coli.codes/escape-string";
 
 /**
  * makes Text from TextNode
@@ -28,7 +28,7 @@ export function makeText(node: nodes.ReflectTextNode): flutter.Text {
   }
 
   //#endregion
-  const escapedText = string_utils.escapeString(text, "dart");
+  const escapedText = escapeDartString(text);
   const textStyle = makeTextStyle(node);
 
   return new flutter.Text(escapedText, {

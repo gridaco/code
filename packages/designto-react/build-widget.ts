@@ -43,10 +43,20 @@ export function buildReactWidgetFromReflectWidget(
       data: widget.data,
       key: _key,
     });
+  }
+  // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
+  else if (widget instanceof core.Container) {
+    thisReactWidget = new react.Container({
+      ...widget,
+      key: _key,
+    });
   } else {
     // todo - handle case more specific
     thisReactWidget = new react.ErrorWidget({
       key: _key,
+      errorMessage: `The input design was not handled. "${
+        widget.key.originName
+      }" type of "${widget._type}" - ${JSON.stringify(widget)}`,
     });
   }
 
