@@ -13,7 +13,7 @@ export abstract class ReflectReactWidget<T = any> extends ReactWidget {
   }
 
   buildImportDeclaration(): ImportDeclaration {
-    return new Import().import(this.imports).from("@reflect-ui/react").make();
+    return new Import().imports(this.imports).from("@reflect-ui/react").make();
   }
 
   abstract attributes(): ColiObjectLike<any>;

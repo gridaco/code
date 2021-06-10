@@ -18,7 +18,7 @@ const import_react_from_react = new Import()
  */
 const import_react_and_use_state_from_react = new Import()
   .importDefault("React")
-  .import("useState")
+  .imports("useState")
   .from(standard_libraries.react.name)
   .make();
 
@@ -27,8 +27,8 @@ const import_react_and_use_state_from_react = new Import()
  */
 const import_react_and_use_state_and_use_effect_from_react = new Import()
   .importDefault("React")
-  .import("useState")
-  .import("useEffect")
+  .imports("useState")
+  .imports("useEffect")
   .from(standard_libraries.react.name)
   .make();
 
@@ -36,7 +36,7 @@ const import_react_and_use_state_and_use_effect_from_react = new Import()
  * CoLI: `import { useState } from "react";`
  */
 const import_use_state_from_react = new Import()
-  .import("useState")
+  .imports("useState")
   .from(standard_libraries.react.name)
   .make();
 
@@ -44,7 +44,7 @@ const import_use_state_from_react = new Import()
  * CoLI: `import { render } from "react-dom";`
  */
 const import_render_from_react_dom = new Import()
-  .import("render")
+  .imports("render")
   .from(standard_libraries.react_dom.name)
   .make();
 
