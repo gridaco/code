@@ -147,7 +147,7 @@ function buildReactComponentFile(p: {
     path: "src/components",
   });
 
-  file.import(...imports);
+  file.imports(...imports);
   file.declare(component);
   file.declare(...styleVariables);
   file.export(new ExportAssignment(component.id));
