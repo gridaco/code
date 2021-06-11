@@ -3,17 +3,17 @@
 ///
 
 /**
- * import { Button } from "@reflect-ui/\<platform\>/`.`"
+ * _import { Button } from "@reflect-ui/\<platform\>/`.`"
  */
 const IMPORT_BUTTON_NAMED = ".";
 
 /**
- * import { Button } from "@reflect-ui/\<platform\>/`button`"
+ * _import { Button } from "@reflect-ui/\<platform\>/`button`"
  */
 const IMPORT_BUTTON_DEFAULT = "/button";
 
 /**
- * import { `Button` } from "@reflect-ui/<platform>"
+ * _import { `Button` } from "@reflect-ui/<platform>"
  */
 const IMPORT_BUTTON_NAME = "Button";
 
