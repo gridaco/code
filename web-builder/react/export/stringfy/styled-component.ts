@@ -3,7 +3,7 @@ import { ExportAssignment } from "@coli.codes/core/assignment/export-assignment"
 import { stringfy } from "@coli.codes/export-string";
 import { ScopedVariableNamer } from "@coli.codes/naming";
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
-import { JSXElementConfig } from "@coli.codes/web-builder-core";
+import { JSXElementConfig, WidgetKeyId } from "@coli.codes/web-builder-core";
 import {
   buildStyledComponentConfig,
   StyledComponentJSXElementConfig,
@@ -29,7 +29,6 @@ import {
   ReactSingleChildWidget,
   ReactTextChildWidget,
   ReactWidget,
-  WidgetKeyId,
 } from "../../widgets.native";
 import { ReactComponentExportResult } from "../export-result";
 
@@ -122,10 +121,10 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
 
   const final = stringfy(file.blocks, {
     language: "tsx",
-    formatter: {
-      parser: "typescript",
-      use: "pritter",
-    },
+    // formatter: {
+    //   parser: "typescript",
+    //   use: "pritter",
+    // },
   });
 
   return {
