@@ -5,3 +5,7 @@ export * from "./dimensions";
 export * from "./font-weight";
 export * from "./gradient";
 export * from "./padding";
+
+// shapes
+export * from "./shape-circle";
+export * from "./shape-round-rect";
