@@ -20,6 +20,8 @@ yarn
 yarn editor
 ```
 
+update pulling - `git submodule update --init --recursive`
+
 ## What does it mean?
 
 ### By "design". What does it mean?
