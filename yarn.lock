@@ -1277,6 +1277,11 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@design-sdk/figma-url@0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-url/-/figma-url-0.0.0.tgz#c39ede50ebe561ea841b2515493424234c26310b"
+  integrity sha512-vmxudANR6D+BRxKMvkDEe+cg01hqMF3X7ICO896Ipk9yj9MQmJ9Nuubn5mz76GKtu7h8d144mYiYAMf8iVTWog==
+
 "@dnd-kit/accessibility@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@dnd-kit/accessibility/-/accessibility-2.0.0.tgz#d1f265ebedde6a66b71bb69fd8bc900b5138a8e2"
