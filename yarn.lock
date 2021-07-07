@@ -1277,10 +1277,15 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@design-sdk/figma-url@0.0.2", "@design-sdk/figma-url@^0.0.2":
+"@design-sdk/figma-url@0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@design-sdk/figma-url/-/figma-url-0.0.2.tgz#6cdac717440def04f419efea080f95dae23e9d6f"
   integrity sha512-BHxiY5OlX8OQNr/81NGo6pI8bm4c9M6s5vV+IJlQf9NFMKIoxv8fUZl0cuDvmQBloOC0HdVL09fPgIi0etVEvQ==
+
+"@design-sdk/figma-url@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-url/-/figma-url-0.0.4.tgz#a522d5aea17dcae92e849497c74d5f85fea42b1f"
+  integrity sha512-9wvaecM9vVxI97CNfnckv0S9yi/ES3zuwQBa0ZfM5eQNbZlAgqTwBIi/Q/xsx7d+aePeGs+nEo2UhR52Rd+xNg==
 
 "@dnd-kit/accessibility@^2.0.0":
   version "2.0.0"
@@ -2558,12 +2563,12 @@
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
 
-"@reflect-blocks/figma-embed@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@reflect-blocks/figma-embed/-/figma-embed-0.0.4.tgz#c516711e41dc28453844db02b386603564fb815e"
-  integrity sha512-p2nysPzv+b3g4Qm5FSvGogeehm4qOBU81mbfb4ql0x+w4j91s4Vl/ev3aJ9QbtECmxzuEUlnQEsnOjChQh3LRQ==
+"@reflect-blocks/figma-embed@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@reflect-blocks/figma-embed/-/figma-embed-0.0.5.tgz#68b0b8de5d3774ac694e6f0aada3def61f587367"
+  integrity sha512-Wp8uGSydr9waD0a+aCcQyeRkWMTnvwHMPRg0vuQfno0lM80SgtecdHKVgsbAo6+N48lKW6x41iC7B5IpYOaOqQ==
   dependencies:
-    "@design-sdk/figma-url" "^0.0.2"
+    "@design-sdk/figma-url" "^0.0.4"
 
 "@reflect-ui/namings@0.0.3":
   version "0.0.3"
