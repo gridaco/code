@@ -11,6 +11,8 @@
         "packages/reflect-core/packages/*",
         "packages/design-sdk/core",
         "packages/design-sdk/figma",
+        "packages/design-sdk/figma-types",
+        "packages/design-sdk/figma-remote",
         "packages/design-sdk/key-annotations",
         "packages/design-sdk/sketch",
         "packages/design-sdk/universal",
