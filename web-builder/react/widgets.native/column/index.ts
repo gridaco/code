@@ -8,7 +8,6 @@ import {
 } from "@reflect-ui/core";
 import { MainAxisSize } from "@reflect-ui/core/lib/main-axis-size";
 import { JSX, JSXElementLike } from "coli";
-import { padding } from "../../../styles";
 import { ReactMultiChildWidget, ReactWidget } from "../../widgets/widget";
 import * as css from "@web-builder/styles";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
@@ -60,7 +59,7 @@ export class Column extends ReactMultiChildWidget {
       "align-items": this.crossAxisAlignment,
       "box-shadow": css.boxshadow(this.boxShadow),
       ...css.background(this.background),
-      ...padding(this.padding),
+      ...css.padding(this.padding),
     };
   }
 }
