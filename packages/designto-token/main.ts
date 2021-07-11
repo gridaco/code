@@ -7,6 +7,8 @@ import { tokenizeVector, tokenizeBitmap } from "./graphics";
 import { SingleOrArray, isNotEmptyArray } from "./utils";
 import { array } from "@reflect-ui/uiutils";
 
+export type { Widget };
+
 /**
  * ENTRY POINT MAIN FUCTION
  * Main function for converting reflect design node tree to reflect widget token tree
