@@ -12,25 +12,23 @@ import { makeStack } from "./make/stack.make";
 import { Axis as ReflectAxis } from "@reflect-ui/core/lib";
 import { makeChip } from "./make/chip.make";
 import { array, roundNumber } from "@reflect-ui/uiutils";
+import { output } from "@designto/config";
+
+type FlutterScreenOutput = output.ScreenOutput<flutter.Widget>;
 
 let parentId = "";
 export let currentBuildingNodeId: string;
 
-interface AppBuildResult {
-  widget: flutter.Widget;
-  scrollable: boolean;
-}
-
 // the target root widget tree
 let targetId: string;
 let scrollable: boolean;
-export function buildApp(sceneNode: nodes.ReflectSceneNode): AppBuildResult {
+export function buildApp(
+  sceneNode: nodes.ReflectSceneNode
+): FlutterScreenOutput {
   scrollable = true; // init to true.
-  console.log(`start building flutter app`);
   targetId = sceneNode.id;
   const rootWidget = generateRootWidget(sceneNode);
-  console.log(`built app complete`);
-  console.log("result is..", rootWidget);
+  console.log("flutter widget build result is..", rootWidget);
   return {
     widget: rootWidget,
     scrollable: scrollable,
