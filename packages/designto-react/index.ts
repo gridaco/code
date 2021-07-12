@@ -4,13 +4,19 @@ import {
   ReactWidget,
   stringfyReactWidget_STYLED_COMPONENTS,
 } from "@coli.codes/react-builder";
-import { ReactComponentExportResult } from "@coli.codes/react-builder/export/export-result";
+import { react as config } from "@designto/config";
 
 export function buildReactApp(
   widget: ReactWidget,
   options: { template: "cra" | "nextjs" }
-): ReactComponentExportResult {
-  return stringfyReactWidget_STYLED_COMPONENTS(widget);
+): config.ReactComponentOutput {
+  const res = stringfyReactWidget_STYLED_COMPONENTS(widget);
+  return {
+    id: widget.key.id,
+    name: widget.key.name,
+    code: { raw: res.code },
+    scaffold: { raw: res.code },
+  };
 }
 
 export function buildReactWidget(widget: Widget) {
