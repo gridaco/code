@@ -25,7 +25,7 @@ export class DesignInput implements IDesignInput {
     this.name = name ?? design.name;
   }
 
-  static fromDesign(design: DesignInput): DesignInput {
-    return new DesignInput(design);
+  static fromDesign(design: ReflectSceneNode): DesignInput {
+    return new DesignInput({ design: design });
   }
 }
