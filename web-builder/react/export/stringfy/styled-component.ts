@@ -129,7 +129,7 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
 
   return {
     code: final,
-    componentName: componentFunction.id.name,
+    name: componentFunction.id.name,
     dependencies: ["@emotion/styled", "react"],
   };
 }

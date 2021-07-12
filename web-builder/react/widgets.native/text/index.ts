@@ -1,5 +1,4 @@
 import { JSXElementConfig, WidgetKey } from "@coli.codes/web-builder-core";
-import { PropertiesHyphen } from "csstype";
 import { ReactTextChildWidget } from "../../widgets/widget";
 import * as core from "@reflect-ui/core";
 import { TextOverflow } from "@reflect-ui/core/lib/text-overflow";

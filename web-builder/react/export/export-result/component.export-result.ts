@@ -1,5 +1,8 @@
+/**
+ * @deprecated use @designto/cofing instead
+ */
 export interface ReactComponentExportResult {
   code: string;
   dependencies: string[];
-  componentName: string;
+  name: string;
 }
