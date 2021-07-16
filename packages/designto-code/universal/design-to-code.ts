@@ -14,9 +14,12 @@ MainImageRepository.instance = new ImageRepositories();
 // endregion
 // ========================================================================
 
+type Formatter = (raw: string, lang?: string) => string | Promise<string>;
+
 export function designToCode(
   input: input.IDesignInput,
-  framework: config.FrameworkConfig
+  framework: config.FrameworkConfig,
+  formatter?: Formatter
 ): output.ICodeOutput {
   const token = tokenize(input.design);
 
