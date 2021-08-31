@@ -1282,11 +1282,6 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@design-sdk/figma-auth-store@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-auth-store/-/figma-auth-store-0.0.1.tgz#dc0d11f00a5034dd58c5ff54bfd049f83512c847"
-  integrity sha512-rxk1ttaBE4r7ACMmMNPaDZs5vGpp5UxRg3XBzXX69XzB5WDASZUU9HjcSGCBZBMskO2Kgp7fThqVokBDOyJ+8w==
-
 "@design-sdk/figma-remote-api@0.0.0":
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/@design-sdk/figma-remote-api/-/figma-remote-api-0.0.0.tgz#c1937575bbf824ca8fc45141db5327dd98d789ff"
