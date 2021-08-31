@@ -1282,11 +1282,6 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@design-sdk/figma-auth-store@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-auth-store/-/figma-auth-store-0.0.1.tgz#dc0d11f00a5034dd58c5ff54bfd049f83512c847"
-  integrity sha512-rxk1ttaBE4r7ACMmMNPaDZs5vGpp5UxRg3XBzXX69XzB5WDASZUU9HjcSGCBZBMskO2Kgp7fThqVokBDOyJ+8w==
-
 "@design-sdk/figma-url@0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@design-sdk/figma-url/-/figma-url-0.0.2.tgz#6cdac717440def04f419efea080f95dae23e9d6f"
@@ -3090,6 +3085,11 @@
   version "15.14.1"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-15.14.1.tgz#4f9d3689532499fdda1c898e19f4593718655e36"
   integrity sha512-wF6hazbsnwaW3GhK4jFuw5NaLDQVRQ6pWQUGAUrJzxixFkTaODSiAKMPXuHwPEPkAKQWHAzj6uJ5h+3zU9gQxg==
+
+"@types/node@^16.3.3":
+  version "16.6.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.6.0.tgz#0d5685f85066f94e97f19e8a67fe003c5fadacc4"
+  integrity sha512-OyiZPohMMjZEYqcVo/UJ04GyAxXOJEZO/FpzyXxcH4r/ArrVoXHf4MbUrkLp0Tz7/p1mMKpo5zJ6ZHl8XBNthQ==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -6342,6 +6342,11 @@ dotenv-webpack@^1.8.0:
   integrity sha512-o8pq6NLBehtrqA8Jv8jFQNtG9nhRtVqmoD4yWbgUyoU3+9WBlPe+c2EAiaJok9RB28QvrWvdWLZGeTT5aATDMg==
   dependencies:
     dotenv-defaults "^1.0.2"
+
+dotenv@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-10.0.0.tgz#3d4227b8fb95f81096cdd2b66653fb2c7085ba81"
+  integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
 dotenv@^6.2.0:
   version "6.2.0"
