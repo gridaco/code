@@ -1,4 +1,4 @@
-import { CssNamedColor, ICssRGBA } from "@coli.codes/core/css/css-color";
+import { CssNamedColor, ICssRGBA } from "@coli.codes/css/css-color";
 import { Color, RGB } from "@reflect-ui/core/lib/color";
 
 type HexColor = string;

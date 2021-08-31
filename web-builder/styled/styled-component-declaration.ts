@@ -1,9 +1,9 @@
 import {
-  ast,
   Html5IdentifierNames,
   Identifier,
   PropertyAccessExpression,
   TaggedTemplateExpression,
+  TemplateLiteral,
   VariableDeclaration,
 } from "coli";
 import { WidgetWithStyle } from "@coli.codes/web-builder-core";
@@ -51,7 +51,7 @@ export class StyledComponentDeclaration extends VariableDeclaration {
         html5tag
       ),
       {
-        template: new ast.TemplateLiteral(formatedStyleStringWithTab),
+        template: new TemplateLiteral(formatedStyleStringWithTab),
       }
     );
   }
