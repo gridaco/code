@@ -157,21 +157,23 @@ function flutterWidgetGenerator(
 }
 
 function setCurrentNode(node: { id: string }) {
-  console.log(
-    `
-    ----------
-    flutter app generation: targetting current processing node to ${node.id}
-    ----------
-    `
-  );
+  // console.log(
+  //   `
+  //   ----------
+  //   flutter app generation: targetting current processing node to ${node.id}
+  //   ----------
+  //   `
+  // );
+
   // TODO - move this to build process's instance
   currentBuildingNodeId = node.id;
 }
 
 function flutterGroupHandler(node: nodes.ReflectGroupNode): flutter.Widget {
-  console.log(
-    `group handler :: making ${node} as a stack with its children count of ${node.childrenCount}`
-  );
+  // console.log(
+  //   `group handler :: making ${node} as a stack with its children count of ${node.childrenCount}`
+  // );
+
   return flutterContainer(
     node,
     makeStack(flutterWidgetGenerator(node.children) as [])
@@ -219,7 +221,8 @@ function flutterText(node: nodes.ReflectTextNode): flutter.Widget {
 }
 
 function flutterFrame(node: nodes.ReflectFrameNode): flutter.Widget {
-  console.log(`start handling frame node ${node.toString()} and its children`);
+  // console.log(`start handling frame node ${node.toString()} and its children`);
+
   const children = flutterWidgetGenerator(node.children);
 
   if (node.children.length === 1) {
