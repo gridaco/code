@@ -1,5 +1,5 @@
 import { Widget, IMultiChildWidget, WidgetKey } from "./widget";
-import { JSXAtrributes, JSXIdentifier } from "coli";
+import { JSXAttributes, JSXIdentifier } from "coli";
 import { CSSProperties } from "@coli.codes/css";
 import { ColiObjectLike } from "@coli.codes/builder";
 import {
@@ -13,7 +13,7 @@ import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
 
 export interface JSXElementConfig {
   tag: ColiObjectLike<JSXIdentifier>;
-  attributes?: JSXAtrributes;
+  attributes?: JSXAttributes;
 }
 
 export interface IWidgetWithStyle {

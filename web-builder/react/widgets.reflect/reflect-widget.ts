@@ -21,7 +21,7 @@ export abstract class ReflectReactWidget<T = any> extends ReactWidget {
   jsxConfig(): JSXElementConfig {
     return {
       tag: JSX.identifier(this.tag),
-      // atrributes: this.attributes() as any,
+      // attributes: this.attributes() as any,
     };
   }
 }

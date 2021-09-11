@@ -2,7 +2,7 @@ import { ColiObjectLike, handle } from "@coli.codes/builder";
 import { CSSProperties } from "@coli.codes/css";
 import { ScopedVariableNamer } from "@coli.codes/naming";
 import { WidgetWithStyle } from "@coli.codes/web-builder-core";
-import { JSXAtrributes, JSXIdentifier } from "coli";
+import { JSXAttributes, JSXIdentifier } from "coli";
 import {
   declareStyledComponentVariable,
   NamePreference,
@@ -11,7 +11,7 @@ import {
 
 export interface StyledComponentJSXElementConfig {
   tag: JSXIdentifier;
-  attributes?: JSXAtrributes;
+  attributes?: JSXAttributes;
   style: CSSProperties;
   styledComponent: StyledComponentDeclaration;
 }

@@ -52,7 +52,7 @@ function buildTextChildJsx(textchildwidget: ReactTextChildWidget) {
 
   return new JSXElement({
     openingElement: new JSXOpeningElement(tag, {
-      atrributes: config.attributes,
+      attributes: config.attributes,
     }),
     children: new JSXText(text),
     closingElement: new JSXClosingElement(tag),
@@ -66,7 +66,7 @@ function buildContainingJsx(
   const tag = handle<JSXIdentifier>(container.tag);
   return new JSXElement({
     openingElement: new JSXOpeningElement(tag, {
-      atrributes: container.attributes,
+      attributes: container.attributes,
     }),
     closingElement: new JSXClosingElement(tag),
     children: children,

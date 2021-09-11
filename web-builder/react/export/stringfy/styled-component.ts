@@ -227,7 +227,7 @@ function buildTextChildJsx(
   const jsxtext = new JSXText(text);
   return new JSXElement({
     openingElement: new JSXOpeningElement(tag, {
-      atrributes: config.attributes,
+      attributes: config.attributes,
     }),
     children: jsxtext,
     closingElement: new JSXClosingElement(tag),
@@ -241,7 +241,7 @@ function buildContainingJsx(
   const tag = handle<JSXIdentifier>(container.tag);
   return new JSXElement({
     openingElement: new JSXOpeningElement(tag, {
-      atrributes: container.attributes,
+      attributes: container.attributes,
     }),
     closingElement: new JSXClosingElement(tag),
     children: children,
