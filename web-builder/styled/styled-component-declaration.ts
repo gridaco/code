@@ -7,7 +7,7 @@ import {
   VariableDeclaration,
 } from "coli";
 import { WidgetWithStyle } from "@coli.codes/web-builder-core";
-import { SyntaxKind } from "@coli.codes/core/ast/syntax-kind";
+import { SyntaxKind } from "@coli.codes/core-syntax-kind";
 import {
   nameVariable,
   NameCases,
