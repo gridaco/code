@@ -104,6 +104,9 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
       break;
 
     case nodes.ReflectNodeType.ellipse:
+      const _ellipse = node as nodes.ReflectEllipseNode;
+      tokenizedTarget = tokenizeContainer.fromEllipse(_ellipse);
+      break;
     case nodes.ReflectNodeType.line:
     default:
       console.error(`${node.type} is not yet handled by "@designto/token"`);

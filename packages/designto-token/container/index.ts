@@ -19,7 +19,19 @@ function fromRectangle(node: nodes.ReflectRectangleNode): core.Container {
 }
 
 function fromEllipse(ellipse: nodes.ReflectEllipseNode): core.Container {
-  return undefined;
+  const container = new core.Container({
+    key: keyFromNode(ellipse),
+    children: undefined,
+  });
+
+  container.x = ellipse.x;
+  container.y = ellipse.y;
+  container.width = ellipse.width;
+  container.height = ellipse.height;
+  container.fills = ellipse.fills as any; // todo
+  container.borders = ellipse.strokes as any; // todo
+
+  return container;
 }
 
 export const tokenizeContainer = {
