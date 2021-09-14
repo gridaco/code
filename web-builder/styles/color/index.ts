@@ -41,7 +41,7 @@ const validColorValue = (f: number) => {
   if (f === undefined) {
     return;
   }
-  if (f < 1) {
+  if (f <= 1) {
     return Math.round(f * 255.0);
   } else {
     return Math.round(f);
