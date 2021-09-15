@@ -49,7 +49,13 @@ export function buildReactWidgetFromReflectWidget(
     thisReactWidget = new react.Container({
       ...widget,
       key: _key,
+      borderRadius: widget.borderRadius,
     });
+    thisReactWidget.x = widget.x;
+    thisReactWidget.y = widget.y;
+    thisReactWidget.width = widget.width;
+    thisReactWidget.height = widget.height;
+    thisReactWidget.background = widget.background;
   } else {
     // todo - handle case more specific
     thisReactWidget = new react.ErrorWidget({

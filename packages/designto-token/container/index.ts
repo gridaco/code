@@ -1,7 +1,6 @@
 import { nodes } from "@design-sdk/core";
 import * as core from "@reflect-ui/core";
 import { keyFromNode } from "../key";
-
 function fromRectangle(node: nodes.ReflectRectangleNode): core.Container {
   const container = new core.Container({
     key: keyFromNode(node),
@@ -30,6 +29,7 @@ function fromEllipse(ellipse: nodes.ReflectEllipseNode): core.Container {
   container.height = ellipse.height;
   container.fills = ellipse.fills as any; // todo
   container.borders = ellipse.strokes as any; // todo
+  container.borderRadius = { all: Math.max(ellipse.width, ellipse.height) / 2 };
 
   return container;
 }
