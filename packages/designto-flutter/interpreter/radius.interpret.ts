@@ -1,5 +1,5 @@
 import * as flutter from "@bridged.xyz/flutter-builder";
-import { IRadius } from "@reflect-ui/core/lib/ui/radius/radius.manifest";
+import { IRadius } from "@reflect-ui/core";
 
 export function interpretRadius(radius: IRadius): flutter.Radius {
   if (typeof radius == "number") {

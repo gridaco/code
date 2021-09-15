@@ -3,7 +3,14 @@ import { CSSProperties } from "@coli.codes/css";
 import { JSXElementConfig, WidgetKey } from "@coli.codes/web-builder-core";
 import { BorderRadiusManifest } from "@reflect-ui/core";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
-import { borderRadius, positionXY, background, px } from "@web-builder/styles";
+import {
+  borderRadius,
+  positionXY,
+  background,
+  px,
+  color,
+  boxshadow,
+} from "@web-builder/styles";
 import { JSX, JSXElementLike, css } from "coli";
 
 import { ReactWidget } from "../../widgets/widget";
@@ -30,9 +37,11 @@ export class Container extends ReactWidget {
     return {
       width: px(this.width),
       height: px(this.height),
+      color: color(this.color),
+      "box-shadow": boxshadow(this.boxShadow),
+      background: color(this.color), // FIXME:
       ...positionXY(this.x, this.y),
       ...borderRadius(this.borderRadius),
-      background: "red", // FIXME:
       ...background(this.background),
     };
   }

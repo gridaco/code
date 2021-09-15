@@ -7,10 +7,11 @@ type CssColorInputLike = CssNamedColor | HexColor | ICssRGBA;
 
 export function color(input: CssColorInputLike | Color): string {
   if (!input) {
+    return;
     console.warn(
       'undefined color is passed to "makeCssColorValue". check this.'
     );
-    return "#000000; /*ERROR*/";
+    // "#000000; /*ERROR*/";
   }
   if (typeof input == "string") {
     // interpret as hex color or named color

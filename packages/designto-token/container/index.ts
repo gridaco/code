@@ -1,5 +1,10 @@
 import { nodes } from "@design-sdk/core";
+import { retrieveFill } from "@design-sdk/core/utils";
+import { paintToColor } from "@design-sdk/core/utils/colors";
+import { Figma } from "@design-sdk/figma-types";
 import * as core from "@reflect-ui/core";
+import { Color } from "@reflect-ui/core";
+import { BoxShape } from "@reflect-ui/core/lib/box-shape";
 import { keyFromNode } from "../key";
 function fromRectangle(node: nodes.ReflectRectangleNode): core.Container {
   const container = new core.Container({
@@ -11,9 +16,9 @@ function fromRectangle(node: nodes.ReflectRectangleNode): core.Container {
   container.y = node.y;
   container.width = node.width;
   container.height = node.height;
-  container.fills = node.fills as any; // todo
-  container.borders = node.strokes as any; // todo
-
+  container.color = forceFillsToSolidColor(node.fills); // FIXME: handle by count of fills.
+  // container.border = new core.Border() as any; // FIXME: handle by count of fills.
+  container.borderRadius = node.cornerRadius;
   return container;
 }
 
@@ -27,8 +32,9 @@ function fromEllipse(ellipse: nodes.ReflectEllipseNode): core.Container {
   container.y = ellipse.y;
   container.width = ellipse.width;
   container.height = ellipse.height;
-  container.fills = ellipse.fills as any; // todo
-  container.borders = ellipse.strokes as any; // todo
+  container.color = forceFillsToSolidColor(ellipse.fills); // FIXME: handle by count of fills.
+  container.border = ellipse.strokes as any; // todo
+  container.shape = BoxShape.circle;
   container.borderRadius = { all: Math.max(ellipse.width, ellipse.height) / 2 };
 
   return container;
@@ -38,3 +44,11 @@ export const tokenizeContainer = {
   fromRectangle: fromRectangle,
   fromEllipse: fromEllipse,
 };
+
+function forceFillsToSolidColor(fills: ReadonlyArray<Figma.Paint>): Color {
+  const fill = retrieveFill(fills, {
+    onlySolid: true,
+  });
+  const color = paintToColor(fill as Figma.SolidPaint);
+  return color;
+}

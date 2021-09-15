@@ -1,4 +1,5 @@
 import { nodes } from "@design-sdk/core";
+import { paintToColor } from "@design-sdk/core/utils/colors";
 import * as core from "@reflect-ui/core";
 import {
   Axis,
@@ -16,6 +17,7 @@ function fromFrame(
 ): core.LayoutRepresntatives {
   const _key = keyFromNode(frame);
   const _background = [frame.primaryColor];
+  const _color = frame.primaryColor;
 
   if (frame.isAutoLayout) {
     switch (frame.layoutMode) {
@@ -28,6 +30,7 @@ function fromFrame(
           boxShadow: frame.primaryShadow,
           padding: frame.padding,
           background: _background,
+          color: _color,
         });
         break;
       case Axis.vertical:

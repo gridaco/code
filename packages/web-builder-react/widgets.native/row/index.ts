@@ -8,8 +8,8 @@ import {
   WidgetKey,
 } from "@coli.codes/web-builder-core";
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
-import { EdgeInsets } from "@reflect-ui/core";
-import { padding } from "@web-builder/styles";
+import { Color, EdgeInsets } from "@reflect-ui/core";
+import { color, padding } from "@web-builder/styles";
 
 export class Row extends ReactMultiChildWidget {
   readonly _type = "row";
@@ -27,18 +27,21 @@ export class Row extends ReactMultiChildWidget {
     boxShadow,
     margin,
     padding,
+    color,
   }: {
     key: WidgetKey;
     children: Array<ReactWidget>;
     boxShadow?: BoxShadowManifest;
     margin?: EdgeInsets;
     padding?: EdgeInsets;
+    color?: Color;
   }) {
     super({
       key: key,
       children: children,
     });
 
+    this.color = color;
     this.margin = margin;
     this.padding = padding;
     this.boxShadow = boxShadow;
@@ -55,6 +58,7 @@ export class Row extends ReactMultiChildWidget {
       display: "flex",
       "flex-direction": "row",
       "box-shadow": css.boxshadow(this.boxShadow),
+      background: color(this.color),
       ...padding(this.padding),
     };
   }

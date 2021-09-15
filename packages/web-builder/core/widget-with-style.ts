@@ -3,6 +3,7 @@ import { JSXAttributes, JSXIdentifier } from "coli";
 import { CSSProperties } from "@coli.codes/css";
 import { ColiObjectLike } from "@coli.codes/builder";
 import {
+  Color,
   EdgeInsets,
   IBoxShadowWidget,
   IEdgeInsetsWidget,
@@ -37,6 +38,7 @@ export abstract class WidgetWithStyle
   height?: number;
 
   background?: BackgroundPaintLike[];
+  color?: Color;
 
   // IPositionWidget
   x?: number;

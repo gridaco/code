@@ -51,6 +51,7 @@ export function buildReactWidgetFromReflectWidget(
       key: _key,
       borderRadius: widget.borderRadius,
     });
+    thisReactWidget.color = widget.color;
     thisReactWidget.x = widget.x;
     thisReactWidget.y = widget.y;
     thisReactWidget.width = widget.width;
