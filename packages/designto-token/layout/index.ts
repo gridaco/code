@@ -1,5 +1,5 @@
 import { nodes } from "@design-sdk/core";
-import { paintToColor } from "@design-sdk/core/utils/colors";
+import { layoutAlignToReflectMainAxisSize } from "@design-sdk/figma/converters";
 import * as core from "@reflect-ui/core";
 import {
   Axis,
@@ -18,6 +18,7 @@ function fromFrame(
   const _key = keyFromNode(frame);
   const _background = [frame.primaryColor];
   const _color = frame.primaryColor;
+  const _mainaxissize = layoutAlignToReflectMainAxisSize(frame.layoutAlign);
 
   if (frame.isAutoLayout) {
     switch (frame.layoutMode) {
@@ -25,6 +26,7 @@ function fromFrame(
         return new Row({
           key: _key,
           children: children,
+          mainAxisSize: _mainaxissize,
           crossAxisAlignment: frame.crossAxisAlignment,
           mainAxisAlignment: frame.mainAxisAlignment,
           boxShadow: frame.primaryShadow,
@@ -37,6 +39,7 @@ function fromFrame(
         return new Column({
           key: _key,
           children: children,
+          mainAxisSize: _mainaxissize,
           crossAxisAlignment: frame.crossAxisAlignment,
           mainAxisAlignment: frame.mainAxisAlignment,
           boxShadow: frame.primaryShadow,
@@ -49,6 +52,7 @@ function fromFrame(
         return new Flex({
           key: _key,
           direction: Axis.vertical,
+          mainAxisSize: _mainaxissize,
           crossAxisAlignment: frame.crossAxisAlignment,
           mainAxisAlignment: frame.mainAxisAlignment,
           verticalDirection: VerticalDirection.down,
@@ -61,8 +65,7 @@ function fromFrame(
   }
 
   // else, stack.
-  // todo - use constructor
-  // todo - also convert as container if single child
+  // TODO: - convert as container if single child
   const stack = new Stack({
     key: _key,
     children: children,
