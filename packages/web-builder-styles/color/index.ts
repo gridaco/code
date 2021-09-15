@@ -57,7 +57,7 @@ const validColorValue = (f: number) => {
 const validAlphaValue = (f: number) => {
   try {
     // from https://stackoverflow.com/a/11832950/5463235
-    return Math.round((f + Number.EPSILON) * 100) / 100;
+    return Math.round((f + Number.EPSILON) * 100) / 100 || 1;
   } catch (_) {
     // returns undefined
     return;
