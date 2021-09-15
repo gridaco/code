@@ -1,0 +1,10 @@
+{
+    "name": "@web-builder/jsx",
+    "version": "0.0.0",
+    "license": "MIT",
+    "author": "bridged.xyz <softmarshmallow>",
+    "dependencies": {},
+    "devDependencies": {
+        "typescript": "^4.2.3"
+    }
+}
