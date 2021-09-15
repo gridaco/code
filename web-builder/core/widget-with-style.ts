@@ -10,6 +10,7 @@ import {
   IWHStyleWidget,
 } from "@reflect-ui/core";
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
+import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
 
 export interface JSXElementConfig {
   tag: ColiObjectLike<JSXIdentifier>;
@@ -34,6 +35,8 @@ export abstract class WidgetWithStyle
   // IWHStyleWidget
   width?: number;
   height?: number;
+
+  background?: BackgroundPaintLike[];
 
   // IPositionWidget
   x?: number;
