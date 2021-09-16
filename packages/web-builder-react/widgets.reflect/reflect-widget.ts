@@ -4,6 +4,7 @@ import { JSXElementConfig, WidgetKey } from "@coli.codes/web-builder-core";
 import { ColiObjectLike } from "@coli.codes/builder";
 
 export abstract class ReflectReactWidget<T = any> extends ReactWidget {
+  children?: ReactWidget[];
   readonly _type: string;
   readonly imports: string;
   readonly tag: string;

@@ -1,5 +1,5 @@
 import { JSXElementConfig, WidgetKey } from "@coli.codes/web-builder-core";
-import { ReactTextChildWidget } from "../../widgets/widget";
+import { ReactTextChildWidget, ReactWidget } from "../../widgets/widget";
 import * as core from "@reflect-ui/core";
 import { TextOverflow } from "@reflect-ui/core/lib/text-overflow";
 import { CSSProperties } from "@coli.codes/css";
@@ -9,6 +9,7 @@ import * as css from "@web-builder/styles";
 
 export class Text extends ReactTextChildWidget {
   _type: "Text";
+  children?: ReactWidget[];
 
   // text properties
   data: string;

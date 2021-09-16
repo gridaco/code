@@ -9,9 +9,8 @@ export class Column extends Flex {
   readonly _type = "column";
 
   constructor(
-    p: Omit<IFlexManifest, "direction"> & {
+    p: Omit<IFlexManifest<ReactWidget>, "direction"> & {
       key: WidgetKey;
-      children: Array<ReactWidget>;
       margin?: EdgeInsets;
       padding?: EdgeInsets;
       background?: BackgroundPaintLike[];

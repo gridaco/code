@@ -16,6 +16,11 @@ export interface StyledComponentJSXElementConfig {
   styledComponent: StyledComponentDeclaration;
 }
 
+export interface NoStyleJSXElementConfig {
+  tag: JSXIdentifier;
+  attributes?: JSXAttributes;
+}
+
 /**
  *
  * @param widget
@@ -30,7 +35,7 @@ export function buildStyledComponentConfig(
       root: boolean;
     };
   }
-): StyledComponentJSXElementConfig {
+): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
   const config = widget.jsxConfig();
 
   const namePref: NamePreference = {
@@ -45,21 +50,28 @@ export function buildStyledComponentConfig(
     name: namePref,
   });
 
-  // rename tag as styled component
-  // e.g. `div` to `Wrapper`
-  if (config.tag instanceof JSXIdentifier) {
-    config.tag.rename(styledVar.id.name);
-  } else {
-    console.error(
-      `unhandled styled component conversion of widget type of ${typeof config}`,
-      config
-    );
-  }
+  if (styledVar) {
+    if (config.tag instanceof JSXIdentifier) {
+      // rename tag as styled component
+      // e.g. `div` to `Wrapper`
+      config.tag.rename(styledVar.id.name);
+    } else {
+      console.error(
+        `unhandled styled component conversion of widget type of ${typeof config}`,
+        config
+      );
+    }
 
-  return {
-    tag: handle(config.tag),
-    attributes: config.attributes,
-    style: widget.styleData(),
-    styledComponent: styledVar,
-  };
+    return {
+      tag: handle(config.tag),
+      attributes: config.attributes,
+      style: widget.styleData(),
+      styledComponent: styledVar,
+    };
+  } else {
+    return {
+      tag: handle(config.tag),
+      attributes: config.attributes,
+    };
+  }
 }

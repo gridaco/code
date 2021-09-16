@@ -18,6 +18,7 @@ import { ReactWidget } from "../../widgets/widget";
 export class Container extends ReactWidget {
   _type = "Container";
 
+  children?: ReactWidget[];
   borderRadius?: BorderRadiusManifest;
 
   constructor(p: {

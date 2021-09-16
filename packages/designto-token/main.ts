@@ -87,6 +87,11 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
       );
       break;
 
+    case nodes.ReflectNodeType.vector:
+      const _vector = node as nodes.ReflectVectorNode;
+      tokenizedTarget = tokenizeVector.fromVector(_vector);
+      break;
+
     case nodes.ReflectNodeType.star:
       tokenizedTarget = tokenizeVector.fromStar();
       break;

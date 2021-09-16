@@ -32,12 +32,11 @@ export class Flex extends ReactMultiChildWidget {
   readonly direction: Axis;
 
   constructor(
-    p: IFlexManifest & {
+    p: IFlexManifest<ReactWidget> & {
       // direction: "row" | "column";
       key: WidgetKey;
       width?: number;
       height?: number;
-      children: Array<ReactWidget>;
       mainAxisAlignment?: MainAxisAlignment;
       mainAxisSize?: MainAxisSize;
       crossAxisAlignment?: CrossAxisAlignment;
@@ -71,7 +70,6 @@ export class Flex extends ReactMultiChildWidget {
   }
 
   styleData(): CSSProperties {
-    console.log("this.direction", this.direction);
     return {
       display: "flex",
       ...sizing({ ...this }),

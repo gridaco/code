@@ -90,8 +90,15 @@ export function declareStyledComponentVariable(
   }
   ///
 
-  return new StyledComponentDeclaration(varname, {
-    style: widgetConfig.styleData(),
-    identifier: handle(jsxconfg.tag).name as Html5IdentifierNames,
-  });
+  const style_data = widgetConfig.styleData();
+  /**
+   * if the style is null, it means don't make element as a styled component at all. if style is a empty object, it means to make a empty styled component.
+   */
+  const should_be_styled = style_data !== null;
+  if (should_be_styled) {
+    return new StyledComponentDeclaration(varname, {
+      style: style_data,
+      identifier: handle(jsxconfg.tag).name as Html5IdentifierNames,
+    });
+  }
 }

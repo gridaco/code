@@ -6,6 +6,7 @@ import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
 import { JSXElementConfig, WidgetKeyId } from "@coli.codes/web-builder-core";
 import {
   buildStyledComponentConfig,
+  NoStyleJSXElementConfig,
   StyledComponentJSXElementConfig,
 } from "@web-builder/styled";
 import {
@@ -65,12 +66,15 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
     }
   );
 
-  function getStyledConfigById(id: string): StyledComponentJSXElementConfig {
+  function getStyledConfigById(
+    id: string
+  ): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
     return styledConfigWidgetMap.get(id);
   }
 
   function buildComponentFunction(): FunctionDeclaration {
     function jsxBuilder(widget: ReactWidget) {
+      console.log(widget.key.name, widget.children);
       const children = widget.children?.map((comp) => {
         const config = getStyledConfigById(comp.key.id);
         if (comp instanceof ReactTextChildWidget) {
@@ -79,7 +83,9 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
 
         const childrenJSX = comp.children?.map((cc) => jsxBuilder(cc));
         return new JSXElement({
-          openingElement: new JSXOpeningElement(config.tag),
+          openingElement: new JSXOpeningElement(config.tag, {
+            attributes: config.attributes,
+          }),
           closingElement: new JSXClosingElement(config.tag),
           children: childrenJSX,
         });
@@ -90,7 +96,9 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
         return buildTextChildJsx(widget, config);
       }
       return new JSXElement({
-        openingElement: new JSXOpeningElement(config.tag),
+        openingElement: new JSXOpeningElement(config.tag, {
+          attributes: config.attributes,
+        }),
         closingElement: new JSXClosingElement(config.tag),
         children: children,
       });
@@ -106,11 +114,12 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
 
   const componentFunction = buildComponentFunction();
 
-  const styledComponentDeclarations = Array.from(
-    styledConfigWidgetMap.keys()
-  ).map((k) => {
-    return styledConfigWidgetMap.get(k).styledComponent;
-  });
+  const styledComponentDeclarations = Array.from(styledConfigWidgetMap.keys())
+    .map((k) => {
+      return (styledConfigWidgetMap.get(k) as StyledComponentJSXElementConfig)
+        .styledComponent;
+    })
+    .filter((s) => s);
 
   const file = buildReactComponentFile({
     componentName: componentName,
@@ -154,7 +163,10 @@ function buildReactComponentFile(p: {
   return file;
 }
 
-type StyledConfigWidgetMap = Map<WidgetKeyId, StyledComponentJSXElementConfig>;
+type StyledConfigWidgetMap = Map<
+  WidgetKeyId,
+  StyledComponentJSXElementConfig | NoStyleJSXElementConfig
+>;
 function getWidgetStyledConfigMap(
   rootWidget: ReactWidget,
   preferences: {
@@ -163,10 +175,13 @@ function getWidgetStyledConfigMap(
 ): StyledConfigWidgetMap {
   const styledConfigWidgetMap: StyledConfigWidgetMap = new Map();
 
-  function mapper(w: ReactWidget) {
-    const isRoot = w.key.id == rootWidget.key.id;
-    const id = w.key.id;
-    const styledConfig = buildStyledComponentConfig(w, {
+  function mapper(widget: ReactWidget) {
+    if (!widget) {
+      throw `cannot map trough ${widget}`;
+    }
+    const isRoot = widget.key.id == rootWidget.key.id;
+    const id = widget.key.id;
+    const styledConfig = buildStyledComponentConfig(widget, {
       transformRootName: true,
       namer: preferences.namer,
       context: {
@@ -175,8 +190,8 @@ function getWidgetStyledConfigMap(
     });
 
     styledConfigWidgetMap.set(id, styledConfig);
-    w.children?.map((wc) => {
-      mapper(wc);
+    widget.children?.map((childwidget) => {
+      mapper(childwidget);
     });
   }
 

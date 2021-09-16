@@ -43,6 +43,12 @@ export function buildReactWidgetFromReflectWidget(
       data: widget.data,
       key: _key,
     });
+  } else if (widget instanceof core.VectorWidget) {
+    thisReactWidget = new react.SvgElement({
+      ...widget,
+      data: widget.data,
+      key: _key,
+    });
   }
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
   else if (widget instanceof core.Container) {

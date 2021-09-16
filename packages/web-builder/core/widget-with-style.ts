@@ -51,7 +51,10 @@ export abstract class WidgetWithStyle
   margin?: EdgeInsets;
   padding?: EdgeInsets;
 
-  abstract styleData(): CSSProperties;
+  /**
+   * if the style is null, it means don't make element as a styled component at all. if style is a empty object, it means to make a empty styled component.
+   */
+  abstract styleData(): CSSProperties | null;
 
   abstract jsxConfig(): JSXElementConfig;
 }

@@ -8,7 +8,7 @@ import {
  * React Widget that requires no additional custom import rather than react
  */
 export abstract class ReactWidget extends WidgetWithStyle {
-  readonly children?: ReactWidget[];
+  abstract readonly children?: ReactWidget[];
 }
 
 /**
@@ -55,6 +55,7 @@ export abstract class ReactIndependantWidget extends ReactWidget {}
  */
 export abstract class ReactTextChildWidget extends ReactWidget {
   readonly text: string;
+  children?: ReactWidget[];
   constructor(p: { key: WidgetKey; data: string }) {
     super({
       key: p.key,

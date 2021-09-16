@@ -8,9 +8,8 @@ import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 export class Row extends Flex {
   readonly _type = "row";
   constructor(
-    p: Omit<IFlexManifest, "direction"> & {
+    p: Omit<IFlexManifest<ReactWidget>, "direction"> & {
       key: WidgetKey;
-      children: Array<ReactWidget>;
       boxShadow?: BoxShadowManifest;
       margin?: EdgeInsets;
       padding?: EdgeInsets;
