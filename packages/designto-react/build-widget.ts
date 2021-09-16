@@ -37,6 +37,18 @@ export function buildReactWidgetFromReflectWidget(
       children: handleChildren(widget.children as []),
       key: _key,
     });
+  } else if (widget instanceof core.SingleChildScrollView) {
+    // since web css does not require additional hierarchy for scroll view, we can simply merge properties.
+    // merge single child scroll view properties for
+    console.log("scrollable widget hit", widget, widget.child);
+    thisReactWidget = new react.Flex({
+      ...widget.child,
+      ...widget,
+      overflow: "auto",
+      children: handleChildren(widget.children as []),
+      key: _key,
+    });
+    //
   } else if (widget instanceof core.Text) {
     thisReactWidget = new react.Text({
       ...widget,

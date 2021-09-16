@@ -31,6 +31,9 @@ export class Flex extends ReactMultiChildWidget {
 
   readonly direction: Axis;
 
+  // css only properties
+  readonly overflow?: CSSProperty.Overflow;
+
   constructor(
     p: IFlexManifest<ReactWidget> & {
       // direction: "row" | "column";
@@ -44,6 +47,7 @@ export class Flex extends ReactMultiChildWidget {
       margin?: EdgeInsets;
       padding?: EdgeInsets;
       background?: BackgroundPaintLike[];
+      overflow?: CSSProperty.Overflow;
     }
   ) {
     super(p);
@@ -61,6 +65,9 @@ export class Flex extends ReactMultiChildWidget {
     this.margin = p.margin;
     this.padding = p.padding;
     this.background = p.background;
+
+    // css only
+    this.overflow = p.overflow;
   }
 
   jsxConfig() {
@@ -76,8 +83,9 @@ export class Flex extends ReactMultiChildWidget {
       ...css.justifyContent(this.mainAxisAlignment),
       "flex-direction": direction(this.direction),
       "align-items": this.crossAxisAlignment,
+      overflow: this.overflow,
       flex: this.flex,
-      gap: px(this.itemSpacing),
+      gap: this.itemSpacing && px(this.itemSpacing),
       "box-shadow": css.boxshadow(this.boxShadow),
       ...css.background(this.background),
       ...css.padding(this.padding),

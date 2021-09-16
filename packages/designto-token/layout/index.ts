@@ -20,6 +20,30 @@ function fromFrame(
   frame: nodes.ReflectFrameNode,
   children: Array<core.Widget>
 ): core.LayoutRepresntatives {
+  const innerlayout = flexOrStackFromFrame(frame, children);
+  const is_overflow_scrollable = isOverflowingAndShouldBeScrollable(frame);
+
+  if (is_overflow_scrollable) {
+    // wrap with single child scroll view
+    const _mainaxissize = layoutAlignToReflectMainAxisSize(frame.layoutAlign);
+    return new core.SingleChildScrollView({
+      key: new WidgetKey({
+        id: frame.id + ".scroll-wrap",
+        originName: frame.name,
+      }),
+      child: innerlayout,
+      scrollDirection: frame.layoutMode,
+      mainAxisSize: _mainaxissize,
+    });
+  } else {
+    return innerlayout;
+  }
+}
+
+function flexOrStackFromFrame(
+  frame: nodes.ReflectFrameNode,
+  children: Array<core.Widget>
+) {
   const _key = keyFromNode(frame);
   const _background = [frame.primaryColor];
   const _color = frame.primaryColor;
@@ -97,3 +121,21 @@ export const tokenizeLayout = {
   fromFrame: fromFrame,
   fromGroup: fromGroup,
 };
+
+/**
+ * read [docs/overflow-layout-scroll.md](docs/overflow-layout-scroll.md)
+ *
+ * !LIMITATIONS: this only detects if the layout should be scrollable to horizontal direction. so the container's axis must be set to horizontal also.
+ * TODO: resolve above limitation
+ * @param frame
+ * @returns
+ */
+function isOverflowingAndShouldBeScrollable(frame: nodes.ReflectFrameNode) {
+  const children_container_size = frame.children.reduce((i, c) => c.width, 0);
+  return (
+    frame.isAutoLayout &&
+    frame.layoutMode === Axis.horizontal &&
+    // if parent is scrollable, then this frame is scrollable
+    frame.width < children_container_size
+  );
+}
