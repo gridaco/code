@@ -7,6 +7,7 @@ export * from "./gradient";
 export * from "./padding";
 export * from "./position";
 export * from "./border-radius";
+export * from "./justify-content";
 
 // shapes
 export * from "./shape-circle";

@@ -17,7 +17,7 @@ export function convertToSize(node: ReflectSceneNode): Size {
   // if has parent
   else if (node.hasParent) {
     // propWidth = Double.infinity as Snippet
-    // TODO - FIXME - handle height. this should not be infinite it it contains something.
+    // TODO: - FIXME - handle height. this should not be infinite it it contains something.
   }
 
   let propHeight: double;
@@ -25,7 +25,7 @@ export function convertToSize(node: ReflectSceneNode): Size {
     propHeight = size.height ? roundNumber(size.height) : undefined;
   } else if (node.hasParent) {
     // propHeight = Double.infinity as Snippet
-    // TODO - FIXME - handle height. can it ever be infinite?
+    // TODO: - FIXME - handle height. can it ever be infinite?
   }
 
   return new Size(propWidth, propHeight);

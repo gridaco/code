@@ -3,6 +3,9 @@ import { EdgeInsets } from "@reflect-ui/core";
 import { px } from "../dimensions";
 
 export function padding(padding: EdgeInsets): CSSProperties {
+  if (!padding) {
+    return {};
+  }
   if (
     padding.top === 0 &&
     padding.right === 0 &&

@@ -8,7 +8,12 @@ import {
   Flex,
   Row,
   VerticalDirection,
+  WidgetKey,
+  BoxShadowManifest,
+  EdgeInsets,
+  Color,
 } from "@reflect-ui/core";
+import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { keyFromNode } from "../key";
 
 function fromFrame(
@@ -20,47 +25,41 @@ function fromFrame(
   const _color = frame.primaryColor;
   const _mainaxissize = layoutAlignToReflectMainAxisSize(frame.layoutAlign);
 
+  const initializer: Omit<IFlexManifest, "direction"> & {
+    key: WidgetKey;
+    boxShadow: BoxShadowManifest;
+    padding: EdgeInsets;
+    background?: Color[];
+    color?: Color;
+  } = {
+    key: _key,
+    width: frame.width,
+    itemSpacing: frame.itemSpacing,
+    height: frame.width,
+    flex: frame.layoutGrow,
+    mainAxisSize: _mainaxissize,
+    crossAxisAlignment: frame.crossAxisAlignment,
+    mainAxisAlignment: frame.mainAxisAlignment,
+    verticalDirection: VerticalDirection.down,
+    boxShadow: frame.primaryShadow,
+    padding: frame.padding,
+    background: _background,
+    children: children,
+    color: _color,
+  };
+
   if (frame.isAutoLayout) {
     switch (frame.layoutMode) {
       case Axis.horizontal:
-        return new Row({
-          key: _key,
-          children: children,
-          mainAxisSize: _mainaxissize,
-          crossAxisAlignment: frame.crossAxisAlignment,
-          mainAxisAlignment: frame.mainAxisAlignment,
-          boxShadow: frame.primaryShadow,
-          padding: frame.padding,
-          background: _background,
-          color: _color,
-        });
-        break;
+        return new Row(initializer);
       case Axis.vertical:
-        return new Column({
-          key: _key,
-          children: children,
-          mainAxisSize: _mainaxissize,
-          crossAxisAlignment: frame.crossAxisAlignment,
-          mainAxisAlignment: frame.mainAxisAlignment,
-          boxShadow: frame.primaryShadow,
-          padding: frame.padding,
-          background: _background,
-        });
-        break;
+        return new Column(initializer);
       default:
         console.info(`Frame: "${frame.name}" fallback to flex`);
         return new Flex({
-          key: _key,
-          direction: Axis.vertical,
-          mainAxisSize: _mainaxissize,
-          crossAxisAlignment: frame.crossAxisAlignment,
-          mainAxisAlignment: frame.mainAxisAlignment,
-          verticalDirection: VerticalDirection.down,
-          boxShadow: frame.primaryShadow,
-          padding: frame.padding,
-          background: _background,
+          ...initializer,
+          direction: Axis.horizontal,
         });
-        break;
     }
   }
 
