@@ -74,7 +74,6 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
 
   function buildComponentFunction(): FunctionDeclaration {
     function jsxBuilder(widget: ReactWidget) {
-      console.log(widget.key.name, widget.children);
       const children = widget.children?.map((comp) => {
         const config = getStyledConfigById(comp.key.id);
         if (comp instanceof ReactTextChildWidget) {

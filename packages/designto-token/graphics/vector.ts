@@ -20,6 +20,7 @@ function fromVector(vector: ReflectVectorNode) {
   const _key = keyFromNode(vector);
   return new VectorWidget({
     key: _key,
+    ...vector,
     data: vector?.vectorPaths[0]?.data,
   });
 }

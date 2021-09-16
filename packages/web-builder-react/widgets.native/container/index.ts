@@ -41,7 +41,7 @@ export class Container extends ReactWidget {
       color: color(this.color),
       "box-shadow": boxshadow(this.boxShadow),
       background: color(this.color), // FIXME:
-      ...positionXY(this.x, this.y),
+      // ...positionXY(this.x, this.y), // FIXME: position shall not be specified when parent has a layout. (e.g. under flex)
       ...borderRadius(this.borderRadius),
       ...background(this.background),
     };

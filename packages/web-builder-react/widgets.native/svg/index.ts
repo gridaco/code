@@ -29,12 +29,35 @@ export class SvgElement extends ReactWidget {
    * a svg data string
    */
   readonly data: string;
-  constructor(p: { key: WidgetKey; data: string }) {
+  constructor(p: {
+    key: WidgetKey;
+    width?: number;
+    height?: number;
+    /**
+     * svg data
+     */
+    data: string;
+  }) {
     super(p);
+
+    // general
+    this.width = p.width;
+    this.height = p.height;
+
+    // region svg related
     this.data = p.data;
+    // endregion svg related
   }
 
   styleData(): CSSProperties {
+    if (!this.data) {
+      // svg data might be empty, in this case also w & h won't be available, we still should draw this element, but visually unreachable.
+      // so we use 0, 0 for its size
+      return {
+        width: "0px",
+        height: "0px",
+      };
+    }
     return {
       width: px(this.width),
       height: px(this.height),
