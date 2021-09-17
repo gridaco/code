@@ -37,7 +37,7 @@ export class TextBuilder extends WidgetBuilder {
     else if ((this.node as ReflectTextNode).textAutoResize === "HEIGHT") {
       return new SizedBox({
         child: child,
-        width: this.node.width,
+        width: roundNumber(this.node.width),
       });
     }
 
