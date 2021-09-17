@@ -1,6 +1,6 @@
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { ReflectEllipseNode, IReflectCornerMixin } from "@design-sdk/core";
-import { interpretRadius } from "../interpreter/radius.interpret";
+import { mapRadius } from "../core-type-mappers";
 import * as core from "@reflect-ui/core";
 
 export function makeBorderRadius(
@@ -26,10 +26,10 @@ function _makePartialBorderRadius(cornerRadius: core.BorderRadiusManifest) {
 
   if (_oneofRadiusIsHasValue) {
     return flutter.BorderRadius.only({
-      topLeft: interpretRadius(cornerRadius.tl),
-      topRight: interpretRadius(cornerRadius.tr),
-      bottomLeft: interpretRadius(cornerRadius.bl),
-      bottomRight: interpretRadius(cornerRadius.br),
+      topLeft: mapRadius(cornerRadius.tl),
+      topRight: mapRadius(cornerRadius.tr),
+      bottomLeft: mapRadius(cornerRadius.bl),
+      bottomRight: mapRadius(cornerRadius.br),
     });
   } else {
     // if none of each corner radius contains value (if every value is empty) do not return a value.
