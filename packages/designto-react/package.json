@@ -8,6 +8,6 @@
   "license": "Apache 2.0",
   "private": false,
   "dependencies": {
-    "@coli.codes/react-builder": "0.0.0"
+    "@web-builder/react": "0.0.0"
   }
 }

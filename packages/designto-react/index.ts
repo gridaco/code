@@ -3,7 +3,7 @@ import { buildReactWidgetFromReflectWidget } from "./build-widget";
 import {
   ReactWidget,
   stringfyReactWidget_STYLED_COMPONENTS,
-} from "@coli.codes/react-builder";
+} from "../builder-react";
 import { react as config } from "@designto/config";
 
 export function buildReactApp(

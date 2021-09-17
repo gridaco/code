@@ -1,7 +1,0 @@
-{
-    "name": "coli-web-builder-examples",
-    "version": "0.0.0",
-    "dependencies": {
-        "@coli.codes/web-builder": "0.0.0"
-    }
-}

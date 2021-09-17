@@ -1,7 +1,7 @@
 import * as core from "@reflect-ui/core";
-import * as react from "@coli.codes/react-builder";
-import { ReactWidget } from "@coli.codes/react-builder";
-import { keyFromWidget } from "@coli.codes/web-builder-core";
+import * as react from "../builder-react";
+import { ReactWidget } from "../builder-react";
+import { keyFromWidget } from "../builder-web-core";
 
 export function buildReactWidgetFromReflectWidget(
   widget: core.Widget
