@@ -1,7 +1,23 @@
 import { Figma } from "@design-sdk/figma";
 import { retrieveFill } from "@design-sdk/core/utils";
 import * as flutter from "@bridged.xyz/flutter-builder";
+import * as core from "@reflect-ui/core";
 import { converters } from "@reflect-ui/core/lib";
+
+/**
+ * this does not support named colors yet.
+ * @param color : Reflect#Color;
+ * @returns
+ */
+export function makeFlutterColorFromReflectColor(
+  color: core.Color
+): flutter.Color {
+  const hex = converters.color.convertReflectColorToUniversal(
+    color,
+    core.ColorFormat.hex
+  );
+  return flutter.Color.fromHex(hex);
+}
 
 /**
  * Retrieve the SOLID color for Flutter when existent, otherwise ""
