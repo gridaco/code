@@ -1,0 +1,10 @@
+{
+    "name": "@designto/svelte",
+    "version": "0.0.0",
+    "description": "design to svelte",
+    "main": "dist/index.js",
+    "repository": "https://github.com/bridgedxyz/design-to-code",
+    "author": "Grida authors",
+    "license": "Apache 2.0",
+    "private": false
+}
