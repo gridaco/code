@@ -1,8 +1,10 @@
 import { ReflectFrameNode } from "@design-sdk/core";
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { Axis as ReflectAxis } from "@reflect-ui/core/lib";
-import { mapCrossAxisAlignment } from "../core-type-mappers";
-import { interpretMainAxisAlignment } from "../interpreter/main-axis-alignment.interpreter";
+import {
+  mapCrossAxisAlignment,
+  mapMainAxisAlignment,
+} from "../core-type-mappers";
 import { interpretMainAxisSize } from "../interpreter/main-axis-size.interpret";
 import { makeSafelyAsList } from "../utils/make-as-safe-list";
 
@@ -15,7 +17,7 @@ export function makeRowColumn(
   const rowOrColumn: RowOrColumn =
     node.layoutMode === ReflectAxis.horizontal ? "Row" : "Column";
 
-  const _mainAxisAlignment = interpretMainAxisAlignment(node.mainAxisAlignment);
+  const _mainAxisAlignment = mapMainAxisAlignment(node.mainAxisAlignment);
   const _mainAxisSize: flutter.MainAxisSize = interpretMainAxisSize(
     node.layoutGrow
   );
