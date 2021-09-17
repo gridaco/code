@@ -1,5 +1,5 @@
-import { ReflectReactWidget } from "../../widgets.reflect/reflect-widget";
-import { BUTTON_IMPORT } from "@coli.codes/reflect-web-builder";
+import { ReflectReactWidget } from "../reflect-widget";
+import { BUTTON_IMPORT } from "@web-builder/reflect-ui";
 import { css } from "coli";
 import { CSSProperties } from "@coli.codes/css";
 export class ReflectButton extends ReflectReactWidget {

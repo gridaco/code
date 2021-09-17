@@ -41,3 +41,15 @@ export function interpretImageFills(
   // this will give image provider `Image.network("https://domain.com/image.png")`
   return new NetworkImage(hostedImage.url);
 }
+
+export function interpretImageFill(fill: Figma.ImagePaint): ImageProvider {
+  let image = retrieveImageFill(fill);
+  const hostedImage = repo_assets.MainImageRepository.instance
+    .get("fill-later-assets")
+    .addImage({
+      key: currentBuildingNodeId,
+      hash: image?.hash,
+    });
+
+  return new NetworkImage(hostedImage.url);
+}

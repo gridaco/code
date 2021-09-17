@@ -3,7 +3,7 @@ import { Figma } from "@design-sdk/figma";
 import { retrieveFill } from "@design-sdk/core/utils";
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { interpretGradient } from "../interpreter/gradient.interpret";
-import { interpretImageFills } from "../interpreter/image.interpret";
+import { interpretImageFill } from "../interpreter/image.interpret";
 import { makeBorderRadius } from "./make-flutter-border-radius";
 import { makeBorder } from "./make-flutter-border";
 import { makeBoxShadow } from "./make-flutter-box-shadow";
@@ -72,7 +72,7 @@ export function makeBoxDecorationBg(
   } else if (fill?.type === "GRADIENT_LINEAR") {
     return interpretGradient(fill);
   } else if (fill?.type == "IMAGE") {
-    return interpretImageFills(fill);
+    return interpretImageFill(fill);
   }
   return undefined;
 }
