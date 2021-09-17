@@ -3,6 +3,7 @@ import * as core from "@reflect-ui/core";
 import { nodes } from "@design-sdk/core";
 import { makeColor } from ".";
 import { TextStyleRepository } from "@design-sdk/figma";
+import { roundDouble } from "../convert";
 
 /**
  * get the code of Text#style (text-style) via the name of the defined textstyle.
@@ -79,7 +80,7 @@ export function makeTextStyle(node: nodes.ReflectTextNode): flutter.TextStyle {
   // make and return new text style
   return new flutter.TextStyle({
     color: fontColor,
-    fontSize: fontSize,
+    fontSize: roundDouble(fontSize),
     fontWeight: fontWeight,
     fontFamily: fontFamily,
     fontStyle: fontStyle,

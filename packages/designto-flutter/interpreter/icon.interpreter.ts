@@ -13,10 +13,12 @@ export function interpretIcon(
     );
   }
 
-  const asset = repo_assets.MainImageRepository.instance.current.addImage({
-    key: node.id,
-    hash: null,
-  });
+  const asset = repo_assets.MainImageRepository.instance
+    .get("fill-later-assets")
+    .addImage({
+      key: node.id,
+      hash: null,
+    });
   return asset;
 }
 

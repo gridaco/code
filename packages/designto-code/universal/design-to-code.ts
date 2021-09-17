@@ -4,27 +4,28 @@ import { Widget } from "@reflect-ui/core";
 import * as toreact from "@designto/react";
 import * as toflutter from "@designto/flutter";
 import { composeAppWithHome } from "@bridged.xyz/flutter-builder";
+import {
+  fetch_all_assets,
+  finalize_temporary_assets_with_prefixed_static_string_keys__dangerously,
+} from "@code-features/assets";
+import { BaseImageRepositories } from "@design-sdk/core/assets-repository";
 
-// ========================================================================
-// region FIXME - REMOVE ME
-import { MainImageRepository } from "@design-sdk/core/assets-repository";
-import { ImageRepositories } from "@design-sdk/figma/asset-repository";
-// set image repo for figma platform
-MainImageRepository.instance = new ImageRepositories();
-// endregion
-// ========================================================================
-
-export function designToCode(
-  input: input.IDesignInput,
-  framework: config.FrameworkConfig
-): output.ICodeOutput {
+export async function designToCode({
+  input,
+  framework,
+  asset_repository,
+}: {
+  input: input.IDesignInput;
+  framework: config.FrameworkConfig;
+  asset_repository?: BaseImageRepositories<string>;
+}): Promise<output.ICodeOutput> {
   const token = tokenize(input.design);
 
   switch (framework.framework) {
     case "react":
       return designToReact({ widget: token });
     case "flutter":
-      return designToFlutter(input);
+      return designToFlutter({ input, asset_repository });
   }
   throw `The framework "${framework}" is not supported at this point.`;
   return;
@@ -36,14 +37,25 @@ export const designTo = {
   flutter: designToFlutter,
 };
 
-export function designToReact(input: { widget: Widget }): output.ICodeOutput {
+export async function designToReact(input: {
+  widget: Widget;
+}): Promise<output.ICodeOutput> {
+  await Promise.resolve();
   const reactwidget = toreact.buildReactWidget(input.widget);
   return toreact.buildReactApp(reactwidget, {
     template: "cra",
   });
 }
 
-export function designToFlutter(input: input.IDesignInput): output.ICodeOutput {
+export async function designToFlutter({
+  input,
+  asset_repository,
+}: {
+  input: input.IDesignInput;
+  asset_repository?: BaseImageRepositories<string>;
+}): Promise<output.ICodeOutput> {
+  await Promise.resolve();
+
   const flutterAppBuild = toflutter.buildApp(input.design);
   const widget = flutterAppBuild?.widget;
   const app =
@@ -53,8 +65,24 @@ export function designToFlutter(input: input.IDesignInput): output.ICodeOutput {
       scrollable: flutterAppBuild.scrollable,
     });
 
-  const widgetCode = widget?.build()?.finalize();
-  const rootAppCode = composeAppWithHome(app);
+  let widgetCode = widget?.build()?.finalize();
+  let rootAppCode = composeAppWithHome(app);
+  // ------------------------------------------------------------------------
+  // finilize temporary assets
+  // this should be placed somewhere else
+  if (asset_repository) {
+    rootAppCode = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
+      rootAppCode,
+      "grida://assets-reservation/images/",
+      await fetch_all_assets(asset_repository)
+    );
+    widgetCode = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
+      widgetCode,
+      "grida://assets-reservation/images/",
+      await fetch_all_assets(asset_repository)
+    );
+  }
+  // ------------------------------------------------------------------------
 
   return {
     code: { raw: widgetCode },

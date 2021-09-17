@@ -4,8 +4,8 @@ import {
   BoxDecoration,
   Color,
 } from "@bridged.xyz/flutter-builder";
-import { makeColorFromRGBO } from "../make/color.make";
-import { interpretGradient } from "./gradient.interpret";
+import { makeColorFromRGBO } from "../make";
+import { interpretGradient } from "../interpreter/gradient.interpret";
 import { interpretBorderRadius } from "./border-radius.interpret";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { ReflectRectangleNode } from "@design-sdk/core";
@@ -15,6 +15,7 @@ import {
   Paint,
   SolidPaint,
 } from "@design-sdk/figma";
+
 export function interpretRect(rect: ReflectRectangleNode): Container {
   const fills = rect.fills as Array<Paint>;
   const fillsCount = fills.length;

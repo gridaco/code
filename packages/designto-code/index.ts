@@ -4,4 +4,4 @@ export * as react from "./react";
 export * as token from "@designto/token";
 
 /* main function */
-export { designToCode } from "./universal";
+export { designToCode, designTo } from "./universal";

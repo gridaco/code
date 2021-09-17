@@ -2,7 +2,7 @@ import {
   BorderRadiusGeometry,
   BorderRadius,
 } from "@bridged.xyz/flutter-builder";
-import { interpretRadius } from "./radius.interpret";
+import { interpretRadius } from "../interpreter/radius.interpret";
 import { BorderRadiusManifest, isCircularRadius } from "@reflect-ui/core";
 
 export function interpretBorderRadius(

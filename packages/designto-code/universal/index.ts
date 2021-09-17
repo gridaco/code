@@ -1,1 +1,8 @@
-export { designToCode } from "./design-to-code";
+export {
+  designToCode,
+  designTo,
+  // --------------
+  designToFlutter,
+  designToReact,
+  designToVue,
+} from "./design-to-code";

@@ -31,12 +31,12 @@ export function interpretImageFills(
     image = retrieveImageFill(fills as Figma.ImagePaint);
   }
 
-  const hostedImage = repo_assets.MainImageRepository.instance.current.addImage(
-    {
+  const hostedImage = repo_assets.MainImageRepository.instance
+    .get("fill-later-assets")
+    .addImage({
       key: currentBuildingNodeId,
       hash: image?.hash,
-    }
-  );
+    });
 
   // this will give image provider `Image.network("https://domain.com/image.png")`
   return new NetworkImage(hostedImage.url);
