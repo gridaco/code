@@ -1,5 +1,5 @@
 import { nodes } from "@design-sdk/core";
-import { layoutAlignToReflectMainAxisSize } from "@design-sdk/figma/converters";
+import { layoutAlignToReflectMainAxisSize } from "@design-sdk/figma-node-conversion";
 import * as core from "@reflect-ui/core";
 import {
   Axis,
