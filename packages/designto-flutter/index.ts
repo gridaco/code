@@ -2,17 +2,18 @@ import { nodes } from "@design-sdk/core";
 import { TextBuilder, WidgetBuilder } from "./widget-builders";
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { makeSafelyAsStackList } from "./utils/make-as-safe-list";
-import { makeDivider } from "./make/divider.make";
+import { makeFlutterDivider } from "./make/make-flutter-divider";
 import { detectIf } from "@reflect-ui/detection";
-import { makeButton } from "./make/button.make";
-import { makeDynamicIcon } from "./make/icon.make";
-import { makeIllustImage } from "./make/image.make";
-import { makeRowColumn } from "./make/column-row.make";
-import { makeStack } from "./make/stack.make";
+import { makeButton } from "./make/make-flutter-flat-button";
+import { makeDynamicIcon } from "./make/make-flutter-icon";
+import { makeIllustImage } from "./make/make-flutter-image";
+import { makeRowColumn } from "./make/make-flutter-column-row";
+import { makeStack } from "./make/make-flutter-stack";
 import { Axis as ReflectAxis } from "@reflect-ui/core/lib";
-import { makeChip } from "./make/chip.make";
+import { makeChip } from "./make/make-flutter-chip";
 import { array, roundNumber } from "@reflect-ui/uiutils";
 import { output } from "@designto/config";
+import { tokenizeDivider } from "@designto/token";
 
 type FlutterScreenOutput = output.ScreenOutput<flutter.Widget>;
 
@@ -139,10 +140,17 @@ function flutterWidgetGenerator(
       );
       return flutterContainer(node, undefined);
     } else if (node instanceof nodes.ReflectLineNode) {
-      console.log(
-        `this node ${node.toString()} is a line. making it as a divider`
-      );
-      return makeDivider(node);
+      const _divider_detection_result = detectIf.divider(node);
+      if (_divider_detection_result.result) {
+        console.log(
+          `this node ${node.toString()} is a line. making it as a divider`
+        );
+        const dividerwidget = tokenizeDivider.fromManifest(
+          node,
+          _divider_detection_result.data
+        );
+        return makeFlutterDivider(dividerwidget);
+      }
     } else if (node instanceof nodes.ReflectGroupNode) {
       console.log(
         `this node ${node.toString()} is a group. handling with group handler`
@@ -278,4 +286,4 @@ function addSpacingIfNeeded(
   return undefined;
 }
 
-export * from "./make/app.make";
+export * from "./make/make-flutter-material-app";

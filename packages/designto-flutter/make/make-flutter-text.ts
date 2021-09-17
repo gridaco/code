@@ -1,10 +1,12 @@
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { nodes } from "@design-sdk/figma";
-import { makeTextStyle } from "./text-style.make";
+import { makeTextStyle } from "./make-flutter-text-style";
 import { mapTextAlign } from "../core-type-mappers";
 import { escapeDartString } from "@coli.codes/escape-string";
 
 /**
+ * [Flutter#Text](https://flutter.dev/docs/development/ui/widgets/text)
+ *
  * makes Text from TextNode
  * @param node text node from desing
  */

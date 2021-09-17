@@ -2,7 +2,7 @@ import * as flutter from "@bridged.xyz/flutter-builder";
 import { ReflectSceneNode } from "@design-sdk/core";
 import { Figma } from "@design-sdk/figma";
 import { roundNumber } from "@reflect-ui/uiutils";
-import { makeColorFromRGBO } from "./color.make";
+import { makeColorFromRGBO } from "./make-flutter-color";
 
 export function makeBoxShadow(
   node: ReflectSceneNode

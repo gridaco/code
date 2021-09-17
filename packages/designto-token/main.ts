@@ -1,9 +1,14 @@
 import { nodes } from "@design-sdk/core";
 import { Widget } from "@reflect-ui/core";
-import { tokenizeText } from "./text";
-import { tokenizeLayout } from "./layout";
-import { tokenizeContainer } from "./container";
-import { tokenizeVector, tokenizeBitmap } from "./graphics";
+import { tokenizeText } from "./token-text";
+import { tokenizeLayout } from "./token-layout";
+import { tokenizeContainer } from "./token-container";
+import {
+  tokenizeVector,
+  tokenizeBitmap,
+  tokenizeGraphics,
+} from "./token-graphics";
+import { tokenizeDivider } from "./token-widgets";
 import { SingleOrArray, isNotEmptyArray } from "./utils";
 import { array } from "@reflect-ui/uiutils";
 
@@ -112,7 +117,12 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
       const _ellipse = node as nodes.ReflectEllipseNode;
       tokenizedTarget = tokenizeContainer.fromEllipse(_ellipse);
       break;
+
     case nodes.ReflectNodeType.line:
+    // const _line = node as nodes.ReflectLineNode;
+    // tokenizedTarget = tokenizeDivider.fromLine(_line);
+    // break;
+
     default:
       console.error(`${node.type} is not yet handled by "@designto/token"`);
       break;

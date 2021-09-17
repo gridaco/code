@@ -1,15 +1,9 @@
 import { nodes } from "@design-sdk/core";
+import * as core from "@reflect-ui/core";
 import * as flutter from "@bridged.xyz/flutter-builder";
-import { makeColor } from "./color.make";
+import { makeColor } from "./make-flutter-color";
 
-export function makeDivider(node: nodes.ReflectDefaultShapeMixin) {
-  // todo migrate this to detection logic
-  if (node.rotation !== 0) {
-    return;
-  }
-  // node.strokeCap
-  // todo implement
-
+export function makeFlutterDivider(node: core.DividerWidget) {
   if (node instanceof nodes.ReflectRectangleNode) {
     // Case 1 has fill, and stroke
     // Case 2 has 0 height, has stroke

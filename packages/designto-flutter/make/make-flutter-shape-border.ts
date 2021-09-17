@@ -1,9 +1,14 @@
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { nodes } from "@design-sdk/core";
-import { makeBorderRadius } from "./border-radius.make";
-import { makeColor } from "./color.make";
+import { makeBorderRadius } from "./make-flutter-border-radius";
+import { makeColor } from "./make-flutter-color";
 
-// TODO this is not fully implemented.
+/**
+ * [Flutter#ShapeBorder](https://api.flutter.dev/flutter/painting/ShapeBorder-class.html)
+ * @deprecated TODO: this is not fully implemented.
+ * @param node
+ * @returns
+ */
 export function makeShape(
   node:
     | nodes.ReflectRectangleNode

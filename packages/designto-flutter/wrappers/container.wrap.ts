@@ -3,7 +3,7 @@ import { nodes } from "@design-sdk/core";
 import { makeEdgeInsets } from "../make";
 import { array } from "@reflect-ui/uiutils";
 import * as flutter from "@bridged.xyz/flutter-builder";
-import { makeBoxDecoration } from "../make/box-decoration.make";
+import { makeBoxDecoration } from "../make/make-flutter-box-decoration";
 import { roundDouble } from "../convert/double.convert";
 
 export function wrapWithContainer(

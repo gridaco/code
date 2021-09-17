@@ -1,9 +1,9 @@
 import { manifests } from "@reflect-ui/detection";
 import * as flutter from "@bridged.xyz/flutter-builder";
-import { makeColor } from "./color.make";
-import { makeBorderRadius } from "./border-radius.make";
-import { makeBorderSide } from "./border-side.make";
-import { makeDynamicIcon, makeIcon } from "./icon.make";
+import { makeColor } from "./make-flutter-color";
+import { makeBorderRadius } from "./make-flutter-border-radius";
+import { makeBorderSide } from "./make-flutter-border-side";
+import { makeDynamicIcon, makeIcon } from "./make-flutter-icon";
 
 export function makeButton(manifest: manifests.DetectedButtonManifest) {
   const text = new flutter.Text(manifest.text?.characters);

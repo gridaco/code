@@ -4,10 +4,10 @@ import { retrieveFill } from "@design-sdk/core/utils";
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { interpretGradient } from "../interpreter/gradient.interpret";
 import { interpretImageFills } from "../interpreter/image.interpret";
-import { makeBorderRadius } from "./border-radius.make";
-import { makeBorder } from "./border.make";
-import { makeBoxShadow } from "./box-shadow.make";
-import { makeColorFromRGBO } from "./color.make";
+import { makeBorderRadius } from "./make-flutter-border-radius";
+import { makeBorder } from "./make-flutter-border";
+import { makeBoxShadow } from "./make-flutter-box-shadow";
+import { makeColorFromRGBO } from "./make-flutter-color";
 
 export function makeBoxDecoration(
   node:

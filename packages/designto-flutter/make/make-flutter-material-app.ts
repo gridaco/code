@@ -1,6 +1,6 @@
 import { MaterialApp, Widget } from "@bridged.xyz/flutter-builder";
-import { makeScreen } from "./scaffold.make";
-import { makeTheme } from "./theme.make";
+import { makeScreen } from "./make-flutter-scaffold";
+import { makeTheme } from "./make-flutter-theme-data";
 
 export function makeApp(home: {
   widget: Widget;

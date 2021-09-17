@@ -1,7 +1,7 @@
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { ReflectDefaultShapeMixin, ReflectSceneNode } from "@design-sdk/core";
 import { roundNumber } from "@reflect-ui/uiutils";
-import { makeColor } from "./color.make";
+import { makeColor } from "./make-flutter-color";
 
 // generate the border, when it exists
 export function makeBorder(node: ReflectSceneNode): flutter.Border {

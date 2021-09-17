@@ -1,9 +1,9 @@
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { manifests } from "@reflect-ui/detection";
 import { makeBorderRadius } from ".";
-import { makeBorderSide } from "./border-side.make";
-import { makeColor } from "./color.make";
-import { makeDynamicIcon } from "./icon.make";
+import { makeBorderSide } from "./make-flutter-border-side";
+import { makeColor } from "./make-flutter-color";
+import { makeDynamicIcon } from "./make-flutter-icon";
 
 export function makeChip(manifest: manifests.DetectedChipManifest) {
   console.log({ manifest });
