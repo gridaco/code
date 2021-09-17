@@ -1,4 +1,4 @@
-import { ReflectDefaultShapeMixin } from "@design-sdk/core/nodes";
+import { ReflectDefaultShapeMixin } from "@design-sdk/core";
 import { ImageProvider, NetworkImage } from "@bridged.xyz/flutter-builder";
 import {
   retrieveImageFill,

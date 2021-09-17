@@ -1,4 +1,4 @@
-import { ReflectFrameNode } from "@design-sdk/core/nodes";
+import { ReflectFrameNode } from "@design-sdk/core";
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { Axis as ReflectAxis } from "@reflect-ui/core/lib";
 import { mapCrossAxisAlignment } from "../core-type-mappers";

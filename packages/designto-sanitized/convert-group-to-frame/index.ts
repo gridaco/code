@@ -1,5 +1,5 @@
-import { ReflectFrameNode, ReflectGroupNode } from "@design-sdk/core/nodes";
-import type { ReflectSceneNode } from "@design-sdk/core/nodes";
+import { ReflectFrameNode, ReflectGroupNode } from "@design-sdk/core";
+import type { ReflectSceneNode } from "@design-sdk/core";
 
 // TODO - Additional feature, this needs to be migrated to @designto/token/logics
 /**

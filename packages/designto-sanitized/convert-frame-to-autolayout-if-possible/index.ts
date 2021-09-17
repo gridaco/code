@@ -14,8 +14,8 @@ import {
   ReflectFrameNode,
   ReflectGroupNode,
   ReflectSceneNodeType,
-} from "@design-sdk/core/nodes";
-import type { ReflectSceneNode } from "@design-sdk/core/nodes";
+} from "@design-sdk/core";
+import type { ReflectSceneNode } from "@design-sdk/core";
 
 /**
  * Add AutoLayout attributes if layout has items aligned (either vertically or horizontally).

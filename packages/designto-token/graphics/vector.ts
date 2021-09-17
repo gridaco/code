@@ -1,4 +1,4 @@
-import { ReflectVectorNode } from "@design-sdk/core/nodes";
+import { ReflectVectorNode } from "@design-sdk/core";
 import { VectorWidget } from "@reflect-ui/core";
 import { keyFromNode } from "../key";
 

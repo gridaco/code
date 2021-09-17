@@ -4,7 +4,7 @@ import {
   ReflectEllipseNode,
   ReflectFrameNode,
   ReflectGroupNode,
-} from "@design-sdk/core/nodes";
+} from "@design-sdk/core";
 import { makeEdgeInsets } from "../make";
 import { array } from "@reflect-ui/uiutils";
 import {

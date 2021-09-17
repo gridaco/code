@@ -2,8 +2,8 @@ import {
   ReflectFrameNode,
   ReflectRectangleNode,
   ReflectGroupNode,
-} from "@design-sdk/core/nodes";
-import type { ReflectSceneNode } from "@design-sdk/core/nodes";
+} from "@design-sdk/core";
+import type { ReflectSceneNode } from "@design-sdk/core";
 import { convert_frame_to_autolayout_if_possible } from "../convert-frame-to-autolayout-if-possible";
 import { convert } from "@design-sdk/figma-node-conversion";
 import { retrieveCollidingChildren } from "@design-sdk/core/utils";
