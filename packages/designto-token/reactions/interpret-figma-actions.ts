@@ -1,13 +1,4 @@
 import { Figma } from "@design-sdk/figma";
-// interpret https://www.figma.com/plugin-docs/api/Action/
-export function isRouteAction(reaction: Figma.Reaction) {
-  const validTrigger =
-    reaction.trigger.type === "ON_CLICK" ||
-    reaction.trigger.type === "ON_PRESS";
-
-  // no need to check for valid action. all action is representable with route
-  return validTrigger;
-}
 
 export function interpretAction(reaction: Figma.Reaction) {
   const trigger = reaction.trigger;

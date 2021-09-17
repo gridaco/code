@@ -1,5 +1,5 @@
 import { detectIf } from "@reflect-ui/detection";
-import { isRouteAction } from "../interpreter/action.interpret";
+import { isRouteAction } from "@design-sdk/figma";
 import { Figma } from "@design-sdk/figma";
 export function makeRoutes(): Array<string> {
   const routes = Array<string>();
