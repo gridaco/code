@@ -6,7 +6,7 @@ import {
 } from "@bridged.xyz/flutter-builder";
 import { makeColorFromRGBO } from "../make/color.make";
 import { interpretGradient } from "./gradient.interpret";
-import { interpretRectCorner } from "./corner.interpret";
+import { interpretBorderRadius } from "./border-radius.interpret";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { ReflectRectangleNode } from "@design-sdk/core/nodes";
 import {
@@ -81,7 +81,7 @@ export function interpretRect(rect: ReflectRectangleNode): Container {
   const decoration = new BoxDecoration({
     color: backgroundColor,
     gradient: gradient,
-    borderRadius: interpretRectCorner(rect),
+    borderRadius: interpretBorderRadius(rect.cornerRadius),
   });
 
   // const backgroundColor =

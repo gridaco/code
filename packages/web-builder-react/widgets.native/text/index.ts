@@ -52,6 +52,9 @@ export class Text extends ReactTextChildWidget {
       "word-spacing": this.style.wordSpacing,
       "text-align": this.alignment,
       "min-height": css.px(this.height),
+
+      // TODO: do not specify width when parent is a flex container.
+      // Also flex: 1 is required to make the text wrap.
       width: css.px(this.width),
     };
   }

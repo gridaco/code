@@ -79,7 +79,6 @@ export class Flex extends ReactMultiChildWidget {
   styleData(): CSSProperties {
     return {
       display: "flex",
-      ...sizing({ ...this }),
       ...css.justifyContent(this.mainAxisAlignment),
       "flex-direction": direction(this.direction),
       "align-items": this.crossAxisAlignment,
@@ -87,6 +86,7 @@ export class Flex extends ReactMultiChildWidget {
       flex: this.flex,
       gap: this.itemSpacing && px(this.itemSpacing),
       "box-shadow": css.boxshadow(this.boxShadow),
+      ...sizing({ ...this }),
       ...css.background(this.background),
       ...css.padding(this.padding),
     };
@@ -114,10 +114,12 @@ function sizing({
   height?: number;
   flex?: number;
 }): CSSProperties {
-  const sizing = <CSSProperties>{
-    "align-self": mainAxisSize == MainAxisSize.max ? "stretch" : undefined,
-    // height: height ?? "100px", // TODO: temp
-  };
-
-  return sizing;
+  if (mainAxisSize === MainAxisSize.max) {
+    return <CSSProperties>{
+      "align-self": "stretch",
+      flex: "1", // This is a temporary solution, since stretch can be used on non-space-between parent, but still the item should stretch, we use flex 1 to do this.
+    };
+  }
+  // TODO:
+  // 1. add widht / height handling
 }

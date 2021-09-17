@@ -1,7 +1,7 @@
 import * as flutter from "@bridged.xyz/flutter-builder";
 import { nodes } from "@design-sdk/figma";
 import { makeTextStyle } from "./text-style.make";
-import { interpretTextAlign } from "../interpreter/text-align.interpreter";
+import { mapTextAlign } from "../core-type-mappers";
 import { escapeDartString } from "@coli.codes/escape-string";
 
 /**
@@ -9,7 +9,7 @@ import { escapeDartString } from "@coli.codes/escape-string";
  * @param node text node from desing
  */
 export function makeText(node: nodes.ReflectTextNode): flutter.Text {
-  const textAlign = interpretTextAlign(node.textAlignHorizontal);
+  const textAlign = mapTextAlign(node.textAlignHorizontal);
 
   //#region get text content
   let text = node.characters;

@@ -1,7 +1,7 @@
 import { Gradient, LinearGradient, Color } from "@bridged.xyz/flutter-builder";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { color_utils } from "@design-sdk/core";
-import { GradientPaint } from "@design-sdk/figma";
+import { GradientPaint } from "@design-sdk/figma-types";
 import { makeColorFromRGBO } from "../make/color.make";
 import { interpretGradientDirection } from "./gradient-direction.interpret";
 
@@ -12,14 +12,14 @@ export function interpretGradient(gradient: GradientPaint): Gradient {
   const direction = interpretGradientDirection(
     color_utils.gradientAngle(gradient)
   );
-  console.log("start making gradient with", gradient.gradientStops);
+  // console.log("start making gradient with", gradient.gradientStops);
 
   let stopPoints: Array<number> = [];
   const colors: Array<Color> = [];
   for (const stop of gradient.gradientStops) {
     const color = makeColorFromRGBO(stop.color, stop.color.a);
     colors.push(color);
-    console.log("color for gradient: ", color);
+    // console.log("color for gradient: ", color);
 
     // stop point as rounded .00 number
     stopPoints.push(roundNumber(stop.position));
