@@ -47,10 +47,10 @@ export function makeEdgeInsets(
   }
 
   return flutter.EdgeInsets.only({
-    left: getOnlyIfNotZero(padding.left),
-    right: getOnlyIfNotZero(padding.right),
-    top: getOnlyIfNotZero(padding.top),
-    bottom: getOnlyIfNotZero(padding.bottom),
+    left: getOnlyIfNotZero(padding.left || padding.horizontal),
+    right: getOnlyIfNotZero(padding.right || padding.horizontal),
+    top: getOnlyIfNotZero(padding.top || padding.vertical),
+    bottom: getOnlyIfNotZero(padding.bottom || padding.vertical),
   });
 }
 
