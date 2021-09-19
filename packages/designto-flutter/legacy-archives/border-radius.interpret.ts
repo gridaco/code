@@ -2,7 +2,7 @@ import {
   BorderRadiusGeometry,
   BorderRadius,
 } from "@bridged.xyz/flutter-builder";
-import { interpretRadius } from "../interpreter/radius.interpret";
+import { mapRadius } from "../core-type-mappers";
 import { BorderRadiusManifest, isCircularRadius } from "@reflect-ui/core";
 import { roundNumber } from "@reflect-ui/uiutils";
 
@@ -12,14 +12,11 @@ export function interpretBorderRadius(
   // figma.mixed means lrtb values are mixed.
   if (borderRadius.all === undefined) {
     return BorderRadius.only({
-      topLeft:
-        borderRadius.tl == 0 ? undefined : interpretRadius(borderRadius.tl),
-      topRight:
-        borderRadius == 0 ? undefined : interpretRadius(borderRadius.tr),
-      bottomLeft:
-        borderRadius.bl == 0 ? undefined : interpretRadius(borderRadius.bl),
+      topLeft: borderRadius.tl == 0 ? undefined : mapRadius(borderRadius.tl),
+      topRight: borderRadius == 0 ? undefined : mapRadius(borderRadius.tr),
+      bottomLeft: borderRadius.bl == 0 ? undefined : mapRadius(borderRadius.bl),
       bottomRight:
-        borderRadius.br == 0 ? undefined : interpretRadius(borderRadius.br),
+        borderRadius.br == 0 ? undefined : mapRadius(borderRadius.br),
     });
   } else {
     if (borderRadius.all != 0) {
