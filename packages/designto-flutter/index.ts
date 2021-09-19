@@ -18,7 +18,6 @@ import { tokenizeDivider } from "@designto/token";
 type FlutterScreenOutput = output.ScreenOutput<flutter.Widget>;
 
 let parentId = "";
-export let currentBuildingNodeId: string;
 
 // the target root widget tree
 let targetId: string;
@@ -41,7 +40,7 @@ function generateRootWidget(
   parentIdSrc: string = ""
 ): flutter.Widget {
   parentId = parentIdSrc;
-  setCurrentNode(sceneNode);
+  _log_current_node(sceneNode);
   let result = flutterWidgetGenerator(sceneNode);
 
   if (Array.isArray(result)) {
@@ -73,7 +72,7 @@ function flutterWidgetGenerator(
     );
 
     sceneNode.forEach((node, index) => {
-      setCurrentNode(node);
+      _log_current_node(node);
       widgets.push(handleNode(node));
 
       // if the parent is an AutoLayout, and itemSpacing is set, add a SizedBox between items.
@@ -102,7 +101,7 @@ function flutterWidgetGenerator(
   }
 
   function handleNode(node: nodes.ReflectSceneNode): flutter.Widget {
-    setCurrentNode(node);
+    _log_current_node(node);
     console.log(
       `starting handling node ${node.toString()} type of ${node.type}`
     );
@@ -164,7 +163,7 @@ function flutterWidgetGenerator(
   }
 }
 
-function setCurrentNode(node: { id: string }) {
+function _log_current_node(node: { id: string }) {
   // console.log(
   //   `
   //   ----------
@@ -172,9 +171,6 @@ function setCurrentNode(node: { id: string }) {
   //   ----------
   //   `
   // );
-
-  // TODO - move this to build process's instance
-  currentBuildingNodeId = node.id;
 }
 
 function flutterGroupHandler(node: nodes.ReflectGroupNode): flutter.Widget {

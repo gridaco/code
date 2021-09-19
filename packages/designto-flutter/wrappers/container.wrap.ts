@@ -22,8 +22,8 @@ export function wrapWithContainer(
     return child;
   }
 
-  // ignore for Groups
   const _boxDecoration =
+    // ignore for GroupNode
     node instanceof nodes.ReflectGroupNode
       ? undefined
       : makeBoxDecoration(node);

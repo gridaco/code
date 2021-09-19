@@ -4,6 +4,7 @@ import {
 } from "@bridged.xyz/flutter-builder";
 import { interpretRadius } from "../interpreter/radius.interpret";
 import { BorderRadiusManifest, isCircularRadius } from "@reflect-ui/core";
+import { roundNumber } from "@reflect-ui/uiutils";
 
 export function interpretBorderRadius(
   borderRadius: BorderRadiusManifest
@@ -23,7 +24,7 @@ export function interpretBorderRadius(
   } else {
     if (borderRadius.all != 0) {
       if (isCircularRadius(borderRadius.all)) {
-        return BorderRadius.circular(borderRadius.all);
+        return BorderRadius.circular(roundNumber(borderRadius.all));
       } else {
         // TODO: handle elliptical radii
       }

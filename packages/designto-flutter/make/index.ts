@@ -8,7 +8,7 @@ import { makeTextStyle } from "./make-flutter-text-style";
 import { makeText } from "./make-flutter-text";
 import {
   makeBoxDecoration,
-  makeBoxDecorationBg,
+  makeBoxDecorationColorBg,
 } from "./make-flutter-box-decoration";
 
 export {
@@ -16,7 +16,7 @@ export {
   makeBorder,
   makeBoxShadow,
   makeBoxDecoration,
-  makeBoxDecorationBg as makeBoxDecorationFill,
+  makeBoxDecorationColorBg as makeBoxDecorationBg,
   makeColor,
   makeColorFromRGBO,
   makeEdgeInsets,

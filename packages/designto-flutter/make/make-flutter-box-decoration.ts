@@ -8,6 +8,12 @@ import { makeBorderRadius } from "./make-flutter-border-radius";
 import { makeBorder } from "./make-flutter-border";
 import { makeBoxShadow } from "./make-flutter-box-shadow";
 import { makeColorFromRGBO } from "./make-flutter-color";
+import { detectIf } from "@reflect-ui/detection";
+
+type DecorationBackgroundLike =
+  | flutter.Color
+  | flutter.Gradient
+  | flutter.ImageProvider;
 
 export function makeBoxDecoration(
   node:
@@ -15,10 +21,29 @@ export function makeBoxDecoration(
     | nodes.ReflectEllipseNode
     | nodes.ReflectFrameNode
 ): flutter.BoxDecoration | flutter.Color {
-  const decorationBackground = makeBoxDecorationBg(node.fills);
   const decorationBorder = makeBorder(node);
   const decorationBoxShadow = makeBoxShadow(node);
   const decorationBorderRadius = makeBorderRadius(node);
+
+  ///
+  /// ----------------------------------------------------------------
+  ///
+  let decorationBackground: DecorationBackgroundLike;
+  // case: image bg ---------------------
+  const _image_detection_result = detectIf.image(node);
+  if (_image_detection_result.result) {
+    decorationBackground = makeBoxDecorationImageBg(
+      _image_detection_result.data,
+      node.id
+    );
+  }
+  // case: solid color or gradient bg --
+  else {
+    decorationBackground = makeBoxDecorationColorBg(node.fills);
+  }
+  ///
+  /// ----------------------------------------------------------------
+  ///
 
   // modify the circle's shape when type is ellipse
   const decorationShape: flutter.BoxShape =
@@ -27,14 +52,13 @@ export function makeBoxDecoration(
       : undefined;
 
   // generate the decoration, or just the backgroundColor when color is SOLID.
-  const isNotSolid =
+  const is_not_simple_solid =
     decorationBorder ||
     decorationShape ||
-    decorationBorder ||
     decorationBorderRadius ||
     decorationBackground;
 
-  return isNotSolid
+  return is_not_simple_solid
     ? new flutter.BoxDecoration({
         borderRadius: decorationBorderRadius,
         shape: decorationShape,
@@ -56,23 +80,43 @@ export function makeBoxDecoration(
             ? (decorationBackground as flutter.Gradient)
             : undefined,
       })
-    : decorationBackground instanceof flutter.Color
+    : /** when bg is a simple solid color */
+    decorationBackground instanceof flutter.Color
     ? (decorationBackground as flutter.Color)
     : undefined;
 }
 
-export function makeBoxDecorationBg(
-  fills: ReadonlyArray<Figma.Paint>
-): flutter.Gradient | flutter.Color | flutter.ImageProvider {
-  const fill = retrieveFill(fills);
+export function makeBoxDecorationImageBg(
+  fill: Figma.ImagePaint,
+  key: string
+): flutter.ImageProvider {
+  return interpretImageFill(fill, key);
+}
 
-  if (fill?.type === "SOLID") {
-    const opacity = fill.opacity ?? 1.0;
-    return makeColorFromRGBO(fill.color, opacity);
-  } else if (fill?.type === "GRADIENT_LINEAR") {
-    return interpretGradient(fill);
-  } else if (fill?.type == "IMAGE") {
-    return interpretImageFill(fill);
+export function makeBoxDecorationColorBg(
+  fills: ReadonlyArray<Figma.Paint>
+): flutter.Gradient | flutter.Color {
+  const fill = retrieveFill(fills);
+  if (!fill) {
+    return;
   }
-  return undefined;
+
+  const opacity = fill.opacity ?? 1.0;
+
+  switch (fill.type) {
+    case "GRADIENT_ANGULAR":
+    case "GRADIENT_DIAMOND":
+    case "GRADIENT_RADIAL":
+      // TODO: handle above gradient types (only linear is handled)
+      console.log(
+        "not handled: `GRADIENT_RADIAL` | `GRADIENT_DIAMOND` | `GRADIENT_ANGULAR`"
+      );
+      return undefined;
+    case "GRADIENT_LINEAR":
+      return interpretGradient(fill);
+    case "SOLID":
+      return makeColorFromRGBO(fill.color, opacity);
+    default:
+      throw `making colored box decoraton with fill type "${fill?.type}" is not allowed."`;
+  }
 }

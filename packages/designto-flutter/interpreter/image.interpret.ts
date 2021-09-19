@@ -5,7 +5,6 @@ import {
   retrievePrimaryImageFill,
 } from "@design-sdk/core/utils/retrieve-image-fills";
 import { repo_assets } from "@design-sdk/core";
-import { currentBuildingNodeId } from "..";
 import { Figma } from "@design-sdk/figma";
 
 /**
@@ -16,12 +15,16 @@ export function interpretImageFilllNode(
   node: ReflectDefaultShapeMixin
 ): ImageProvider {
   if (node.hasImage) {
-    return interpretImageFills(node.fills as ReadonlyArray<Figma.Paint>);
+    return interpretImageFills(
+      node.fills as ReadonlyArray<Figma.Paint>,
+      node.id
+    );
   }
 }
 
 export function interpretImageFills(
-  fills: ReadonlyArray<Figma.Paint> | Figma.Paint
+  fills: ReadonlyArray<Figma.Paint> | Figma.Paint,
+  key: string
 ): ImageProvider {
   let image: Figma.Image;
   if (Array.isArray(fills)) {
@@ -34,7 +37,7 @@ export function interpretImageFills(
   const hostedImage = repo_assets.MainImageRepository.instance
     .get("fill-later-assets")
     .addImage({
-      key: currentBuildingNodeId,
+      key: key,
       hash: image?.hash,
     });
 
@@ -42,12 +45,15 @@ export function interpretImageFills(
   return new NetworkImage(hostedImage.url);
 }
 
-export function interpretImageFill(fill: Figma.ImagePaint): ImageProvider {
+export function interpretImageFill(
+  fill: Figma.ImagePaint,
+  key: string
+): ImageProvider {
   let image = retrieveImageFill(fill);
   const hostedImage = repo_assets.MainImageRepository.instance
     .get("fill-later-assets")
     .addImage({
-      key: currentBuildingNodeId,
+      key: key,
       hash: image?.hash,
     });
 
