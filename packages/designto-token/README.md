@@ -8,6 +8,8 @@ Tokenize package uses reflec-detection internally, reflect raw node as input, re
 
 ## How is the token designed?
 
+> Token is a minimal atomic node that can no more be splitted, so it can be adopted universally to merge and build by platforms / frameworks. Its design is like Coli's design.
+
 We had two options to design the general architecture of this. first one was to accpeting all property-like nodes as a token as well, second was to accept the token as a container and others as a property in a more intuitive way.
 
 This is more easier to understand if you think of both flutter and css.

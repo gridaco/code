@@ -40,7 +40,6 @@ export function buildReactWidgetFromReflectWidget(
   } else if (widget instanceof core.SingleChildScrollView) {
     // since web css does not require additional hierarchy for scroll view, we can simply merge properties.
     // merge single child scroll view properties for
-    console.log("scrollable widget hit", widget, widget.child);
     thisReactWidget = new react.Flex({
       ...widget.child,
       ...widget,
@@ -59,6 +58,12 @@ export function buildReactWidgetFromReflectWidget(
     thisReactWidget = new react.SvgElement({
       ...widget,
       data: widget.data,
+      key: _key,
+    });
+  } else if (widget instanceof core.ImageWidget) {
+    thisReactWidget = new react.ImageElement({
+      ...widget,
+      src: widget.src,
       key: _key,
     });
   }
