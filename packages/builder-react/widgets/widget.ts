@@ -11,6 +11,12 @@ export abstract class ReactWidget extends WidgetWithStyle {
   abstract readonly children?: ReactWidget[];
 }
 
+export abstract class ReactSelfClosingWidget
+  extends ReactWidget
+  implements Omit<ReactWidget, "children"> {
+  readonly children?: undefined;
+}
+
 /**
  * React widget that contains multiple children in the same depth 1 hierarchy
  */

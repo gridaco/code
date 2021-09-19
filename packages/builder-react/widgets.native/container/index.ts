@@ -52,3 +52,9 @@ export class Container extends ReactWidget {
     };
   }
 }
+
+export abstract class SelfClosingContainer
+  extends Container
+  implements Omit<Container, "children"> {
+  readonly children?: undefined;
+}
