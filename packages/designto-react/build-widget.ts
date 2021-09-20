@@ -66,7 +66,30 @@ export function buildReactWidgetFromReflectWidget(
       src: widget.src,
       key: _key,
     });
+  } else if (widget instanceof core.IconWidget) {
+    // TODO: not ready - svg & named icon not supported
+    switch ((widget.icon as core.IconData)._type) {
+      case "named-icon": {
+        thisReactWidget = new react.ImageElement({
+          ...widget,
+          src:
+            "https://bridged-service-static.s3.us-west-1.amazonaws.com/branding/logo/32.png", // TODO: change this
+          key: _key,
+        });
+        break;
+      }
+      case "remote-uri": {
+        thisReactWidget = new react.ImageElement({
+          ...widget,
+          src: widget.icon.uri,
+          key: _key,
+          alt: "icon",
+        });
+        break;
+      }
+    }
   }
+
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
   else if (widget instanceof core.Container) {
     thisReactWidget = new react.Container({

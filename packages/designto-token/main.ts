@@ -82,6 +82,12 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
   if (_detect_if_image.result) {
     return tokenizeGraphics.fromImage(node, _detect_if_image.data);
   }
+
+  // - icon -
+  const _detect_if_icon = detectIf.icon(node);
+  if (_detect_if_icon.result) {
+    return tokenizeGraphics.fromIcon(node, _detect_if_icon.data);
+  }
   // -------------------------------------------------------------------------
   // --------------------------- Detected tokens -----------------------------
   // -------------------------------------------------------------------------

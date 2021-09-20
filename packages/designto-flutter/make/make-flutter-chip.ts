@@ -3,7 +3,6 @@ import { manifests } from "@reflect-ui/detection";
 import { makeBorderRadius } from ".";
 import { makeBorderSide } from "./make-flutter-border-side";
 import { makeColor } from "./make-flutter-color";
-import { makeDynamicIcon } from "./make-flutter-icon";
 
 export function makeChip(manifest: manifests.DetectedChipManifest) {
   console.log({ manifest });
@@ -29,12 +28,13 @@ export function makeChip(manifest: manifests.DetectedChipManifest) {
   var trailingWidget;
 
   if (manifest.leading) {
-    // TODO :: Make
+    // TODO: Make
   }
 
   if (manifest.trailing) {
-    const icon = makeDynamicIcon(manifest.trailing);
-    trailingWidget = icon;
+    // TODO: implement trailing
+    // const icon = makeDynamicIcon(manifest.trailing);
+    // trailingWidget = icon;
   }
 
   return new flutter.Chip({

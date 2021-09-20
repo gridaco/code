@@ -1,40 +1,79 @@
-import { nodes } from "@design-sdk/core";
+import { ReflectSceneNode } from "@design-sdk/core";
 import * as flutter from "@bridged.xyz/flutter-builder";
-import { makeColor } from ".";
-import { interpretIcon } from "../interpreter/icon.interpreter";
+import {
+  findRemotePreservedDefaultNamedOssIcon,
+  interpretFlutterImageIcon,
+  interpretFlutterMaterialIconData,
+} from "../interpreter/icon.interpreter";
+import { Color, IconManifest, MdiConfig } from "@reflect-ui/core";
+import { makeFlutterColorFromReflectColor } from "./make-flutter-color";
+import { DetectedIconData } from "@reflect-ui/detection/lib/icon.detection";
 
-export function makeDynamicIcon(
-  node: nodes.ReflectSceneNode
-): flutter.Icon | flutter.Image {
-  const iconContent = interpretIcon(node);
-  if (iconContent instanceof flutter.IconData) {
-    return makeIcon(node, iconContent);
-  } else {
-    return flutter.Image.network(iconContent.url, {
-      width: node.width,
-      height: node.height,
-      fit: flutter.BoxFit.cover as flutter.Snippet,
-    })
-      .addComment("Detected as Icon")
-      .addComment(
-        `FIXME: Check your design. this is an icon of node ${node.toString()}. we couldn't any matching flutter native icon, so we uploaded the asset to the cloud, load from it.`
-      );
+type FlutterDynamicIconLike = flutter.Icon | flutter.Image;
+export function makeDetectedIcon(d: DetectedIconData): FlutterDynamicIconLike {
+  switch (d.type) {
+    case "named":
+      if (d.icon.host === "material") {
+        const icondata = interpretFlutterMaterialIconData(
+          d as IconManifest<MdiConfig>
+        );
+        return makeIcon({
+          size: d.size,
+          icon: icondata,
+          color: d.color,
+        });
+      } else {
+        const remote_named_icon_src = findRemotePreservedDefaultNamedOssIcon(
+          d.icon
+        );
+        return makeIconAsImage({
+          ...d,
+          icon: remote_named_icon_src,
+        });
+        // other than mdi is not handled.
+      }
+      break;
+    case "design-node":
+      return makeDesignNodeIconAsImage(d);
   }
 }
 
-export function makeIcon(node: nodes.ReflectSceneNode, icon: flutter.IconData) {
-  let fills = node.primaryFill;
+function makeDesignNodeIconAsImage(
+  d: IconManifest<ReflectSceneNode>
+): flutter.Image {
+  const iconContent = interpretFlutterImageIcon(d.icon);
+  return flutter.Image.network(iconContent.url, {
+    width: d.size,
+    height: d.size,
+    fit: flutter.BoxFit.cover as flutter.Snippet,
+  })
+    .addComment("Detected as Icon")
+    .addComment(
+      `TODO: Check your design. this is an icon of node ${d.icon.toString()}. we couldn't any matching flutter native icon, so we uploaded the asset to the cloud, load from it.`
+    );
+}
 
-  return new flutter.Icon(icon, {
-    size: node.width,
-    color: makeColor(fills),
+function makeIconAsImage(d: IconManifest<string>) {
+  return flutter.Image.network(d.icon, {
+    width: d.size,
+    height: d.size,
+    fit: flutter.BoxFit.cover as flutter.Snippet,
   });
 }
 
-export function makePlaceholderIcon(
-  node: nodes.ReflectSceneNode
-): flutter.Icon {
-  return makeIcon(node, flutter.Snippet.fromStatic("Icons.add"));
+export function makeIcon({
+  icon,
+  size,
+  color,
+}: {
+  icon: flutter.IconData;
+  size: number;
+  color: Color;
+}) {
+  return new flutter.Icon(icon, {
+    size: size,
+    color: makeFlutterColorFromReflectColor(color),
+  });
 }
 
 /**

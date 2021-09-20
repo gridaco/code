@@ -5,7 +5,7 @@ import { makeSafelyAsStackList } from "./utils/make-as-safe-list";
 import { makeFlutterDivider } from "./make/make-flutter-divider";
 import { detectIf } from "@reflect-ui/detection";
 import { makeButton } from "./make/make-flutter-flat-button";
-import { makeDynamicIcon } from "./make/make-flutter-icon";
+import { makeDetectedIcon } from "./make/make-flutter-icon";
 import { makeIllustImage } from "./make/make-flutter-image";
 import { makeRowColumn } from "./make/make-flutter-column-row";
 import { makeStack } from "./make/make-flutter-stack";
@@ -108,25 +108,25 @@ function flutterWidgetGenerator(
 
     const chipDetectionResult = detectIf.chip(node);
     if (chipDetectionResult.result) {
-      console.log("this node is detected as Chip", node.name);
+      console.log("detected:: this node is detected as Chip", node.name);
       return makeChip(chipDetectionResult.data);
     }
 
     const buttonDetectionResult = detectIf.button(node);
     if (buttonDetectionResult.result) {
-      console.log("this node is detected as button.", node.name);
+      console.log("detected:: this node is detected as button.", node.name);
       return makeButton(buttonDetectionResult.data);
     }
 
     const iconDetectionResult = detectIf.icon(node);
     if (iconDetectionResult.result) {
-      console.log("this node is detected as an icon.", node.name);
-      return makeDynamicIcon(node);
+      console.log("detected:: this node is detected as an icon.", node.name);
+      return makeDetectedIcon(iconDetectionResult.data);
     }
 
     const illustDetectionResult = detectIf.illust(node);
     if (illustDetectionResult.result) {
-      console.log("this node is detected as an illust.", node.name);
+      console.log("detected:: this node is detected as an illust.", node.name);
       return makeIllustImage(node);
     }
 

@@ -3,8 +3,8 @@ import * as flutter from "@bridged.xyz/flutter-builder";
 import { makeColor } from "./make-flutter-color";
 import { makeBorderRadius } from "./make-flutter-border-radius";
 import { makeBorderSide } from "./make-flutter-border-side";
-import { makeDynamicIcon, makeIcon } from "./make-flutter-icon";
-
+import { makeDetectedIcon } from "./make-flutter-icon";
+import { onPressed } from "../static-snippets";
 export function makeButton(manifest: manifests.DetectedButtonManifest) {
   const text = new flutter.Text(manifest.text?.characters);
   const color: flutter.Color = makeColor(manifest.base.fills);
@@ -15,12 +15,9 @@ export function makeButton(manifest: manifests.DetectedButtonManifest) {
     borderRadius: makeBorderRadius(manifest.base),
     side: makeBorderSide(manifest.base),
   });
-  const onPressed = flutter.Snippet.fromStatic(
-    '(){ print("Button clicked!"); }'
-  ) as any;
 
   if (manifest.icon) {
-    const icon = makeDynamicIcon(manifest.icon);
+    const icon = makeDetectedIcon(manifest.icon);
     return flutter.FlatButton.icon({
       onPressed: onPressed,
       label: text,
