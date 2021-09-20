@@ -42,6 +42,16 @@ yarn add @coli.codes/react-builder
 all html atrributes for react (naming)
 
 ```ts
+type Key = string | number;
+
+/**
+ * @internal You shouldn't need to use this type since you never see these attributes
+ * inside your component or have to validate them.
+ */
+interface Attributes {
+  key?: Key | null | undefined;
+}
+
 // All the WAI-ARIA 1.1 attributes from https://www.w3.org/TR/wai-aria-1.1/
 interface AriaAttributes {
   /** Identifies the currently active element when DOM focus is on a composite widget, textbox, group, or application. */
@@ -516,5 +526,43 @@ interface AllHTMLAttributes<T> extends HTMLAttributes<T> {
   width?: number | string | undefined;
   wmode?: string | undefined;
   wrap?: string | undefined;
+}
+```
+
+## Key
+
+> How we handle lists & keys for react
+
+[React lists-and-keys](https://reactjs.org/docs/lists-and-keys.html)
+
+```tsx
+<ul id="example-1">
+  {[1, 2, 3].map((i) => {
+    return <li key={i}>{{ i }}</li>;
+  })}
+</ul>
+```
+
+> Vue has a same concept, but in vue syntax
+
+```vue
+<ul id="example-1">
+  <li v-for="item in items" :key="item.message">
+    {{ item.message }}
+  </li>
+</ul>
+```
+
+from `index.d.ts`
+
+```ts
+type Key = string | number;
+
+/**
+ * @internal You shouldn't need to use this type since you never see these attributes
+ * inside your component or have to validate them.
+ */
+interface Attributes {
+  key?: Key | null | undefined;
 }
 ```
