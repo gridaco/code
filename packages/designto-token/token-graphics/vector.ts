@@ -1,5 +1,7 @@
-import { ReflectVectorNode } from "@design-sdk/core";
-import { VectorWidget } from "@reflect-ui/core";
+import { ReflectSceneNode, ReflectVectorNode } from "@design-sdk/core";
+import { MainImageRepository } from "@design-sdk/core/assets-repository";
+import { ImagePaint } from "@design-sdk/figma-types";
+import { ImageWidget, VectorWidget } from "@reflect-ui/core";
 import { keyFromNode } from "../key";
 
 function fromStar(): VectorWidget {
@@ -29,15 +31,28 @@ function fromFrame() {
   // return new VectorWidget("");
 }
 
-function fromGroup() {
-  // return new VectorWidget("");
+function fromImage(image: ReflectSceneNode, data: ImagePaint) {
+  const _tmp_img = MainImageRepository.instance
+    .get("fill-later-assets")
+    .addImage({
+      key: image.id,
+      hash: data.imageHash,
+    });
+
+  const _key = keyFromNode(image);
+  return new ImageWidget({
+    key: _key,
+    src: _tmp_img.url,
+    width: image.width,
+    height: image.height,
+  });
 }
 
 export const tokenizeVector = {
   fromStar: fromStar,
   fromLine: fromLine,
   fromPoligon: fromPoligon,
-  fromFrame: fromFrame,
-  fromGroup: fromGroup,
+  // fromFrame: fromFrame,
+  fromImage: fromImage,
   fromVector: fromVector,
 };

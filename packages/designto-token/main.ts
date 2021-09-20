@@ -11,6 +11,7 @@ import {
 import { tokenizeDivider } from "./token-widgets";
 import { SingleOrArray, isNotEmptyArray } from "./utils";
 import { array } from "@reflect-ui/uiutils";
+import { detectIf } from "@reflect-ui/detection";
 
 export type { Widget };
 
@@ -71,6 +72,19 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
     );
     return;
   }
+
+  // -------------------------------------------------------------------------
+  // --------------------------- Detected tokens -----------------------------
+  // -------------------------------------------------------------------------
+
+  // - image -
+  const _detect_if_image = detectIf.image(node);
+  if (_detect_if_image.result) {
+    return tokenizeGraphics.fromImage(node, _detect_if_image.data);
+  }
+  // -------------------------------------------------------------------------
+  // --------------------------- Detected tokens -----------------------------
+  // -------------------------------------------------------------------------
 
   let tokenizedTarget: Widget;
   switch (node.type as string) {

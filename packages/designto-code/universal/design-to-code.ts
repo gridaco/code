@@ -23,7 +23,7 @@ export async function designToCode({
 
   switch (framework.framework) {
     case "react":
-      return designToReact({ widget: token });
+      return designToReact({ input: { widget: token }, asset_repository });
     case "flutter":
       return designToFlutter({ input, asset_repository });
   }
@@ -37,14 +37,37 @@ export const designTo = {
   flutter: designToFlutter,
 };
 
-export async function designToReact(input: {
-  widget: Widget;
+export async function designToReact({
+  input,
+  asset_repository,
+}: {
+  input: { widget: Widget };
+  asset_repository?: BaseImageRepositories<string>;
 }): Promise<output.ICodeOutput> {
   await Promise.resolve();
   const reactwidget = toreact.buildReactWidget(input.widget);
-  return toreact.buildReactApp(reactwidget, {
+  const res = toreact.buildReactApp(reactwidget, {
     template: "cra",
   });
+
+  // ------------------------------------------------------------------------
+  // finilize temporary assets
+  // this should be placed somewhere else
+  if (asset_repository) {
+    res.code.raw = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
+      res.code.raw,
+      "grida://assets-reservation/images/",
+      await fetch_all_assets(asset_repository)
+    );
+    res.scaffold.raw = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
+      res.scaffold.raw,
+      "grida://assets-reservation/images/",
+      await fetch_all_assets(asset_repository)
+    );
+  }
+  // ------------------------------------------------------------------------
+
+  return res;
 }
 
 export async function designToFlutter({
