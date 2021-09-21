@@ -6,10 +6,11 @@ export class ReflectButton extends ReflectReactWidget {
   readonly imports: string = BUTTON_IMPORT.named;
   readonly tag: string = BUTTON_IMPORT.name;
 
-  attributes() {
+  styleData(): CSSProperties {
     return {};
   }
-  styleData(): CSSProperties {
+
+  attributes() {
     return {};
   }
 }

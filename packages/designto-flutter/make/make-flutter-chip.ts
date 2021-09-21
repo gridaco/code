@@ -6,7 +6,7 @@ import { makeColor } from "./make-flutter-color";
 
 export function makeChip(manifest: manifests.DetectedChipManifest) {
   console.log({ manifest });
-  var content = new flutter.Text(manifest.content?.characters);
+  var content = new flutter.Text(manifest.content?.text);
   const color: flutter.Color = makeColor(manifest.base.fills);
   const textColor: flutter.Color = makeColor(manifest.content?.fills);
   const height = manifest.base.height;

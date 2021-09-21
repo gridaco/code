@@ -8,7 +8,7 @@ import {
   tokenizeBitmap,
   tokenizeGraphics,
 } from "./token-graphics";
-import { tokenizeDivider } from "./token-widgets";
+import { tokenizeButton, tokenizeDivider } from "./token-widgets";
 import { SingleOrArray, isNotEmptyArray } from "./utils";
 import { array } from "@reflect-ui/uiutils";
 import { detectIf } from "@reflect-ui/detection";
@@ -88,6 +88,13 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
   if (_detect_if_icon.result) {
     return tokenizeGraphics.fromIcon(node, _detect_if_icon.data);
   }
+
+  // - button -
+  const _detect_if_button = detectIf.button(node);
+  if (_detect_if_button.result) {
+    return tokenizeButton.fromManifest(node, _detect_if_button.data);
+  }
+
   // -------------------------------------------------------------------------
   // --------------------------- Detected tokens -----------------------------
   // -------------------------------------------------------------------------

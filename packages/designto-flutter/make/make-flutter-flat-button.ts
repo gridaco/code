@@ -5,8 +5,9 @@ import { makeBorderRadius } from "./make-flutter-border-radius";
 import { makeBorderSide } from "./make-flutter-border-side";
 import { makeDetectedIcon } from "./make-flutter-icon";
 import { onPressed } from "../static-snippets";
-export function makeButton(manifest: manifests.DetectedButtonManifest) {
-  const text = new flutter.Text(manifest.text?.characters);
+
+export function makeFlatButton(manifest: manifests.DetectedButtonManifest) {
+  const text = new flutter.Text(manifest.text?.text);
   const color: flutter.Color = makeColor(manifest.base.fills);
   const textColor: flutter.Color = makeColor(manifest.text?.fills);
   const minWidth = manifest.base.width;

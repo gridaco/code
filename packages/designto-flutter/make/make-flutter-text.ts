@@ -11,10 +11,10 @@ import { escapeDartString } from "@coli.codes/escape-string";
  * @param node text node from desing
  */
 export function makeText(node: nodes.ReflectTextNode): flutter.Text {
-  const textAlign = mapTextAlign(node.textAlignHorizontal);
+  const textAlign = mapTextAlign(node.textAlign);
 
   //#region get text content
-  let text = node.characters;
+  let text = node.text;
   switch (node.textCase) {
     case "LOWER":
       text = text.toLowerCase();

@@ -4,7 +4,7 @@ import * as flutter from "@bridged.xyz/flutter-builder";
 import { makeSafelyAsStackList } from "./utils/make-as-safe-list";
 import { makeFlutterDivider } from "./make/make-flutter-divider";
 import { detectIf } from "@reflect-ui/detection";
-import { makeButton } from "./make/make-flutter-flat-button";
+import { makeFlatButton } from "./make/make-flutter-flat-button";
 import { makeDetectedIcon } from "./make/make-flutter-icon";
 import { makeIllustImage } from "./make/make-flutter-image";
 import { makeRowColumn } from "./make/make-flutter-column-row";
@@ -115,7 +115,7 @@ function flutterWidgetGenerator(
     const buttonDetectionResult = detectIf.button(node);
     if (buttonDetectionResult.result) {
       console.log("detected:: this node is detected as button.", node.name);
-      return makeButton(buttonDetectionResult.data);
+      return makeFlatButton(buttonDetectionResult.data);
     }
 
     const iconDetectionResult = detectIf.icon(node);

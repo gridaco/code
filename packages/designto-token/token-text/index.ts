@@ -13,8 +13,8 @@ export function fromText(node: nodes.ReflectTextNode): Text {
 
   return new Text({
     key: keyFromNode(node),
-    data: node.characters,
-    alignment: node.textAlignHorizontal,
+    data: node.text,
+    alignment: node.textAlign,
     style: new TextStyle({
       fontFamily: node.fontName.family,
       fontSize: node.fontSize,
