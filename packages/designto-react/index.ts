@@ -1,9 +1,9 @@
 import { Widget } from "@reflect-ui/core";
-import { buildReactWidgetFromReflectWidget } from "./build-widget";
+import { buildReactWidgetFromTokens } from "./build-widget";
 import {
   ReactWidget,
   stringfyReactWidget_STYLED_COMPONENTS,
-} from "../builder-react";
+} from "@web-builder/react";
 import { react as config } from "@designto/config";
 
 export function buildReactApp(
@@ -23,5 +23,5 @@ export function buildReactWidget(widget: Widget) {
   if (!widget) {
     throw "A valid reflect widget manifest should be passed as an input. none was passed.";
   }
-  return buildReactWidgetFromReflectWidget(widget);
+  return buildReactWidgetFromTokens(widget, { is_root: true });
 }

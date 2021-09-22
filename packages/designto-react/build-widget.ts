@@ -1,10 +1,13 @@
 import * as core from "@reflect-ui/core";
-import * as react from "../builder-react";
-import { ReactWidget } from "../builder-react";
-import { keyFromWidget } from "../builder-web-core";
+import * as react from "@web-builder/react";
+import { ReactWidget } from "@web-builder/react";
+import { keyFromWidget } from "@web-builder/core";
 
-export function buildReactWidgetFromReflectWidget(
-  widget: core.Widget
+export function buildReactWidgetFromTokens(
+  widget: core.Widget,
+  context: {
+    is_root: boolean;
+  }
 ): ReactWidget {
   const handleChildren = (children: core.Widget[]): ReactWidget[] => {
     return children?.map((c) => {
@@ -13,7 +16,17 @@ export function buildReactWidgetFromReflectWidget(
   };
 
   const handleChild = (child: core.Widget): ReactWidget => {
-    return buildReactWidgetFromReflectWidget(child);
+    return buildReactWidgetFromTokens(child, { ...context, is_root: false });
+  };
+
+  const _remove_width_height_if_root_wh = {
+    width: context.is_root ? undefined : widget.width,
+    height: context.is_root ? undefined : widget.height,
+  };
+
+  const default_props_for_layout = {
+    ...widget,
+    ..._remove_width_height_if_root_wh,
   };
 
   const _key = keyFromWidget(widget);
@@ -21,19 +34,19 @@ export function buildReactWidgetFromReflectWidget(
   let thisReactWidget: ReactWidget;
   if (widget instanceof core.Column) {
     thisReactWidget = new react.Column({
-      ...widget,
+      ...default_props_for_layout,
       children: handleChildren(widget.children),
       key: _key,
     });
   } else if (widget instanceof core.Row) {
     thisReactWidget = new react.Row({
-      ...widget,
+      ...default_props_for_layout,
       children: handleChildren(widget.children),
       key: _key,
     });
   } else if (widget instanceof core.Stack) {
     thisReactWidget = new react.Stack({
-      ...widget,
+      ...default_props_for_layout,
       children: handleChildren(widget.children as []),
       key: _key,
     });
