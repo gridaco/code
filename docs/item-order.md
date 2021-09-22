@@ -56,7 +56,16 @@ And below is the short version of the above image.
 ]
 ```
 
+**Relation between index and z-index**
+As shown above, the lastly created item places on the last of the array index, and top of the visual tree (on design tool), which will have the highest z-index also.
+
 **Sorting strategy**
 
 When sorting strategy not applied and code gen with raw input, below result may come.
 ![](./worng-sorting-example-when-not-sanitized.png)
+
+**Exceptional cases**
+
+> What if the item is intetionally on the top (z) even if it's placed at the bottom of the parent?
+
+On this case, it can be both intended or a design error. the good example of this being a valid case is a bottom navigation. But also bottom navigation should be constrained to follow the bottom.
