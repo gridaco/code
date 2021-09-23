@@ -85,3 +85,5 @@ Column(Modifier.width(IntrinsicSize.Max)) {
 ## Note - The problem & Good to know
 
 While css can handle all figma constraints (including STRETCH) with `position`, `left`, `right`, `top` and `bottom`, other platform requires additional wrap or modification on different property, which makes the token to break down into deeper level.
+
+There is always a way to use stack + positioned to make it work as the same way css does, but in declarative language, this will get lot massy (long, unreadable code.).
