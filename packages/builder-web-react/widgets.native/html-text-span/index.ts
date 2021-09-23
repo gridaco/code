@@ -16,8 +16,8 @@ export class Text extends ReactTextChildWidget {
   overflow: TextOverflow;
   style: core.ITextStyle;
   alignment: core.TextAlign;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
 
   constructor(p: {
     key: WidgetKey;
@@ -25,8 +25,8 @@ export class Text extends ReactTextChildWidget {
     overflow: TextOverflow;
     style: core.ITextStyle;
     alignment: core.TextAlign;
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
   }) {
     super(p);
 

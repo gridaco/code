@@ -11,6 +11,23 @@ export function fromText(node: nodes.ReflectTextNode): Text {
   // 1. check if text is rich text
   // if () //
 
+  const wh = {
+    width: undefined,
+    height: undefined,
+  };
+  switch (node.textAutoResize) {
+    case "HEIGHT":
+      wh.width = node.width; // fix the width
+      break;
+    case "WIDTH_AND_HEIGHT":
+      // do not specify wh
+      break;
+    case "NONE":
+      // TODO: overflow: visible
+      wh.width = node.width;
+      wh.height = node.height;
+      break;
+  }
   return new Text({
     key: keyFromNode(node),
     data: node.text,
@@ -24,8 +41,9 @@ export function fromText(node: nodes.ReflectTextNode): Text {
       // lineheight
       // letter spacing
     }),
-    width: node.width,
-    height: node.height,
+    ...wh,
+    // width: node.width,
+    // height: node.height,
   });
 }
 

@@ -12,6 +12,7 @@ import {
   BoxShadowManifest,
   EdgeInsets,
   Color,
+  BorderRadiusManifest,
 } from "@reflect-ui/core";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { keyFromNode } from "../key";
@@ -61,6 +62,7 @@ function flexOrStackFromFrame(
     padding: EdgeInsets;
     background?: Color[];
     color?: Color;
+    borderRadius?: BorderRadiusManifest;
   } = {
     key: _key,
     width: frame.width,
@@ -76,6 +78,7 @@ function flexOrStackFromFrame(
     background: _background,
     children: wchildren,
     color: _color,
+    borderRadius: frame.cornerRadius,
   };
 
   if (frame.isAutoLayout) {

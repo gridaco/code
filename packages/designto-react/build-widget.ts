@@ -2,6 +2,7 @@ import * as core from "@reflect-ui/core";
 import * as react from "@web-builder/react";
 import { ReactWidget } from "@web-builder/react";
 import { keyFromWidget } from "@web-builder/core";
+import { MainImageRepository } from "@design-sdk/core/assets-repository";
 
 export function buildReactWidgetFromTokens(
   widget: core.Widget,
@@ -98,12 +99,20 @@ export function buildReactWidgetFromTokens(
     });
   } else if (widget instanceof core.IconWidget) {
     // TODO: not ready - svg & named icon not supported
+
     switch ((widget.icon as core.IconData)._type) {
       case "named-icon": {
+        const _tmp_icon_as_img = MainImageRepository.instance
+          .get("fill-later-assets")
+          .addImage({
+            key: widget.key.id,
+          });
+
         thisReactWidget = new react.ImageElement({
           ...widget,
           src:
-            "https://bridged-service-static.s3.us-west-1.amazonaws.com/branding/logo/32.png", // TODO: change this
+            _tmp_icon_as_img.url ||
+            /*fallback*/ "https://bridged-service-static.s3.us-west-1.amazonaws.com/branding/logo/32.png", // TODO: change this
           key: _key,
         });
         break;

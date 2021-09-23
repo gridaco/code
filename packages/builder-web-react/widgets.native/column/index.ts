@@ -1,5 +1,10 @@
 import { WidgetKey } from "../../../builder-web-core";
-import { Axis, Color, EdgeInsets } from "@reflect-ui/core";
+import {
+  Axis,
+  BorderRadiusManifest,
+  Color,
+  EdgeInsets,
+} from "@reflect-ui/core";
 import { ReactWidget } from "../../widgets/widget";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
 import { Flex } from "../flex";
@@ -15,6 +20,7 @@ export class Column extends Flex {
       padding?: EdgeInsets;
       background?: BackgroundPaintLike[];
       color?: Color;
+      borderRadius?: BorderRadiusManifest;
     }
   ) {
     super({ ...p, direction: Axis.vertical });

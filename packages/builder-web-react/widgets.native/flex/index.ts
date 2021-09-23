@@ -2,6 +2,7 @@ import { CSSProperties, CSSProperty } from "@coli.codes/css";
 import { WidgetKey } from "../../../builder-web-core";
 import {
   Axis,
+  BorderRadiusManifest,
   CrossAxisAlignment,
   EdgeInsets,
   MainAxisAlignment,
@@ -13,7 +14,7 @@ import { ReactMultiChildWidget, ReactWidget } from "../../widgets/widget";
 import * as css from "../../../builder-css-styles";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
-import { px } from "../../../builder-css-styles";
+import { px, borderRadius } from "@web-builder/styles";
 
 export class Flex extends ReactMultiChildWidget {
   readonly _type: "row" | "column";
@@ -34,6 +35,8 @@ export class Flex extends ReactMultiChildWidget {
   // css only properties
   readonly overflow?: CSSProperty.Overflow;
 
+  borderRadius?: BorderRadiusManifest;
+
   constructor(
     p: IFlexManifest<ReactWidget> & {
       // direction: "row" | "column";
@@ -48,6 +51,7 @@ export class Flex extends ReactMultiChildWidget {
       padding?: EdgeInsets;
       background?: BackgroundPaintLike[];
       overflow?: CSSProperty.Overflow;
+      borderRadius?: BorderRadiusManifest;
     }
   ) {
     super(p);
@@ -65,6 +69,7 @@ export class Flex extends ReactMultiChildWidget {
     this.margin = p.margin;
     this.padding = p.padding;
     this.background = p.background;
+    this.borderRadius = p.borderRadius;
 
     // css only
     this.overflow = p.overflow;
@@ -86,6 +91,7 @@ export class Flex extends ReactMultiChildWidget {
       flex: this.flex,
       gap: this.itemSpacing && px(this.itemSpacing),
       "box-shadow": css.boxshadow(this.boxShadow),
+      ...borderRadius(this.borderRadius),
       ...sizing({ ...this }),
       ...css.background(this.background),
       ...css.padding(this.padding),
