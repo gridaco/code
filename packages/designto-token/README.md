@@ -16,6 +16,22 @@ This is more easier to understand if you think of both flutter and css.
 
 Flutter is designed as in first approach, css is designed as the second approach
 
+**Token as property vs Token as hierarchy**
+While designing a token, we often face rather to design token as a property or as a hierarchy.
+
+For example,
+
+- the position data in design comes in as a property (x, y).
+- the position data in css is flat & in as aproperty (top, left)
+- the position data in flutter is hierarchical. `Position { Container {} } `
+
+In this scenario, regardingless how much single pltform's design is exceptional, the data should follow the hierarchical shape to satisfy all platfrom.
+
+**The reason is..**
+all the processing logic should be handled on tokenizer and the tokens are the result of the decision tree. No heavy, decision changing logic should be hanlded after the tokenization.
+
+e.g. All design elements has its position, but not all nodes are being placed statically on that posision. by wrapping (not as property) the position, we can tell the later hanlders that this is already decided to be positioned and have its static posision specified. - if we don't do this way each logic by frameworks will be fragmented and unable to maintain.
+
 ### The first approach (noisy and accurate one)
 
 **Pros**
