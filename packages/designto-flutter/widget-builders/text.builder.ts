@@ -23,24 +23,29 @@ export class TextBuilder extends WidgetBuilder {
    * @param child
    */
   wrapTextAutoResize(child: Text): Widget {
-    // if, NONE set, provide both w/h for wapping sizedbox
-    if ((this.node as ReflectTextNode).textAutoResize === "NONE") {
-      return new SizedBox({
-        child: child,
-        width: roundNumber(this.node.width),
-        height: roundNumber(this.node.height),
-      });
+    const textAutoResize = (this.node as ReflectTextNode).textAutoResize;
+    switch (textAutoResize) {
+      case "NONE": {
+        // if, NONE set, provide both w/h for wapping sizedbox
+        // TODO: this needs to be handled with overflow box - since the overflow content still should be visible (and not take up size).
+        return new SizedBox({
+          child: child,
+          width: roundNumber(this.node.width),
+          height: roundNumber(this.node.height),
+        });
+      }
+      case "HEIGHT": {
+        // if HEIGHT set, HEIGHT will be calculated automatically, but width won't
+        // provide only height for warpping sizedbox
+        return new SizedBox({
+          child: child,
+          width: roundNumber(this.node.width),
+        });
+      }
+      case "WIDTH_AND_HEIGHT": {
+        // not specifing size (not wrapping with sizedbox) will follow the text content's size (both w&h).
+        return child;
+      }
     }
-
-    // if HEIGHT set, HEIGHT will be calculated automatically, but width won't
-    // provide only height for warpping sizedbox
-    else if ((this.node as ReflectTextNode).textAutoResize === "HEIGHT") {
-      return new SizedBox({
-        child: child,
-        width: roundNumber(this.node.width),
-      });
-    }
-
-    return child;
   }
 }
