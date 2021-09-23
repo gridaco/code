@@ -43,12 +43,33 @@ In flutter or any other platforms, the approach differs.
 
 setting width or height to `double.infinity`
 
+**Using infinity size**
+
 ```dart
 Container(
     // height: double.infinity, // stretch vertically
     width: double.infinity, // stretch horizontally
     margin: EdgeInsets.all(16), // this will stretch horizontally with 16 spaces.
     child: SomeChild()
+);
+```
+
+**Using positioned (like css)**
+
+```dart
+Stack(                             /* <----- */
+    children: [
+        Positioned(
+            left: 0,               /* <----- */
+            right: 0,              /* <----- */
+            child: Container(
+                margin: EdgeInsets.all(4),
+                padding: EdgeInsets.all(4),
+                // see here, no infinity size is required /* width: double.infinity, */
+                color: Colors.black,
+                child: Text('Hello, World!', style: Theme.of(context).textTheme.headline4))
+            );
+            ]
 );
 ```
 
