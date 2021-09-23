@@ -24,6 +24,7 @@ function fromVector(vector: ReflectVectorNode) {
     key: _key,
     ...vector,
     data: vector?.vectorPaths[0]?.data,
+    fill: vector.primaryColor,
   });
 }
 

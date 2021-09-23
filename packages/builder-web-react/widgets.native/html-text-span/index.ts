@@ -5,7 +5,7 @@ import { TextOverflow } from "@reflect-ui/core/lib/text-overflow";
 import { CSSProperties } from "@coli.codes/css";
 import { JSX } from "coli";
 import { RGBA } from "@reflect-ui/core/lib/color";
-import * as css from "../../../builder-css-styles";
+import * as css from "@web-builder/styles";
 
 export class Text extends ReactTextChildWidget {
   _type: "Text";
@@ -51,6 +51,7 @@ export class Text extends ReactTextChildWidget {
       "line-height": this.style.lineHeight,
       "word-spacing": this.style.wordSpacing,
       "text-align": this.alignment,
+      "text-decoration": css.textDecoration(this.style.decoration),
       "min-height": css.px(this.height),
 
       // TODO: do not specify width when parent is a flex container.

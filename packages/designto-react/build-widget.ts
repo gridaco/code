@@ -49,7 +49,7 @@ export function buildReactWidgetFromTokens(
       ...default_props_for_layout,
       children: handleChildren(widget.children as []),
       key: _key,
-    });
+    }).__tmp_set_explicit_min_height(widget.height);
   } else if (widget instanceof core.SingleChildScrollView) {
     // since web css does not require additional hierarchy for scroll view, we can simply merge properties.
     // merge single child scroll view properties for
@@ -61,6 +61,22 @@ export function buildReactWidgetFromTokens(
       key: _key,
     });
     //
+  } else if (widget instanceof core.Positioned) {
+    thisReactWidget = handleChild(widget.child);
+    // TODO: shoul apply to all widgets. - make a container builder and blend the constraint properties.
+    if (thisReactWidget instanceof react.Container) {
+      // -------------------------------------
+      // override w & h with position provided w/h
+      thisReactWidget.width = widget.width;
+      thisReactWidget.height = widget.height;
+      // -------------------------------------
+      thisReactWidget.constraint = {
+        left: widget.left,
+        top: widget.top,
+        right: widget.right,
+        bottom: widget.bottom,
+      };
+    }
   } else if (widget instanceof core.Text) {
     thisReactWidget = new react.Text({
       ...widget,
@@ -71,6 +87,7 @@ export function buildReactWidgetFromTokens(
     thisReactWidget = new react.SvgElement({
       ...widget,
       data: widget.data,
+      fill: widget.fill,
       key: _key,
     });
   } else if (widget instanceof core.ImageWidget) {

@@ -1,8 +1,9 @@
 import { ReactWidget } from "../../widgets/widget";
 import { CSSProperties } from "@coli.codes/css";
 import { JSXElementConfig, WidgetKey } from "../../../builder-web-core";
-import { px, color } from "../../../builder-css-styles";
+import { px, color } from "@web-builder/styles";
 import { JSX, JSXAttribute, StringLiteral } from "coli";
+import { Color } from "@reflect-ui/core";
 
 /**
  * 
@@ -29,6 +30,12 @@ export class SvgElement extends ReactWidget {
    * a svg data string
    */
   readonly data: string;
+
+  /**
+   * svg path fill color
+   */
+  readonly fill?: Color;
+
   constructor(p: {
     key: WidgetKey;
     width?: number;
@@ -37,6 +44,7 @@ export class SvgElement extends ReactWidget {
      * svg data
      */
     data: string;
+    fill?: Color;
   }) {
     super(p);
 
@@ -46,8 +54,28 @@ export class SvgElement extends ReactWidget {
 
     // region svg related
     this.data = p.data;
+    this.fill = p.fill;
     // endregion svg related
   }
+
+  children = [
+    <ReactWidget>{
+      key: new WidgetKey(`${this.key.id}.svg-path`, "svg-path"),
+      styleData: () => null,
+      jsxConfig: () => {
+        return {
+          tag: JSX.identifier("path"),
+          attributes: [
+            new JSXAttribute(
+              "fill",
+              new StringLiteral(color(this.fill) || "current")
+            ), // TODO: color: ;
+            new JSXAttribute("d", new StringLiteral(this.data ?? "")),
+          ],
+        };
+      },
+    },
+  ];
 
   styleData(): CSSProperties {
     if (!this.data) {
@@ -64,22 +92,6 @@ export class SvgElement extends ReactWidget {
       color: color(this.color),
     };
   }
-
-  children = [
-    <ReactWidget>{
-      key: new WidgetKey(`${this.key.id}.svg-path`, "svg-path"),
-      styleData: () => null,
-      jsxConfig: () => {
-        return {
-          tag: JSX.identifier("path"),
-          attributes: [
-            new JSXAttribute("fill", new StringLiteral("current")),
-            new JSXAttribute("d", new StringLiteral(this.data ?? "")),
-          ],
-        };
-      },
-    },
-  ];
 
   jsxConfig(): JSXElementConfig {
     return {

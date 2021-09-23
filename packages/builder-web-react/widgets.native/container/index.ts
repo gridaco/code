@@ -5,7 +5,7 @@ import { BorderRadiusManifest } from "@reflect-ui/core";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
 import {
   borderRadius,
-  positionXY,
+  positionAbsolute,
   background,
   px,
   color,
@@ -20,6 +20,12 @@ export class Container extends ReactWidget {
 
   children?: ReactWidget[];
   borderRadius?: BorderRadiusManifest;
+  constraint?: {
+    left?: number;
+    top?: number;
+    right?: number;
+    bottom?: number;
+  };
 
   constructor(p: {
     key: WidgetKey;
@@ -41,7 +47,10 @@ export class Container extends ReactWidget {
       color: color(this.color),
       "box-shadow": boxshadow(this.boxShadow),
       background: color(this.color), // FIXME:
-      // ...positionXY(this.x, this.y), // FIXME: position shall not be specified when parent has a layout. (e.g. under flex)
+      /**
+       * // FIXME: position shall not be specified when parent has a layout. (e.g. under flex)
+       */
+      ...((this.constraint && positionAbsolute(this.constraint)) || {}),
       ...borderRadius(this.borderRadius),
       ...background(this.background),
     };

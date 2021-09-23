@@ -16,3 +16,20 @@ export function positionXY(x: number, y: number): CSSProperties {
     };
   }
 }
+
+export function positionAbsolute(constraint?: {
+  left?: number;
+  top?: number;
+  right?: number;
+  bottom?: number;
+}): CSSProperties {
+  if (constraint) {
+    return {
+      position: "absolute",
+      left: px(constraint.left),
+      top: px(constraint.top),
+      right: px(constraint.right),
+      bottom: px(constraint.bottom),
+    };
+  }
+}

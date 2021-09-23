@@ -61,7 +61,14 @@ function dynamicGenerator(
   }
 }
 
-function handleChildren(nodes: Array<nodes.ReflectSceneNode>): Array<Widget> {
+/**
+ * @internal - do not export as sdk usage. this should be exported & used for internal use only.
+ * @param nodes
+ * @returns
+ */
+export function handleChildren(
+  nodes: Array<nodes.ReflectSceneNode>
+): Array<Widget> {
   return dynamicGenerator(nodes) as Array<Widget>;
 }
 
@@ -113,10 +120,7 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
 
     case nodes.ReflectNodeType.frame:
       const _frame = node as nodes.ReflectFrameNode;
-      tokenizedTarget = tokenizeLayout.fromFrame(
-        _frame,
-        handleChildren(_frame.children)
-      );
+      tokenizedTarget = tokenizeLayout.fromFrame(_frame, _frame.children);
       break;
 
     case nodes.ReflectNodeType.vector:
@@ -134,10 +138,7 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
 
     case nodes.ReflectNodeType.group:
       const _group = node as nodes.ReflectGroupNode;
-      tokenizedTarget = tokenizeLayout.fromGroup(
-        _group,
-        handleChildren(_group.children)
-      );
+      tokenizedTarget = tokenizeLayout.fromGroup(_group, _group.children);
       break;
 
     case nodes.ReflectNodeType.ellipse:

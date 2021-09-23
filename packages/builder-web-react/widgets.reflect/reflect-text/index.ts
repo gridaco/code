@@ -1,7 +1,7 @@
 import { ReflectReactWidget } from "../reflect-widget";
 import { TEXT_IMPORT } from "@web-builder/reflect-ui";
 import { JSX, JSXText } from "coli";
-import { WidgetKey } from "../../../builder-web-core";
+import { WidgetKey } from "@web-builder/core";
 import { CSSProperties } from "@coli.codes/css";
 
 export class ReflectText extends ReflectReactWidget {
