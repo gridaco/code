@@ -29,10 +29,13 @@ Before we start, we recommand you to read [Figma Constraint docs](https://www.fi
 **Experimental**
 There are css experimental values for width. (This might be a standard way on the future) At this point, no valid documents are available, we do not support below values.
 
-[Learn more](https://developer.mozilla.org/en-US/docs/Web/CSS/width)
-
 - `width:stretch`
 - `width:fill`
+
+_References_
+
+- [mdn css width](https://developer.mozilla.org/en-US/docs/Web/CSS/width)
+- [w3 - css-sizing-4 draft](https://www.w3.org/TR/css-sizing-4/)
 
 ## Flutter
 
