@@ -15,9 +15,9 @@ export class Row extends Flex {
   constructor(
     p: Omit<IFlexManifest<ReactWidget>, "direction"> & {
       key: WidgetKey;
-      boxShadow?: BoxShadowManifest;
       margin?: EdgeInsets;
       padding?: EdgeInsets;
+      boxShadow?: BoxShadowManifest;
       color?: Color;
       borderRadius?: BorderRadiusManifest;
     }

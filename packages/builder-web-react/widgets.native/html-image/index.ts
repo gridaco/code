@@ -1,3 +1,4 @@
+import { CSSProperties } from "@coli.codes/css";
 import assert from "assert";
 import { JSX, JSXAttribute, StringLiteral } from "coli";
 import { JSXElementConfig, WidgetKey } from "../../../builder-web-core";
@@ -23,7 +24,11 @@ export class ImageElement extends SelfClosingContainer {
   }
 
   styleData() {
-    return super.styleData();
+    return <CSSProperties>{
+      ...super.styleData(),
+      "object-fit": "cover",
+      "max-width": "100%",
+    };
   }
 
   jsxConfig() {

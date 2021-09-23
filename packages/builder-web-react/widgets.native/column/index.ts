@@ -2,6 +2,7 @@ import { WidgetKey } from "../../../builder-web-core";
 import {
   Axis,
   BorderRadiusManifest,
+  BoxShadowManifest,
   Color,
   EdgeInsets,
 } from "@reflect-ui/core";
@@ -18,7 +19,7 @@ export class Column extends Flex {
       key: WidgetKey;
       margin?: EdgeInsets;
       padding?: EdgeInsets;
-      background?: BackgroundPaintLike[];
+      boxShadow?: BoxShadowManifest;
       color?: Color;
       borderRadius?: BorderRadiusManifest;
     }

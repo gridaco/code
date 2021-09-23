@@ -3,6 +3,7 @@ import { WidgetKey } from "../../../builder-web-core";
 import {
   Axis,
   BorderRadiusManifest,
+  BoxShadowManifest,
   CrossAxisAlignment,
   EdgeInsets,
   MainAxisAlignment,
@@ -48,6 +49,7 @@ export class Flex extends ReactMultiChildWidget {
       crossAxisAlignment?: CrossAxisAlignment;
       verticalDirection?: VerticalDirection;
       margin?: EdgeInsets;
+      boxShadow?: BoxShadowManifest;
       padding?: EdgeInsets;
       background?: BackgroundPaintLike[];
       overflow?: CSSProperty.Overflow;
@@ -70,6 +72,7 @@ export class Flex extends ReactMultiChildWidget {
     this.padding = p.padding;
     this.background = p.background;
     this.borderRadius = p.borderRadius;
+    this.boxShadow = p.boxShadow;
 
     // css only
     this.overflow = p.overflow;
