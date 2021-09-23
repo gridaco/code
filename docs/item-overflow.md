@@ -17,12 +17,20 @@ This is a good example of the overflowing static example.
 
 .overflow {
   position: relative;
-  left: -10%; /* <-- overflow static position */
+  left: calc(
+    (100% - 1000px) * 0.5
+  ); /* <-- overflow static position (center) (parent.width - this.with / 2) */
+  /* or for non-semitric alignment, left:calc((100% - w - x) / 2) */
+
   margin: 10px; /*(visual factor)*/
   background-color: red; /*(visual factor)*/
   width: 1000px; /* <-- overflowing size */
 }
 ```
+
+The math for finding the constrainted position is.
+
+- left: `calc((100% - w - x) / 2)`
 
 ## Flutter
 
@@ -44,6 +52,13 @@ OverflowBox(
 );
 ```
 
+The math for finding the constrainted position is.
+
+<!-- TODO: math not complete - read https://api.flutter.dev/flutter/widgets/Align-class.html-->
+
+- alignment: `Alignment(x, y)`
+
 _References_
 
 - [Flutter#OverflowBox](https://api.flutter.dev/flutter/widgets/OverflowBox-class.html)
+- [Flutter#Align](https://api.flutter.dev/flutter/widgets/Align-class.html)
