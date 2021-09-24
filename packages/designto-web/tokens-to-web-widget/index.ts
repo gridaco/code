@@ -50,7 +50,7 @@ export function buildWebWidgetFromTokens(
       ...default_props_for_layout,
       children: handleChildren(widget.children as []),
       key: _key,
-    }).__tmp_set_explicit_min_height(widget.height);
+    });
   } else if (widget instanceof core.SingleChildScrollView) {
     // since web css does not require additional hierarchy for scroll view, we can simply merge properties.
     // merge single child scroll view properties for

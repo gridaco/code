@@ -5,19 +5,22 @@ import { JSXElementConfig, WidgetKey } from "../..";
 import { CSSProperties } from "@coli.codes/css";
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
 import * as css from "@web-builder/styles";
-import { Color } from "@reflect-ui/core";
+import { Color, DimensionLength } from "@reflect-ui/core";
+import { CssMinHeightMixin } from "../_utility";
 
-export class Stack extends MultiChildWidget {
+export class Stack extends MultiChildWidget implements CssMinHeightMixin {
   readonly _type = "stack";
 
   width: number;
   height: number;
+  minHeight?: DimensionLength;
 
   constructor(p: {
     key: WidgetKey;
     children: Array<WidgetTree>;
     width: number;
     height: number;
+    minHeight?: DimensionLength;
     boxShadow?: BoxShadowManifest;
     color?: Color;
   }) {
@@ -26,6 +29,7 @@ export class Stack extends MultiChildWidget {
     this.width = p.width;
     this.height = p.height;
     this.boxShadow = p.boxShadow;
+    this.minHeight = p.minHeight;
   }
 
   jsxConfig(): JSXElementConfig {
@@ -34,25 +38,12 @@ export class Stack extends MultiChildWidget {
     };
   }
 
-  // ------------------------------------------------------
-  private __minHeight: number;
-  /**
-   * TODO: min height is set because positioned under stack requires parent (this) to have a height.
-   * @param h
-   * @returns
-   */
-  __tmp_set_explicit_min_height(h: number): this {
-    this.__minHeight = h;
-    return this;
-  }
-  // ------------------------------------------------------
-
   styleData(): CSSProperties {
     return {
       width: css.px(this.width),
       height: css.px(this.height),
 
-      "min-height": css.px(this.__minHeight),
+      "min-height": css.minHeight(this.minHeight),
       "background-color": css.color(this.color),
       // for stacking elements under parent, parent's position shall be relative, children shall be absolute with anchor (e.g. bottom: 0)
       // can it be always relative?

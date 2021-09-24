@@ -23,10 +23,19 @@ import { handleChildren } from "../main";
 
 function fromFrame(
   frame: nodes.ReflectFrameNode,
-  children: Array<nodes.ReflectSceneNode>
+  children: Array<nodes.ReflectSceneNode>,
+  context: {
+    is_root: boolean;
+  }
 ): core.LayoutRepresntatives {
   const innerlayout = flexOrStackFromFrame(frame, children);
   const is_overflow_scrollable = isOverflowingAndShouldBeScrollable(frame);
+
+  if (context.is_root) {
+    // add height size to root frame
+    innerlayout.minHeight = "100vh";
+    return innerlayout;
+  }
 
   if (is_overflow_scrollable) {
     // wrap with single child scroll view

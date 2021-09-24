@@ -5,6 +5,7 @@ import {
   BorderRadiusManifest,
   BoxShadowManifest,
   CrossAxisAlignment,
+  DimensionLength,
   EdgeInsets,
   MainAxisAlignment,
   VerticalDirection,
@@ -19,8 +20,9 @@ import * as css from "../../../builder-css-styles";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { px, borderRadius } from "@web-builder/styles";
+import { CssMinHeightMixin } from "../_utility";
 
-export class Flex extends MultiChildWidget {
+export class Flex extends MultiChildWidget implements CssMinHeightMixin {
   readonly _type: "row" | "column";
 
   mainAxisAlignment?: MainAxisAlignment;
@@ -40,6 +42,7 @@ export class Flex extends MultiChildWidget {
   readonly overflow?: CSSProperty.Overflow;
 
   borderRadius?: BorderRadiusManifest;
+  minHeight?: DimensionLength;
 
   constructor(
     p: IFlexManifest<WidgetTree> & {
@@ -47,6 +50,7 @@ export class Flex extends MultiChildWidget {
       key: WidgetKey;
       width?: number;
       height?: number;
+      minHeight?: DimensionLength;
       mainAxisAlignment?: MainAxisAlignment;
       mainAxisSize?: MainAxisSize;
       crossAxisAlignment?: CrossAxisAlignment;
@@ -79,6 +83,7 @@ export class Flex extends MultiChildWidget {
 
     // css only
     this.overflow = p.overflow;
+    this.minHeight = p.minHeight;
   }
 
   jsxConfig() {
@@ -99,6 +104,7 @@ export class Flex extends MultiChildWidget {
       "box-shadow": css.boxshadow(this.boxShadow),
       ...borderRadius(this.borderRadius),
       ...sizing({ ...this }),
+      "min-height": css.minHeight(this.minHeight),
       ...css.background(this.background),
       ...css.padding(this.padding),
     };

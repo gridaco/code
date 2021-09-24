@@ -120,7 +120,9 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
 
     case nodes.ReflectNodeType.frame:
       const _frame = node as nodes.ReflectFrameNode;
-      tokenizedTarget = tokenizeLayout.fromFrame(_frame, _frame.children);
+      tokenizedTarget = tokenizeLayout.fromFrame(_frame, _frame.children, {
+        is_root: node.isRoot,
+      });
       break;
 
     case nodes.ReflectNodeType.vector:
