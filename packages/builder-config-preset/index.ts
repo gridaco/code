@@ -24,6 +24,13 @@ export const react_presets = {
   },
 };
 
+export const vanilla_presets = {
+  vanilla_default: <config.VanillaFrameworkConfig>{
+    framework: Framework.vanilla,
+    language: Language.html,
+  },
+};
+
 export const flutter_presets = {
   flutter_default: <config.FlutterFrameworkConfig>{
     framework: Framework.flutter,
@@ -34,12 +41,14 @@ export const flutter_presets = {
 export const presets = {
   react: react_presets,
   flutter: flutter_presets,
+  vanilla: vanilla_presets,
 };
 
 export const all_preset_options__prod = [
   flutter_presets.flutter_default,
   react_presets.react_default,
   react_presets.react_with_styled_components,
+  vanilla_presets.vanilla_default,
   // react_with_css_in_jsx // NOT ON PRODUCTION
   // react_with_css // NOT ON PRODUCTION
 ];
@@ -49,6 +58,7 @@ export const all_preset_options_map__prod = {
   flutter_default: flutter_presets.flutter_default,
   react_default: react_presets.react_default,
   react_with_styled_components: react_presets.react_with_styled_components,
+  vanilla_default: vanilla_presets.vanilla_default,
   // react_with_css_in_jsx // NOT ON PRODUCTION
   // react_with_css // NOT ON PRODUCTION
 };
