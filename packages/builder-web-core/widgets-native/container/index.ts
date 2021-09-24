@@ -1,7 +1,7 @@
 import { ColiObjectLike } from "@coli.codes/builder";
 import { CSSProperties } from "@coli.codes/css";
 import { JSXElementConfig, WidgetKey } from "../..";
-import { BorderRadiusManifest } from "@reflect-ui/core";
+import { BorderRadiusManifest, DimensionLength } from "@reflect-ui/core";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
 import {
   borderRadius,
@@ -21,10 +21,10 @@ export class Container extends WidgetTree {
   children?: WidgetTree[];
   borderRadius?: BorderRadiusManifest;
   constraint?: {
-    left?: number;
-    top?: number;
-    right?: number;
-    bottom?: number;
+    left?: DimensionLength;
+    top?: DimensionLength;
+    right?: DimensionLength;
+    bottom?: DimensionLength;
   };
 
   constructor(p: {
@@ -44,9 +44,10 @@ export class Container extends WidgetTree {
     return {
       width: px(this.width),
       height: px(this.height),
-      color: color(this.color),
       "box-shadow": boxshadow(this.boxShadow),
-      background: color(this.color), // FIXME:
+      color: color(this.color),
+      // FIXME: bg should be handled by the background paint, which is not ready from tokenizer.
+      background: color(this.color),
       /**
        * // FIXME: position shall not be specified when parent has a layout. (e.g. under flex)
        */

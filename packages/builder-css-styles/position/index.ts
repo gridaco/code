@@ -1,6 +1,7 @@
 import { CSSProperties } from "@coli.codes/css";
-import { px } from "..";
-
+import { DimensionLength } from "@reflect-ui/core";
+import { px } from "../dimensions";
+import { length } from "../length";
 /**
  * relative position with xy
  * @param x
@@ -18,18 +19,18 @@ export function positionXY(x: number, y: number): CSSProperties {
 }
 
 export function positionAbsolute(constraint?: {
-  left?: number;
-  top?: number;
-  right?: number;
-  bottom?: number;
+  left?: DimensionLength;
+  top?: DimensionLength;
+  right?: DimensionLength;
+  bottom?: DimensionLength;
 }): CSSProperties {
   if (constraint) {
     return {
       position: "absolute",
-      left: px(constraint.left),
-      top: px(constraint.top),
-      right: px(constraint.right),
-      bottom: px(constraint.bottom),
+      left: length(constraint.left),
+      top: length(constraint.top),
+      right: length(constraint.right),
+      bottom: length(constraint.bottom),
     };
   }
 }

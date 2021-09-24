@@ -2,7 +2,7 @@
 
 > This document is based on horizontally centered element. (which applies the same to vertically centered.)
 
-Before we start, we recommand you to read [Figma Constraint docs](https://www.figma.com/plugin-docs/api/Constraints/). in this document, we only handle `STRETCH`
+Before we start, we recommand you to read [Figma Constraint docs](https://www.figma.com/plugin-docs/api/Constraints/). in this document, we only handle `CENTER`
 
 ## The behaviour
 

@@ -13,6 +13,7 @@ import {
   EdgeInsets,
   Color,
   BorderRadiusManifest,
+  Calculation,
 } from "@reflect-ui/core";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { keyFromNode } from "../key";
@@ -109,7 +110,7 @@ function flexOrStackFromFrame(
   // TODO: - convert as container if single child
 
   // wrap each children with positioned
-  const stack_children = wchildren.map((child) => {
+  const stack_children = wchildren?.map((child) => {
     const ogchild = children.find((c) => c.id === child.key.id);
 
     const constraint = {
@@ -157,13 +158,35 @@ function flexOrStackFromFrame(
           wh.width = undefined;
           break;
         case "CENTER":
-          // FIXME: should be dynamic value
-          // left: calc(
-          //     (100% - 1000px) * 0.5
-          //   );
-          // new core.Alignment(0, 0);
-          // static
-          constraint.left = (frame.width - ogchild.width) * 0.5;
+          const half_w = ogchild.width / 2;
+          const centerdiff =
+            // center of frame
+            frame.width / 2 -
+            // center of og
+            (half_w + ogchild.x);
+          constraint.left = <Calculation>{
+            type: "calc",
+            operations: {
+              left: {
+                type: "calc",
+                operations: { left: "50%", op: "+", right: centerdiff },
+              },
+              op: "-", // this part is different
+              right: half_w,
+            },
+          };
+          // --- we can also specify the right, but left is enough.
+          // constraint.right = <Calculation>{
+          //   type: "calc",
+          //   operations: {
+          //     left: {
+          //       type: "calc",
+          //       operations: { left: "50%", op: "+", right: centerdiff },
+          //     },
+          //     op: "+", // this part is different
+          //     right: half,
+          //   },
+          // };
           break;
       }
       switch (ogchild.constraints.vertical) {
@@ -177,20 +200,13 @@ function flexOrStackFromFrame(
         case "STRETCH":
           constraint.top = _t;
           constraint.bottom = _b;
-          // TODO: // wh.height = undefined;
+          wh.height = undefined;
           break;
         case "CENTER":
           // static
           constraint.top = (frame.height - ogchild.height) * 0.5;
           break; // FIXME: not handled
       }
-      //  console.log(
-      //    ogchild.name,
-      //    "ogchild.constraints",
-      //    ogchild.constraints,
-      //    `${ogchild.x},${ogchild.y}`
-      //  );
-      //  console.log(ogchild.name, "constraint", constraint);
     }
 
     return new core.Positioned({
