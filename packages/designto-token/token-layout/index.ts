@@ -76,8 +76,8 @@ function flexOrStackFromFrame(
   } = {
     key: _key,
     width: frame.width,
+    height: frame.height,
     itemSpacing: frame.itemSpacing,
-    height: frame.width,
     flex: frame.layoutGrow,
     mainAxisSize: _mainaxissize,
     crossAxisAlignment: frame.crossAxisAlignment,
@@ -121,8 +121,8 @@ function flexOrStackFromFrame(
     };
 
     const wh = {
-      width: child.width,
-      height: child.height,
+      width: ogchild.width,
+      height: ogchild.height,
     };
 
     const _l = ogchild.x;
