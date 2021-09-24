@@ -1,4 +1,4 @@
-import { ColiObjectLike, handle } from "@coli.codes/builder";
+import { handle } from "@coli.codes/builder";
 import { CSSProperties } from "@coli.codes/css";
 import { ScopedVariableNamer } from "@coli.codes/naming";
 import { WidgetWithStyle } from "@web-builder/core";
@@ -10,6 +10,7 @@ import {
 } from "./styled-component-declaration";
 
 export interface StyledComponentJSXElementConfig {
+  id: string;
   tag: JSXIdentifier;
   attributes?: JSXAttributes;
   style: CSSProperties;
@@ -17,6 +18,7 @@ export interface StyledComponentJSXElementConfig {
 }
 
 export interface NoStyleJSXElementConfig {
+  id?: string;
   tag: JSXIdentifier;
   attributes?: JSXAttributes;
 }
@@ -30,6 +32,7 @@ export function buildStyledComponentConfig(
   widget: WidgetWithStyle,
   preferences: {
     namer: ScopedVariableNamer;
+    rename_tag: boolean;
     transformRootName: boolean;
     context: {
       root: boolean;
@@ -52,9 +55,11 @@ export function buildStyledComponentConfig(
 
   if (styledVar) {
     if (config.tag instanceof JSXIdentifier) {
-      // rename tag as styled component
-      // e.g. `div` to `Wrapper`
-      config.tag.rename(styledVar.id.name);
+      if (preferences.rename_tag) {
+        // rename tag as styled component
+        // e.g. `div` to `Wrapper`
+        config.tag.rename(styledVar.id.name);
+      }
     } else {
       console.error(
         `unhandled styled component conversion of widget type of ${typeof config}`,
@@ -63,6 +68,7 @@ export function buildStyledComponentConfig(
     }
 
     return {
+      id: styledVar.id.name,
       tag: handle(config.tag),
       attributes: config.attributes,
       style: widget.styleData(),
@@ -70,6 +76,7 @@ export function buildStyledComponentConfig(
     };
   } else {
     return {
+      id: undefined,
       tag: handle(config.tag),
       attributes: config.attributes,
     };

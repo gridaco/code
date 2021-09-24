@@ -1,5 +1,5 @@
 {
-    "name": "vanilla",
+    "name": "@web-builder/vanilla",
     "version": "0.0.0",
     "dependencies": {}
 }

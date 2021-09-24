@@ -4,7 +4,7 @@ import { WidgetTree } from "@web-builder/core";
 import { keyFromWidget } from "@web-builder/core";
 import { MainImageRepository } from "@design-sdk/core/assets-repository";
 
-export function buildReactWidgetFromTokens(
+export function buildWebWidgetFromTokens(
   widget: core.Widget,
   context: {
     is_root: boolean;
@@ -17,7 +17,7 @@ export function buildReactWidgetFromTokens(
   };
 
   const handleChild = (child: core.Widget): WidgetTree => {
-    return buildReactWidgetFromTokens(child, { ...context, is_root: false });
+    return buildWebWidgetFromTokens(child, { ...context, is_root: false });
   };
 
   const _remove_width_height_if_root_wh = {

@@ -1,11 +1,8 @@
-import { handle } from "@coli.codes/builder";
 import { ExportAssignment } from "@coli.codes/core/assignment/export-assignment";
 import { stringfy } from "@coli.codes/export-string";
 import { ScopedVariableNamer } from "@coli.codes/naming";
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
-import { JSXElementConfig, WidgetKeyId } from "../../../builder-web-core";
 import {
-  buildStyledComponentConfig,
   NoStyleJSXElementConfig,
   StyledComponentJSXElementConfig,
 } from "@web-builder/styled";
@@ -16,22 +13,19 @@ import {
   ImportDeclaration,
   JSXClosingElement,
   JSXElement,
-  JSXElementLike,
-  JSXIdentifier,
   JSXOpeningElement,
-  JSXText,
   Return,
   SourceFile,
   VariableDeclaration,
 } from "coli";
 import { react_imports } from "../../build-app/import-specifications";
-import {
-  MultiChildWidget,
-  SingleChildWidget,
-  TextChildWidget,
-  WidgetTree,
-} from "@web-builder/core";
+import { TextChildWidget, WidgetTree } from "@web-builder/core";
 import { ReactComponentExportResult } from "../export-result";
+import {
+  buildTextChildJsx,
+  getWidgetStylesConfigMap,
+  WidgetStyleConfigMap,
+} from "@web-builder/core/builders";
 
 const IMPORT_DEFAULT_STYLED_FROM_EMOTION_STYLED = new Import()
   .importDefault("styled")
@@ -59,10 +53,11 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
   );
   // buildWidgetExportable(component);
 
-  const styledConfigWidgetMap: StyledConfigWidgetMap = getWidgetStyledConfigMap(
+  const styledConfigWidgetMap: WidgetStyleConfigMap = getWidgetStylesConfigMap(
     component,
     {
       namer: styledComponentNamer,
+      rename_tag: true /** styled component tag shoule be renamed */,
     }
   );
 
@@ -160,116 +155,4 @@ function buildReactComponentFile(p: {
   file.export(new ExportAssignment(component.id));
 
   return file;
-}
-
-type StyledConfigWidgetMap = Map<
-  WidgetKeyId,
-  StyledComponentJSXElementConfig | NoStyleJSXElementConfig
->;
-function getWidgetStyledConfigMap(
-  rootWidget: WidgetTree,
-  preferences: {
-    namer: ScopedVariableNamer;
-  }
-): StyledConfigWidgetMap {
-  const styledConfigWidgetMap: StyledConfigWidgetMap = new Map();
-
-  function mapper(widget: WidgetTree) {
-    if (!widget) {
-      throw `cannot map trough ${widget}`;
-    }
-    const isRoot = widget.key.id == rootWidget.key.id;
-    const id = widget.key.id;
-    const styledConfig = buildStyledComponentConfig(widget, {
-      transformRootName: true,
-      namer: preferences.namer,
-      context: {
-        root: isRoot,
-      },
-    });
-
-    styledConfigWidgetMap.set(id, styledConfig);
-    widget.children?.map((childwidget) => {
-      mapper(childwidget);
-    });
-  }
-
-  mapper(rootWidget);
-
-  return styledConfigWidgetMap;
-}
-
-////
-//// region jsx tree builder
-////
-
-export function buildWidgetExportable(widget: WidgetTree) {
-  const _key = widget.key;
-  const _id = _key.id;
-  const _name = _key.name;
-  const jsxconfg = widget.jsxConfig();
-  let jsx;
-  let style;
-
-  if (widget instanceof MultiChildWidget) {
-    const children = widget.children;
-    jsx = buildJsx(widget);
-
-    //
-  } else if (widget instanceof SingleChildWidget) {
-    const child = widget.child;
-    jsx = buildJsx(widget);
-    //
-  } else if (widget instanceof TextChildWidget) {
-    const text = widget.text;
-    jsx = buildTextChildJsx(widget, jsxconfg);
-    //
-  }
-
-  //   return new ReactComponentExportable({});
-}
-
-function handleWidget(widget: WidgetTree) {}
-
-function buildTextChildJsx(
-  textchildwidget: TextChildWidget,
-  config: JSXElementConfig
-) {
-  const text = textchildwidget.text;
-  const tag = handle<JSXIdentifier>(config.tag);
-
-  const jsxtext = new JSXText(text);
-  return new JSXElement({
-    openingElement: new JSXOpeningElement(tag, {
-      attributes: config.attributes,
-    }),
-    children: jsxtext,
-    closingElement: new JSXClosingElement(tag),
-  });
-}
-
-function buildContainingJsx(
-  container: JSXElementConfig,
-  children: Array<JSXElementLike>
-): JSXElementLike {
-  const tag = handle<JSXIdentifier>(container.tag);
-  return new JSXElement({
-    openingElement: new JSXOpeningElement(tag, {
-      attributes: container.attributes,
-    }),
-    closingElement: new JSXClosingElement(tag),
-    children: children,
-  });
-}
-
-function buildJsx(widget: WidgetTree): JSXElementLike {
-  const children = buildChildrenJsx(widget.children);
-  const container = buildContainingJsx(widget.jsxConfig(), children);
-  return container;
-}
-
-function buildChildrenJsx(children: Array<WidgetTree>): Array<JSXElementLike> {
-  return children?.map((c) => {
-    return buildJsx(c);
-  });
 }

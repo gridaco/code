@@ -2,6 +2,7 @@ import { input, output, config } from "../proc";
 import { tokenize } from "@designto/token";
 import { Widget } from "@reflect-ui/core";
 import * as toreact from "@designto/react";
+import * as tovanilla from "@designto/vanilla";
 import * as toflutter from "@designto/flutter";
 import { composeAppWithHome } from "@bridged.xyz/flutter-builder";
 import {
@@ -22,6 +23,8 @@ export async function designToCode({
   const token = tokenize(input.design);
 
   switch (framework.framework) {
+    case "vanilla":
+      return designToVanilla({ input: { widget: token }, asset_repository });
     case "react":
       return designToReact({ input: { widget: token }, asset_repository });
     case "flutter":
@@ -44,7 +47,6 @@ export async function designToReact({
   input: { widget: Widget };
   asset_repository?: BaseImageRepositories<string>;
 }): Promise<output.ICodeOutput> {
-  await Promise.resolve();
   const reactwidget = toreact.buildReactWidget(input.widget);
   const res = toreact.buildReactApp(reactwidget, {
     template: "cra",
@@ -117,4 +119,34 @@ export async function designToFlutter({
 
 export function designToVue(input: input.IDesignInput): output.ICodeOutput {
   return;
+}
+
+export async function designToVanilla({
+  input,
+  asset_repository,
+}: {
+  input: { widget: Widget };
+  asset_repository?: BaseImageRepositories<string>;
+}): Promise<output.ICodeOutput> {
+  const vanillawidget = tovanilla.buildVanillaWidget(input.widget);
+  const res = tovanilla.buildVanillaFile(vanillawidget);
+
+  // ------------------------------------------------------------------------
+  // finilize temporary assets
+  // this should be placed somewhere else
+  if (asset_repository) {
+    res.code.raw = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
+      res.code.raw,
+      "grida://assets-reservation/images/",
+      await fetch_all_assets(asset_repository)
+    );
+    res.scaffold.raw = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
+      res.scaffold.raw,
+      "grida://assets-reservation/images/",
+      await fetch_all_assets(asset_repository)
+    );
+  }
+  // ------------------------------------------------------------------------
+
+  return res;
 }

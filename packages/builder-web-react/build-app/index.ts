@@ -1,10 +1,6 @@
-import { Widget } from "../widgets.native";
-import { react_imports } from "./import-specifications";
-import {
-  packages,
-  standard_libraries,
-  templates,
-} from "@coli.codes/nodejs-builder";
+import { Widget } from "@web-builder/core";
+import { standard_libraries, templates } from "@coli.codes/nodejs-builder";
+
 /**
  * builds create-react-app wrapped react app.
  *
