@@ -21,6 +21,10 @@ import {
   StringLiteral,
 } from "coli";
 
+const user_agent_stylesheet_override = <CSSProperties>{
+  margin: "0px",
+};
+
 const html_render = ({ css, body }: { css: string; body: string }) => {
   const indenter = (s: string, tabs: number = 0) =>
     s.replace(/\n/g, "\n" + "\t".repeat(tabs));
@@ -106,11 +110,20 @@ export function export_inlined_css_html_file(widget: WidgetTree) {
       };
     })
     .filter((s) => s);
+  css_declarations.push({
+    key: {
+      name: "*",
+      selector: "tag",
+    },
+    style: user_agent_stylesheet_override,
+  });
 
   const strfied_css = css_declarations
     .map((css) => {
       const selectors = {
         id: "#",
+        class: ".",
+        tag: "",
       };
       const stylestring = buildCssStandard(css.style);
       const key = selectors[css.key.selector] + css.key.name;
