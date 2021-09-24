@@ -17,6 +17,9 @@ export function fromText(node: nodes.ReflectTextNode): Text {
   };
   switch (node.textAutoResize) {
     case "HEIGHT":
+      // means only height is auto.
+      // this should be ignored when the parent is a flex.
+      // if fill container, then the size should not be specified.
       wh.width = node.width; // fix the width
       break;
     case "WIDTH_AND_HEIGHT":
@@ -28,6 +31,7 @@ export function fromText(node: nodes.ReflectTextNode): Text {
       wh.height = node.height;
       break;
   }
+
   return new Text({
     key: keyFromNode(node),
     data: node.text,
@@ -42,8 +46,6 @@ export function fromText(node: nodes.ReflectTextNode): Text {
       // letter spacing
     }),
     ...wh,
-    // width: node.width,
-    // height: node.height,
   });
 }
 
