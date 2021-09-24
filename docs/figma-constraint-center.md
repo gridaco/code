@@ -6,7 +6,7 @@ Before we start, we recommand you to read [Figma Constraint docs](https://www.fi
 
 ## The behaviour
 
-![](constraint-calculation-center.png)
+![](./assets/constraint-calculation-center.png)
 
 ## Web - css
 
