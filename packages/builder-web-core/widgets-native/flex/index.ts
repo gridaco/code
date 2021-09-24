@@ -1,5 +1,5 @@
 import { CSSProperties, CSSProperty } from "@coli.codes/css";
-import { WidgetKey } from "../../../builder-web-core";
+import { WidgetKey } from "../..";
 import {
   Axis,
   BorderRadiusManifest,
@@ -11,13 +11,16 @@ import {
 } from "@reflect-ui/core";
 import { MainAxisSize } from "@reflect-ui/core/lib/main-axis-size";
 import { JSX, JSXElementLike } from "coli";
-import { ReactMultiChildWidget, ReactWidget } from "../../widgets/widget";
+import {
+  MultiChildWidget,
+  WidgetTree,
+} from "@web-builder/core/widget-tree/widget";
 import * as css from "../../../builder-css-styles";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { px, borderRadius } from "@web-builder/styles";
 
-export class Flex extends ReactMultiChildWidget {
+export class Flex extends MultiChildWidget {
   readonly _type: "row" | "column";
 
   mainAxisAlignment?: MainAxisAlignment;
@@ -39,7 +42,7 @@ export class Flex extends ReactMultiChildWidget {
   borderRadius?: BorderRadiusManifest;
 
   constructor(
-    p: IFlexManifest<ReactWidget> & {
+    p: IFlexManifest<WidgetTree> & {
       // direction: "row" | "column";
       key: WidgetKey;
       width?: number;

@@ -1,6 +1,6 @@
-import { ReactWidget } from "../../widgets/widget";
+import { WidgetTree } from "@web-builder/core/widget-tree/widget";
 import { CSSProperties } from "@coli.codes/css";
-import { JSXElementConfig, WidgetKey } from "../../../builder-web-core";
+import { JSXElementConfig, WidgetKey } from "../..";
 import { px, color } from "@web-builder/styles";
 import { JSX, JSXAttribute, StringLiteral } from "coli";
 import { Color } from "@reflect-ui/core";
@@ -23,7 +23,7 @@ import { Color } from "@reflect-ui/core";
     </svg>
  * ```
  */
-export class SvgElement extends ReactWidget {
+export class SvgElement extends WidgetTree {
   _type = "svg";
 
   /**
@@ -59,7 +59,7 @@ export class SvgElement extends ReactWidget {
   }
 
   children = [
-    <ReactWidget>{
+    <WidgetTree>{
       key: new WidgetKey(`${this.key.id}.svg-path`, "svg-path"),
       styleData: () => null,
       jsxConfig: () => {

@@ -1,7 +1,7 @@
 import { CSSProperties } from "@coli.codes/css";
 import assert from "assert";
 import { JSX, JSXAttribute, StringLiteral } from "coli";
-import { JSXElementConfig, WidgetKey } from "../../../builder-web-core";
+import { JSXElementConfig, WidgetKey } from "../..";
 import { SelfClosingContainer } from "../container";
 
 export class ImageElement extends SelfClosingContainer {

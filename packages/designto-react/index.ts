@@ -1,13 +1,13 @@
 import { Widget } from "@reflect-ui/core";
 import { buildReactWidgetFromTokens } from "./build-widget";
 import {
-  ReactWidget,
+  WidgetTree,
   stringfyReactWidget_STYLED_COMPONENTS,
 } from "@web-builder/react";
 import { react as config } from "@designto/config";
 
 export function buildReactApp(
-  widget: ReactWidget,
+  widget: WidgetTree,
   options: { template: "cra" | "nextjs" }
 ): config.ReactComponentOutput {
   const res = stringfyReactWidget_STYLED_COMPONENTS(widget);

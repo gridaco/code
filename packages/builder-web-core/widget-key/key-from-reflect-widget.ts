@@ -1,4 +1,4 @@
-import { WidgetKey } from "./widget";
+import { WidgetKey } from "./widget-key";
 import * as core from "@reflect-ui/core";
 import { nameit, NameCases } from "@coli.codes/naming";
 export function keyFromWidget(widget: core.Widget): WidgetKey {

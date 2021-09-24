@@ -1,10 +1,10 @@
-import { ReactWidget } from "../widgets/widget";
+import { WidgetTree } from "@web-builder/core/widget-tree/widget";
 import { ImportDeclaration, Import, JSX, JSXElementLike } from "coli";
 import { JSXElementConfig, WidgetKey } from "../../builder-web-core";
 import { ColiObjectLike } from "@coli.codes/builder";
 
-export abstract class ReflectReactWidget<T = any> extends ReactWidget {
-  children?: ReactWidget[];
+export abstract class ReflectReactWidget<T = any> extends WidgetTree {
+  children?: WidgetTree[];
   readonly _type: string;
   readonly imports: string;
   readonly tag: string;

@@ -1,4 +1,4 @@
-import { Widget, IMultiChildWidget, WidgetKey } from "./widget";
+import { Widget, IMultiChildWidget } from ".";
 import { JSXAttributes, JSXIdentifier } from "coli";
 import { CSSProperties } from "@coli.codes/css";
 import { ColiObjectLike } from "@coli.codes/builder";
@@ -12,6 +12,7 @@ import {
 } from "@reflect-ui/core";
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
+import { WidgetKey } from "../widget-key";
 
 export interface JSXElementConfig {
   tag: ColiObjectLike<JSXIdentifier>;

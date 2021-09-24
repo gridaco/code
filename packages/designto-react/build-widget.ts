@@ -1,6 +1,6 @@
 import * as core from "@reflect-ui/core";
-import * as react from "@web-builder/react";
-import { ReactWidget } from "@web-builder/react";
+import * as web from "@web-builder/core";
+import { WidgetTree } from "@web-builder/core";
 import { keyFromWidget } from "@web-builder/core";
 import { MainImageRepository } from "@design-sdk/core/assets-repository";
 
@@ -9,14 +9,14 @@ export function buildReactWidgetFromTokens(
   context: {
     is_root: boolean;
   }
-): ReactWidget {
-  const handleChildren = (children: core.Widget[]): ReactWidget[] => {
+): WidgetTree {
+  const handleChildren = (children: core.Widget[]): WidgetTree[] => {
     return children?.map((c) => {
       return handleChild(c);
     });
   };
 
-  const handleChild = (child: core.Widget): ReactWidget => {
+  const handleChild = (child: core.Widget): WidgetTree => {
     return buildReactWidgetFromTokens(child, { ...context, is_root: false });
   };
 
@@ -32,21 +32,21 @@ export function buildReactWidgetFromTokens(
 
   const _key = keyFromWidget(widget);
 
-  let thisReactWidget: ReactWidget;
+  let thisReactWidget: WidgetTree;
   if (widget instanceof core.Column) {
-    thisReactWidget = new react.Column({
+    thisReactWidget = new web.Column({
       ...default_props_for_layout,
       children: handleChildren(widget.children),
       key: _key,
     });
   } else if (widget instanceof core.Row) {
-    thisReactWidget = new react.Row({
+    thisReactWidget = new web.Row({
       ...default_props_for_layout,
       children: handleChildren(widget.children),
       key: _key,
     });
   } else if (widget instanceof core.Stack) {
-    thisReactWidget = new react.Stack({
+    thisReactWidget = new web.Stack({
       ...default_props_for_layout,
       children: handleChildren(widget.children as []),
       key: _key,
@@ -54,7 +54,7 @@ export function buildReactWidgetFromTokens(
   } else if (widget instanceof core.SingleChildScrollView) {
     // since web css does not require additional hierarchy for scroll view, we can simply merge properties.
     // merge single child scroll view properties for
-    thisReactWidget = new react.Flex({
+    thisReactWidget = new web.Flex({
       ...widget.child,
       ...widget,
       overflow: "auto",
@@ -65,7 +65,7 @@ export function buildReactWidgetFromTokens(
   } else if (widget instanceof core.Positioned) {
     thisReactWidget = handleChild(widget.child);
     // TODO: shoul apply to all widgets. - make a container builder and blend the constraint properties.
-    if (thisReactWidget instanceof react.Container) {
+    if (thisReactWidget instanceof web.Container) {
       // -------------------------------------
       // override w & h with position provided w/h
       thisReactWidget.width = widget.width;
@@ -79,20 +79,20 @@ export function buildReactWidgetFromTokens(
       };
     }
   } else if (widget instanceof core.Text) {
-    thisReactWidget = new react.Text({
+    thisReactWidget = new web.Text({
       ...widget,
       data: widget.data,
       key: _key,
     });
   } else if (widget instanceof core.VectorWidget) {
-    thisReactWidget = new react.SvgElement({
+    thisReactWidget = new web.SvgElement({
       ...widget,
       data: widget.data,
       fill: widget.fill,
       key: _key,
     });
   } else if (widget instanceof core.ImageWidget) {
-    thisReactWidget = new react.ImageElement({
+    thisReactWidget = new web.ImageElement({
       ...widget,
       src: widget.src,
       key: _key,
@@ -108,7 +108,7 @@ export function buildReactWidgetFromTokens(
             key: widget.key.id,
           });
 
-        thisReactWidget = new react.ImageElement({
+        thisReactWidget = new web.ImageElement({
           ...widget,
           src:
             _tmp_icon_as_img.url ||
@@ -118,7 +118,7 @@ export function buildReactWidgetFromTokens(
         break;
       }
       case "remote-uri": {
-        thisReactWidget = new react.ImageElement({
+        thisReactWidget = new web.ImageElement({
           ...widget,
           src: widget.icon.uri,
           key: _key,
@@ -131,7 +131,7 @@ export function buildReactWidgetFromTokens(
 
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
   else if (widget instanceof core.Container) {
-    thisReactWidget = new react.Container({
+    thisReactWidget = new web.Container({
       ...widget,
       key: _key,
       borderRadius: widget.borderRadius,
@@ -144,7 +144,7 @@ export function buildReactWidgetFromTokens(
     thisReactWidget.background = widget.background;
   } else {
     // todo - handle case more specific
-    thisReactWidget = new react.ErrorWidget({
+    thisReactWidget = new web.ErrorWidget({
       key: _key,
       errorMessage: `The input design was not handled. "${
         widget.key.originName

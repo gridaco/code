@@ -8,7 +8,7 @@ export * from "./html-svg";
 export * from "./html-image";
 export * from "./error-widget";
 
-export * from "../widgets/widget";
+export * from "@web-builder/core/widget-tree/widget";
 
 // export core widget
-export * from "@web-builder/core/widget";
+export * from "@web-builder/core/widget-core";

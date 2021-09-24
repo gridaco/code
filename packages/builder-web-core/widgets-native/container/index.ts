@@ -1,6 +1,6 @@
 import { ColiObjectLike } from "@coli.codes/builder";
 import { CSSProperties } from "@coli.codes/css";
-import { JSXElementConfig, WidgetKey } from "../../../builder-web-core";
+import { JSXElementConfig, WidgetKey } from "../..";
 import { BorderRadiusManifest } from "@reflect-ui/core";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
 import {
@@ -13,12 +13,12 @@ import {
 } from "../../../builder-css-styles";
 import { JSX, JSXElementLike, css } from "coli";
 
-import { ReactWidget } from "../../widgets/widget";
+import { WidgetTree } from "@web-builder/core/widget-tree/widget";
 
-export class Container extends ReactWidget {
+export class Container extends WidgetTree {
   _type = "Container";
 
-  children?: ReactWidget[];
+  children?: WidgetTree[];
   borderRadius?: BorderRadiusManifest;
   constraint?: {
     left?: number;

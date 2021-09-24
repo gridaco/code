@@ -1,10 +1,13 @@
 import { CSSProperties } from "@coli.codes/css";
-import { JSXElementConfig, WidgetKey } from "../../../builder-web-core";
+import { JSXElementConfig, WidgetKey } from "../..";
 import { JSX, JSXElementLike, css, JSXText } from "coli";
 
-import { ReactTextChildWidget, ReactWidget } from "../../widgets/widget";
+import {
+  TextChildWidget,
+  WidgetTree,
+} from "@web-builder/core/widget-tree/widget";
 
-export class ErrorWidget extends ReactTextChildWidget {
+export class ErrorWidget extends TextChildWidget {
   constructor(p: { key: WidgetKey; errorMessage: string }) {
     super({
       key: p.key,

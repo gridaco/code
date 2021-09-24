@@ -1,31 +1,31 @@
-import { WidgetKey } from "../../builder-web-core";
 import {
+  WidgetKey,
   WidgetWithStyle,
   MultiChildWidgetWithStyle,
-} from "../../builder-web-core/widget-with-style";
+} from "@web-builder/core";
 
 /**
- * React Widget that requires no additional custom import rather than react
+ * Widget that requires no additional custom import rather than react
  */
-export abstract class ReactWidget extends WidgetWithStyle {
-  abstract readonly children?: ReactWidget[];
+export abstract class WidgetTree extends WidgetWithStyle {
+  abstract readonly children?: WidgetTree[];
 }
 
-export abstract class ReactSelfClosingWidget
-  extends ReactWidget
-  implements Omit<ReactWidget, "children"> {
+export abstract class SelfClosingWidget
+  extends WidgetTree
+  implements Omit<WidgetTree, "children"> {
   readonly children?: undefined;
 }
 
 /**
- * React widget that contains multiple children in the same depth 1 hierarchy
+ * widget that contains multiple children in the same depth 1 hierarchy
  */
-export abstract class ReactMultiChildWidget
-  extends ReactWidget
+export abstract class MultiChildWidget
+  extends WidgetTree
   implements MultiChildWidgetWithStyle {
-  readonly children: ReactWidget[] = [];
+  readonly children: WidgetTree[] = [];
   tag: string;
-  constructor(p: { key: WidgetKey; children: Array<ReactWidget> }) {
+  constructor(p: { key: WidgetKey; children: Array<WidgetTree> }) {
     super({ key: p.key });
     this.children = p.children;
   }
@@ -37,9 +37,9 @@ export abstract class ReactMultiChildWidget
  * which is present for representing connection between prebuilt widget that accepts single child,
  * or for creating constraints for simple layouts such as margin wrap.
  */
-export abstract class ReactSingleChildWidget extends ReactMultiChildWidget {
-  readonly child: ReactWidget;
-  constructor(parameters: { key: WidgetKey; child: ReactWidget }) {
+export abstract class SingleChildWidget extends MultiChildWidget {
+  readonly child: WidgetTree;
+  constructor(parameters: { key: WidgetKey; child: WidgetTree }) {
     super({
       key: parameters.key,
       children: [parameters.child],
@@ -51,17 +51,17 @@ export abstract class ReactSingleChildWidget extends ReactMultiChildWidget {
 
 /**
  * [SPECIAL] Independant widget that does not follow default builder's children handing logic, but containing it's own prebuilt children jsx
- * @todo
+ * @todo @deprecated (not ready for use)
  */
-export abstract class ReactIndependantWidget extends ReactWidget {}
+export abstract class IndependantWidget extends WidgetTree {}
 
 /**
- * React widget containing only text values.
+ * widget containing only text values.
  * e.g. <div>I'm Text</div>, <Typography>I'm Text</Typography>, <h1>I'm Text</h1>
  */
-export abstract class ReactTextChildWidget extends ReactWidget {
+export abstract class TextChildWidget extends WidgetTree {
   readonly text: string;
-  children?: ReactWidget[];
+  children?: WidgetTree[];
   constructor(p: { key: WidgetKey; data: string }) {
     super({
       key: p.key,

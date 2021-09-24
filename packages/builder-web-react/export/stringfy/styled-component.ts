@@ -26,11 +26,11 @@ import {
 } from "coli";
 import { react_imports } from "../../build-app/import-specifications";
 import {
-  ReactMultiChildWidget,
-  ReactSingleChildWidget,
-  ReactTextChildWidget,
-  ReactWidget,
-} from "../../widgets.native";
+  MultiChildWidget,
+  SingleChildWidget,
+  TextChildWidget,
+  WidgetTree,
+} from "@web-builder/core";
 import { ReactComponentExportResult } from "../export-result";
 
 const IMPORT_DEFAULT_STYLED_FROM_EMOTION_STYLED = new Import()
@@ -50,7 +50,7 @@ const imports = [
  * @returns
  */
 export function stringfyReactWidget_STYLED_COMPONENTS(
-  component: ReactWidget
+  component: WidgetTree
 ): ReactComponentExportResult {
   const componentName = component.key.name;
   const styledComponentNamer = new ScopedVariableNamer(
@@ -73,10 +73,10 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
   }
 
   function buildComponentFunction(): FunctionDeclaration {
-    function jsxBuilder(widget: ReactWidget) {
+    function jsxBuilder(widget: WidgetTree) {
       const children = widget.children?.map((comp) => {
         const config = getStyledConfigById(comp.key.id);
-        if (comp instanceof ReactTextChildWidget) {
+        if (comp instanceof TextChildWidget) {
           return buildTextChildJsx(comp, config);
         }
 
@@ -91,7 +91,7 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
       });
 
       const config = getStyledConfigById(widget.key.id);
-      if (widget instanceof ReactTextChildWidget) {
+      if (widget instanceof TextChildWidget) {
         return buildTextChildJsx(widget, config);
       }
       return new JSXElement({
@@ -167,14 +167,14 @@ type StyledConfigWidgetMap = Map<
   StyledComponentJSXElementConfig | NoStyleJSXElementConfig
 >;
 function getWidgetStyledConfigMap(
-  rootWidget: ReactWidget,
+  rootWidget: WidgetTree,
   preferences: {
     namer: ScopedVariableNamer;
   }
 ): StyledConfigWidgetMap {
   const styledConfigWidgetMap: StyledConfigWidgetMap = new Map();
 
-  function mapper(widget: ReactWidget) {
+  function mapper(widget: WidgetTree) {
     if (!widget) {
       throw `cannot map trough ${widget}`;
     }
@@ -203,7 +203,7 @@ function getWidgetStyledConfigMap(
 //// region jsx tree builder
 ////
 
-export function buildWidgetExportable(widget: ReactWidget) {
+export function buildWidgetExportable(widget: WidgetTree) {
   const _key = widget.key;
   const _id = _key.id;
   const _name = _key.name;
@@ -211,16 +211,16 @@ export function buildWidgetExportable(widget: ReactWidget) {
   let jsx;
   let style;
 
-  if (widget instanceof ReactMultiChildWidget) {
+  if (widget instanceof MultiChildWidget) {
     const children = widget.children;
     jsx = buildJsx(widget);
 
     //
-  } else if (widget instanceof ReactSingleChildWidget) {
+  } else if (widget instanceof SingleChildWidget) {
     const child = widget.child;
     jsx = buildJsx(widget);
     //
-  } else if (widget instanceof ReactTextChildWidget) {
+  } else if (widget instanceof TextChildWidget) {
     const text = widget.text;
     jsx = buildTextChildJsx(widget, jsxconfg);
     //
@@ -229,10 +229,10 @@ export function buildWidgetExportable(widget: ReactWidget) {
   //   return new ReactComponentExportable({});
 }
 
-function handleWidget(widget: ReactWidget) {}
+function handleWidget(widget: WidgetTree) {}
 
 function buildTextChildJsx(
-  textchildwidget: ReactTextChildWidget,
+  textchildwidget: TextChildWidget,
   config: JSXElementConfig
 ) {
   const text = textchildwidget.text;
@@ -262,13 +262,13 @@ function buildContainingJsx(
   });
 }
 
-function buildJsx(widget: ReactWidget): JSXElementLike {
+function buildJsx(widget: WidgetTree): JSXElementLike {
   const children = buildChildrenJsx(widget.children);
   const container = buildContainingJsx(widget.jsxConfig(), children);
   return container;
 }
 
-function buildChildrenJsx(children: Array<ReactWidget>): Array<JSXElementLike> {
+function buildChildrenJsx(children: Array<WidgetTree>): Array<JSXElementLike> {
   return children?.map((c) => {
     return buildJsx(c);
   });

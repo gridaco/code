@@ -1,4 +1,4 @@
-import { WidgetKey } from "../../../builder-web-core";
+import type { WidgetKey } from "../../widget-key";
 import {
   Axis,
   BorderRadiusManifest,
@@ -6,8 +6,7 @@ import {
   Color,
   EdgeInsets,
 } from "@reflect-ui/core";
-import { ReactWidget } from "../../widgets/widget";
-import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
+import { WidgetTree } from "@web-builder/core/widget-tree/widget";
 import { Flex } from "../flex";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 
@@ -15,7 +14,7 @@ export class Column extends Flex {
   readonly _type = "column";
 
   constructor(
-    p: Omit<IFlexManifest<ReactWidget>, "direction"> & {
+    p: Omit<IFlexManifest<WidgetTree>, "direction"> & {
       key: WidgetKey;
       margin?: EdgeInsets;
       padding?: EdgeInsets;

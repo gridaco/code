@@ -1,13 +1,13 @@
 import { JSX } from "coli";
 
-import { ReactMultiChildWidget, ReactWidget } from "../../widgets/widget";
-import { JSXElementConfig, WidgetKey } from "../../../builder-web-core";
+import { MultiChildWidget, WidgetTree } from "@web-builder/core";
+import { JSXElementConfig, WidgetKey } from "../..";
 import { CSSProperties } from "@coli.codes/css";
-import * as css from "../../../builder-css-styles";
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
-import { color } from "@web-builder/styles";
+import * as css from "@web-builder/styles";
 import { Color } from "@reflect-ui/core";
-export class Stack extends ReactMultiChildWidget {
+
+export class Stack extends MultiChildWidget {
   readonly _type = "stack";
 
   width: number;
@@ -15,7 +15,7 @@ export class Stack extends ReactMultiChildWidget {
 
   constructor(p: {
     key: WidgetKey;
-    children: Array<ReactWidget>;
+    children: Array<WidgetTree>;
     width: number;
     height: number;
     boxShadow?: BoxShadowManifest;
@@ -53,7 +53,7 @@ export class Stack extends ReactMultiChildWidget {
       height: css.px(this.height),
 
       "min-height": css.px(this.__minHeight),
-      "background-color": color(this.color),
+      "background-color": css.color(this.color),
       // for stacking elements under parent, parent's position shall be relative, children shall be absolute with anchor (e.g. bottom: 0)
       // can it be always relative?
       position: "relative",

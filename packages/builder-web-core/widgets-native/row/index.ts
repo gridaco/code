@@ -1,5 +1,5 @@
-import { ReactWidget } from "../../widgets/widget";
-import { WidgetKey } from "../../../builder-web-core";
+import { WidgetTree } from "@web-builder/core/widget-tree/widget";
+import { WidgetKey } from "../..";
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
 import {
   Axis,
@@ -13,7 +13,7 @@ import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 export class Row extends Flex {
   readonly _type = "row";
   constructor(
-    p: Omit<IFlexManifest<ReactWidget>, "direction"> & {
+    p: Omit<IFlexManifest<WidgetTree>, "direction"> & {
       key: WidgetKey;
       margin?: EdgeInsets;
       padding?: EdgeInsets;
