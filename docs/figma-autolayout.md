@@ -1,3 +1,5 @@
+# Figma Auto layout
+
 > These are the figma frame's property effecting to auto layouyt (flexbox) behaiviour
 
 - layoutMode: "VERTICAL" | "HORIZONTAL" - colum or row
@@ -8,7 +10,7 @@
 - layoutAlign: "STRETCH" | "INHERIT"
 - layoutGrow: 0 | 1 - flex 0/1
 
-## "Stretched" item
+## "Stretched" item (Fill container)
 
 ### Web - css
 
@@ -22,6 +24,8 @@
 .container {
   display: flex;
   align-items: stretch;
+  /* align-items: normal; - this also works (uses stretch) */
+  /* align-items: _undefined_ - this also works (normal as default value) */
 }
 
 .item {
@@ -47,6 +51,10 @@
   /* ... */
 }
 ```
+
+_References_
+
+- [css#align-items (mdn)](https://developer.mozilla.org/en-US/docs/Web/CSS/align-items)
 
 ### Flutter
 
@@ -122,3 +130,14 @@ _References_
 
 - [Add support for cross axis expansion #9075](https://github.com/flutter/flutter/issues/9075)
 - [Flutter#Expanded](https://api.flutter.dev/flutter/widgets/Expanded-class.html)
+
+### Universal token - Stretched
+
+We use Stretched Token for specifing specific widget to be stretched. Learn more at [@designto/token/tokens](../packages/designto-token/tokens/stretched/README.md)
+
+## Hug contents item (Not having any intrinsic size)
+
+> Hug contents will follow its items size, not having a intrinsic size of its own.
+> Learn how to hanlde this here at [box-sizing#Not having-any-intrinsic-size](./css-box-sizing.md)
+
+<!-- Code examples WIP -->
