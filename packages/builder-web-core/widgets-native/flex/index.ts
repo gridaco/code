@@ -103,9 +103,10 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
       gap: this.itemSpacing && px(this.itemSpacing),
       "box-shadow": css.boxshadow(this.boxShadow),
       ...borderRadius(this.borderRadius),
-      ...sizing({ ...this }),
+      ...flexsizing({ ...this }),
       "min-height": css.minHeight(this.minHeight),
       ...css.background(this.background),
+      "box-sizing": (this.padding && "border-box") || undefined,
       ...css.padding(this.padding),
     };
   }
@@ -121,7 +122,7 @@ function direction(axis: Axis): CSSProperty.FlexDirection {
   throw `axis value of "${axis}" is not a valid reflect Axis value.`;
 }
 
-function sizing({
+function flexsizing({
   mainAxisSize,
   width,
   height,
@@ -132,12 +133,20 @@ function sizing({
   height?: number;
   flex?: number;
 }): CSSProperties {
-  if (mainAxisSize === MainAxisSize.max) {
-    return <CSSProperties>{
-      "align-self": "stretch",
-      flex: "1", // This is a temporary solution, since stretch can be used on non-space-between parent, but still the item should stretch, we use flex 1 to do this.
-    };
+  switch (mainAxisSize) {
+    case MainAxisSize.max: {
+      return <CSSProperties>{
+        "align-self": "stretch",
+        flex: "1", // This is a temporary solution, since stretch can be used on non-space-between parent, but still the item should stretch, we use flex 1 to do this.
+      };
+    }
+    case MainAxisSize.min: {
+      return {
+        flex: "none",
+      };
+    }
   }
+
   // TODO:
   // 1. add widht / height handling
 }
