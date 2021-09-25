@@ -44,7 +44,6 @@ export class Text extends TextChildWidget {
 
   styleData(): CSSProperties {
     return <CSSProperties>{
-      // todo - name conversion not handled properly.
       color: css.color((this.textStyle.color as any) as RGBA),
       "text-overflow": this.overflow,
       "font-size": css.px(this.textStyle.fontSize),

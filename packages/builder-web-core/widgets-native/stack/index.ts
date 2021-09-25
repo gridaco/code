@@ -47,7 +47,7 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
       height: css.px(this.height),
 
       "min-height": css.minHeight(this.minHeight),
-      "background-color": css.color(this.color),
+      ...css.background(this.color),
       ...css.borderRadius(this.borderRadius),
       // for stacking elements under parent, parent's position shall be relative, children shall be absolute with anchor (e.g. bottom: 0)
       // can it be always relative?

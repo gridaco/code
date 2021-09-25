@@ -3,11 +3,7 @@ import { Widget, WidgetKey } from "@reflect-ui/core";
 import { tokenizeText } from "./token-text";
 import { tokenizeLayout } from "./token-layout";
 import { tokenizeContainer } from "./token-container";
-import {
-  tokenizeVector,
-  tokenizeBitmap,
-  tokenizeGraphics,
-} from "./token-graphics";
+import { tokenizeVector, tokenizeGraphics } from "./token-graphics";
 import { tokenizeButton, tokenizeDivider } from "./token-widgets";
 import { SingleOrArray, isNotEmptyArray } from "./utils";
 import { array } from "@reflect-ui/uiutils";
@@ -176,6 +172,12 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
       });
     }
   }
+
+  // console.log(
+  //   "tokenizedTarget",
+  //   tokenizedTarget.key.originName,
+  //   tokenizedTarget
+  // );
 
   return tokenizedTarget;
 }

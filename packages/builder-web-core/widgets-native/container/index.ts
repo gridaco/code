@@ -2,14 +2,7 @@ import { CSSProperties } from "@coli.codes/css";
 import { JSXElementConfig, WidgetKey } from "../..";
 import { BorderRadiusManifest } from "@reflect-ui/core";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
-import {
-  borderRadius,
-  positionAbsolute,
-  background,
-  px,
-  color,
-  boxshadow,
-} from "@web-builder/styles";
+import * as css from "@web-builder/styles";
 import { JSX } from "coli";
 
 import { WidgetTree } from "@web-builder/core/widget-tree/widget";
@@ -35,14 +28,13 @@ export class Container extends WidgetTree {
 
   styleData(): CSSProperties {
     return {
-      width: px(this.width),
-      height: px(this.height),
-      "box-shadow": boxshadow(this.boxShadow),
-      color: color(this.color),
+      width: css.px(this.width),
+      height: css.px(this.height),
+      "box-shadow": css.boxshadow(this.boxShadow),
       // FIXME: bg should be handled by the background paint, which is not ready from tokenizer.
-      background: color(this.color),
-      ...borderRadius(this.borderRadius),
-      ...background(this.background),
+      "background-color": css.color(this.color),
+      // color: color(this.color), // color is for text
+      ...css.borderRadius(this.borderRadius),
     };
   }
   jsxConfig(): JSXElementConfig {
