@@ -6,7 +6,7 @@ import { array } from "@reflect-ui/uiutils";
  * @todo - not implemented
  * @returns
  */
-export function background(bg: BackgroundPaintLike[]): CSSProperties {
+export function background(...bg: BackgroundPaintLike[]): CSSProperties {
   const safebg = bg?.filter(array.filters.notEmpty);
   if (safebg && safebg.length > 0) {
     const _primary = safebg[0];
