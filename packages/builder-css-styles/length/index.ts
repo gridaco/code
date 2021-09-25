@@ -3,7 +3,7 @@ import { calc, operation } from "../calc";
 import { px, vw, vh } from "../dimensions";
 
 export function length(d: DimensionLength | string, a?: Axis) {
-  if (!d) {
+  if (d === undefined) {
     return;
   }
 
