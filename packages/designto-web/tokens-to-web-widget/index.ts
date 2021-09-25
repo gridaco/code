@@ -1,8 +1,11 @@
 import * as core from "@reflect-ui/core";
+import { tokens as special } from "@designto/token";
 import * as web from "@web-builder/core";
 import { WidgetTree } from "@web-builder/core";
 import { keyFromWidget } from "@web-builder/core";
 import { MainImageRepository } from "@design-sdk/core/assets-repository";
+import * as css from "@web-builder/styles";
+import { Axis } from "@reflect-ui/core";
 
 export function buildWebWidgetFromTokens(
   widget: core.Widget,
@@ -64,23 +67,24 @@ export function buildWebWidgetFromTokens(
     //
   } else if (widget instanceof core.Positioned) {
     thisReactWidget = handleChild(widget.child);
-    // TODO: shoul apply to all widgets. - make a container builder and blend the constraint properties.
-    if (thisReactWidget instanceof web.Container) {
-      // -------------------------------------
-      // override w & h with position provided w/h
-      thisReactWidget.width = widget.width;
-      thisReactWidget.height = widget.height;
-      // -------------------------------------
-      thisReactWidget.constraint = {
-        left: widget.left,
-        top: widget.top,
-        right: widget.right,
-        bottom: widget.bottom,
-      };
-    }
+    // -------------------------------------
+    // override w & h with position provided w/h
+    thisReactWidget.extendStyle({
+      width: css.px(widget.width),
+      height: css.px(widget.height),
+    });
+    // -------------------------------------
+    thisReactWidget.constraint = {
+      left: widget.left,
+      top: widget.top,
+      right: widget.right,
+      bottom: widget.bottom,
+    };
   } else if (widget instanceof core.Text) {
     thisReactWidget = new web.Text({
       ...widget,
+      textStyle:
+        widget.style /** explicit assignment - field name is different */,
       data: widget.data,
       key: _key,
     });
@@ -142,13 +146,50 @@ export function buildWebWidgetFromTokens(
     thisReactWidget.width = widget.width;
     thisReactWidget.height = widget.height;
     thisReactWidget.background = widget.background;
-  } else {
+  }
+
+  // -------------------------------------
+  // special tokens
+  // -------------------------------------
+  else if (widget instanceof special.Stretched) {
+    let remove_size;
+    switch (widget.axis) {
+      case Axis.horizontal:
+        remove_size = "height";
+        break;
+      case Axis.vertical:
+        remove_size = "width";
+        break;
+    }
+
+    thisReactWidget = handleChild(widget.child);
+    thisReactWidget.extendStyle({
+      "align-self": "stretch",
+      [remove_size]: undefined,
+    });
+  }
+  // -------------------------------------
+
+  // -------------------------------------
+  // end of logic gate
+  // -------------------------------------
+  else {
     // todo - handle case more specific
     thisReactWidget = new web.ErrorWidget({
       key: _key,
       errorMessage: `The input design was not handled. "${
         widget.key.originName
-      }" type of "${widget._type}" - ${JSON.stringify(widget)}`,
+      }" type of "${widget._type}" - ${JSON.stringify(widget.key)}`,
+    });
+  }
+  // -------------------------------------
+  // -------------------------------------
+
+  // post extending - do not abuse this
+  if (context.is_root) {
+    thisReactWidget.extendStyle({
+      // TODO: add overflow x hide handling by case.
+      // "overflow-x": "hidden",
     });
   }
 
