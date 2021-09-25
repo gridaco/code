@@ -11,15 +11,14 @@ import {
   VerticalDirection,
 } from "@reflect-ui/core";
 import { MainAxisSize } from "@reflect-ui/core/lib/main-axis-size";
-import { JSX, JSXElementLike } from "coli";
+import { JSX } from "coli";
 import {
   MultiChildWidget,
   WidgetTree,
 } from "@web-builder/core/widget-tree/widget";
-import * as css from "../../../builder-css-styles";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
-import { px, borderRadius } from "@web-builder/styles";
+import * as css from "@web-builder/styles";
 import { CssMinHeightMixin } from "../_utility";
 
 export class Flex extends MultiChildWidget implements CssMinHeightMixin {
@@ -64,6 +63,10 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
     }
   ) {
     super(p);
+
+    this.width = p.width;
+    this.height = p.height;
+
     // flex related
     this.direction = p.direction;
     this.itemSpacing = p.itemSpacing;
@@ -100,9 +103,9 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
       "align-items": this.crossAxisAlignment,
       overflow: this.overflow,
       flex: this.flex,
-      gap: this.itemSpacing && px(this.itemSpacing),
+      gap: this.itemSpacing && css.px(this.itemSpacing),
       "box-shadow": css.boxshadow(this.boxShadow),
-      ...borderRadius(this.borderRadius),
+      ...css.borderRadius(this.borderRadius),
       ...flexsizing({ ...this }),
       "min-height": css.minHeight(this.minHeight),
       ...css.background(this.background),
@@ -127,7 +130,9 @@ function flexsizing({
   width,
   height,
   flex,
+  direction,
 }: {
+  direction: Axis;
   mainAxisSize?: MainAxisSize;
   width?: number;
   height?: number;
@@ -141,9 +146,15 @@ function flexsizing({
       };
     }
     case MainAxisSize.min: {
-      return {
-        flex: "none",
-      };
+      switch (direction) {
+        case Axis.horizontal:
+        case Axis.vertical:
+          return {
+            flex: "none",
+            width: width && css.px(width),
+            height: height && css.px(height),
+          };
+      }
     }
   }
 
