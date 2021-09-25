@@ -27,7 +27,7 @@ export class ImageElement extends SelfClosingContainer {
     return <CSSProperties>{
       ...super.styleData(),
       "object-fit": "cover",
-      "max-width": "100%",
+      // "max-width": "100%",
     };
   }
 
