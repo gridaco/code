@@ -35,21 +35,28 @@ export function buildWebWidgetFromTokens(
 
   const _key = keyFromWidget(widget);
 
-  let thisReactWidget: WidgetTree;
+  let thisWebWidget: WidgetTree;
   if (widget instanceof core.Column) {
-    thisReactWidget = new web.Column({
+    thisWebWidget = new web.Column({
       ...default_props_for_layout,
       children: handleChildren(widget.children),
       key: _key,
     });
   } else if (widget instanceof core.Row) {
-    thisReactWidget = new web.Row({
+    thisWebWidget = new web.Row({
+      ...default_props_for_layout,
+      children: handleChildren(widget.children),
+      key: _key,
+    });
+  } else if (widget instanceof core.Flex) {
+    thisWebWidget = new web.Flex({
+      ...widget,
       ...default_props_for_layout,
       children: handleChildren(widget.children),
       key: _key,
     });
   } else if (widget instanceof core.Stack) {
-    thisReactWidget = new web.Stack({
+    thisWebWidget = new web.Stack({
       ...default_props_for_layout,
       children: handleChildren(widget.children as []),
       key: _key,
@@ -57,7 +64,7 @@ export function buildWebWidgetFromTokens(
   } else if (widget instanceof core.SingleChildScrollView) {
     // since web css does not require additional hierarchy for scroll view, we can simply merge properties.
     // merge single child scroll view properties for
-    thisReactWidget = new web.Flex({
+    thisWebWidget = new web.Flex({
       ...widget.child,
       ...widget,
       overflow: "auto",
@@ -66,22 +73,22 @@ export function buildWebWidgetFromTokens(
     });
     //
   } else if (widget instanceof core.Positioned) {
-    thisReactWidget = handleChild(widget.child);
+    thisWebWidget = handleChild(widget.child);
     // -------------------------------------
     // override w & h with position provided w/h
-    thisReactWidget.extendStyle({
+    thisWebWidget.extendStyle({
       width: css.px(widget.width),
       height: css.px(widget.height),
     });
     // -------------------------------------
-    thisReactWidget.constraint = {
+    thisWebWidget.constraint = {
       left: widget.left,
       top: widget.top,
       right: widget.right,
       bottom: widget.bottom,
     };
   } else if (widget instanceof core.Text) {
-    thisReactWidget = new web.Text({
+    thisWebWidget = new web.Text({
       ...widget,
       textStyle:
         widget.style /** explicit assignment - field name is different */,
@@ -89,14 +96,14 @@ export function buildWebWidgetFromTokens(
       key: _key,
     });
   } else if (widget instanceof core.VectorWidget) {
-    thisReactWidget = new web.SvgElement({
+    thisWebWidget = new web.SvgElement({
       ...widget,
       data: widget.data,
       fill: widget.fill,
       key: _key,
     });
   } else if (widget instanceof core.ImageWidget) {
-    thisReactWidget = new web.ImageElement({
+    thisWebWidget = new web.ImageElement({
       ...widget,
       src: widget.src,
       key: _key,
@@ -112,7 +119,7 @@ export function buildWebWidgetFromTokens(
             key: widget.key.id,
           });
 
-        thisReactWidget = new web.ImageElement({
+        thisWebWidget = new web.ImageElement({
           ...widget,
           src:
             _tmp_icon_as_img.url ||
@@ -122,7 +129,7 @@ export function buildWebWidgetFromTokens(
         break;
       }
       case "remote-uri": {
-        thisReactWidget = new web.ImageElement({
+        thisWebWidget = new web.ImageElement({
           ...widget,
           src: widget.icon.uri,
           key: _key,
@@ -135,17 +142,17 @@ export function buildWebWidgetFromTokens(
 
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
   else if (widget instanceof core.Container) {
-    thisReactWidget = new web.Container({
+    thisWebWidget = new web.Container({
       ...widget,
       key: _key,
       borderRadius: widget.borderRadius,
     });
-    thisReactWidget.color = widget.color;
-    thisReactWidget.x = widget.x;
-    thisReactWidget.y = widget.y;
-    thisReactWidget.width = widget.width;
-    thisReactWidget.height = widget.height;
-    thisReactWidget.background = widget.background;
+    thisWebWidget.color = widget.color;
+    thisWebWidget.x = widget.x;
+    thisWebWidget.y = widget.y;
+    thisWebWidget.width = widget.width;
+    thisWebWidget.height = widget.height;
+    thisWebWidget.background = widget.background;
   }
 
   // -------------------------------------
@@ -162,8 +169,8 @@ export function buildWebWidgetFromTokens(
         break;
     }
 
-    thisReactWidget = handleChild(widget.child);
-    thisReactWidget.extendStyle({
+    thisWebWidget = handleChild(widget.child);
+    thisWebWidget.extendStyle({
       "align-self": "stretch",
       [remove_size]: undefined,
     });
@@ -175,7 +182,7 @@ export function buildWebWidgetFromTokens(
   // -------------------------------------
   else {
     // todo - handle case more specific
-    thisReactWidget = new web.ErrorWidget({
+    thisWebWidget = new web.ErrorWidget({
       key: _key,
       errorMessage: `The input design was not handled. "${
         widget.key.originName
@@ -187,11 +194,11 @@ export function buildWebWidgetFromTokens(
 
   // post extending - do not abuse this
   if (context.is_root) {
-    thisReactWidget.extendStyle({
+    thisWebWidget.extendStyle({
       // TODO: add overflow x hide handling by case.
       // "overflow-x": "hidden",
     });
   }
 
-  return thisReactWidget;
+  return thisWebWidget;
 }
