@@ -10,15 +10,15 @@ function fromRectangle(node: nodes.ReflectRectangleNode): core.Container {
   const container = new core.Container({
     key: keyFromNode(node),
     children: undefined,
+    width: node.width,
+    height: node.height,
+    borderRadius: node.cornerRadius,
+    color: forceFillsToSolidColor(node.fills), // FIXME: handle by count of fills.
   });
 
   container.x = node.x;
   container.y = node.y;
-  container.width = node.width;
-  container.height = node.height;
-  container.color = forceFillsToSolidColor(node.fills); // FIXME: handle by count of fills.
   // container.border = new core.Border() as any; // FIXME: handle by count of fills.
-  container.borderRadius = node.cornerRadius;
   return container;
 }
 

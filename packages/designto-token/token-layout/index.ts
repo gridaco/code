@@ -15,6 +15,7 @@ import {
   BorderRadiusManifest,
   Calculation,
 } from "@reflect-ui/core";
+import { Stretched } from "../tokens";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { keyFromNode } from "../key";
 import { handleChildren } from "../main";
@@ -109,9 +110,43 @@ function flexOrStackFromFrame(
   // else, stack.
   // TODO: - convert as container if single child
 
-  // wrap each children with positioned
-  const stack_children = wchildren?.map((child) => {
-    const ogchild = children.find((c) => c.id === child.key.id);
+  const stack_children = stackChildren({
+    ogchildren: children,
+    wchildren: wchildren,
+    container: frame,
+  });
+
+  const stack = new Stack({
+    key: _key,
+    children: stack_children,
+    width: frame.width,
+    height: frame.height,
+    boxShadow: frame.primaryShadow,
+    borderRadius: frame.cornerRadius,
+    padding: frame.padding,
+    background: _background,
+    color: _color,
+  });
+  return stack;
+}
+
+/**
+ * wrap each children with positioned
+ *
+ * @param param0
+ * @returns
+ */
+function stackChildren({
+  container,
+  wchildren,
+  ogchildren,
+}: {
+  ogchildren: Array<nodes.ReflectSceneNode>;
+  container: nodes.ReflectSceneNode;
+  wchildren: core.Widget[];
+}): core.Widget[] {
+  return wchildren?.map((child) => {
+    const ogchild = ogchildren.find((c) => c.id === child.key.id);
 
     const constraint = {
       left: undefined,
@@ -126,9 +161,9 @@ function flexOrStackFromFrame(
     };
 
     const _l = ogchild.x;
-    const _r = frame.width - (ogchild.x + ogchild.width);
+    const _r = container.width - (ogchild.x + ogchild.width);
     const _t = ogchild.y;
-    const _b = frame.height - (ogchild.y + ogchild.height);
+    const _b = container.height - (ogchild.y + ogchild.height);
 
     /**
      * "MIN": Left or Top
@@ -161,7 +196,7 @@ function flexOrStackFromFrame(
           const half_w = ogchild.width / 2;
           const centerdiff =
             // center of frame
-            frame.width / 2 -
+            container.width / 2 -
             // center of og
             (half_w + ogchild.x);
           constraint.left = <Calculation>{
@@ -204,7 +239,7 @@ function flexOrStackFromFrame(
           break;
         case "CENTER":
           // static
-          constraint.top = (frame.height - ogchild.height) * 0.5;
+          constraint.top = (container.height - ogchild.height) * 0.5;
           break; // FIXME: not handled
       }
     }
@@ -219,18 +254,6 @@ function flexOrStackFromFrame(
       child: child,
     });
   });
-
-  const stack = new Stack({
-    key: _key,
-    children: stack_children,
-    width: frame.width,
-    height: frame.height,
-    boxShadow: frame.primaryShadow,
-    padding: frame.padding,
-    background: _background,
-    color: _color,
-  });
-  return stack;
 }
 
 function fromGroup(
@@ -238,14 +261,23 @@ function fromGroup(
   children: Array<nodes.ReflectSceneNode>
 ): core.LayoutRepresntatives {
   const wchildren = handleChildren(children);
+  const stack_children = stackChildren({
+    ogchildren: children,
+    wchildren: wchildren,
+    container: group,
+  });
+  const _background = [group.primaryColor];
+  const _color = group.primaryColor;
   const stack = new Stack({
     key: keyFromNode(group),
-    children: wchildren,
+    children: stack_children,
     width: group.width,
     height: group.height,
     boxShadow: group.primaryShadow,
+    padding: group.padding,
+    background: _background,
+    color: _color,
   });
-  stack.children = wchildren;
   return stack;
 }
 
