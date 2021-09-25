@@ -1,5 +1,5 @@
 import { nodes } from "@design-sdk/core";
-import { Widget } from "@reflect-ui/core";
+import { Widget, WidgetKey } from "@reflect-ui/core";
 import { tokenizeText } from "./token-text";
 import { tokenizeLayout } from "./token-layout";
 import { tokenizeContainer } from "./token-container";
@@ -12,6 +12,8 @@ import { tokenizeButton, tokenizeDivider } from "./token-widgets";
 import { SingleOrArray, isNotEmptyArray } from "./utils";
 import { array } from "@reflect-ui/uiutils";
 import { detectIf } from "@reflect-ui/detection";
+import { Stretched } from "./tokens";
+import { byY, byYX } from "@designto/sanitized";
 
 export type { Widget };
 
@@ -46,9 +48,12 @@ function dynamicGenerator(
   if (isNotEmptyArray(node)) {
     const widgets: Array<Widget> = [];
     node = node as Array<nodes.ReflectSceneNode>;
-    node.forEach((node, index) => {
-      widgets.push(handleNode(node));
-    });
+    node
+      // .reverse()
+      // .sort(byY)
+      .forEach((node, index) => {
+        widgets.push(handleNode(node));
+      });
 
     // filter empty widgets (safe checker logic)
     const finalWidgets = widgets.filter((w) => array.filters.notEmpty(w));
@@ -157,5 +162,20 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
       console.error(`${node.type} is not yet handled by "@designto/token"`);
       break;
   }
+
+  // post wrapping
+  if (tokenizedTarget) {
+    if (node.layoutAlign && node.layoutAlign === "STRETCH") {
+      tokenizedTarget = new Stretched({
+        key: new WidgetKey({
+          ...tokenizedTarget.key,
+          id: tokenizedTarget.key.id + "_stretched",
+        }),
+        child: tokenizedTarget,
+        axis: node.parent?.layoutMode,
+      });
+    }
+  }
+
   return tokenizedTarget;
 }
