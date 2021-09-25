@@ -1,7 +1,6 @@
-import { ColiObjectLike } from "@coli.codes/builder";
 import { CSSProperties } from "@coli.codes/css";
 import { JSXElementConfig, WidgetKey } from "../..";
-import { BorderRadiusManifest, DimensionLength } from "@reflect-ui/core";
+import { BorderRadiusManifest } from "@reflect-ui/core";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
 import {
   borderRadius,
@@ -10,8 +9,8 @@ import {
   px,
   color,
   boxshadow,
-} from "../../../builder-css-styles";
-import { JSX, JSXElementLike, css } from "coli";
+} from "@web-builder/styles";
+import { JSX } from "coli";
 
 import { WidgetTree } from "@web-builder/core/widget-tree/widget";
 
@@ -20,12 +19,6 @@ export class Container extends WidgetTree {
 
   children?: WidgetTree[];
   borderRadius?: BorderRadiusManifest;
-  constraint?: {
-    left?: DimensionLength;
-    top?: DimensionLength;
-    right?: DimensionLength;
-    bottom?: DimensionLength;
-  };
 
   constructor(p: {
     key: WidgetKey;
@@ -48,10 +41,6 @@ export class Container extends WidgetTree {
       color: color(this.color),
       // FIXME: bg should be handled by the background paint, which is not ready from tokenizer.
       background: color(this.color),
-      /**
-       * // FIXME: position shall not be specified when parent has a layout. (e.g. under flex)
-       */
-      ...((this.constraint && positionAbsolute(this.constraint)) || {}),
       ...borderRadius(this.borderRadius),
       ...background(this.background),
     };
