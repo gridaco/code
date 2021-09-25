@@ -5,11 +5,17 @@ type XYItem = { x: number; y: number };
  * @param items
  * @returns
  */
-function sortbyXY<T extends XYItem = XYItem>(items: Array<T>): Array<T> {
-  return items.sort((a, b) => {
-    if (a.y !== b.y) {
-      return a.y - b.y;
-    }
-    return a.x - b.x;
-  });
+export function sortbyYX<T extends XYItem = XYItem>(items: Array<T>): Array<T> {
+  return items.sort(byYX);
 }
+
+export const byYX = (a: XYItem, b: XYItem) => {
+  if (a.y !== b.y) {
+    return a.y - b.y;
+  }
+  return a.x - b.x;
+};
+
+export const byY = (a: XYItem, b: XYItem) => {
+  return a.y - b.y;
+};
