@@ -33,6 +33,21 @@ Using border-box will contain the padding inside its final height. same h & p se
 }
 ```
 
+**Not having any intrinsic size**
+
+Having padding without any height specified is a valid and recommended styling strategy.
+
+```css
+.content {
+  background-color: black;
+
+  /* height: 100px; -- height must be NOT specified. */
+  padding: 24px;
+}
+```
+
+In the same way, the flex container or in a item, the same strategy can be used. Describing based on figma auto layout, if the size is `Hug contents`, which means it does not have a `intrinsic size`. Which concludes - there is no need for specifing a size.
+
 **Using `max-height` instead of `height`**
 
 Yet specifing box-sizing property might not be a best solution, it get's redundant, may confuse developer. and also may require additional handling since the whole behaviour being changed.
