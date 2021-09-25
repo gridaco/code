@@ -4,6 +4,7 @@ import { CSSProperties } from "@coli.codes/css";
 import { ColiObjectLike } from "@coli.codes/builder";
 import {
   Color,
+  DimensionLength,
   EdgeInsets,
   IBoxShadowWidget,
   IEdgeInsetsWidget,
@@ -13,6 +14,7 @@ import {
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
 import { WidgetKey } from "../widget-key";
+import { positionAbsolute } from "@web-builder/styles";
 
 export interface JSXElementConfig {
   tag: ColiObjectLike<JSXIdentifier>;
@@ -38,6 +40,13 @@ export abstract class WidgetWithStyle
   width?: number;
   height?: number;
 
+  constraint?: {
+    left?: DimensionLength;
+    top?: DimensionLength;
+    right?: DimensionLength;
+    bottom?: DimensionLength;
+  };
+
   background?: BackgroundPaintLike[];
   color?: Color;
 
@@ -54,10 +63,27 @@ export abstract class WidgetWithStyle
 
   /**
    * if the style is null, it means don't make element as a styled component at all. if style is a empty object, it means to make a empty styled component.
+   * @internal - use .style for accessing the full style data.
    */
   abstract styleData(): CSSProperties | null;
+  get style() {
+    return {
+      ...this.styleData(),
+      // extended to override
+      ...this.extendedStyle,
+      /**
+       * // FIXME: position shall not be specified when parent has a layout. (e.g. under flex)
+       */
+      ...((this.constraint && positionAbsolute(this.constraint)) || {}),
+    };
+  }
 
   abstract jsxConfig(): JSXElementConfig;
+
+  private extendedStyle: CSSProperties = {};
+  extendStyle(style: CSSProperties) {
+    this.extendedStyle = style;
+  }
 }
 
 /**
