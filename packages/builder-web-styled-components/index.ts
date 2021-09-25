@@ -71,7 +71,7 @@ export function buildStyledComponentConfig(
       id: styledVar.id.name,
       tag: handle(config.tag),
       attributes: config.attributes,
-      style: widget.styleData(),
+      style: widget.style,
       styledComponent: styledVar,
     };
   } else {
