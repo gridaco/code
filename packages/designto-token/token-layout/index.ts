@@ -14,6 +14,7 @@ import {
   Color,
   BorderRadiusManifest,
   Calculation,
+  Clip,
 } from "@reflect-ui/core";
 import { Stretched } from "../tokens";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
@@ -67,6 +68,10 @@ function flexOrStackFromFrame(
   const _color = frame.primaryColor;
   const _mainaxissize = layoutAlignToReflectMainAxisSize(frame.layoutAlign);
 
+  // Should this be used for flex?
+  // frame.primaryAxisSizingMode;
+  // frame.counterAxisSizingMode;
+
   const initializer: Omit<IFlexManifest, "direction"> & {
     key: WidgetKey;
     boxShadow: BoxShadowManifest;
@@ -109,6 +114,10 @@ function flexOrStackFromFrame(
 
   // else, stack.
   // TODO: - convert as container if single child
+  //
+
+  // handle overflow
+  const _overflow_hide = frame.clipsContent;
 
   const stack_children = stackChildren({
     ogchildren: children,
@@ -125,6 +134,7 @@ function flexOrStackFromFrame(
     borderRadius: frame.cornerRadius,
     padding: frame.padding,
     background: _background,
+    clipBehavior: _overflow_hide ? Clip.antiAlias : Clip.none,
     color: _color,
   });
   return stack;
@@ -145,115 +155,121 @@ function stackChildren({
   container: nodes.ReflectSceneNode;
   wchildren: core.Widget[];
 }): core.Widget[] {
-  return wchildren?.map((child) => {
-    const ogchild = ogchildren.find((c) => c.id === child.key.id);
+  return wchildren
+    ?.map((child) => {
+      const ogchild = ogchildren.find((c) => c.id === child.key.id);
+      if (!ogchild) {
+        console.error(`Could not find child with id: ${child.key.id}`);
+        return;
+      }
 
-    const constraint = {
-      left: undefined,
-      top: undefined,
-      right: undefined,
-      bottom: undefined,
-    };
+      const constraint = {
+        left: undefined,
+        top: undefined,
+        right: undefined,
+        bottom: undefined,
+      };
 
-    const wh = {
-      width: ogchild.width,
-      height: ogchild.height,
-    };
+      const wh = {
+        width: ogchild.width,
+        height: ogchild.height,
+      };
 
-    const _l = ogchild.x;
-    const _r = container.width - (ogchild.x + ogchild.width);
-    const _t = ogchild.y;
-    const _b = container.height - (ogchild.y + ogchild.height);
+      const _l = ogchild.x;
+      const _r = container.width - (ogchild.x + ogchild.width);
+      const _t = ogchild.y;
+      const _b = container.height - (ogchild.y + ogchild.height);
 
-    /**
-     * "MIN": Left or Top
-     * "MAX": Right or Bottom
-     * "CENTER": Center
-     * "STRETCH": Left & Right or Top & Bottom
-     * "SCALE": Scale
-     */
+      /**
+       * "MIN": Left or Top
+       * "MAX": Right or Bottom
+       * "CENTER": Center
+       * "STRETCH": Left & Right or Top & Bottom
+       * "SCALE": Scale
+       */
 
-    if (!ogchild.constraints) {
-      console.error(
-        `${ogchild.toString()} has no constraints. this can happen when node under group item tokenization is incomplete. this is engine's error.`,
-        ogchild
-      );
-    } else {
-      switch (ogchild.constraints.horizontal) {
-        case "MIN":
-          constraint.left = _l;
-          break;
-        case "MAX":
-          constraint.right = _r;
-          break;
-        case "SCALE": /** scale fallbacks to stretch */
-        case "STRETCH":
-          constraint.left = _l;
-          constraint.right = _r;
-          wh.width = undefined;
-          break;
-        case "CENTER":
-          const half_w = ogchild.width / 2;
-          const centerdiff =
-            // center of frame
-            container.width / 2 -
-            // center of og
-            (half_w + ogchild.x);
-          constraint.left = <Calculation>{
-            type: "calc",
-            operations: {
-              left: {
-                type: "calc",
-                operations: { left: "50%", op: "+", right: centerdiff },
+      if (!ogchild.constraints) {
+        console.error(
+          `${ogchild.toString()} has no constraints. this can happen when node under group item tokenization is incomplete. this is engine's error.`,
+          ogchild
+        );
+      } else {
+        switch (ogchild.constraints.horizontal) {
+          case "MIN":
+            constraint.left = _l;
+            break;
+          case "MAX":
+            constraint.right = _r;
+            break;
+          case "SCALE": /** scale fallbacks to stretch */
+          case "STRETCH":
+            constraint.left = _l;
+            constraint.right = _r;
+            wh.width = undefined;
+            break;
+          case "CENTER":
+            const half_w = ogchild.width / 2;
+            const centerdiff =
+              // center of frame
+              container.width / 2 -
+              // center of og
+              (half_w + ogchild.x);
+            constraint.left = <Calculation>{
+              type: "calc",
+              operations: {
+                left: {
+                  type: "calc",
+                  operations: { left: "50%", op: "+", right: centerdiff },
+                },
+                op: "-", // this part is different
+                right: half_w,
               },
-              op: "-", // this part is different
-              right: half_w,
-            },
-          };
-          // --- we can also specify the right, but left is enough.
-          // constraint.right = <Calculation>{
-          //   type: "calc",
-          //   operations: {
-          //     left: {
-          //       type: "calc",
-          //       operations: { left: "50%", op: "+", right: centerdiff },
-          //     },
-          //     op: "+", // this part is different
-          //     right: half,
-          //   },
-          // };
-          break;
+            };
+            // --- we can also specify the right, but left is enough.
+            // constraint.right = <Calculation>{
+            //   type: "calc",
+            //   operations: {
+            //     left: {
+            //       type: "calc",
+            //       operations: { left: "50%", op: "+", right: centerdiff },
+            //     },
+            //     op: "+", // this part is different
+            //     right: half,
+            //   },
+            // };
+            break;
+        }
+        switch (ogchild.constraints.vertical) {
+          case "MIN":
+            constraint.top = _t;
+            break;
+          case "MAX":
+            constraint.bottom = _b;
+            break;
+          case "SCALE": /** scale fallbacks to stretch */
+          case "STRETCH":
+            constraint.top = _t;
+            constraint.bottom = _b;
+            wh.height = undefined;
+            break;
+          case "CENTER":
+            // static
+            constraint.top = (container.height - ogchild.height) * 0.5;
+            break; // FIXME: not handled
+        }
       }
-      switch (ogchild.constraints.vertical) {
-        case "MIN":
-          constraint.top = _t;
-          break;
-        case "MAX":
-          constraint.bottom = _b;
-          break;
-        case "SCALE": /** scale fallbacks to stretch */
-        case "STRETCH":
-          constraint.top = _t;
-          constraint.bottom = _b;
-          wh.height = undefined;
-          break;
-        case "CENTER":
-          // static
-          constraint.top = (container.height - ogchild.height) * 0.5;
-          break; // FIXME: not handled
-      }
-    }
 
-    return new core.Positioned({
-      key: new WidgetKey({
-        id: child.key.id + ".positioned",
-        originName: child.key.originName,
-      }),
-      ...constraint,
-      ...wh,
-      child: child,
-    });
-  });
+      return new core.Positioned({
+        key: new WidgetKey({
+          id: child.key.id + ".positioned",
+          originName: child.key.originName,
+        }),
+        ...constraint,
+        ...wh,
+        child: child,
+      });
+    })
+    .filter((c) => c);
 }
 
 function fromGroup(

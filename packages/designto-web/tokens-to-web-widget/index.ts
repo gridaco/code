@@ -5,7 +5,7 @@ import { WidgetTree } from "@web-builder/core";
 import { keyFromWidget } from "@web-builder/core";
 import { MainImageRepository } from "@design-sdk/core/assets-repository";
 import * as css from "@web-builder/styles";
-import { Axis } from "@reflect-ui/core";
+import { Axis, Stack } from "@reflect-ui/core";
 
 export function buildWebWidgetFromTokens(
   widget: core.Widget,
@@ -56,8 +56,15 @@ export function buildWebWidgetFromTokens(
       key: _key,
     });
   } else if (widget instanceof core.Stack) {
+    const _remove_overflow_if_root_overflow = {
+      clipBehavior: context.is_root
+        ? undefined
+        : (widget as Stack).clipBehavior,
+    };
+
     thisWebWidget = new web.Stack({
       ...default_props_for_layout,
+      ..._remove_overflow_if_root_overflow,
       children: handleChildren(widget.children as []),
       key: _key,
     });
