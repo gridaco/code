@@ -1,4 +1,4 @@
-import { nodes } from "@design-sdk/core";
+import { nodes, ReflectSceneNodeType } from "@design-sdk/core";
 import { layoutAlignToReflectMainAxisSize } from "@design-sdk/figma-node-conversion";
 import * as core from "@reflect-ui/core";
 import {
@@ -16,7 +16,6 @@ import {
   Calculation,
   Clip,
 } from "@reflect-ui/core";
-import { Stretched } from "../tokens";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { keyFromNode } from "../key";
 import { handleChildren } from "../main";
@@ -159,8 +158,8 @@ function stackChildren({
     ?.map((child) => {
       const ogchild = ogchildren.find((c) => c.id === child.key.id);
       if (!ogchild) {
-        console.error(`Could not find child with id: ${child.key.id}`);
-        return;
+        // console.error(`Could not find child with id: ${child.key.id}`);
+        throw `Could not find child with id: ${child.key.id}`;
       }
 
       const constraint = {
@@ -188,11 +187,17 @@ function stackChildren({
        * "SCALE": Scale
        */
 
-      if (!ogchild.constraints) {
+      if (ogchild.type == ReflectSceneNodeType.group) {
+        // FIXME: group should actually not be a stack, since the item's constraints are relative to parent of a group(this).
+        // however, this should be fixed in the group tokenization, not in this block.
+        constraint.left = ogchild.x;
+        constraint.top = ogchild.y;
+        // console.error("cannot add constraint to stack: group is not supported");
+      } else if (!ogchild.constraints) {
         console.error(
-          `${ogchild.toString()} has no constraints. this can happen when node under group item tokenization is incomplete. this is engine's error.`,
-          ogchild
+          `${ogchild.toString()} has no constraints. this can happen when node under group item tokenization is incomplete. this is engine's error.`
         );
+        // throw `${ogchild.toString()} has no constraints. this can happen when node under group item tokenization is incomplete. this is engine's error.`;
       } else {
         switch (ogchild.constraints.horizontal) {
           case "MIN":
