@@ -11,6 +11,8 @@ export function fromText(node: nodes.ReflectTextNode): Text {
   // 1. check if text is rich text
   // if () //
 
+  // -------------------------------
+  // resizing
   const wh = {
     width: undefined,
     height: undefined,
@@ -31,6 +33,7 @@ export function fromText(node: nodes.ReflectTextNode): Text {
       wh.height = node.height;
       break;
   }
+  // -------------------------------
 
   return new Text({
     key: keyFromNode(node),
@@ -42,7 +45,7 @@ export function fromText(node: nodes.ReflectTextNode): Text {
       fontSize: node.fontSize,
       fontWeight: node.fontWeight,
       color: node.primaryColor,
-      // lineheight
+      lineHeight: node.lineHeight,
       // letter spacing
     }),
     ...wh,
