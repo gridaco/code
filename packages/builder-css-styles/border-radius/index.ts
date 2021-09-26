@@ -64,6 +64,11 @@ export function borderRadius(r: BorderRadiusManifest): CSSProperties {
       console.warn("elliptical border radius not supported");
     }
   } else {
-    console.warn("border radius on each side is not supported");
+    return {
+      "border-top-left-radius": px(r.tl as number),
+      "border-top-right-radius": px(r.tr as number),
+      "border-bottom-right-radius": px(r.br as number),
+      "border-bottom-left-radius": px(r.bl as number),
+    };
   }
 }
