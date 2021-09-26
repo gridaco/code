@@ -8,7 +8,6 @@ import { makeBorderRadius } from "./make-flutter-border-radius";
 import { makeBorder } from "./make-flutter-border";
 import { makeBoxShadow } from "./make-flutter-box-shadow";
 import { makeColorFromRGBO } from "./make-flutter-color";
-import { detectIf } from "@reflect-ui/detection";
 
 type DecorationBackgroundLike =
   | flutter.Color
@@ -30,10 +29,12 @@ export function makeBoxDecoration(
   ///
   let decorationBackground: DecorationBackgroundLike;
   // case: image bg ---------------------
-  const _image_detection_result = detectIf.image(node);
-  if (_image_detection_result.result) {
+  if (node.primaryImage) {
     decorationBackground = makeBoxDecorationImageBg(
-      _image_detection_result.data,
+      node.fills.find<Figma.ImagePaint>(
+        //@ts-ignore
+        (f) => f.type === "IMAGE"
+      ),
       node.id
     );
   }
