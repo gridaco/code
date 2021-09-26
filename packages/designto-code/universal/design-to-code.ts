@@ -11,24 +11,29 @@ import {
 } from "@code-features/assets";
 import { BaseImageRepositories } from "@design-sdk/core/assets-repository";
 
+interface AssetsConfig {
+  asset_repository?: BaseImageRepositories<string>;
+  skip_asset_replacement?: boolean;
+}
+
 export async function designToCode({
   input,
   framework,
-  asset_repository,
+  asset_config,
 }: {
   input: input.IDesignInput;
   framework: config.FrameworkConfig;
-  asset_repository?: BaseImageRepositories<string>;
+  asset_config: AssetsConfig;
 }): Promise<output.ICodeOutput> {
   const token = tokenize(input.design);
 
   switch (framework.framework) {
     case "vanilla":
-      return designToVanilla({ input: { widget: token }, asset_repository });
+      return designToVanilla({ input: { widget: token }, asset_config });
     case "react":
-      return designToReact({ input: { widget: token }, asset_repository });
+      return designToReact({ input: { widget: token }, asset_config });
     case "flutter":
-      return designToFlutter({ input, asset_repository });
+      return designToFlutter({ input, asset_config });
   }
   throw `The framework "${framework}" is not supported at this point.`;
   return;
@@ -42,10 +47,10 @@ export const designTo = {
 
 export async function designToReact({
   input,
-  asset_repository,
+  asset_config,
 }: {
   input: { widget: Widget };
-  asset_repository?: BaseImageRepositories<string>;
+  asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
   const reactwidget = toreact.buildReactWidget(input.widget);
   const res = toreact.buildReactApp(reactwidget, {
@@ -55,16 +60,17 @@ export async function designToReact({
   // ------------------------------------------------------------------------
   // finilize temporary assets
   // this should be placed somewhere else
-  if (asset_repository) {
+  if (asset_config?.asset_repository && !asset_config.skip_asset_replacement) {
+    const assets = await fetch_all_assets(asset_config.asset_repository);
     res.code.raw = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
       res.code.raw,
-      "grida://assets-reservation/images/",
-      await fetch_all_assets(asset_repository)
+      default_asset_replacement_prefix,
+      assets
     );
     res.scaffold.raw = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
       res.scaffold.raw,
-      "grida://assets-reservation/images/",
-      await fetch_all_assets(asset_repository)
+      default_asset_replacement_prefix,
+      assets
     );
   }
   // ------------------------------------------------------------------------
@@ -74,10 +80,10 @@ export async function designToReact({
 
 export async function designToFlutter({
   input,
-  asset_repository,
+  asset_config,
 }: {
   input: input.IDesignInput;
-  asset_repository?: BaseImageRepositories<string>;
+  asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
   await Promise.resolve();
 
@@ -95,16 +101,17 @@ export async function designToFlutter({
   // ------------------------------------------------------------------------
   // finilize temporary assets
   // this should be placed somewhere else
-  if (asset_repository) {
+  if (asset_config?.asset_repository && !asset_config.skip_asset_replacement) {
+    const assets = await fetch_all_assets(asset_config?.asset_repository);
     rootAppCode = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
       rootAppCode,
-      "grida://assets-reservation/images/",
-      await fetch_all_assets(asset_repository)
+      default_asset_replacement_prefix,
+      assets
     );
     widgetCode = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
       widgetCode,
-      "grida://assets-reservation/images/",
-      await fetch_all_assets(asset_repository)
+      default_asset_replacement_prefix,
+      assets
     );
   }
   // ------------------------------------------------------------------------
@@ -123,10 +130,10 @@ export function designToVue(input: input.IDesignInput): output.ICodeOutput {
 
 export async function designToVanilla({
   input,
-  asset_repository,
+  asset_config,
 }: {
   input: { widget: Widget };
-  asset_repository?: BaseImageRepositories<string>;
+  asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
   const vanillawidget = tovanilla.buildVanillaWidget(input.widget);
   const res = tovanilla.buildVanillaFile(vanillawidget);
@@ -134,19 +141,22 @@ export async function designToVanilla({
   // ------------------------------------------------------------------------
   // finilize temporary assets
   // this should be placed somewhere else
-  if (asset_repository) {
+  if (asset_config?.asset_repository && !asset_config.skip_asset_replacement) {
+    const assets = await fetch_all_assets(asset_config.asset_repository);
     res.code.raw = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
       res.code.raw,
-      "grida://assets-reservation/images/",
-      await fetch_all_assets(asset_repository)
+      default_asset_replacement_prefix,
+      assets
     );
     res.scaffold.raw = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
       res.scaffold.raw,
-      "grida://assets-reservation/images/",
-      await fetch_all_assets(asset_repository)
+      default_asset_replacement_prefix,
+      assets
     );
   }
   // ------------------------------------------------------------------------
 
   return res;
 }
+
+const default_asset_replacement_prefix = "grida://assets-reservation/images/";
