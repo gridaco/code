@@ -1,6 +1,7 @@
 import { Axis, DimensionLength } from "@reflect-ui/core";
 import { calc, operation } from "../calc";
 import { px, vw, vh } from "../dimensions";
+import { percent } from "../percent";
 
 export function length(d: DimensionLength | string, a?: Axis) {
   if (d === undefined) {
@@ -29,6 +30,11 @@ export function length(d: DimensionLength | string, a?: Axis) {
     if (d.endsWith("vh")) {
       return vh(parseFloat(d));
     }
+
+    if (d.endsWith("%")) {
+      return percent(d as `${number}%`);
+    }
+
     // this case, the d value is already processed by other css builders.
     else {
       return d;
