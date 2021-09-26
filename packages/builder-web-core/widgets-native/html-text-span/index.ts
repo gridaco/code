@@ -1,13 +1,10 @@
 import { JSXElementConfig, WidgetKey } from "../..";
-import {
-  TextChildWidget,
-  WidgetTree,
-} from "@web-builder/core/widget-tree/widget";
+import { TextChildWidget, WidgetTree } from "@web-builder/core";
 import * as core from "@reflect-ui/core";
-import { TextOverflow } from "@reflect-ui/core/lib/text-overflow";
+import { TextOverflow } from "@reflect-ui/core";
 import { CSSProperties } from "@coli.codes/css";
 import { JSX } from "coli";
-import { RGBA } from "@reflect-ui/core/lib/color";
+import { RGBA } from "@reflect-ui/core";
 import * as css from "@web-builder/styles";
 
 export class Text extends TextChildWidget {
@@ -44,16 +41,19 @@ export class Text extends TextChildWidget {
 
   styleData(): CSSProperties {
     return <CSSProperties>{
+      // text style
+      // ------------------------------------------
       color: css.color((this.textStyle.color as any) as RGBA),
       "text-overflow": this.overflow,
       "font-size": css.px(this.textStyle.fontSize),
       "font-family": this.textStyle.fontFamily,
       "font-weight": css.convertToCssFontWeight(this.textStyle.fontWeight),
-      "letter-spacing": this.textStyle.letterSpacing,
-      "line-height": this.textStyle.lineHeight,
+      "letter-spacing": css.length(this.textStyle.letterSpacing),
+      "line-height": css.length(this.textStyle.lineHeight),
       "word-spacing": this.textStyle.wordSpacing,
       "text-align": this.alignment,
       "text-decoration": css.textDecoration(this.textStyle.decoration),
+      // ------------------------------------------
       "min-height": css.px(this.height),
 
       // TODO: do not specify width when parent is a flex container.
