@@ -46,7 +46,7 @@ export class Text extends TextChildWidget {
       color: css.color((this.textStyle.color as any) as RGBA),
       "text-overflow": this.overflow,
       "font-size": css.px(this.textStyle.fontSize),
-      "font-family": this.textStyle.fontFamily,
+      "font-family": css.fontFamily(this.textStyle.fontFamily),
       "font-weight": css.convertToCssFontWeight(this.textStyle.fontWeight),
       "letter-spacing": css.length(this.textStyle.letterSpacing),
       "line-height": css.length(this.textStyle.lineHeight),
