@@ -258,9 +258,28 @@ function stackChildren({
             wh.height = undefined;
             break;
           case "CENTER":
-            // static
-            constraint.top = (container.height - ogchild.height) * 0.5;
-            break; // FIXME: not handled
+            const half_h = ogchild.height / 2;
+            const centerdiff =
+              // center of frame
+              container.height / 2 -
+              // center of og
+              (half_h + ogchild.y);
+            constraint.top = <Calculation>{
+              type: "calc",
+              operations: {
+                left: {
+                  type: "calc",
+                  operations: {
+                    left: "50%",
+                    op: "+",
+                    right: centerdiff,
+                  },
+                },
+                op: "-", // this part is different
+                right: half_h,
+              },
+            };
+            break;
         }
       }
 
