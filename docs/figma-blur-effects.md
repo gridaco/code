@@ -1,5 +1,7 @@
 # Figma blur effects
 
+![](https://static.figma.com/uploads/9def6cce093b164306328ee228028155d13d72d0)
+
 - layer blur - blur this layer
 - background blur - blur the background behind the layer (filter)
 
