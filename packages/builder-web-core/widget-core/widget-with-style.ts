@@ -10,7 +10,6 @@ import {
   IEdgeInsetsWidget,
   IPositionedWidget,
   IWHStyleWidget,
-  // IOpacityWidget,
 } from "@reflect-ui/core";
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
@@ -37,8 +36,6 @@ export abstract class WidgetWithStyle
     IPositionedWidget,
     IBoxShadowWidget,
     IEdgeInsetsWidget {
-  // IOpacityWidget
-  // IWHStyleWidget
   width?: number;
   height?: number;
 
@@ -59,8 +56,6 @@ export abstract class WidgetWithStyle
   // IBoxShadowWidget
   boxShadow?: BoxShadowManifest;
 
-  opacity?: number;
-
   // IEdgeInsetsWidget
   margin?: EdgeInsets;
   padding?: EdgeInsets;
@@ -73,12 +68,16 @@ export abstract class WidgetWithStyle
   get style() {
     return {
       ...this.styleData(),
-      // extended to override
-      ...this.extendedStyle,
       /**
        * // FIXME: position shall not be specified when parent has a layout. (e.g. under flex)
        */
       ...((this.constraint && positionAbsolute(this.constraint)) || {}),
+      // --------------------------------------------------------------------
+      // ALWAYS ON BOTTOM
+      // extended to override
+      ...this.extendedStyle,
+
+      // --------------------------------------------------------------------
     };
   }
 
@@ -86,7 +85,10 @@ export abstract class WidgetWithStyle
 
   private extendedStyle: CSSProperties = {};
   extendStyle(style: CSSProperties) {
-    this.extendedStyle = style;
+    this.extendedStyle = {
+      ...this.extendedStyle,
+      ...style,
+    };
   }
 }
 

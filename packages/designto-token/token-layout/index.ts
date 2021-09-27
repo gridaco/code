@@ -7,6 +7,9 @@ import {
   Stack,
   Flex,
   Row,
+  Opacity,
+  Positioned,
+  Widget,
   VerticalDirection,
   WidgetKey,
   BoxShadowManifest,
@@ -19,6 +22,7 @@ import {
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { keyFromNode } from "../key";
 import { handleChildren } from "../main";
+import { Stretched } from "../tokens";
 
 // type ChildrenTransformer
 // type LayoutBuilder<N extends nodes.ReflectSceneNode> = (node: N, ) =>
@@ -156,9 +160,11 @@ function stackChildren({
 }): core.Widget[] {
   return wchildren
     ?.map((child) => {
-      const ogchild = ogchildren.find((c) => c.id === child.key.id);
+      const _unwrappedChild = unwrappedChild(child);
+
+      const ogchild = ogchildren.find((c) => c.id === _unwrappedChild.key.id);
       if (!ogchild) {
-        // console.error(`Could not find child with id: ${child.key.id}`);
+        console.error(`Could not find child with id: ${child.key.id}`);
         throw `Could not find child with id: ${child.key.id}`;
       }
 
@@ -348,4 +354,15 @@ function isOverflowingAndShouldBeScrollable(frame: nodes.ReflectFrameNode) {
     // if parent is scrollable, then this frame is scrollable
     frame.width < children_container_size
   );
+}
+
+function unwrappedChild(maybeWrapped: Widget): Widget {
+  const wrapped =
+    maybeWrapped instanceof Opacity ||
+    maybeWrapped instanceof Positioned ||
+    maybeWrapped instanceof Stretched;
+  if (wrapped) {
+    return maybeWrapped.child;
+  }
+  return maybeWrapped;
 }

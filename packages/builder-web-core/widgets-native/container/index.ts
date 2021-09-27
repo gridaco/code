@@ -37,7 +37,6 @@ export class Container extends WidgetTree {
       "background-color": css.color(this.color),
       // color: color(this.color), // color is for text
       ...css.borderRadius(this.borderRadius),
-      opacity: css.opacity(this.opacity),
     };
   }
   jsxConfig(): JSXElementConfig {

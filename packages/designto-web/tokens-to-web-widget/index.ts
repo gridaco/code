@@ -94,6 +94,11 @@ export function buildWebWidgetFromTokens(
       right: widget.right,
       bottom: widget.bottom,
     };
+  } else if (widget instanceof core.Opacity) {
+    thisWebWidget = handleChild(widget.child);
+    thisWebWidget.extendStyle({
+      opacity: css.opacity(widget.opacity),
+    });
   } else if (widget instanceof core.Text) {
     thisWebWidget = new web.Text({
       ...widget,
@@ -160,7 +165,6 @@ export function buildWebWidgetFromTokens(
     thisWebWidget.width = widget.width;
     thisWebWidget.height = widget.height;
     thisWebWidget.background = widget.background;
-    thisWebWidget.opacity = widget.opacity;
   }
 
   // -------------------------------------
