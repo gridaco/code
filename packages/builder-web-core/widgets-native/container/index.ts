@@ -21,7 +21,6 @@ export class Container extends WidgetTree {
     width?: number;
     height?: number;
     borderRadius?: BorderRadiusManifest;
-    opacity?: number;
   }) {
     super(p);
     this.borderRadius = p.borderRadius;
@@ -36,7 +35,6 @@ export class Container extends WidgetTree {
       "background-color": css.color(this.color),
       // color: color(this.color), // color is for text
       ...css.borderRadius(this.borderRadius),
-      opacity: css.opacity(this.opacity),
     };
   }
   jsxConfig(): JSXElementConfig {

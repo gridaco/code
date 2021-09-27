@@ -12,7 +12,7 @@ export * from "./border-radius";
 export * from "./justify-content";
 export * from "./min-height";
 export * from "./length";
-export * from "./opacity";
+export * from "./calc";
 
 // shapes
 export * from "./shape-circle";

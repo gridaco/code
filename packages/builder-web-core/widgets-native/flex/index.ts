@@ -111,7 +111,6 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
       ...css.background(...(this.background || [])),
       "box-sizing": (this.padding && "border-box") || undefined,
       ...css.padding(this.padding),
-      opacity: css.opacity(this.opacity),
     };
   }
 }
