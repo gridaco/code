@@ -116,47 +116,53 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
 
   let tokenizedTarget: Widget;
   switch (node.type as string) {
-    case nodes.ReflectNodeType.rectangle:
+    case nodes.ReflectSceneNodeType.rectangle:
       tokenizedTarget = tokenizeContainer.fromRectangle(
         node as nodes.ReflectRectangleNode
       );
       break;
 
-    case nodes.ReflectNodeType.text:
+    case nodes.ReflectSceneNodeType.text:
       tokenizedTarget = tokenizeText.fromText(node as nodes.ReflectTextNode);
       break;
 
-    case nodes.ReflectNodeType.frame:
+    case nodes.ReflectSceneNodeType.frame:
       const _frame = node as nodes.ReflectFrameNode;
       tokenizedTarget = tokenizeLayout.fromFrame(_frame, _frame.children, {
         is_root: node.isRoot,
       });
       break;
 
-    case nodes.ReflectNodeType.vector:
+    case nodes.ReflectSceneNodeType.vector:
       const _vector = node as nodes.ReflectVectorNode;
       tokenizedTarget = tokenizeVector.fromVector(_vector);
       break;
 
-    case nodes.ReflectNodeType.star:
+    case nodes.ReflectSceneNodeType.star:
       tokenizedTarget = tokenizeVector.fromStar();
       break;
 
-    case nodes.ReflectNodeType.poligon:
+    case nodes.ReflectSceneNodeType.poligon:
       tokenizedTarget = tokenizeVector.fromPoligon();
       break;
 
-    case nodes.ReflectNodeType.group:
+    case nodes.ReflectSceneNodeType.group:
       const _group = node as nodes.ReflectGroupNode;
       tokenizedTarget = tokenizeLayout.fromGroup(_group, _group.children);
       break;
 
-    case nodes.ReflectNodeType.ellipse:
+    case nodes.ReflectSceneNodeType.ellipse:
       const _ellipse = node as nodes.ReflectEllipseNode;
       tokenizedTarget = tokenizeContainer.fromEllipse(_ellipse);
       break;
 
-    case nodes.ReflectNodeType.line:
+    case nodes.ReflectSceneNodeType.boolean_operation:
+      console.log("tokenizing bool op to image", node);
+      const _bool_op = node as nodes.ReflectBooleanOperationNode;
+      tokenizedTarget = tokenizeGraphics.fromBooleanOperation(_bool_op);
+      break;
+
+    case nodes.ReflectSceneNodeType.line:
     // const _line = node as nodes.ReflectLineNode;
     // tokenizedTarget = tokenizeDivider.fromLine(_line);
     // break;
