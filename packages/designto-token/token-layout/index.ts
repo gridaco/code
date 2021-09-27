@@ -215,10 +215,11 @@ function stackChildren({
           case "CENTER":
             const half_w = ogchild.width / 2;
             const centerdiff =
-              // center of frame
-              container.width / 2 -
               // center of og
-              (half_w + ogchild.x);
+              half_w +
+              ogchild.x -
+              // center of frame
+              container.width / 2;
             constraint.left = <Calculation>{
               type: "calc",
               operations: {
@@ -258,12 +259,16 @@ function stackChildren({
             wh.height = undefined;
             break;
           case "CENTER":
-            const half_h = ogchild.height / 2;
+            const half_height = ogchild.height / 2;
+            const container_snapshot_center = container.height / 2;
+            const child_snapshot_center = half_height + ogchild.y;
+
             const centerdiff =
-              // center of frame
-              container.height / 2 -
               // center of og
-              (half_h + ogchild.y);
+              child_snapshot_center -
+              // center of frame
+              container_snapshot_center;
+
             constraint.top = <Calculation>{
               type: "calc",
               operations: {
@@ -276,7 +281,7 @@ function stackChildren({
                   },
                 },
                 op: "-", // this part is different
-                right: half_h,
+                right: half_height,
               },
             };
             break;
