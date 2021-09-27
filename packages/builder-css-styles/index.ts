@@ -13,6 +13,7 @@ export * from "./justify-content";
 export * from "./min-height";
 export * from "./length";
 export * from "./calc";
+export * from "./opacity";
 
 // shapes
 export * from "./shape-circle";

@@ -1,7 +1,4 @@
 export function opacity(o?: number): number {
-  if (!o) {
-    return o;
-  } else {
-    return;
-  }
+  const formatToOneDecimal = Math.round(o * 10) / 10;
+  return formatToOneDecimal;
 }
