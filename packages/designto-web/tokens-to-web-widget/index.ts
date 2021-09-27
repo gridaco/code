@@ -160,6 +160,7 @@ export function buildWebWidgetFromTokens(
     thisWebWidget.width = widget.width;
     thisWebWidget.height = widget.height;
     thisWebWidget.background = widget.background;
+    thisWebWidget.opacity = widget.opacity;
   }
 
   // -------------------------------------
