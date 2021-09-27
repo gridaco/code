@@ -1,11 +1,9 @@
-import { keyframes } from "@emotion/react";
 import { CSSProperties } from "@coli.codes/css";
 import { JSXElementConfig, WidgetKey } from "../..";
 import { BorderRadiusManifest } from "@reflect-ui/core";
-import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
+import { Background } from "@reflect-ui/core/lib/background";
 import * as css from "@web-builder/styles";
 import { JSX } from "coli";
-
 import { WidgetTree } from "@web-builder/core/widget-tree/widget";
 
 export class Container extends WidgetTree {
@@ -16,15 +14,19 @@ export class Container extends WidgetTree {
 
   constructor(p: {
     key: WidgetKey;
-    background?: BackgroundPaintLike[];
     x?: number;
     y?: number;
     width?: number;
     height?: number;
+    background?: Background;
     borderRadius?: BorderRadiusManifest;
-    opacity?: number;
   }) {
     super(p);
+    this.width = p.width;
+    this.height = p.height;
+    this.x = p.x;
+    this.y = p.y;
+    this.background = p.background;
     this.borderRadius = p.borderRadius;
   }
 
@@ -33,9 +35,7 @@ export class Container extends WidgetTree {
       width: css.px(this.width),
       height: css.px(this.height),
       "box-shadow": css.boxshadow(this.boxShadow),
-      // FIXME: bg should be handled by the background paint, which is not ready from tokenizer.
-      "background-color": css.color(this.color),
-      // color: color(this.color), // color is for text
+      ...css.background(this.background),
       ...css.borderRadius(this.borderRadius),
     };
   }

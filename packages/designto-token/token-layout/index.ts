@@ -19,6 +19,7 @@ import {
   Calculation,
   Clip,
 } from "@reflect-ui/core";
+import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { keyFromNode } from "../key";
 import { handleChildren } from "../main";
@@ -67,7 +68,7 @@ function flexOrStackFromFrame(
   const wchildren = handleChildren(children);
 
   const _key = keyFromNode(frame);
-  const _background = [frame.primaryColor];
+  const _background = frame.primaryColor;
   const _color = frame.primaryColor;
   const _mainaxissize = layoutAlignToReflectMainAxisSize(frame.layoutAlign);
 
@@ -79,7 +80,7 @@ function flexOrStackFromFrame(
     key: WidgetKey;
     boxShadow: BoxShadowManifest;
     padding: EdgeInsets;
-    background?: Color[];
+    background?: Background;
     color?: Color;
     borderRadius?: BorderRadiusManifest;
   } = {
@@ -138,7 +139,6 @@ function flexOrStackFromFrame(
     padding: frame.padding,
     background: _background,
     clipBehavior: _overflow_hide ? Clip.antiAlias : Clip.none,
-    color: _color,
   });
   return stack;
 }
@@ -317,8 +317,7 @@ function fromGroup(
     wchildren: wchildren,
     container: group,
   });
-  const _background = [group.primaryColor];
-  const _color = group.primaryColor;
+  const _background = group.primaryColor;
   const stack = new Stack({
     key: keyFromNode(group),
     children: stack_children,
@@ -327,7 +326,6 @@ function fromGroup(
     boxShadow: group.primaryShadow,
     padding: group.padding,
     background: _background,
-    color: _color,
   });
   return stack;
 }

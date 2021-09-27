@@ -13,7 +13,7 @@ function fromRectangle(rect: nodes.ReflectRectangleNode): core.Container {
     width: rect.width,
     height: rect.height,
     borderRadius: rect.cornerRadius,
-    color: forceFillsToSolidColor(rect.fills), // FIXME: handle by count of fills.
+    background: forceFillsToSolidColor(rect.fills),
   });
 
   container.x = rect.x;
@@ -29,7 +29,7 @@ function fromEllipse(ellipse: nodes.ReflectEllipseNode): core.Container {
     width: ellipse.width,
     height: ellipse.height,
     borderRadius: { all: Math.max(ellipse.width, ellipse.height) / 2 },
-    color: forceFillsToSolidColor(ellipse.fills),
+    background: forceFillsToSolidColor(ellipse.fills),
   });
 
   container.x = ellipse.x;

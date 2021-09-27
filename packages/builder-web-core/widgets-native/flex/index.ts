@@ -16,7 +16,7 @@ import {
   MultiChildWidget,
   WidgetTree,
 } from "@web-builder/core/widget-tree/widget";
-import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
+import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import * as css from "@web-builder/styles";
 import { CssMinHeightMixin } from "../_utility";
@@ -30,7 +30,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
   verticalDirection?: VerticalDirection;
   margin?: EdgeInsets;
   padding?: EdgeInsets;
-  background?: BackgroundPaintLike[];
+  background?: Background;
   // indicates the spacing between items
   itemSpacing?: number;
   flex?: number;
@@ -57,7 +57,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
       margin?: EdgeInsets;
       boxShadow?: BoxShadowManifest;
       padding?: EdgeInsets;
-      background?: BackgroundPaintLike[];
+      background?: Background;
       overflow?: CSSProperty.Overflow;
       borderRadius?: BorderRadiusManifest;
     }
@@ -108,7 +108,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
       ...css.borderRadius(this.borderRadius),
       ...flexsizing({ ...this }),
       "min-height": css.minHeight(this.minHeight),
-      ...css.background(...(this.background || [])),
+      ...css.background(this.background),
       "box-sizing": (this.padding && "border-box") || undefined,
       ...css.padding(this.padding),
     };
