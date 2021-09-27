@@ -157,7 +157,6 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
       break;
 
     case nodes.ReflectSceneNodeType.boolean_operation:
-      console.log("tokenizing bool op to image", node);
       const _bool_op = node as nodes.ReflectBooleanOperationNode;
       tokenizedTarget = tokenizeGraphics.fromBooleanOperation(_bool_op);
       break;
