@@ -1,11 +1,14 @@
 import * as flutter from "@bridged.xyz/flutter-builder";
-import { ReflectEllipseNode, IReflectCornerMixin } from "@design-sdk/core";
+import {
+  ReflectEllipseNode,
+  IReflectRectangleCornerMixin,
+} from "@design-sdk/core";
 import { mapRadius } from "../core-type-mappers";
 import * as core from "@reflect-ui/core";
 import { roundNumber } from "@reflect-ui/uiutils";
 
 export function makeBorderRadius(
-  node: IReflectCornerMixin
+  node: IReflectRectangleCornerMixin
 ): flutter.BorderRadiusGeometry {
   if (node instanceof ReflectEllipseNode) return undefined;
   if (node.cornerRadius === undefined || node.cornerRadius.all === 0) {
