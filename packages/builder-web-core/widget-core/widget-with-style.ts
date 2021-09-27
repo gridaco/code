@@ -10,6 +10,7 @@ import {
   IEdgeInsetsWidget,
   IPositionedWidget,
   IWHStyleWidget,
+  IOpacityWidget,
 } from "@reflect-ui/core";
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
 import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
@@ -35,7 +36,8 @@ export abstract class WidgetWithStyle
     IWHStyleWidget,
     IPositionedWidget,
     IBoxShadowWidget,
-    IEdgeInsetsWidget {
+    IEdgeInsetsWidget,
+    IOpacityWidget {
   // IWHStyleWidget
   width?: number;
   height?: number;
@@ -56,6 +58,8 @@ export abstract class WidgetWithStyle
 
   // IBoxShadowWidget
   boxShadow?: BoxShadowManifest;
+
+  opacity?: number;
 
   // IEdgeInsetsWidget
   margin?: EdgeInsets;
