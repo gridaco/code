@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "CommonJS",
+    "strict": false,
+    "esModuleInterop": true,
+    "moduleResolution": "node"
+  },
+  "include": ["cli.ts"]
+}
