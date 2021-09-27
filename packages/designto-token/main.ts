@@ -9,7 +9,9 @@ import { SingleOrArray, isNotEmptyArray } from "./utils";
 import { array } from "@reflect-ui/uiutils";
 import { detectIf } from "@reflect-ui/detection";
 import { Stretched } from "./tokens";
-import { byY, byYX } from "@designto/sanitized";
+import { byY, byYX } from "@designto/sanitized/sort-by-y-z";
+import ignore_masking_pipline from "@designto/sanitized/ignore-masking-nodes";
+import { default_tokenizer_config } from "./config";
 
 export type { Widget };
 
@@ -47,6 +49,11 @@ function dynamicGenerator(
     node
       // .reverse()
       // .sort(byY)
+      .filter(
+        ignore_masking_pipline(
+          default_tokenizer_config.sanitizer_ignore_masking_node
+        )
+      )
       .forEach((node, index) => {
         widgets.push(handleNode(node));
       });
