@@ -11,7 +11,7 @@ See, we have both bg color and opacity gradients. still only gradients will be v
 ```dart
 Container(
     decoration: BoxDecoration(
-      color: Colors.blue,
+      color: Colors.blue, // <--------- this will be ignored.
       gradient: LinearGradient(
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
@@ -24,7 +24,9 @@ Container(
 );
 ```
 
-**Color + Gradient. - chunked decoration**
+---
+
+**✅ Color + Gradient. - chunked decoration**
 
 The correct way of mixing Color + Gradient is chunking the decorations in the correct order-hierarchy
 
@@ -49,6 +51,8 @@ Container(
 ```
 
 ## Color + Image
+
+![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_decoration.png)
 
 ```dart
 Container(
