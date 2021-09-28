@@ -194,11 +194,14 @@ function stackChildren({
 }
 
 function find_original(ogchildren: Array<nodes.ReflectSceneNode>, of: Widget) {
+  if (!of) {
+    throw `cannot find original if "of" widget is not provided. provided was - ${of}`;
+  }
   const _unwrappedChild = unwrappedChild(of);
   const ogchild = ogchildren.find(
     (c) =>
       // target the unwrapped child
-      c.id === _unwrappedChild.key.id ||
+      c.id === (_unwrappedChild && _unwrappedChild.key.id) ||
       // target the widget itself - some widgets are not wrapped, yet being converted to a container-like (e.g. maskier)
       c.id === of.key.id
   );

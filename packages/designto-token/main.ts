@@ -193,9 +193,13 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
       break;
 
     case nodes.ReflectSceneNodeType.line:
+      // FIXME: this is a temporary fallback. line should be handled with unique handler. (using rect's handler instead.)
+      tokenizedTarget = tokenizeContainer.fromRectangle(
+        node as nodes.ReflectRectangleNode
+      );
+      break;
     // const _line = node as nodes.ReflectLineNode;
     // tokenizedTarget = tokenizeDivider.fromLine(_line);
-    // break;
 
     default:
       console.error(`${node.type} is not yet handled by "@designto/token"`);
