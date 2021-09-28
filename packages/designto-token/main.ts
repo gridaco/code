@@ -12,9 +12,12 @@ import { Stretched } from "./tokens";
 import { byY, byYX } from "@designto/sanitized/sort-by-y-z";
 import ignore_masking_pipline from "@designto/sanitized/ignore-masking-nodes";
 import { default_tokenizer_config } from "./config";
-import { hasDimmedOpacity, hasStretching } from "./detection";
+import { containsMasking, hasDimmedOpacity, hasStretching } from "./detection";
+import { MaskingItemContainingNode, tokenizeMasking } from "./token-masking";
 
 export type { Widget };
+
+export type RuntimeChildrenInput = Array<nodes.ReflectSceneNode | Widget>;
 
 /**
  * ENTRY POINT MAIN FUCTION
@@ -75,10 +78,14 @@ function dynamicGenerator(
  * @param nodes
  * @returns
  */
-export function handleChildren(
-  nodes: Array<nodes.ReflectSceneNode>
-): Array<Widget> {
-  return dynamicGenerator(nodes) as Array<Widget>;
+export function handleChildren(nodes: RuntimeChildrenInput): Array<Widget> {
+  return nodes.map((n) => {
+    if (n instanceof Widget) {
+      return n;
+    } else {
+      return dynamicGenerator(n) as Widget;
+    }
+  });
 }
 
 function handleNode(node: nodes.ReflectSceneNode): Widget {
@@ -114,6 +121,29 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
   // -------------------------------------------------------------------------
   // --------------------------- Detected tokens -----------------------------
   // -------------------------------------------------------------------------
+
+  //
+  //
+  // -------------------------------------------------------------------------
+  //
+  //
+
+  // -------------------------------------------------------------------------
+  // --------------------------- Pre processors ------------------------------
+  // -------------------------------------------------------------------------
+  if (containsMasking(node)) {
+    console.log("masking detected", node);
+    tokenizeMasking.fromMultichild(node as MaskingItemContainingNode);
+  }
+  // -------------------------------------------------------------------------
+  // --------------------------- Pre processors ------------------------------
+  // -------------------------------------------------------------------------
+
+  //
+  //
+  // -------------------------------------------------------------------------
+  //
+  //
 
   let tokenizedTarget: Widget;
   switch (node.type as string) {
@@ -172,6 +202,7 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
       break;
   }
 
+  // -------------------------------------------------------------------------
   // post wrapping
   if (tokenizedTarget) {
     if (hasStretching(node)) {
