@@ -11,6 +11,7 @@ function fromRectangle(rect: nodes.ReflectRectangleNode): core.Container {
     width: rect.width,
     height: rect.height,
     borderRadius: rect.cornerRadius,
+    boxShadow: rect.primaryShadow,
     border: tokenizeBorder.fromNode(rect),
     background: tokenizeBackground.fromFills(rect.fills),
   });
@@ -27,6 +28,7 @@ function fromEllipse(ellipse: nodes.ReflectEllipseNode): core.Container {
     children: undefined,
     width: ellipse.width,
     height: ellipse.height,
+    boxShadow: ellipse.primaryShadow,
     border: tokenizeBorder.fromNode(ellipse),
     borderRadius: { all: Math.max(ellipse.width, ellipse.height) / 2 },
     background: tokenizeBackground.fromFills(ellipse.fills),
