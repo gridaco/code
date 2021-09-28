@@ -19,14 +19,17 @@ export function color(input: CssColorInputLike | Color): string {
   } else if (input instanceof CssNamedColor) {
     return input.name;
   } else if (typeof input == "object") {
+    // with alpha
     if ("r" in input && "a" in input) {
-      const a = validAlphaValue(input.a);
+      const a = safe_alpha_fallback(validAlphaValue(input.a));
       const rgba = input as ICssRGBA;
       const _r = validColorValue(rgba.r) ?? 0;
       const _g = validColorValue(rgba.g) ?? 0;
       const _b = validColorValue(rgba.b) ?? 0;
-      return `rgba(${_r}, ${_g}, ${_b}, ${a ?? 1})`;
-    } else if ("r" in input && "a"! in input) {
+      return `rgba(${_r}, ${_g}, ${_b}, ${a})`;
+    }
+    // no alpha
+    else if ("r" in input && "a"! in input) {
       const rgb = input as RGB;
       return `rgb(${validColorValue(rgb.r) ?? 0}, ${
         validColorValue(rgb.g) ?? 0
@@ -50,6 +53,13 @@ const validColorValue = (f: number) => {
   }
 };
 
+const safe_alpha_fallback = (f: number) => {
+  if (f === undefined) {
+    return 1;
+  }
+  return f;
+};
+
 /**
  * returns rounded alpha value at decimal point 2.
  * @param f
@@ -61,9 +71,9 @@ const validAlphaValue = (f: number) => {
       return 0;
     }
     // from https://stackoverflow.com/a/11832950/5463235
-    return Math.round((f + Number.EPSILON) * 100) / 100 || 1;
+    return Math.round((f + Number.EPSILON) * 100) / 100;
   } catch (_) {
-    // returns undefined
+    console.error(_);
     return;
   }
 };
