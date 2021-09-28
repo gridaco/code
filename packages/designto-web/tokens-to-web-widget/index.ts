@@ -111,8 +111,10 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
   else if (widget instanceof core.ClipRRect) {
     thisWebWidget = handleChild(widget.child);
     thisWebWidget.extendStyle({
-      // FIXME: clip path for rect is not working.
-      ...css.clipPath(widget),
+      ...css.borderRadius(widget.borderRadius),
+      overflow: "hidden",
+      width: "100%", // ----- need better approach
+      height: "100%", // ----- need better approach
     });
   } else if (widget instanceof core.ClipPath) {
     thisWebWidget = handleChild(widget.child);
