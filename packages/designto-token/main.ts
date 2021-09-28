@@ -12,6 +12,7 @@ import { Stretched } from "./tokens";
 import { byY, byYX } from "@designto/sanitized/sort-by-y-z";
 import ignore_masking_pipline from "@designto/sanitized/ignore-masking-nodes";
 import { default_tokenizer_config } from "./config";
+import { hasDimmedOpacity, hasStretching } from "./detection";
 
 export type { Widget };
 
@@ -173,7 +174,7 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
 
   // post wrapping
   if (tokenizedTarget) {
-    if (node.layoutAlign && node.layoutAlign === "STRETCH") {
+    if (hasStretching(node)) {
       tokenizedTarget = new Stretched({
         key: new WidgetKey({
           ...tokenizedTarget.key,
@@ -185,11 +186,7 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
     }
   }
 
-  if (
-    node.opacity >= 0 &&
-    node.opacity < 1 &&
-    typeof node.opacity !== "undefined"
-  ) {
+  if (hasDimmedOpacity(node)) {
     tokenizedTarget = wrap_with_opacity(node, tokenizedTarget);
   }
 
