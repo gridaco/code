@@ -8,3 +8,4 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path
 
 - [Figma masking](./figma-mask-layer.md)
 - [Css mask](./css-mask.md)
+- [Interactive demo - clipping-paths-with-clip-path](https://css-playground.com/view/65/clipping-paths-with-clip-path)
