@@ -1,6 +1,5 @@
 import { nodes, ReflectSceneNodeType } from "@design-sdk/core";
 import { layoutAlignToReflectMainAxisSize } from "@design-sdk/figma-node-conversion";
-import { Figma } from "@design-sdk/figma-types";
 import * as core from "@reflect-ui/core";
 import {
   Axis,
@@ -175,9 +174,10 @@ function stackChildren({
         bottom: undefined,
       };
 
+      /// this is a snapshot of a w, h. under logic will remove or preserve each property for constraint assignment.
       const wh = {
-        width: ogchild.width,
-        height: ogchild.height,
+        width: child.width,
+        height: child.height,
       };
 
       const _l = ogchild.x;
