@@ -31,12 +31,14 @@ import { Stretched } from "../tokens";
 // type ChildrenTransformer
 // type LayoutBuilder<N extends nodes.ReflectSceneNode> = (node: N, ) =>
 
+type RuntimeLayoutContext = {
+  is_root: boolean;
+};
+
 function fromFrame(
   frame: nodes.ReflectFrameNode,
   children: Array<nodes.ReflectSceneNode>,
-  context: {
-    is_root: boolean;
-  }
+  context: RuntimeLayoutContext
 ): core.LayoutRepresntatives {
   const innerlayout = flexOrStackFromFrame(frame, children);
   const is_overflow_scrollable = isOverflowingAndShouldBeScrollable(frame);
@@ -335,11 +337,6 @@ function fromGroup(
   return stack;
 }
 
-export const tokenizeLayout = {
-  fromFrame: fromFrame,
-  fromGroup: fromGroup,
-};
-
 /**
  * read [docs/overflow-layout-scroll.md](docs/overflow-layout-scroll.md)
  *
@@ -369,3 +366,32 @@ function unwrappedChild(maybeWrapped: Widget): Widget {
   }
   return maybeWrapped;
 }
+
+function fromFrameOrGroup(
+  node: nodes.ReflectFrameNode | nodes.ReflectGroupNode,
+  children: Array<nodes.ReflectSceneNode>,
+  context: RuntimeLayoutContext
+) {
+  if (node instanceof nodes.ReflectFrameNode) {
+    return fromFrame(node, children, context);
+  }
+  if (node instanceof nodes.ReflectGroupNode) {
+    return fromGroup(node, children);
+  }
+
+  throw `nor node was group or frame, "${(node as any).name}" type of "${
+    (node as any).type
+  }"`;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------Export region--------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
+export const tokenizeLayout = {
+  fromFrame: fromFrame,
+  fromGroup: fromGroup,
+  fromFrameOrGroup: fromFrameOrGroup,
+};
+// ---------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------Export region--------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
