@@ -159,6 +159,7 @@ export class SvgElement extends WidgetTree {
             }
             default: {
               console.error("unsupported gradient type for svg path.");
+              return [path_with_fill("black")];
             }
           }
         }
