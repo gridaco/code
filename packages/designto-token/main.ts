@@ -1,5 +1,5 @@
 import { nodes } from "@design-sdk/core";
-import { Widget, WidgetKey, Opacity } from "@reflect-ui/core";
+import { Widget } from "@reflect-ui/core";
 import { tokenizeText } from "./token-text";
 import { tokenizeLayout } from "./token-layout";
 import { tokenizeContainer } from "./token-container";
@@ -8,12 +8,13 @@ import { tokenizeButton, tokenizeDivider } from "./token-widgets";
 import { SingleOrArray, isNotEmptyArray } from "./utils";
 import { array } from "@reflect-ui/uiutils";
 import { detectIf } from "@reflect-ui/detection";
-import { Stretched } from "./tokens";
 import { byY, byYX } from "@designto/sanitized/sort-by-y-z";
 import ignore_masking_pipline from "@designto/sanitized/ignore-masking-nodes";
 import { default_tokenizer_config } from "./config";
 import { containsMasking, hasDimmedOpacity, hasStretching } from "./detection";
 import { MaskingItemContainingNode, tokenizeMasking } from "./token-masking";
+import { wrap_with_opacity } from "./token-opacity";
+import { wrap_with_stretched } from "./token-stretch";
 
 export type { Widget };
 
@@ -132,7 +133,7 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
   // --------------------------- Pre processors ------------------------------
   // -------------------------------------------------------------------------
   if (containsMasking(node)) {
-    tokenizeMasking.fromMultichild(node as MaskingItemContainingNode);
+    return tokenizeMasking.fromMultichild(node as MaskingItemContainingNode);
   }
   // -------------------------------------------------------------------------
   // --------------------------- Pre processors ------------------------------
@@ -205,14 +206,7 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
   // post wrapping
   if (tokenizedTarget) {
     if (hasStretching(node)) {
-      tokenizedTarget = new Stretched({
-        key: new WidgetKey({
-          ...tokenizedTarget.key,
-          id: tokenizedTarget.key.id + "_stretched",
-        }),
-        child: tokenizedTarget,
-        axis: node.parent?.layoutMode,
-      });
+      tokenizedTarget = wrap_with_stretched(node, tokenizedTarget);
     }
   }
 
@@ -221,18 +215,4 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
   }
 
   return tokenizedTarget;
-}
-
-function wrap_with_opacity(
-  node: nodes.ReflectSceneNode,
-  widget: Widget
-): Opacity {
-  return new Opacity({
-    key: new WidgetKey({
-      ...widget.key,
-      id: widget.key.id + "_opacity",
-    }),
-    child: widget,
-    opacity: node.opacity,
-  });
 }

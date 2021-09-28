@@ -8,9 +8,15 @@ import * as css from "@web-builder/styles";
 import { Axis, Stack } from "@reflect-ui/core";
 
 export function buildWebWidgetFromTokens(widget: core.Widget): WidgetTree {
-  return compose(widget, {
+  const composed = compose(widget, {
     is_root: true,
   });
+
+  if (process.env.NODE_ENV === "development") {
+    console.info("dev::", "final web token composed", composed);
+  }
+
+  return composed;
 }
 
 function compose(widget: core.Widget, context: { is_root: boolean }) {
