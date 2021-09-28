@@ -18,12 +18,14 @@ import {
   BorderRadiusManifest,
   Calculation,
   Clip,
+  Border,
 } from "@reflect-ui/core";
 import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { keyFromNode } from "../key";
 import { handleChildren } from "../main";
 import { tokenBackground } from "../token-background";
+import { tokenizeBorder } from "../token-border";
 import { Stretched } from "../tokens";
 
 // type ChildrenTransformer
@@ -70,6 +72,7 @@ function flexOrStackFromFrame(
 
   const _key = keyFromNode(frame);
   const _background = tokenBackground.fromFills(frame.fills);
+  const _border = tokenizeBorder.fromNode(frame);
   const _mainaxissize = layoutAlignToReflectMainAxisSize(frame.layoutAlign);
 
   // Should this be used for flex?
@@ -83,6 +86,7 @@ function flexOrStackFromFrame(
     background?: Background;
     color?: Color;
     borderRadius?: BorderRadiusManifest;
+    border?: Border;
   } = {
     key: _key,
     width: frame.width,
@@ -98,6 +102,7 @@ function flexOrStackFromFrame(
     background: _background,
     children: wchildren,
     borderRadius: frame.cornerRadius,
+    border: _border,
   };
 
   if (frame.isAutoLayout) {
@@ -135,6 +140,7 @@ function flexOrStackFromFrame(
     height: frame.height,
     boxShadow: frame.primaryShadow,
     borderRadius: frame.cornerRadius,
+    border: _border,
     padding: frame.padding,
     background: _background,
     clipBehavior: _overflow_hide ? Clip.antiAlias : Clip.none,

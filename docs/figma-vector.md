@@ -16,3 +16,7 @@ We often see designers using vector path as a rect shape, placing it as a backgr
 
 - Don't set constraint to stretch for vector
   Accepted values are `left` | `right` | `top` | `bottom` | `scale` (with aspect ratio)
+
+**Rect shape vector will automatically interpreted as Simply Rectangle**
+
+WIP - rectangle detection based on svg path data. this algorithm is under development.

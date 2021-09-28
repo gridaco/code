@@ -1,6 +1,6 @@
 import { CSSProperties } from "@coli.codes/css";
 import { JSXElementConfig, WidgetKey } from "../..";
-import { BorderRadiusManifest } from "@reflect-ui/core";
+import { Border, BorderRadiusManifest } from "@reflect-ui/core";
 import { Background } from "@reflect-ui/core/lib/background";
 import * as css from "@web-builder/styles";
 import { JSX } from "coli";
@@ -11,6 +11,7 @@ export class Container extends WidgetTree {
 
   children?: WidgetTree[];
   borderRadius?: BorderRadiusManifest;
+  border?: Border;
 
   constructor(p: {
     key: WidgetKey;
@@ -20,6 +21,7 @@ export class Container extends WidgetTree {
     height?: number;
     background?: Background;
     borderRadius?: BorderRadiusManifest;
+    border?: Border;
   }) {
     super(p);
     this.width = p.width;
@@ -28,6 +30,7 @@ export class Container extends WidgetTree {
     this.y = p.y;
     this.background = p.background;
     this.borderRadius = p.borderRadius;
+    this.border = p.border;
   }
 
   styleData(): CSSProperties {
@@ -36,6 +39,7 @@ export class Container extends WidgetTree {
       height: css.px(this.height),
       "box-shadow": css.boxshadow(this.boxShadow),
       ...css.background(this.background),
+      ...css.border(this.border),
       ...css.borderRadius(this.borderRadius),
     };
   }

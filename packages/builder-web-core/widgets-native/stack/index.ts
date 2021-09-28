@@ -4,7 +4,12 @@ import { JSXElementConfig, WidgetKey } from "../..";
 import { CSSProperties, CSSProperty } from "@coli.codes/css";
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
 import * as css from "@web-builder/styles";
-import { BorderRadiusManifest, Clip, DimensionLength } from "@reflect-ui/core";
+import {
+  Border,
+  BorderRadiusManifest,
+  Clip,
+  DimensionLength,
+} from "@reflect-ui/core";
 import { CssMinHeightMixin } from "../_utility";
 import { Background } from "@reflect-ui/core/lib/background";
 
@@ -15,6 +20,7 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
   height: number;
   minHeight?: DimensionLength;
   borderRadius?: BorderRadiusManifest;
+  border?: Border;
   clipBehavior?: Clip;
 
   constructor(p: {
@@ -25,6 +31,7 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
     minHeight?: DimensionLength;
     boxShadow?: BoxShadowManifest;
     borderRadius?: BorderRadiusManifest;
+    border?: Border;
     background?: Background;
     clipBehavior?: Clip;
   }) {
@@ -40,6 +47,7 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
 
     // stack specific
     this.clipBehavior = p.clipBehavior;
+    this.border = p.border;
   }
 
   jsxConfig(): JSXElementConfig {
@@ -56,6 +64,7 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
       "min-height": css.minHeight(this.minHeight),
       overflow: clip(this.clipBehavior),
       ...css.background(this.background),
+      ...css.border(this.border),
       ...css.borderRadius(this.borderRadius),
       // for stacking elements under parent, parent's position shall be relative, children shall be absolute with anchor (e.g. bottom: 0)
       // can it be always relative?

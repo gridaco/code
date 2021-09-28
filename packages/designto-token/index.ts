@@ -10,6 +10,6 @@ export * as utils from "./utils";
 export { tokenizeGraphics } from "./token-graphics";
 export { tokenizeText } from "./token-text";
 export { tokenizeDivider } from "./token-widgets";
-
+export { tokenizeBorder } from "./token-border";
 // simple atomics
 export * from "./token-gradient";
