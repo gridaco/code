@@ -203,6 +203,8 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
 
     default:
       console.error(`${node.type} is not yet handled by "@designto/token"`);
+      tokenizedTarget = tokenizeGraphics.fromAnyNode(node); // this is expensive
+      tokenizedTarget.key.originName = `Fallbacked to image from - "${tokenizedTarget.key.originName}". this is a bug.`;
       break;
   }
 
