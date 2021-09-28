@@ -1,5 +1,9 @@
 import { JSX } from "coli";
-import { MultiChildWidget, WidgetTree } from "@web-builder/core";
+import {
+  MultiChildWidget,
+  StylableJSXElementConfig,
+  WidgetTree,
+} from "@web-builder/core";
 import { JSXElementConfig, WidgetKey } from "../..";
 import { CSSProperties, CSSProperty } from "@coli.codes/css";
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
@@ -50,8 +54,9 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
     this.border = p.border;
   }
 
-  jsxConfig(): JSXElementConfig {
-    return <JSXElementConfig>{
+  jsxConfig(): StylableJSXElementConfig {
+    return <StylableJSXElementConfig>{
+      type: "tag-and-attr",
       tag: JSX.identifier("div"),
     };
   }

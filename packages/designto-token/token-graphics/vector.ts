@@ -3,6 +3,7 @@ import { MainImageRepository } from "@design-sdk/core/assets-repository";
 import { ImagePaint } from "@design-sdk/figma-types";
 import { ImageWidget, VectorWidget } from "@reflect-ui/core";
 import { keyFromNode } from "../key";
+import { tokenizeBackground } from "../token-background";
 import { tokenizeBitmap } from "./bitmap";
 
 function fromStar(): VectorWidget {
@@ -34,7 +35,7 @@ function fromVector(vector: ReflectVectorNode) {
     key: _key,
     ...vector,
     data: vector?.vectorPaths[0].data,
-    fill: vector.primaryColor,
+    fill: tokenizeBackground.fromFills(vector.fills),
   });
 }
 

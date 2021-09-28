@@ -64,6 +64,6 @@ function forceFillsToSolidColor(fills: ReadonlyArray<Figma.Paint>): Color {
   return color;
 }
 
-export const tokenBackground = {
+export const tokenizeBackground = {
   fromFills: fromFills,
 };

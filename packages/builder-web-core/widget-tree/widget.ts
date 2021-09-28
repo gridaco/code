@@ -2,6 +2,8 @@ import {
   WidgetKey,
   WidgetWithStyle,
   MultiChildWidgetWithStyle,
+  UnstylableJSXElementConfig,
+  StylableJSXElementConfig,
 } from "@web-builder/core";
 
 /**
@@ -15,6 +17,7 @@ export abstract class SelfClosingWidget
   extends WidgetTree
   implements Omit<WidgetTree, "children"> {
   readonly children?: undefined;
+  abstract jsxConfig(): StylableJSXElementConfig;
 }
 
 /**
@@ -29,6 +32,7 @@ export abstract class MultiChildWidget
     super({ key: p.key });
     this.children = p.children;
   }
+  abstract jsxConfig(): StylableJSXElementConfig;
 }
 
 /**
@@ -47,13 +51,17 @@ export abstract class SingleChildWidget extends MultiChildWidget {
 
     this.child = parameters.child;
   }
+
+  abstract jsxConfig(): StylableJSXElementConfig;
 }
 
 /**
  * [SPECIAL] Independant widget that does not follow default builder's children handing logic, but containing it's own prebuilt children jsx
  * @todo @deprecated (not ready for use)
  */
-export abstract class IndependantWidget extends WidgetTree {}
+export abstract class IndependantWidget extends WidgetTree {
+  abstract jsxConfig(): UnstylableJSXElementConfig;
+}
 
 /**
  * widget containing only text values.
@@ -69,4 +77,5 @@ export abstract class TextChildWidget extends WidgetTree {
 
     this.text = p.data;
   }
+  abstract jsxConfig(): StylableJSXElementConfig;
 }
