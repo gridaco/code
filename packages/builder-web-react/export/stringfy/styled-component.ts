@@ -69,6 +69,11 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
 
   function buildComponentFunction(): FunctionDeclaration {
     function jsxBuilder(widget: WidgetTree) {
+      const _jsxcfg = widget.jsxConfig();
+      if (_jsxcfg.type === "static-tree") {
+        return _jsxcfg.tree;
+      }
+
       const children = widget.children?.map((comp) => {
         const config = getStyledConfigById(comp.key.id);
         if (comp instanceof TextChildWidget) {

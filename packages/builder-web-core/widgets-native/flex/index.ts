@@ -1,5 +1,5 @@
 import { CSSProperties, CSSProperty } from "@coli.codes/css";
-import { WidgetKey } from "../..";
+import { StylableJSXElementConfig, WidgetKey } from "../..";
 import {
   Axis,
   Border,
@@ -17,6 +17,7 @@ import {
   MultiChildWidget,
   WidgetTree,
 } from "@web-builder/core/widget-tree/widget";
+import { JSXElementConfig } from "@web-builder/core";
 import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import * as css from "@web-builder/styles";
@@ -93,8 +94,9 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
     this.minHeight = p.minHeight;
   }
 
-  jsxConfig() {
+  jsxConfig(): StylableJSXElementConfig {
     return {
+      type: "tag-and-attr",
       tag: JSX.identifier("div"),
     };
   }

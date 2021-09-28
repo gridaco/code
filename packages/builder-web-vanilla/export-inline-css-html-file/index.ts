@@ -61,6 +61,11 @@ export function export_inlined_css_html_file(widget: WidgetTree) {
 
   function buildBodyHtml(widget: WidgetTree) {
     const children = widget.children?.map((comp) => {
+      const jsxcfg = comp.jsxConfig();
+      if (jsxcfg.type === "static-tree") {
+        return jsxcfg.tree;
+      }
+
       const config = getStyleConfigById(comp.key.id);
       if (comp instanceof TextChildWidget) {
         const jsx = buildTextChildJsx(comp, config);
@@ -79,6 +84,11 @@ export function export_inlined_css_html_file(widget: WidgetTree) {
       injectIdToJsx(jsx, config.id);
       return jsx;
     });
+
+    const jsxcfg = widget.jsxConfig();
+    if (jsxcfg.type === "static-tree") {
+      return jsxcfg.tree;
+    }
 
     const config = getStyleConfigById(widget.key.id);
     if (widget instanceof TextChildWidget) {

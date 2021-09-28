@@ -1,4 +1,4 @@
-import { JSXElementConfig, WidgetKey } from "../..";
+import { JSXElementConfig, StylableJSXElementConfig, WidgetKey } from "../..";
 import { TextChildWidget, WidgetTree } from "@web-builder/core";
 import * as core from "@reflect-ui/core";
 import { TextOverflow } from "@reflect-ui/core";
@@ -62,8 +62,9 @@ export class Text extends TextChildWidget {
     };
   }
 
-  jsxConfig(): JSXElementConfig {
-    return <JSXElementConfig>{
+  jsxConfig(): StylableJSXElementConfig {
+    return <StylableJSXElementConfig>{
+      type: "tag-and-attr",
       tag: JSX.identifier("span"),
     };
   }

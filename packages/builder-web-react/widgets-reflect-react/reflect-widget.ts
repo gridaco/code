@@ -1,6 +1,10 @@
 import { WidgetTree } from "@web-builder/core/widget-tree/widget";
 import { ImportDeclaration, Import, JSX, JSXElementLike } from "coli";
-import { JSXElementConfig, WidgetKey } from "@web-builder/core";
+import {
+  JSXElementConfig,
+  StylableJSXElementConfig,
+  WidgetKey,
+} from "@web-builder/core";
 import { ColiObjectLike } from "@coli.codes/builder";
 
 export abstract class ReflectReactWidget<T = any> extends WidgetTree {
@@ -19,8 +23,9 @@ export abstract class ReflectReactWidget<T = any> extends WidgetTree {
 
   abstract attributes(): ColiObjectLike<any>;
 
-  jsxConfig(): JSXElementConfig {
+  jsxConfig(): StylableJSXElementConfig {
     return {
+      type: "tag-and-attr",
       tag: JSX.identifier(this.tag),
       // attributes: this.attributes() as any,
     };

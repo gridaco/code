@@ -154,6 +154,7 @@ function fromMultichild(node: MaskingItemContainingNode) {
       references: hierarchy_items,
     });
 
+    /* ---- dev logging - preserve.
     console.log(`masking transform gate of ${container.key.originName}`, {
       maskitee: maskitee,
       maskier: maskier,
@@ -164,6 +165,7 @@ function fromMultichild(node: MaskingItemContainingNode) {
       hierarchy_items: hierarchy_items,
       index_of_maskier: index_of_maskier,
     });
+    */
     return container;
   }
   //

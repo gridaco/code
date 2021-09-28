@@ -1,7 +1,7 @@
 import { CSSProperties } from "@coli.codes/css";
 import assert from "assert";
 import { JSX, JSXAttribute, StringLiteral } from "coli";
-import { JSXElementConfig, WidgetKey } from "../..";
+import { JSXElementConfig, StylableJSXElementConfig, WidgetKey } from "../..";
 import { SelfClosingContainer } from "../container";
 
 export class ImageElement extends SelfClosingContainer {
@@ -31,8 +31,9 @@ export class ImageElement extends SelfClosingContainer {
     };
   }
 
-  jsxConfig() {
-    return <JSXElementConfig>{
+  jsxConfig(): StylableJSXElementConfig {
+    return <StylableJSXElementConfig>{
+      type: "tag-and-attr",
       tag: JSX.identifier("img"),
       attributes: [
         this.src && new JSXAttribute("src", new StringLiteral(this.src)),

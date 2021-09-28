@@ -6,7 +6,7 @@ import {
   TemplateLiteral,
   VariableDeclaration,
 } from "coli";
-import { WidgetWithStyle } from "@web-builder/core";
+import { StylableJSXElementConfig, WidgetWithStyle } from "@web-builder/core";
 import { SyntaxKind } from "@coli.codes/core-syntax-kind";
 import {
   nameVariable,
@@ -72,7 +72,7 @@ export function declareStyledComponentVariable(
     name?: NamePreference;
   }
 ): StyledComponentDeclaration {
-  const jsxconfg = widgetConfig.jsxConfig();
+  const jsxconfg = widgetConfig.jsxConfig() as StylableJSXElementConfig;
 
   /// region name
   let varname: string;

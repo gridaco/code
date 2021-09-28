@@ -25,7 +25,7 @@ import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { keyFromNode } from "../key";
 import { handleChildren, RuntimeChildrenInput } from "../main";
-import { tokenBackground } from "../token-background";
+import { tokenizeBackground } from "../token-background";
 import { tokenizeBorder } from "../token-border";
 import { Stretched } from "../tokens";
 
@@ -78,7 +78,7 @@ function flexOrStackFromFrame(
   const wchildren = handleChildren(children);
 
   const _key = keyFromNode(frame);
-  const _background = tokenBackground.fromFills(frame.fills);
+  const _background = tokenizeBackground.fromFills(frame.fills);
   const _border = tokenizeBorder.fromNode(frame);
   const _mainaxissize = layoutAlignToReflectMainAxisSize(frame.layoutAlign);
 

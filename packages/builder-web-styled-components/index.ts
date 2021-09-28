@@ -39,7 +39,7 @@ export function buildStyledComponentConfig(
     };
   }
 ): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
-  const config = widget.jsxConfig();
+  const config = widget.jsxConfig() as StyledComponentJSXElementConfig;
 
   const namePref: NamePreference = {
     namer: preferences.namer,

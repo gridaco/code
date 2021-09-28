@@ -1,6 +1,7 @@
 import { handle } from "@coli.codes/builder";
 import {
   JSXElementConfig,
+  StylableJSXElementConfig,
   TextChildWidget,
   WidgetTree,
 } from "@web-builder/core";
@@ -16,10 +17,9 @@ import {
 ////
 //// region jsx tree builder
 ////
-
 export function buildTextChildJsx(
   textchildwidget: TextChildWidget,
-  config: JSXElementConfig
+  config: StylableJSXElementConfig
 ) {
   const text = textchildwidget.text;
   const tag = handle<JSXIdentifier>(config.tag);
@@ -38,14 +38,23 @@ export function buildContainingJsx(
   container: JSXElementConfig,
   children: Array<JSXElementLike>
 ): JSXElementLike {
-  const tag = handle<JSXIdentifier>(container.tag);
-  return new JSXElement({
-    openingElement: new JSXOpeningElement(tag, {
-      attributes: container.attributes,
-    }),
-    closingElement: new JSXClosingElement(tag),
-    children: children,
-  });
+  switch (container.type) {
+    case "static-tree": {
+      return handle<JSXElementLike>(container.tree);
+    }
+    case "tag-and-attr": {
+      const tag = handle<JSXIdentifier>(container.tag);
+      return new JSXElement({
+        openingElement: new JSXOpeningElement(tag, {
+          attributes: container.attributes,
+        }),
+        closingElement: new JSXClosingElement(tag),
+        children: children,
+      });
+    }
+    default:
+      throw new Error("error while building jsx");
+  }
 }
 
 export function buildJsx(widget: WidgetTree): JSXElementLike {
