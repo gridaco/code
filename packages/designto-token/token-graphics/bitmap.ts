@@ -1,5 +1,8 @@
 import { MainImageRepository } from "@design-sdk/core/assets-repository";
-import type { ReflectBooleanOperationNode } from "@design-sdk/figma-node";
+import type {
+  ReflectBooleanOperationNode,
+  ReflectSceneNode,
+} from "@design-sdk/figma-node";
 import { ImageWidget } from "@reflect-ui/core";
 import { ImagePaint } from "@reflect-ui/core/lib/cgr";
 import { keyFromNode } from "../key";
@@ -29,24 +32,28 @@ function fromFrame(): ImageWidget {
   return;
 }
 
-function fromBooleanOperation(
-  booleanop: ReflectBooleanOperationNode
-): ImageWidget {
+function fromAnyNode(node: ReflectSceneNode) {
   const _tmp_img = MainImageRepository.instance
     .get("fill-later-assets")
     .addImage({
-      key: booleanop.id,
+      key: node.id,
     });
 
   const widget = new ImageWidget({
-    key: keyFromNode(booleanop),
-    width: booleanop.width,
-    height: booleanop.height,
+    key: keyFromNode(node),
+    width: node.width,
+    height: node.height,
     src: _tmp_img.url,
   });
-  widget.x = booleanop.x;
-  widget.y = booleanop.y;
+  widget.x = node.x;
+  widget.y = node.y;
   return widget;
+}
+
+function fromBooleanOperation(
+  booleanop: ReflectBooleanOperationNode
+): ImageWidget {
+  return fromAnyNode(booleanop);
 }
 
 export const tokenizeBitmap = {
@@ -56,4 +63,5 @@ export const tokenizeBitmap = {
   fromGroup: fromGroup,
   fromFrame: fromFrame,
   fromBooleanOperation: fromBooleanOperation,
+  fromAnyNode: fromAnyNode,
 };

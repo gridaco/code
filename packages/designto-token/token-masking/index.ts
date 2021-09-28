@@ -12,6 +12,7 @@ import {
   ReflectVectorNode,
 } from "@design-sdk/figma-node";
 import { BorderRadius, ClipPath, ClipRRect, WidgetKey } from "@reflect-ui/core";
+import { tokenizeGraphics } from "..";
 import { containsMasking, ismaskier } from "../detection";
 import { keyFromNode } from "../key";
 import { tokenizeLayout } from "../token-layout";
@@ -96,40 +97,50 @@ function fromMultichild(node: MaskingItemContainingNode) {
 
     const raw_maskier_key = keyFromNode(maskier); // we do not override key for clipped because maskier it self is not being nested, but being converted as a container-like.
     let clipped;
-    switch (maskier.type) {
-      case ReflectSceneNodeType.rectangle:
-        clipped = new ClipRRect({
-          key: raw_maskier_key,
-          child: clippedcontents_new_layout_except_irrelavents,
-          borderRadius: (maskier as ReflectRectangleNode).cornerRadius,
-        });
-        break;
-      case ReflectSceneNodeType.ellipse:
-        clipped = new ClipRRect({
-          key: raw_maskier_key,
-          child: clippedcontents_new_layout_except_irrelavents,
-          // TODO: this is a temporary solution - no native ellipse support
-          borderRadius: BorderRadius.all(
-            (maskier as ReflectEllipseNode).width / 2
-          ),
-        });
-        break;
-      case ReflectSceneNodeType.vector:
-        // TODO: multi path vector is not supported
-        const vector_asset_data = (maskier as ReflectVectorNode).vectorPaths[0]
-          ?.data;
 
-        clipped = new ClipPath({
-          key: raw_maskier_key,
-          child: clippedcontents_new_layout_except_irrelavents,
-          clipper: {
-            type: "path",
-            data: vector_asset_data,
-          },
-        });
-        break;
-      default:
-        console.log("unsupported maskier type", maskier.type);
+    // TODO: this should rather be isImage then hasImage.
+    if (maskier.hasImage) {
+      // the behaviour is incorrect in percise sence, because the irrelevant nodes will be included inside the image.
+      return tokenizeGraphics.fromAnyNode(node);
+      // TODO: image handling should be done with `clip-path: url(image.png)`
+    } else {
+      switch (maskier.type) {
+        case ReflectSceneNodeType.rectangle:
+          clipped = new ClipRRect({
+            key: raw_maskier_key,
+            child: clippedcontents_new_layout_except_irrelavents,
+            borderRadius: (maskier as ReflectRectangleNode).cornerRadius,
+          });
+          break;
+        case ReflectSceneNodeType.ellipse:
+          clipped = new ClipRRect({
+            key: raw_maskier_key,
+            child: clippedcontents_new_layout_except_irrelavents,
+            // TODO: this is a temporary solution - no native ellipse support
+            borderRadius: BorderRadius.all(
+              (maskier as ReflectEllipseNode).width / 2
+            ),
+          });
+          break;
+        case ReflectSceneNodeType.vector:
+          // TODO: multi path vector is not supported
+          const vector_asset_data = (maskier as ReflectVectorNode)
+            .vectorPaths[0]?.data;
+
+          clipped = new ClipPath({
+            key: raw_maskier_key,
+            child: clippedcontents_new_layout_except_irrelavents,
+            clipper: {
+              type: "path",
+              data: vector_asset_data,
+            },
+          });
+          break;
+        default:
+          console.error("unsupported maskier type", maskier.type);
+          // fallback to image bake.
+          return tokenizeGraphics.fromAnyNode(node);
+      }
     }
 
     const children = [
