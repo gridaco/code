@@ -18,21 +18,27 @@ import {
   BorderRadiusManifest,
   Calculation,
   Clip,
+  Border,
 } from "@reflect-ui/core";
+import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { keyFromNode } from "../key";
 import { handleChildren } from "../main";
+import { tokenBackground } from "../token-background";
+import { tokenizeBorder } from "../token-border";
 import { Stretched } from "../tokens";
 
 // type ChildrenTransformer
 // type LayoutBuilder<N extends nodes.ReflectSceneNode> = (node: N, ) =>
 
+type RuntimeLayoutContext = {
+  is_root: boolean;
+};
+
 function fromFrame(
   frame: nodes.ReflectFrameNode,
   children: Array<nodes.ReflectSceneNode>,
-  context: {
-    is_root: boolean;
-  }
+  context: RuntimeLayoutContext
 ): core.LayoutRepresntatives {
   const innerlayout = flexOrStackFromFrame(frame, children);
   const is_overflow_scrollable = isOverflowingAndShouldBeScrollable(frame);
@@ -67,8 +73,8 @@ function flexOrStackFromFrame(
   const wchildren = handleChildren(children);
 
   const _key = keyFromNode(frame);
-  const _background = [frame.primaryColor];
-  const _color = frame.primaryColor;
+  const _background = tokenBackground.fromFills(frame.fills);
+  const _border = tokenizeBorder.fromNode(frame);
   const _mainaxissize = layoutAlignToReflectMainAxisSize(frame.layoutAlign);
 
   // Should this be used for flex?
@@ -79,9 +85,10 @@ function flexOrStackFromFrame(
     key: WidgetKey;
     boxShadow: BoxShadowManifest;
     padding: EdgeInsets;
-    background?: Color[];
+    background?: Background;
     color?: Color;
     borderRadius?: BorderRadiusManifest;
+    border?: Border;
   } = {
     key: _key,
     width: frame.width,
@@ -96,8 +103,8 @@ function flexOrStackFromFrame(
     padding: frame.padding,
     background: _background,
     children: wchildren,
-    color: _color,
     borderRadius: frame.cornerRadius,
+    border: _border,
   };
 
   if (frame.isAutoLayout) {
@@ -135,10 +142,10 @@ function flexOrStackFromFrame(
     height: frame.height,
     boxShadow: frame.primaryShadow,
     borderRadius: frame.cornerRadius,
+    border: _border,
     padding: frame.padding,
     background: _background,
     clipBehavior: _overflow_hide ? Clip.antiAlias : Clip.none,
-    color: _color,
   });
   return stack;
 }
@@ -175,9 +182,10 @@ function stackChildren({
         bottom: undefined,
       };
 
+      /// this is a snapshot of a w, h. under logic will remove or preserve each property for constraint assignment.
       const wh = {
-        width: ogchild.width,
-        height: ogchild.height,
+        width: child.width,
+        height: child.height,
       };
 
       const _l = ogchild.x;
@@ -317,8 +325,6 @@ function fromGroup(
     wchildren: wchildren,
     container: group,
   });
-  const _background = [group.primaryColor];
-  const _color = group.primaryColor;
   const stack = new Stack({
     key: keyFromNode(group),
     children: stack_children,
@@ -326,16 +332,10 @@ function fromGroup(
     height: group.height,
     boxShadow: group.primaryShadow,
     padding: group.padding,
-    background: _background,
-    color: _color,
+    background: undefined, // group does not have fills.
   });
   return stack;
 }
-
-export const tokenizeLayout = {
-  fromFrame: fromFrame,
-  fromGroup: fromGroup,
-};
 
 /**
  * read [docs/overflow-layout-scroll.md](docs/overflow-layout-scroll.md)
@@ -366,3 +366,32 @@ function unwrappedChild(maybeWrapped: Widget): Widget {
   }
   return maybeWrapped;
 }
+
+function fromFrameOrGroup(
+  node: nodes.ReflectFrameNode | nodes.ReflectGroupNode,
+  children: Array<nodes.ReflectSceneNode>,
+  context: RuntimeLayoutContext
+) {
+  if (node instanceof nodes.ReflectFrameNode) {
+    return fromFrame(node, children, context);
+  }
+  if (node instanceof nodes.ReflectGroupNode) {
+    return fromGroup(node, children);
+  }
+
+  throw `nor node was group or frame, "${(node as any).name}" type of "${
+    (node as any).type
+  }"`;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------Export region--------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
+export const tokenizeLayout = {
+  fromFrame: fromFrame,
+  fromGroup: fromGroup,
+  fromFrameOrGroup: fromFrameOrGroup,
+};
+// ---------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------Export region--------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------

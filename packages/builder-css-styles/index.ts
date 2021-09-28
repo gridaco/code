@@ -1,5 +1,7 @@
 export * from "./background";
 export * from "./box-shadow";
+export * from "./border";
+export * from "./border-radius";
 export * from "./color";
 export * from "./dimensions";
 export * from "./font-weight";
@@ -8,13 +10,11 @@ export * from "./text-decoration";
 export * from "./gradient";
 export * from "./padding";
 export * from "./position";
-export * from "./border-radius";
 export * from "./justify-content";
 export * from "./min-height";
 export * from "./length";
 export * from "./calc";
 export * from "./opacity";
-
 // shapes
 export * from "./shape-circle";
 export * from "./shape-round-rect";

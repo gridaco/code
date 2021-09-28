@@ -43,8 +43,14 @@ _References_
 // wip
 ```
 
-**With ClipRect (ClipPath)**
+**With `ClipRect` | `CipRRect` | `ClipPath`**
 
 ```dart
 // wip
 ```
+
+_References_
+
+- [Flutter Devs medium - ClipRRect & ClipPath In Flutter](https://medium.com/flutterdevs/cliprrect-clippath-in-flutter-4c41abe4e8)
+- [Flutter#ClipPath](https://api.flutter.dev/flutter/widgets/ClipPath-class.html)
+- [Flutter#ClipRect](https://api.flutter.dev/flutter/widgets/ClipRect-class.html)

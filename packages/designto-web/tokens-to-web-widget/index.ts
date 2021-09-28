@@ -159,7 +159,6 @@ export function buildWebWidgetFromTokens(
       key: _key,
       borderRadius: widget.borderRadius,
     });
-    thisWebWidget.color = widget.color;
     thisWebWidget.x = widget.x;
     thisWebWidget.y = widget.y;
     thisWebWidget.width = widget.width;

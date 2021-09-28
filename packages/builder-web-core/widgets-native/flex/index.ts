@@ -2,6 +2,7 @@ import { CSSProperties, CSSProperty } from "@coli.codes/css";
 import { WidgetKey } from "../..";
 import {
   Axis,
+  Border,
   BorderRadiusManifest,
   BoxShadowManifest,
   CrossAxisAlignment,
@@ -16,7 +17,7 @@ import {
   MultiChildWidget,
   WidgetTree,
 } from "@web-builder/core/widget-tree/widget";
-import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
+import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import * as css from "@web-builder/styles";
 import { CssMinHeightMixin } from "../_utility";
@@ -30,7 +31,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
   verticalDirection?: VerticalDirection;
   margin?: EdgeInsets;
   padding?: EdgeInsets;
-  background?: BackgroundPaintLike[];
+  background?: Background;
   // indicates the spacing between items
   itemSpacing?: number;
   flex?: number;
@@ -41,6 +42,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
   readonly overflow?: CSSProperty.Overflow;
 
   borderRadius?: BorderRadiusManifest;
+  border?: Border;
   minHeight?: DimensionLength;
 
   constructor(
@@ -57,9 +59,10 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
       margin?: EdgeInsets;
       boxShadow?: BoxShadowManifest;
       padding?: EdgeInsets;
-      background?: BackgroundPaintLike[];
+      background?: Background;
       overflow?: CSSProperty.Overflow;
       borderRadius?: BorderRadiusManifest;
+      border?: Border;
     }
   ) {
     super(p);
@@ -82,6 +85,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
     this.padding = p.padding;
     this.background = p.background;
     this.borderRadius = p.borderRadius;
+    this.border = p.border;
     this.boxShadow = p.boxShadow;
 
     // css only
@@ -105,10 +109,11 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
       flex: this.flex,
       gap: this.itemSpacing && css.px(this.itemSpacing),
       "box-shadow": css.boxshadow(this.boxShadow),
+      ...css.border(this.border),
       ...css.borderRadius(this.borderRadius),
       ...flexsizing({ ...this }),
       "min-height": css.minHeight(this.minHeight),
-      ...css.background(...(this.background || [])),
+      ...css.background(this.background),
       "box-sizing": (this.padding && "border-box") || undefined,
       ...css.padding(this.padding),
     };

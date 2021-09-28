@@ -7,6 +7,8 @@ import {
   ReflectGroupNode,
   ReflectSceneNode,
 } from "@design-sdk/figma-node";
+import { containsMasking, ismaskier } from "../detection";
+import { tokenizeLayout } from "../token-layout";
 
 type MaskingSplits =
   | /**
@@ -33,11 +35,11 @@ type MaskingSplits =
 
 function fromMultichild(node: ReflectGroupNode | ReflectFrameNode) {
   const hierarchy_items = node.children;
-  if (hierarchy_items.some(containsmasking)) {
+  if (containsMasking(node)) {
     // TODO: should we handle the case where that multiple maskier existing in same hierarchy?
 
     // 1. split as maskier | maskitee | irrelavent
-    const index_of_maskier = hierarchy_items.findIndex(containsmasking);
+    const index_of_maskier = hierarchy_items.findIndex(ismaskier);
 
     const maskitee = hierarchy_items.slice(0, index_of_maskier);
     const maskier = hierarchy_items[index_of_maskier];
@@ -65,10 +67,18 @@ function fromMultichild(node: ReflectGroupNode | ReflectFrameNode) {
      *
      */
     // TODO: implement above logic
+    const children = [
+      // maskings
+      // others
+    ];
+    const container = tokenizeLayout.fromFrameOrGroup(node, children, {
+      is_root: node.isRoot, // probably not needed - who uses masking directly under root frame?
+    });
+    return container;
   }
   //
 }
 
-function containsmasking(node: ReflectSceneNode): boolean {
-  return node.isMask;
-}
+export const tokenizeMasking = {
+  fromMultichild: fromMultichild,
+};

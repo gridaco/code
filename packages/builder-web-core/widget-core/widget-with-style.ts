@@ -12,7 +12,7 @@ import {
   IWHStyleWidget,
 } from "@reflect-ui/core";
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
-import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
+import { Background } from "@reflect-ui/core/lib/background";
 import { WidgetKey } from "../widget-key";
 import { positionAbsolute } from "@web-builder/styles";
 
@@ -46,7 +46,7 @@ export abstract class WidgetWithStyle
     bottom?: DimensionLength;
   };
 
-  background?: BackgroundPaintLike[];
+  background?: Background;
   color?: Color;
 
   // IPositionWidget
