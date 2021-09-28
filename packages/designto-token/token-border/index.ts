@@ -26,14 +26,17 @@ function fromStrokes(
     width: number;
   }
 ) {
-  // generate the border, when it should exist
-  // if width is 0, then we don't want to generate a border
-  return width
-    ? Border.all({
-        color: retrievePrimaryColor(strokes),
-        width: roundNumber(width),
-      })
-    : undefined;
+  // guard invisible borders
+  if (strokes.filter((s) => s.visible).length > 0) {
+    // generate the border, when it should exist
+    // if width is 0, then we don't want to generate a border
+    return width
+      ? Border.all({
+          color: retrievePrimaryColor(strokes),
+          width: roundNumber(width),
+        })
+      : undefined;
+  }
 }
 
 export const tokenizeBorder = {
