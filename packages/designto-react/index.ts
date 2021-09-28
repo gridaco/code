@@ -23,5 +23,5 @@ export function buildReactWidget(widget: Widget) {
   if (!widget) {
     throw "A valid reflect widget manifest should be passed as an input. none was passed.";
   }
-  return buildWebWidgetFromTokens(widget, { is_root: true });
+  return buildWebWidgetFromTokens(widget);
 }

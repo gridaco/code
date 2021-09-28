@@ -132,7 +132,6 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
   // --------------------------- Pre processors ------------------------------
   // -------------------------------------------------------------------------
   if (containsMasking(node)) {
-    console.log("masking detected", node);
     tokenizeMasking.fromMultichild(node as MaskingItemContainingNode);
   }
   // -------------------------------------------------------------------------

@@ -7,12 +7,13 @@ import { MainImageRepository } from "@design-sdk/core/assets-repository";
 import * as css from "@web-builder/styles";
 import { Axis, Stack } from "@reflect-ui/core";
 
-export function buildWebWidgetFromTokens(
-  widget: core.Widget,
-  context: {
-    is_root: boolean;
-  }
-): WidgetTree {
+export function buildWebWidgetFromTokens(widget: core.Widget): WidgetTree {
+  return compose(widget, {
+    is_root: true,
+  });
+}
+
+function compose(widget: core.Widget, context: { is_root: boolean }) {
   const handleChildren = (children: core.Widget[]): WidgetTree[] => {
     return children?.map((c) => {
       return handleChild(c);
@@ -20,7 +21,7 @@ export function buildWebWidgetFromTokens(
   };
 
   const handleChild = (child: core.Widget): WidgetTree => {
-    return buildWebWidgetFromTokens(child, { ...context, is_root: false });
+    return compose(child, { ...context, is_root: false });
   };
 
   const _remove_width_height_if_root_wh = {
@@ -98,6 +99,12 @@ export function buildWebWidgetFromTokens(
     thisWebWidget = handleChild(widget.child);
     thisWebWidget.extendStyle({
       opacity: css.opacity(widget.opacity),
+    });
+  } else if (widget instanceof core.ClipRRect) {
+    console.log("ClipRRect", widget);
+    thisWebWidget = handleChild(widget.child);
+    thisWebWidget.extendStyle({
+      ...css.clipPath(widget),
     });
   } else if (widget instanceof core.Text) {
     thisWebWidget = new web.Text({
