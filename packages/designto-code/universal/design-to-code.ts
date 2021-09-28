@@ -10,6 +10,7 @@ import {
   finalize_temporary_assets_with_prefixed_static_string_keys__dangerously,
 } from "@code-features/assets";
 import { BaseImageRepositories } from "@design-sdk/core/assets-repository";
+import { k } from "@web-builder/core";
 
 interface AssetsConfig {
   asset_repository?: BaseImageRepositories<string>;
@@ -62,14 +63,9 @@ export async function designToReact({
   // this should be placed somewhere else
   if (asset_config?.asset_repository && !asset_config.skip_asset_replacement) {
     const assets = await fetch_all_assets(asset_config.asset_repository);
-    res.code.raw = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
-      res.code.raw,
-      default_asset_replacement_prefix,
-      assets
-    );
-    res.scaffold.raw = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
+    res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
+    res.scaffold.raw = dangerous_temporary_asset_replacer(
       res.scaffold.raw,
-      default_asset_replacement_prefix,
       assets
     );
   }
@@ -103,16 +99,8 @@ export async function designToFlutter({
   // this should be placed somewhere else
   if (asset_config?.asset_repository && !asset_config.skip_asset_replacement) {
     const assets = await fetch_all_assets(asset_config?.asset_repository);
-    rootAppCode = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
-      rootAppCode,
-      default_asset_replacement_prefix,
-      assets
-    );
-    widgetCode = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
-      widgetCode,
-      default_asset_replacement_prefix,
-      assets
-    );
+    rootAppCode = dangerous_temporary_asset_replacer(rootAppCode, assets);
+    widgetCode = dangerous_temporary_asset_replacer(widgetCode, assets);
   }
   // ------------------------------------------------------------------------
 
@@ -143,14 +131,9 @@ export async function designToVanilla({
   // this should be placed somewhere else
   if (asset_config?.asset_repository && !asset_config.skip_asset_replacement) {
     const assets = await fetch_all_assets(asset_config.asset_repository);
-    res.code.raw = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
-      res.code.raw,
-      default_asset_replacement_prefix,
-      assets
-    );
-    res.scaffold.raw = finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
+    res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
+    res.scaffold.raw = dangerous_temporary_asset_replacer(
       res.scaffold.raw,
-      default_asset_replacement_prefix,
       assets
     );
   }
@@ -160,3 +143,11 @@ export async function designToVanilla({
 }
 
 const default_asset_replacement_prefix = "grida://assets-reservation/images/";
+const dangerous_temporary_asset_replacer = (r, a) => {
+  return finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
+    r,
+    default_asset_replacement_prefix,
+    a,
+    { fallback: k.image_smallest_fallback_source_base_64 }
+  );
+};
