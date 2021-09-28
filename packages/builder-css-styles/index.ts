@@ -3,6 +3,7 @@ export * from "./box-shadow";
 export * from "./border";
 export * from "./border-radius";
 export * from "./color";
+export * from "./clip-path";
 export * from "./dimensions";
 export * from "./font-weight";
 export * from "./font-family";
@@ -15,6 +16,10 @@ export * from "./min-height";
 export * from "./length";
 export * from "./calc";
 export * from "./opacity";
-// shapes
-export * from "./shape-circle";
-export * from "./shape-round-rect";
+
+// shapes & tricks
+export * as tricks from "./tricks";
+
+// basic shapes - https://developer.mozilla.org/en-US/docs/Web/CSS/basic-shape
+export * from "./inset";
+export * from "./circle";
