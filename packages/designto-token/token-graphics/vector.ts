@@ -3,6 +3,7 @@ import { MainImageRepository } from "@design-sdk/core/assets-repository";
 import { ImagePaint } from "@design-sdk/figma-types";
 import { ImageWidget, VectorWidget } from "@reflect-ui/core";
 import { keyFromNode } from "../key";
+import { tokenizeBitmap } from "./bitmap";
 
 function fromStar(): VectorWidget {
   // return new VectorWidget("");
@@ -19,11 +20,20 @@ function fromPoligon(): VectorWidget {
 }
 
 function fromVector(vector: ReflectVectorNode) {
+  if (vector?.vectorPaths.length === 0) {
+    // we are not sure when specifically this happens, but as reported, curvy lines does not contain a vector paths.
+    // so we just return a image bake of it.
+    console.warn(
+      `tried to get path data from vector, but none was provided. baking as a bitmap instead.`,
+      vector
+    );
+    return tokenizeBitmap.fromAnyNode(vector);
+  }
   const _key = keyFromNode(vector);
   return new VectorWidget({
     key: _key,
     ...vector,
-    data: vector?.vectorPaths[0]?.data,
+    data: vector?.vectorPaths[0].data,
     fill: vector.primaryColor,
   });
 }
