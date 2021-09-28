@@ -1,13 +1,14 @@
 import { CSSProperties, CSSProperty } from "@coli.codes/css";
 import {
+  ClipPath,
   ClipRRect,
   isCircularRadius,
   isEllipticalRadius,
 } from "@reflect-ui/core";
-import { px } from "../dimensions";
+import { path } from "..";
 import { inset } from "../inset";
 
-type CssClipInput = ClipRRect;
+type CssClipInput = ClipRRect | ClipPath;
 
 export function clipPath(clip: CssClipInput): CSSProperties {
   if (clip instanceof ClipRRect) {
@@ -25,15 +26,14 @@ export function clipPath(clip: CssClipInput): CSSProperties {
       // each radii
       // TODO: each round corner not supported
     }
+  } else if (clip instanceof ClipPath) {
+    return {
+      "clip-path": path(clip.clipper.data),
+    };
   }
   console.info("clip-path with", clip, "is not yet supported");
   return undefined;
   //
-}
-
-function from_path(): CSSProperty.ClipPath {
-  // clip-path: path('M0.5,1 C0.5,1,0,0.7,0,0.3 A0.25,0.25,1,1,1,0.5,0.3 A0.25,0.25,1,1,1,1,0.3 C1,0.7,0.5,1,0.5,1 Z');
-  return "path()";
 }
 
 function from_ellipse(): CSSProperty.ClipPath {

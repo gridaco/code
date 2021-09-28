@@ -106,13 +106,26 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     thisWebWidget.extendStyle({
       opacity: css.opacity(widget.opacity),
     });
-  } else if (widget instanceof core.ClipRRect) {
-    console.log("ClipRRect", widget);
+  }
+  // ----- region clip path ------
+  else if (widget instanceof core.ClipRRect) {
+    thisWebWidget = handleChild(widget.child);
+    thisWebWidget.extendStyle({
+      // FIXME: clip path for rect is not working.
+      ...css.clipPath(widget),
+    });
+  } else if (widget instanceof core.ClipPath) {
     thisWebWidget = handleChild(widget.child);
     thisWebWidget.extendStyle({
       ...css.clipPath(widget),
+      top: undefined,
+      left: undefined,
+      right: undefined,
+      bottom: undefined,
     });
-  } else if (widget instanceof core.Text) {
+  }
+  // ----- endregion clip path ------
+  else if (widget instanceof core.Text) {
     thisWebWidget = new web.Text({
       ...widget,
       textStyle:

@@ -3,11 +3,15 @@
 ///
 
 import {
+  ReflectEllipseNode,
   ReflectFrameNode,
   ReflectGroupNode,
+  ReflectRectangleNode,
   ReflectSceneNode,
+  ReflectSceneNodeType,
+  ReflectVectorNode,
 } from "@design-sdk/figma-node";
-import { BorderRadius, ClipRRect, WidgetKey } from "@reflect-ui/core";
+import { BorderRadius, ClipPath, ClipRRect, WidgetKey } from "@reflect-ui/core";
 import { containsMasking, ismaskier } from "../detection";
 import { keyFromNode } from "../key";
 import { tokenizeLayout } from "../token-layout";
@@ -77,6 +81,8 @@ function fromMultichild(node: MaskingItemContainingNode) {
     // region clone container, preserving only maskitee
     const cloned_container = Object.assign({}, node);
     cloned_container.children = maskitee;
+    // @ts-ignore
+    cloned_container.id = `${maskier.id}-masked-contents-container`;
     // endregion
     // --------------------------------------------------
 
@@ -88,18 +94,49 @@ function fromMultichild(node: MaskingItemContainingNode) {
       }
     );
 
-    const raw_maskier_key = keyFromNode(maskier);
-    const clipped = new ClipRRect({
-      key: raw_maskier_key, // we do not override key for clipped because maskier it self is not being nested, but being converted as a container-like.
-      child: clippedcontents_new_layout_except_irrelavents,
-      borderRadius: BorderRadius.all(maskier.radius),
-    });
+    const raw_maskier_key = keyFromNode(maskier); // we do not override key for clipped because maskier it self is not being nested, but being converted as a container-like.
+    let clipped;
+    switch (maskier.type) {
+      case ReflectSceneNodeType.rectangle:
+        clipped = new ClipRRect({
+          key: raw_maskier_key,
+          child: clippedcontents_new_layout_except_irrelavents,
+          borderRadius: (maskier as ReflectRectangleNode).cornerRadius,
+        });
+        break;
+      case ReflectSceneNodeType.ellipse:
+        clipped = new ClipRRect({
+          key: raw_maskier_key,
+          child: clippedcontents_new_layout_except_irrelavents,
+          // TODO: this is a temporary solution - no native ellipse support
+          borderRadius: BorderRadius.all(
+            (maskier as ReflectEllipseNode).width / 2
+          ),
+        });
+        break;
+      case ReflectSceneNodeType.vector:
+        // TODO: multi path vector is not supported
+        const vector_asset_data = (maskier as ReflectVectorNode).vectorPaths[0]
+          ?.data;
+
+        clipped = new ClipPath({
+          key: raw_maskier_key,
+          child: clippedcontents_new_layout_except_irrelavents,
+          clipper: {
+            type: "path",
+            data: vector_asset_data,
+          },
+        });
+        break;
+      default:
+        console.log("unsupported maskier type", maskier.type);
+    }
 
     const children = [
-      // maskings
-      clipped,
       // others
-      ...irrelavent,
+      ...irrelavent, // 1 (order matters)
+      // maskings
+      clipped, // 2 (order matters)
     ];
     const container = tokenizeLayout.fromFrameOrGroup(node, children, {
       is_root: node.isRoot, // probably not needed - who uses masking directly under root frame?
