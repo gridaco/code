@@ -1,6 +1,6 @@
-import { buildCssStandard, CSSProperties } from "@coli.codes/css";
+import { buildCssStandard } from "@coli.codes/css";
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
-import { TextChildWidget, WidgetTree } from "@web-builder/core";
+import { k, TextChildWidget, WidgetTree } from "@web-builder/core";
 import {
   buildTextChildJsx,
   getWidgetStylesConfigMap,
@@ -10,20 +10,14 @@ import {
 } from "@web-builder/core/builders";
 import {
   JSXAttribute,
-  JSXAttributes,
   JSXClosingElement,
   JSXElement,
   JSXElementLike,
-  JSXIdentifier,
   JSXOpeningElement,
   ScopedVariableNamer,
   stringfy,
   StringLiteral,
 } from "coli";
-
-const user_agent_stylesheet_override = <CSSProperties>{
-  margin: "0px",
-};
 
 const html_render = ({ css, body }: { css: string; body: string }) => {
   const indenter = (s: string, tabs: number = 0) =>
@@ -125,7 +119,7 @@ export function export_inlined_css_html_file(widget: WidgetTree) {
       name: "*",
       selector: "tag",
     },
-    style: user_agent_stylesheet_override,
+    style: k.user_agent_stylesheet_override_default,
   });
 
   const strfied_css = css_declarations

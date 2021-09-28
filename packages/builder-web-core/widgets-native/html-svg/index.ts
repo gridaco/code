@@ -91,6 +91,10 @@ export class SvgElement extends WidgetTree {
         },
       };
 
+    if (!this.fill) {
+      return [path_with_fill("black")];
+    }
+
     if (Array.isArray(this.fill)) {
       console.error("multiple fills for svg path is not supported.");
     } else {
