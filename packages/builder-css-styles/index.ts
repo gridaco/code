@@ -17,9 +17,15 @@ export * from "./length";
 export * from "./calc";
 export * from "./opacity";
 
-// shapes & tricks
+// shapes & tricks  ---------------------------------------------------------------
 export * as tricks from "./tricks";
+// --------------------------------------------------------------------------------
 
+// --------------------------------------------------------------------------------
 // basic shapes - https://developer.mozilla.org/en-US/docs/Web/CSS/basic-shape
 export * from "./inset";
 export * from "./circle";
+export * from "./ellipse";
+// export * from "./polygon"; // WIP
+export * from "./path";
+// --------------------------------------------------------------------------------
