@@ -2,12 +2,16 @@ import { nodes } from "@design-sdk/core";
 import { Figma } from "@design-sdk/figma";
 import { retrieveFill } from "@design-sdk/core/utils";
 import * as flutter from "@bridged.xyz/flutter-builder";
-import { interpretGradient } from "../interpreter/gradient.interpret";
 import { interpretImageFill } from "../interpreter/image.interpret";
 import { makeBorderRadius } from "./make-flutter-border-radius";
 import { makeBorder } from "./make-flutter-border";
 import { makeBoxShadow } from "./make-flutter-box-shadow";
-import { makeColorFromRGBO } from "./make-flutter-color";
+import {
+  makeColorFromRGBO,
+  makeFlutterColorFromReflectColor,
+} from "./make-flutter-color";
+import { tokenize_gradient } from "@designto/token";
+import { mapAlignment } from "../core-type-mappers";
 
 type DecorationBackgroundLike =
   | flutter.Color
@@ -114,7 +118,13 @@ export function makeBoxDecorationColorBg(
       );
       return undefined;
     case "GRADIENT_LINEAR":
-      return interpretGradient(fill);
+      const g = tokenize_gradient(fill as Figma.GradientPaint);
+      return new flutter.LinearGradient({
+        begin: mapAlignment(g.begin),
+        end: mapAlignment(g.end),
+        colors: g.colors.map((c) => makeFlutterColorFromReflectColor(c)),
+        stops: g.stops,
+      });
     case "SOLID":
       return makeColorFromRGBO(fill.color, opacity);
     default:

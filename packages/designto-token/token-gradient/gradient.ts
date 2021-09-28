@@ -1,15 +1,16 @@
-import { Gradient, LinearGradient, Color } from "@bridged.xyz/flutter-builder";
-import { roundNumber } from "@reflect-ui/uiutils";
+import { Figma } from "@design-sdk/figma-types";
+import { Color, LinearGradient } from "@reflect-ui/core";
 import { color_utils } from "@design-sdk/core";
-import { GradientPaint } from "@design-sdk/figma-types";
-import { makeColorFromRGBO } from "../make/make-flutter-color";
-import { interpretGradientDirection } from "./gradient-direction.interpret";
+import { tokenize_gradient_direction_from_angle } from "../token-gradient";
+import { roundNumber } from "@reflect-ui/uiutils";
 
-export function interpretGradient(gradient: GradientPaint): Gradient {
+export function tokenize_gradient(
+  gradient: Figma.GradientPaint
+): LinearGradient {
   // TODO Handle transform percisely.
   // https://www.figma.com/plugin-docs/api/Transform/
   // https://www.mathworks.com/discovery/affine-transformation.html
-  const direction = interpretGradientDirection(
+  const direction = tokenize_gradient_direction_from_angle(
     color_utils.gradientAngle(gradient)
   );
   // console.log("start making gradient with", gradient.gradientStops);
@@ -17,7 +18,12 @@ export function interpretGradient(gradient: GradientPaint): Gradient {
   let stopPoints: Array<number> = [];
   const colors: Array<Color> = [];
   for (const stop of gradient.gradientStops) {
-    const color = makeColorFromRGBO(stop.color, stop.color.a);
+    // TODO: check this color maker
+    const color = {
+      ...stop.color,
+      a: stop.color.a,
+    };
+
     colors.push(color);
     // console.log("color for gradient: ", color);
 
