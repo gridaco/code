@@ -2,11 +2,38 @@ import { ReflectSceneNode } from "@design-sdk/figma";
 import { retrieveFill } from "@design-sdk/core/utils";
 import { paintToColor } from "@design-sdk/core/utils/colors";
 import { Figma } from "@design-sdk/figma-types";
-import { Color } from "@reflect-ui/core";
+import { Color, ObjectColor } from "@reflect-ui/core";
+import { tokenize_gradient } from "..";
+import { Background } from "@reflect-ui/core/lib/background";
 
-function fromFills(fills: ReflectSceneNode["fills"]) {
+function fromFills(fills: ReflectSceneNode["fills"]): Background {
+  fills = fills && fills.filter((f) => f.visible);
   if (fills && fills.length > 0) {
-    return forceFillsToSolidColor(fills);
+    return forceSingleFill(fills);
+    // return forceFillsToSolidColor(fills);
+  }
+}
+
+function forceSingleFill(fills: ReflectSceneNode["fills"]): Background {
+  const fill: Figma.Paint = retrieveFill(fills);
+  switch (fill.type) {
+    case "SOLID":
+      return {
+        type: "solid-color",
+        // TODO: support other than object color
+        ...(paintToColor(fill) as ObjectColor),
+      };
+    case "GRADIENT_RADIAL":
+    case "GRADIENT_LINEAR":
+    case "GRADIENT_DIAMOND":
+    case "GRADIENT_ANGULAR":
+      return {
+        type: "gradient",
+        ...tokenize_gradient(fill),
+      };
+    case "IMAGE":
+      // TODO:
+      return;
   }
 }
 

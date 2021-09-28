@@ -1,14 +1,21 @@
-// TODO: remove figma dependency
-import { Figma } from "@design-sdk/figma-types";
+import { LinearGradientManifest } from "@reflect-ui/core";
+import { CSSProperty } from "@coli.codes/css";
 import { color } from "../color";
 
 /**
- * WIP
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient()
+ *
  * @param g
  * @returns
  */
-export function linearGradient(g: Figma.GradientPaint) {
-  return `linear-gradient(0deg, ${g.gradientStops
-    .map((s) => `${color(s.color)} ${s.position * 100}%`)
-    .join(", ")})`;
+export function linearGradient(g: LinearGradientManifest): CSSProperty.Color {
+  // throw "css gradient not ready";
+  // TODO:
+  // 1. stops support
+  // 2. angle support
+  var angleDeg =
+    (Math.atan2(g.begin.y - g.end.y, g.begin.x - g.end.x) * 180) / Math.PI;
+
+  const colors = g.colors.map(color).join(", ");
+  return `linear-gradient(${angleDeg}deg, ${colors})`;
 }

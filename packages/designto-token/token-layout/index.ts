@@ -1,5 +1,6 @@
 import { nodes, ReflectSceneNodeType } from "@design-sdk/core";
 import { layoutAlignToReflectMainAxisSize } from "@design-sdk/figma-node-conversion";
+import { Figma } from "@design-sdk/figma-types";
 import * as core from "@reflect-ui/core";
 import {
   Axis,
@@ -23,6 +24,7 @@ import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { keyFromNode } from "../key";
 import { handleChildren } from "../main";
+import { tokenBackground } from "../token-background";
 import { Stretched } from "../tokens";
 
 // type ChildrenTransformer
@@ -68,8 +70,7 @@ function flexOrStackFromFrame(
   const wchildren = handleChildren(children);
 
   const _key = keyFromNode(frame);
-  const _background = frame.primaryColor;
-  const _color = frame.primaryColor;
+  const _background = tokenBackground.fromFills(frame.fills);
   const _mainaxissize = layoutAlignToReflectMainAxisSize(frame.layoutAlign);
 
   // Should this be used for flex?
@@ -97,7 +98,6 @@ function flexOrStackFromFrame(
     padding: frame.padding,
     background: _background,
     children: wchildren,
-    color: _color,
     borderRadius: frame.cornerRadius,
   };
 
@@ -317,7 +317,6 @@ function fromGroup(
     wchildren: wchildren,
     container: group,
   });
-  const _background = group.primaryColor;
   const stack = new Stack({
     key: keyFromNode(group),
     children: stack_children,
@@ -325,7 +324,7 @@ function fromGroup(
     height: group.height,
     boxShadow: group.primaryShadow,
     padding: group.padding,
-    background: _background,
+    background: undefined, // group does not have fills.
   });
   return stack;
 }
