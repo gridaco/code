@@ -45,9 +45,9 @@ function fromMultichild(node: MaskingItemContainingNode) {
     // 1. split as maskier | maskitee | irrelavent
     const index_of_maskier = hierarchy_items.findIndex(ismaskier);
 
-    const maskitee = hierarchy_items.slice(0, index_of_maskier);
     const maskier = hierarchy_items[index_of_maskier];
-    const irrelavent = hierarchy_items.slice(index_of_maskier + 1);
+    const irrelavent = hierarchy_items.slice(0, index_of_maskier);
+    const maskitee = hierarchy_items.slice(index_of_maskier + 1);
 
     /**
      *
@@ -104,6 +104,17 @@ function fromMultichild(node: MaskingItemContainingNode) {
     const container = tokenizeLayout.fromFrameOrGroup(node, children, {
       is_root: node.isRoot, // probably not needed - who uses masking directly under root frame?
       references: hierarchy_items,
+    });
+
+    console.log(`masking transform gate of ${container.key.originName}`, {
+      maskitee: maskitee,
+      maskier: maskier,
+      irrelavent: irrelavent,
+      clipped: clipped,
+      children: children,
+      container: container,
+      hierarchy_items: hierarchy_items,
+      index_of_maskier: index_of_maskier,
     });
     return container;
   }
