@@ -239,10 +239,11 @@ function stackChild({
     bottom: undefined,
   };
 
+  const unwrapped = unwrappedChild(child);
   /// this is a snapshot of a w, h. under logic will remove or preserve each property for constraint assignment.
   const wh = {
-    width: child.width,
-    height: child.height,
+    width: unwrapped.width,
+    height: unwrapped.height,
   };
 
   const _l = ogchild.x;
