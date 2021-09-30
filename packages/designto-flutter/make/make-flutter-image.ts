@@ -1,5 +1,5 @@
 import { nodes } from "@design-sdk/core";
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import { interpretIllust } from "../interpreter/illust.interpret";
 
 const PLACEHOLDER =

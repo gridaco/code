@@ -1,5 +1,5 @@
 import { Widget, IMultiChildWidget } from ".";
-import { JSXAttributes, JSXIdentifier } from "coli";
+import { ColiObject, JSXAttributes, JSXElementLike, JSXIdentifier } from "coli";
 import { CSSProperties } from "@coli.codes/css";
 import { ColiObjectLike } from "@coli.codes/builder";
 import {
@@ -16,10 +16,26 @@ import { Background } from "@reflect-ui/core/lib/background";
 import { WidgetKey } from "../widget-key";
 import { positionAbsolute } from "@web-builder/styles";
 
-export interface JSXElementConfig {
+interface TagAndAttributeSegment {
   tag: ColiObjectLike<JSXIdentifier>;
   attributes?: JSXAttributes;
 }
+
+interface StaticTree {
+  tree: ColiObjectLike<JSXElementLike>;
+}
+
+export type UnstylableJSXElementConfig = StaticTree & {
+  type?: "static-tree";
+};
+
+export type StylableJSXElementConfig = TagAndAttributeSegment & {
+  type?: "tag-and-attr";
+};
+
+export type JSXElementConfig =
+  | StylableJSXElementConfig
+  | UnstylableJSXElementConfig;
 
 export interface IWidgetWithStyle {
   styleData(): CSSProperties;

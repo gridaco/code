@@ -1,6 +1,6 @@
 import { nodes } from "@design-sdk/core";
 import * as core from "@reflect-ui/core";
-import { tokenBackground } from "../token-background";
+import { tokenizeBackground } from "../token-background";
 import { BoxShape } from "@reflect-ui/core/lib/box-shape";
 import { keyFromNode } from "../key";
 import { tokenizeBorder } from "../token-border";
@@ -11,8 +11,9 @@ function fromRectangle(rect: nodes.ReflectRectangleNode): core.Container {
     width: rect.width,
     height: rect.height,
     borderRadius: rect.cornerRadius,
+    boxShadow: rect.primaryShadow,
     border: tokenizeBorder.fromNode(rect),
-    background: tokenBackground.fromFills(rect.fills),
+    background: tokenizeBackground.fromFills(rect.fills),
   });
 
   container.x = rect.x;
@@ -27,9 +28,10 @@ function fromEllipse(ellipse: nodes.ReflectEllipseNode): core.Container {
     children: undefined,
     width: ellipse.width,
     height: ellipse.height,
+    boxShadow: ellipse.primaryShadow,
     border: tokenizeBorder.fromNode(ellipse),
     borderRadius: { all: Math.max(ellipse.width, ellipse.height) / 2 },
-    background: tokenBackground.fromFills(ellipse.fills),
+    background: tokenizeBackground.fromFills(ellipse.fills),
   });
 
   container.x = ellipse.x;

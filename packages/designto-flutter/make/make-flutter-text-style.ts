@@ -1,4 +1,4 @@
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import * as core from "@reflect-ui/core";
 import { nodes } from "@design-sdk/core";
 import { makeColor } from ".";

@@ -1,4 +1,4 @@
-import { MainAxisAlignment, Snippet } from "@bridged.xyz/flutter-builder";
+import { MainAxisAlignment, Snippet } from "@flutter-builder/flutter";
 import { MainAxisAlignment as ReflectMainAxisAlignment } from "@reflect-ui/core/lib";
 
 export function mapMainAxisAlignment(

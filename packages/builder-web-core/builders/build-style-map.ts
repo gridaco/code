@@ -34,6 +34,11 @@ export function getWidgetStylesConfigMap(
     if (!widget) {
       throw `cannot map trough ${widget}`;
     }
+
+    if (widget.jsxConfig().type === "static-tree") {
+      return;
+    }
+
     const isRoot = widget.key.id == rootWidget.key.id;
     const id = widget.key.id;
     const styledConfig = buildStyledComponentConfig(widget, {

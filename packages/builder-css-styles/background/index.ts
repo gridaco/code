@@ -30,7 +30,10 @@ export function background(bg: Background): CSSProperties {
             };
           }
           default:
-            throw "other than linear-gradient is not supported yet.";
+            console.error(
+              "other than linear-gradient is not supported yet.",
+              _primary
+            );
         }
       }
       case "solid-color": {

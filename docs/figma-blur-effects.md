@@ -40,16 +40,18 @@ filter: blur(4px);
 
 <!-- Adding layer / background blur in flutter is little bit more trickier than css -->
 
-- layer blur - [`backdropFilter`](https://api.flutter.dev/flutter/widgets/BackdropFilter-class.html)
+- layer blur - [`ImageFiltered`](https://api.flutter.dev/flutter/widgets/ImageFiltered-class.html)
 - background blur - [`backdropFilter`](https://api.flutter.dev/flutter/widgets/BackdropFilter-class.html)
 - [`ImageFilter.blur()`](https://api.flutter.dev/flutter/dart-ui/ImageFilter/ImageFilter.blur.html)
 
 In flutter, `layer blur` and `background blur` are the differences in code structure.
 
-**layer blur**
+[`reference`](https://dev.to/boilplate/how-to-blur-in-flutter-5891)
+
+**layer blur with `ImageFiltered`**
 
 ```dart
-child: BackdropFilter(
+child: ImageFiltered(
   imageFilter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
   child: ~others
 )
@@ -59,7 +61,6 @@ child: BackdropFilter(
 
 ```dart
 child: BackdropFilter(
-  imageFilter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+  filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
 )
-child: ~others
 ```

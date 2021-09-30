@@ -1,5 +1,5 @@
 import { CSSProperties } from "@coli.codes/css";
-import { JSXElementConfig, WidgetKey } from "../..";
+import { JSXElementConfig, StylableJSXElementConfig, WidgetKey } from "../..";
 import { JSX, JSXElementLike, css, JSXText } from "coli";
 
 import {
@@ -20,8 +20,9 @@ export class ErrorWidget extends TextChildWidget {
     };
   }
 
-  jsxConfig(): JSXElementConfig {
-    return <JSXElementConfig>{
+  jsxConfig(): StylableJSXElementConfig {
+    return <StylableJSXElementConfig>{
+      type: "tag-and-attr",
       tag: JSX.identifier("em"),
     };
 

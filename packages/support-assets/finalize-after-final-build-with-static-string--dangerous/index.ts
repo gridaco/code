@@ -12,12 +12,16 @@ type AssetStringReplacementMap = { [key: string]: string };
  */
 export function finalize_temporary_assets_with_static_string_keys__dangerously(
   code: string,
-  assets: AssetStringReplacementMap
+  assets: AssetStringReplacementMap,
+  safety: {
+    fallback: string;
+  }
 ) {
   finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
     code,
     false,
-    assets
+    assets,
+    safety
   );
 }
 
@@ -37,10 +41,16 @@ export function finalize_temporary_assets_with_static_string_keys__dangerously(
 export function finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
   code: string,
   prefix: string | false,
-  assets: AssetStringReplacementMap
+  assets: AssetStringReplacementMap,
+  safety: {
+    fallback: string;
+  }
 ) {
   Object.keys(assets).forEach((key) => {
-    code = code.replace(new RegExp(`${prefix || ""}${key}`, "g"), assets[key]);
+    code = code.replace(
+      new RegExp(`${prefix || ""}${key}`, "g"),
+      assets[key] || safety.fallback
+    );
   });
   return code;
 }
