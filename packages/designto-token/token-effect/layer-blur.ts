@@ -1,21 +1,23 @@
 import { nodes } from "@design-sdk/core";
-import { Widget, WidgetKey } from "@reflect-ui/core";
-import { Blur } from "@reflect-ui/core/lib/cgr/effects";
+import { Widget, WidgetKey, Blurred } from "@reflect-ui/core";
+import { BlurEffect } from "@reflect-ui/core/lib/cgr/effects";
 
 export function wrap_with_layer_blur(
   node: nodes.ReflectSceneNode,
   widget: Widget
-): Blur {
-  return new Blur({
+): Blurred {
+  const _blur: BlurEffect | any = node.effects.find((d) => {
+    if (d.type === "LAYER_BLUR") {
+      return d;
+    }
+  });
+
+  return new Blurred({
     key: new WidgetKey({
       ...widget.key,
       id: widget.key.id + "_layer_blur",
     }),
     child: widget,
-    blur: node.effects.map((d) => {
-      if (d.type === "LAYER_BLUR") {
-        return d;
-      }
-    }),
+    blur: _blur,
   });
 }
