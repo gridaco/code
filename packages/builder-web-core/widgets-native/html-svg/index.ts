@@ -48,6 +48,12 @@ export class SvgElement extends WidgetTree {
    */
   readonly fill?: Background;
 
+  /**
+   * svg path stroke color
+   * @deprecated - this is currently not supported
+   */
+  readonly stroke?: Color;
+
   readonly children;
 
   constructor(p: {
@@ -59,6 +65,7 @@ export class SvgElement extends WidgetTree {
      */
     data: string;
     fill?: Background;
+    stroke?: Color;
   }) {
     super(p);
 
@@ -69,13 +76,14 @@ export class SvgElement extends WidgetTree {
     // region svg related
     this.data = p.data;
     this.fill = p.fill;
+    this.stroke = p.stroke;
     // endregion svg related
 
     this.children = this._init_children();
   }
 
   private _init_children() {
-    const path_with_fill = (fill: string) =>
+    const path_with_fill = (fill: string | false) =>
       <WidgetTree>{
         key: new WidgetKey(`${this.key.id}.svg-path`, "svg-path"),
         styleData: () => null,
@@ -84,12 +92,17 @@ export class SvgElement extends WidgetTree {
           return {
             tag: _tag,
             attributes: [
-              new JSXAttribute("fill", new StringLiteral(fill || "current")),
+              fill &&
+                new JSXAttribute("fill", new StringLiteral(fill || "current")),
               new JSXAttribute("d", new StringLiteral(this.data ?? "")),
             ],
           };
         },
       };
+
+    if (!this.fill) {
+      return [path_with_fill("transparent")];
+    }
 
     if (Array.isArray(this.fill)) {
       console.error("multiple fills for svg path is not supported.");
@@ -159,6 +172,7 @@ export class SvgElement extends WidgetTree {
             }
             default: {
               console.error("unsupported gradient type for svg path.");
+              return [path_with_fill("black")];
             }
           }
         }

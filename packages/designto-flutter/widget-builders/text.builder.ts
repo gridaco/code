@@ -1,5 +1,5 @@
 import { ReflectTextNode } from "@design-sdk/core";
-import { SizedBox, Text, Widget } from "@bridged.xyz/flutter-builder";
+import { SizedBox, Text, Widget } from "@flutter-builder/flutter";
 import { makeText } from "../make/make-flutter-text";
 import { WidgetBuilder } from "./default.builder";
 import { roundNumber } from "@reflect-ui/uiutils";

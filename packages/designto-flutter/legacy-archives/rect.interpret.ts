@@ -3,7 +3,7 @@ import {
   Gradient,
   BoxDecoration,
   Color,
-} from "@bridged.xyz/flutter-builder";
+} from "@flutter-builder/flutter";
 import { makeColorFromRGBO } from "../make";
 import { interpretGradient } from "../interpreter/gradient.interpret";
 import { interpretBorderRadius } from "./border-radius.interpret";

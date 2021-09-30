@@ -1,7 +1,7 @@
 import { convertToSize } from "../convert/size.convert";
 import { Figma, nodes } from "@design-sdk/figma";
 import { converters } from "@reflect-ui/core/lib";
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import { makeColor } from "../make/color.make";
 import { makeShape as makeShape } from "../make/shape.make";
 import { makeBorderRadius } from "../make/border-radius.make";

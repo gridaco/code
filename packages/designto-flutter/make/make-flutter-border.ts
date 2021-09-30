@@ -1,4 +1,4 @@
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import { ReflectDefaultShapeMixin, ReflectSceneNode } from "@design-sdk/core";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { makeColor } from "./make-flutter-color";

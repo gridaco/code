@@ -242,9 +242,11 @@ function stackChild({
 
   const unwrapped = unwrappedChild(child);
   /// this is a snapshot of a w, h. under logic will remove or preserve each property for constraint assignment.
+  /// use unswrapped child - since the property we're trying to get is wh
+  const _unwrappedChild = unwrappedChild(child);
   const wh = {
-    width: unwrapped.width,
-    height: unwrapped.height,
+    width: _unwrappedChild.width,
+    height: _unwrappedChild.height,
   };
 
   const _l = ogchild.x;
@@ -283,7 +285,7 @@ function stackChild({
       case "STRETCH":
         constraint.left = _l;
         constraint.right = _r;
-        wh.width = undefined;
+        wh.width = undefined; // no fixed width
         break;
       case "CENTER":
         const half_w = ogchild.width / 2;
@@ -360,6 +362,8 @@ function stackChild({
         break;
     }
   }
+
+  // console.log("positioning based on constraints", { wh, constraint, child });
 
   return new core.Positioned({
     key: new WidgetKey({

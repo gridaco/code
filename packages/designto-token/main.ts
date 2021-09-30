@@ -132,19 +132,52 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
   // -------------------------------------------------------------------------
   // --------------------------- Pre processors ------------------------------
   // -------------------------------------------------------------------------
+  let tokenizedTarget: Widget = null;
   if (containsMasking(node)) {
-    return tokenizeMasking.fromMultichild(node as MaskingItemContainingNode);
+    tokenizedTarget = tokenizeMasking.fromMultichild(
+      node as MaskingItemContainingNode
+    );
   }
-  // -------------------------------------------------------------------------
-  // --------------------------- Pre processors ------------------------------
-  // -------------------------------------------------------------------------
-
-  //
   //
   // -------------------------------------------------------------------------
-  //
   //
 
+  // -------------------------------------------------------------------------
+  // -------------------------- handle by types ------------------------------
+  // -------------------------------------------------------------------------
+  if (!tokenizedTarget) {
+    // if none handled by above gates, handle by type. this is the default tokenizer.
+    tokenizedTarget = handle_by_types(node);
+  }
+  //
+  // -------------------------------------------------------------------------
+  //
+
+  // -------------------------------------------------------------------------
+  // -------------------------- post wrap widget -----------------------------
+  // -------------------------------------------------------------------------
+  tokenizedTarget = post_wrap(node, tokenizedTarget);
+  //
+  // -------------------------------------------------------------------------
+  //
+
+  return tokenizedTarget;
+}
+
+function post_wrap(node: nodes.ReflectSceneNode, tokenizedTarget: Widget) {
+  if (tokenizedTarget) {
+    if (hasStretching(node)) {
+      tokenizedTarget = wrap_with_stretched(node, tokenizedTarget);
+    }
+  }
+
+  if (hasDimmedOpacity(node)) {
+    tokenizedTarget = wrap_with_opacity(node, tokenizedTarget);
+  }
+  return tokenizedTarget;
+}
+
+function handle_by_types(node: nodes.ReflectSceneNode): Widget {
   let tokenizedTarget: Widget;
   switch (node.type as string) {
     case nodes.ReflectSceneNodeType.rectangle:
@@ -207,18 +240,5 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
       tokenizedTarget.key.originName = `Fallbacked to image from - "${tokenizedTarget.key.originName}". this is a bug.`;
       break;
   }
-
-  // -------------------------------------------------------------------------
-  // post wrapping
-  if (tokenizedTarget) {
-    if (hasStretching(node)) {
-      tokenizedTarget = wrap_with_stretched(node, tokenizedTarget);
-    }
-  }
-
-  if (hasDimmedOpacity(node)) {
-    tokenizedTarget = wrap_with_opacity(node, tokenizedTarget);
-  }
-
   return tokenizedTarget;
 }

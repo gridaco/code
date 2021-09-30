@@ -6,7 +6,7 @@ import {
   ReflectTextNode,
 } from "@design-sdk/core";
 
-import { Size, Widget } from "@bridged.xyz/flutter-builder";
+import { Size, Widget } from "@flutter-builder/flutter";
 import { wrapWithContainer } from "../wrappers/container.wrap";
 import { wrapWithOpacity } from "../wrappers/opacity.wrap";
 import { wrapWithPositioned } from "../wrappers/positioned.wrap";

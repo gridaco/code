@@ -1,4 +1,4 @@
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 
 export function makeSafelyAsList<T>(maybeList: Array<T> | T): Array<T> {
   if (Array.isArray(maybeList)) {

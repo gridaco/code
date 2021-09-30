@@ -1,6 +1,6 @@
 import { nodeWidthHeight } from "@design-sdk/core/utils/node-width-height";
 import { ReflectSceneNode } from "@design-sdk/core";
-import { double, Size } from "@bridged.xyz/flutter-builder";
+import { double, Size } from "@flutter-builder/flutter";
 import { roundNumber } from "@reflect-ui/uiutils";
 
 /**

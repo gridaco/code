@@ -1,4 +1,4 @@
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import { nodes } from "@design-sdk/figma";
 import { makeTextStyle } from "./make-flutter-text-style";
 import { mapTextAlign } from "../core-type-mappers";
