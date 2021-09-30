@@ -20,6 +20,7 @@ import {
   Clip,
   Border,
   ClipRRect,
+  Blurred,
 } from "@reflect-ui/core";
 import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
@@ -428,6 +429,7 @@ function isOverflowingAndShouldBeScrollable(frame: nodes.ReflectFrameNode) {
 
 function unwrappedChild(maybeWrapped: Widget): Widget {
   const wrapped =
+    maybeWrapped instanceof Blurred ||
     maybeWrapped instanceof Opacity ||
     maybeWrapped instanceof Positioned ||
     maybeWrapped instanceof ClipRRect ||

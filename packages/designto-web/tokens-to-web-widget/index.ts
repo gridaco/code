@@ -106,6 +106,17 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     thisWebWidget.extendStyle({
       opacity: css.opacity(widget.opacity),
     });
+  } else if (widget instanceof core.Blurred) {
+    thisWebWidget = handleChild(widget.child);
+    if (widget.blur.type === "LAYER_BLUR") {
+      thisWebWidget.extendStyle({
+        filter: css.blur(widget.blur.radius),
+      });
+    } else if (widget.blur.type === "BACKGROUND_BLUR") {
+      thisWebWidget.extendStyle({
+        "backdrop-filter": css.blur(widget.blur.radius),
+      });
+    }
   }
   // ----- region clip path ------
   else if (widget instanceof core.ClipRRect) {
@@ -186,11 +197,11 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
       ...widget,
       key: _key,
       borderRadius: widget.borderRadius,
+      width: widget.width,
+      height: widget.height,
     });
     thisWebWidget.x = widget.x;
     thisWebWidget.y = widget.y;
-    thisWebWidget.width = widget.width;
-    thisWebWidget.height = widget.height;
     thisWebWidget.background = widget.background;
   }
 
