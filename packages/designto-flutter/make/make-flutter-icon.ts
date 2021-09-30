@@ -1,5 +1,5 @@
 import { ReflectSceneNode } from "@design-sdk/core";
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import {
   findRemotePreservedDefaultNamedOssIcon,
   interpretFlutterImageIcon,

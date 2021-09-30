@@ -1,6 +1,6 @@
 import { Figma } from "@design-sdk/figma";
 import { retrieveFill } from "@design-sdk/core/utils";
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import * as core from "@reflect-ui/core";
 import { converters } from "@reflect-ui/core/lib";
 

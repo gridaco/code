@@ -1,4 +1,4 @@
-import { MaterialApp, Widget } from "@bridged.xyz/flutter-builder";
+import { MaterialApp, Widget } from "@flutter-builder/flutter";
 import { makeScreen } from "./make-flutter-scaffold";
 import { makeTheme } from "./make-flutter-theme-data";
 

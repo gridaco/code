@@ -1,5 +1,5 @@
 import { manifests } from "@reflect-ui/detection";
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import { makeColor } from "./make-flutter-color";
 import { makeBorderRadius } from "./make-flutter-border-radius";
 import { makeBorderSide } from "./make-flutter-border-side";

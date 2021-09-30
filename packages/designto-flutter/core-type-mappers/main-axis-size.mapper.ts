@@ -1,4 +1,4 @@
-import { MainAxisSize } from "@bridged.xyz/flutter-builder";
+import { MainAxisSize } from "@flutter-builder/flutter";
 import { FigmaLayoutGrow } from "@design-sdk/figma-types";
 
 export function mapMainAxisSize(layoutGrow: FigmaLayoutGrow): MainAxisSize {

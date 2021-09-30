@@ -1,4 +1,4 @@
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import { makeTextTheme } from "./make-flutter-text-theme";
 
 export function makeTheme(): flutter.ThemeData {

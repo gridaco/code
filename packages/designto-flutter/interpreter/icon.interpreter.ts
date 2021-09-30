@@ -1,5 +1,5 @@
 import { ReflectSceneNode } from "@design-sdk/core";
-import { Icons, IconData } from "@bridged.xyz/flutter-builder";
+import { Icons, IconData } from "@flutter-builder/flutter";
 import { repo_assets } from "@design-sdk/core";
 import {
   IconManifest,

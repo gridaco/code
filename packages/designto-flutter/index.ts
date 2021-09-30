@@ -1,6 +1,6 @@
 import { nodes } from "@design-sdk/core";
 import { TextBuilder, WidgetBuilder } from "./widget-builders";
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import { makeSafelyAsStackList } from "./utils/make-as-safe-list";
 import { makeFlutterDivider } from "./make/make-flutter-divider";
 import { detectIf } from "@reflect-ui/detection";

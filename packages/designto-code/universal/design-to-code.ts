@@ -4,7 +4,7 @@ import { Widget } from "@reflect-ui/core";
 import * as toreact from "@designto/react";
 import * as tovanilla from "@designto/vanilla";
 import * as toflutter from "@designto/flutter";
-import { composeAppWithHome } from "@bridged.xyz/flutter-builder";
+import { composeAppWithHome } from "@flutter-builder/flutter";
 import {
   fetch_all_assets,
   finalize_temporary_assets_with_prefixed_static_string_keys__dangerously,

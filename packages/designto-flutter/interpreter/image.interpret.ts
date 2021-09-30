@@ -1,5 +1,5 @@
 import { ReflectDefaultShapeMixin } from "@design-sdk/core";
-import { ImageProvider, NetworkImage } from "@bridged.xyz/flutter-builder";
+import { ImageProvider, NetworkImage } from "@flutter-builder/flutter";
 import {
   retrieveImageFill,
   retrievePrimaryImageFill,

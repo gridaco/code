@@ -2,7 +2,7 @@ import { convertToSize } from "../convert";
 import { nodes } from "@design-sdk/core";
 import { makeEdgeInsets } from "../make";
 import { array } from "@reflect-ui/uiutils";
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import { makeBoxDecoration } from "../make/make-flutter-box-decoration";
 import { roundDouble } from "../convert/double.convert";
 

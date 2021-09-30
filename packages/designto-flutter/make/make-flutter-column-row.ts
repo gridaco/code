@@ -1,5 +1,5 @@
 import { ReflectFrameNode } from "@design-sdk/core";
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import { Axis as ReflectAxis } from "@reflect-ui/core/lib";
 import {
   mapCrossAxisAlignment,

@@ -1,5 +1,5 @@
 import { nodes, utils } from "@design-sdk/core";
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 
 // This must happen before Stack or after the Positioned, but not before.
 export function makeEdgeInsets(

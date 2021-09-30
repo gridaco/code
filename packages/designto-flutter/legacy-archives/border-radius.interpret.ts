@@ -1,7 +1,4 @@
-import {
-  BorderRadiusGeometry,
-  BorderRadius,
-} from "@bridged.xyz/flutter-builder";
+import { BorderRadiusGeometry, BorderRadius } from "@flutter-builder/flutter";
 import { mapRadius } from "../core-type-mappers";
 import { BorderRadiusManifest, isCircularRadius } from "@reflect-ui/core";
 import { roundNumber } from "@reflect-ui/uiutils";

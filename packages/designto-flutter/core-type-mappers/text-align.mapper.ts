@@ -1,5 +1,5 @@
 import * as core from "@reflect-ui/core";
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 
 export function mapTextAlign(textalign: core.TextAlign): flutter.TextAlign {
   // only undefined in testing
