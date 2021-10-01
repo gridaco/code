@@ -24,6 +24,12 @@ _References_
 - background blur - [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter)
 - [`blur()`](<https://developer.mozilla.org/en-US/docs/Web/CSS/filter-function/blur()>)
 
+- text layer blur - [`reference (text-shadow)`](https://css-tricks.com/fun-with-blurred-text/)
+- text background blur = [`reference (clip-path)`](https://css-tricks.com/a-glassy-and-classy-text-effect/)
+- [`text-shadow`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-shadow)
+- [`<clipPath>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/clipPath)
+- [`<clip-path>`](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path)
+
 **Background blur with `backdrop-filter: blur()`**
 
 ```css
@@ -43,8 +49,6 @@ filter: blur(4px);
 - layer blur - [`ImageFiltered`](https://api.flutter.dev/flutter/widgets/ImageFiltered-class.html)
 - background blur - [`backdropFilter`](https://api.flutter.dev/flutter/widgets/BackdropFilter-class.html)
 - [`ImageFilter.blur()`](https://api.flutter.dev/flutter/dart-ui/ImageFilter/ImageFilter.blur.html)
-
-[`reference`](https://dev.to/boilplate/how-to-blur-in-flutter-5891)
 
 **layer blur with `ImageFiltered`**
 
