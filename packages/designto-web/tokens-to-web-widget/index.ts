@@ -108,14 +108,17 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     });
   } else if (widget instanceof core.Blurred) {
     thisWebWidget = handleChild(widget.child);
-    if (widget.blur.type === "LAYER_BLUR") {
-      thisWebWidget.extendStyle({
-        filter: css.blur(widget.blur.radius),
-      });
-    } else if (widget.blur.type === "BACKGROUND_BLUR") {
-      thisWebWidget.extendStyle({
-        "backdrop-filter": css.blur(widget.blur.radius),
-      });
+    const isBlurVisibile = widget.blur.visible;
+    if(isBlurVisibile){
+      if (widget.blur.type === "LAYER_BLUR") {
+        thisWebWidget.extendStyle({
+          filter: css.blur(widget.blur.radius),
+        });
+      } else if (widget.blur.type === "BACKGROUND_BLUR") {
+        thisWebWidget.extendStyle({
+          "backdrop-filter": css.blur(widget.blur.radius),
+        });
+      }
     }
   }
   // ----- region clip path ------
