@@ -47,6 +47,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     return {
       mainAxisAlignment: rendering.mainAxisAlignment(f.mainAxisAlignment),
       crossAxisAlignment: rendering.crossAxisAlignment(f.crossAxisAlignment),
+      mainAxisSize: rendering.mainAxisSize(f.mainAxisSize),
+      verticalDirection: painting.verticalDirection(f.verticalDirection),
     };
   };
   //   const _key = keyFromWidget(widget);
@@ -178,7 +180,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
       }
       case "remote-uri": {
         thisFlutterWidget = flutter.Image.network(widget.icon.uri, {
-          ...widget,
+          width: widget.size,
+          height: widget.size,
           semanticLabel: "icon",
           //   key: _key,
         });
@@ -224,7 +227,9 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     }
 
     thisFlutterWidget = handleChild(widget.child);
-    thisFlutterWidget[remove_size] = Double.infinity;
+    thisFlutterWidget = wrap_with_sized_and_inject_size(thisFlutterWidget, {
+      [remove_size]: Double.infinity,
+    });
   }
   // -------------------------------------
 
@@ -249,4 +254,27 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
   }
 
   return thisFlutterWidget;
+}
+
+function wrap_with_sized_and_inject_size(
+  widget: flutter.Widget,
+  size: {
+    width?: flutter.double;
+    height?: flutter.double;
+  }
+) {
+  if (
+    widget instanceof flutter.Container ||
+    widget instanceof flutter.SizedBox
+  ) {
+    size.width && (widget.width = size.width);
+    size.height && (widget.height = size.height);
+    return widget;
+  } else {
+    return new flutter.SizedBox({
+      child: widget,
+      width: size.width,
+      height: size.height,
+    });
+  }
 }
