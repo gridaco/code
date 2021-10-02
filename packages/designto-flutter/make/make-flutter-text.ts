@@ -30,12 +30,12 @@ export function makeText(node: nodes.ReflectTextNode): flutter.Text {
   }
   //#endregion
 
-  // const escapedText = escapeDartString(text);
+  const escapedText = escapeDartString(text);
+  // throw "not used";
   // const textStyle = painting.textStyle(node);
 
-  // return new flutter.Text(escapedText, {
-  //   style: textStyle,
-  //   textAlign: textAlign,
-  // });
-  throw "not used";
+  return new flutter.Text(escapedText, {
+    // style: textStyle,
+    textAlign: textAlign,
+  });
 }

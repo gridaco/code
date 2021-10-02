@@ -1,11 +1,16 @@
 import * as core from "@reflect-ui/core";
 import * as flutter from "@flutter-builder/flutter";
 import * as painting from "../painting";
+import * as rendering from "../rendering";
 import { tokens as special } from "@designto/token";
 import { MainImageRepository } from "@design-sdk/core/assets-repository";
 import { Axis } from "@reflect-ui/core";
 import { Double } from "@flutter-builder/flutter";
-export function buildWebWidgetFromTokens(widget: core.Widget): flutter.Widget {
+import { escapeDartString } from "@coli.codes/escape-string";
+
+export function buildFlutterWidgetFromTokens(
+  widget: core.Widget
+): flutter.Widget {
   const composed = compose(widget, {
     is_root: true,
   });
@@ -38,18 +43,26 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     ..._remove_width_height_if_root_wh,
   };
 
+  const flex_props = (f: core.Flex) => {
+    return {
+      mainAxisAlignment: rendering.mainAxisAlignment(f.mainAxisAlignment),
+      crossAxisAlignment: rendering.crossAxisAlignment(f.crossAxisAlignment),
+    };
+  };
   //   const _key = keyFromWidget(widget);
 
   let thisFlutterWidget: flutter.Widget;
   if (widget instanceof core.Column) {
     thisFlutterWidget = new flutter.Column({
       ...default_props_for_layout,
+      ...flex_props(widget),
       children: handleChildren(widget.children),
       //   key: _key,
     });
   } else if (widget instanceof core.Row) {
     thisFlutterWidget = new flutter.Row({
       ...default_props_for_layout,
+      ...flex_props(widget),
       children: handleChildren(widget.children),
       //   key: _key,
     });
@@ -118,7 +131,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
   }
   // ----- endregion clip path ------
   else if (widget instanceof core.Text) {
-    thisFlutterWidget = new flutter.Text(widget.data, {
+    const _escaped_dart_string = escapeDartString(widget.data);
+    thisFlutterWidget = new flutter.Text(_escaped_dart_string, {
       ...widget,
       style: painting.textStyle(widget.style),
       /** explicit assignment - field name is different */

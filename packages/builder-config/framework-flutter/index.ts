@@ -1,1 +1,3 @@
-export interface FlutterComponentOutput {}
+import { ComponentOutput } from "../output";
+
+export interface FlutterComponentOutput extends ComponentOutput {}
