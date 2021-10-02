@@ -4,7 +4,7 @@ import * as core from "@reflect-ui/core/lib";
  * returns CrossAxisAlignment by counterAxisAlignItems
  * @param crossAxisAlignItems
  */
-export function mapCrossAxisAlignment(
+export function crossAxisAlignment(
   crossAxisAlignItems: core.CrossAxisAlignment
 ): CrossAxisAlignment {
   switch (crossAxisAlignItems) {

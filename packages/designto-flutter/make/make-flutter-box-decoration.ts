@@ -3,15 +3,9 @@ import { Figma } from "@design-sdk/figma";
 import { retrieveFill } from "@design-sdk/core/utils";
 import * as flutter from "@flutter-builder/flutter";
 import { interpretImageFill } from "../interpreter/image.interpret";
-import { makeBorderRadius } from "./make-flutter-border-radius";
-import { makeBorder } from "./make-flutter-border";
-import { makeBoxShadow } from "./make-flutter-box-shadow";
-import {
-  makeColorFromRGBO,
-  makeFlutterColorFromReflectColor,
-} from "./make-flutter-color";
-import { tokenize_gradient } from "@designto/token";
-import { mapAlignment } from "../core-type-mappers";
+import * as painting from "../painting";
+import { makeColorFromRGBO } from "./make-flutter-color";
+import { tokenizeBorder, tokenize_gradient } from "@designto/token";
 
 type DecorationBackgroundLike =
   | flutter.Color
@@ -24,9 +18,10 @@ export function makeBoxDecoration(
     | nodes.ReflectEllipseNode
     | nodes.ReflectFrameNode
 ): flutter.BoxDecoration | flutter.Color {
-  const decorationBorder = makeBorder(node);
-  const decorationBoxShadow = makeBoxShadow(node);
-  const decorationBorderRadius = makeBorderRadius(node);
+  const _border = tokenizeBorder.fromNode(node);
+  const decorationBorder = painting.border(_border);
+  const decorationBoxShadow = painting.boxShadow(node.shadows);
+  const decorationBorderRadius = painting.borderRadius(node.cornerRadius);
 
   ///
   /// ----------------------------------------------------------------
@@ -119,12 +114,7 @@ export function makeBoxDecorationColorBg(
       return undefined;
     case "GRADIENT_LINEAR":
       const g = tokenize_gradient(fill as Figma.GradientPaint);
-      return new flutter.LinearGradient({
-        begin: mapAlignment(g.begin),
-        end: mapAlignment(g.end),
-        colors: g.colors.map((c) => makeFlutterColorFromReflectColor(c)),
-        stops: g.stops,
-      });
+      return painting.linearGradient(g);
     case "SOLID":
       return makeColorFromRGBO(fill.color, opacity);
     default:

@@ -1,18 +1,21 @@
+import { retrievePrimaryColor } from "@design-sdk/core/utils";
 import * as flutter from "@flutter-builder/flutter";
 import { manifests } from "@reflect-ui/detection";
-import { makeBorderRadius } from ".";
-import { makeBorderSide } from "./make-flutter-border-side";
+import { borderside } from "../painting/painting-border-side";
 import { makeColor } from "./make-flutter-color";
+import * as painting from "../painting";
 
 export function makeChip(manifest: manifests.DetectedChipManifest) {
-  console.log({ manifest });
   var content = new flutter.Text(manifest.content?.text);
   const color: flutter.Color = makeColor(manifest.base.fills);
   const textColor: flutter.Color = makeColor(manifest.content?.fills);
   const height = manifest.base.height;
   const shape = new flutter.RoundedRectangleBorder({
-    borderRadius: makeBorderRadius(manifest.base),
-    side: makeBorderSide(manifest.base),
+    borderRadius: painting.borderRadius(manifest.base.cornerRadius),
+    side: borderside({
+      color: retrievePrimaryColor(manifest.base.strokes),
+      width: manifest.base.strokeWeight,
+    }),
   });
   const onSelected = flutter.Snippet.fromStatic(
     '(){ print("Chip onSelected"); }'

@@ -1,7 +1,7 @@
 import * as core from "@reflect-ui/core";
 import * as flutter from "@flutter-builder/flutter";
 
-export function mapTextAlign(textalign: core.TextAlign): flutter.TextAlign {
+export function textAlign(textalign: core.TextAlign): flutter.TextAlign {
   // only undefined in testing
 
   // we are not handling "left" align, because it will be set by default.

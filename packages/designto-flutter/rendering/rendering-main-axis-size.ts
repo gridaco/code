@@ -1,7 +1,7 @@
 import { MainAxisSize } from "@flutter-builder/flutter";
 import { FigmaLayoutGrow } from "@design-sdk/figma-types";
 
-export function mapMainAxisSize(layoutGrow: FigmaLayoutGrow): MainAxisSize {
+export function mainAxisSize(layoutGrow: FigmaLayoutGrow): MainAxisSize {
   if (layoutGrow === 0) {
     return MainAxisSize.min;
   } else {

@@ -1,7 +1,7 @@
 import { Alignment } from "@reflect-ui/core";
 import * as flutter from "@flutter-builder/flutter";
 
-export function mapAlignment(a: Alignment): flutter.Alignment {
+export function alignment(a: Alignment): flutter.Alignment {
   // TODO: Alignemt value comparison won't work. (not tested)
   switch (a) {
     case Alignment.center: {

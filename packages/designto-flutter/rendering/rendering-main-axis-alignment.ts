@@ -1,7 +1,7 @@
 import { MainAxisAlignment, Snippet } from "@flutter-builder/flutter";
 import { MainAxisAlignment as ReflectMainAxisAlignment } from "@reflect-ui/core/lib";
 
-export function mapMainAxisAlignment(
+export function mainAxisAlignment(
   mainAxisAlignemt: ReflectMainAxisAlignment
 ): MainAxisAlignment {
   switch (mainAxisAlignemt) {

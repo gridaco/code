@@ -1,11 +1,8 @@
 import { ReflectFrameNode } from "@design-sdk/core";
 import * as flutter from "@flutter-builder/flutter";
 import { Axis as ReflectAxis } from "@reflect-ui/core/lib";
-import {
-  mapCrossAxisAlignment,
-  mapMainAxisAlignment,
-  mapMainAxisSize,
-} from "../core-type-mappers";
+import * as dartui from "../dart-ui";
+import * as rendering from "../rendering";
 import { makeSafelyAsList } from "../utils/make-as-safe-list";
 
 export type RowOrColumn = "Row" | "Column";
@@ -17,9 +14,15 @@ export function makeRowColumn(
   const rowOrColumn: RowOrColumn =
     node.layoutMode === ReflectAxis.horizontal ? "Row" : "Column";
 
-  const _mainAxisAlignment = mapMainAxisAlignment(node.mainAxisAlignment);
-  const _mainAxisSize: flutter.MainAxisSize = mapMainAxisSize(node.layoutGrow);
-  const _crossAxisAlignment = mapCrossAxisAlignment(node.crossAxisAlignment);
+  const _mainAxisAlignment = rendering.mainAxisAlignment(
+    node.mainAxisAlignment
+  );
+  const _mainAxisSize: flutter.MainAxisSize = rendering.mainAxisSize(
+    node.layoutGrow
+  );
+  const _crossAxisAlignment = rendering.crossAxisAlignment(
+    node.crossAxisAlignment
+  );
 
   // safely make childeren as list type
   children = makeSafelyAsList<flutter.Widget>(children);

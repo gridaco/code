@@ -9,9 +9,11 @@ function fromNode(node: ReflectSceneNode) {
     if (!node.strokes || node.strokes.length === 0) {
       return undefined;
     }
-    return fromStrokes(node.strokes, {
-      width: node.strokeWeight,
-    });
+    if ("strokeWeight" in node) {
+      return fromStrokes(node.strokes, {
+        width: node.strokeWeight,
+      });
+    }
   }
 }
 
