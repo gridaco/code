@@ -16,7 +16,7 @@ export function buildFlutterWidgetFromTokens(
   });
 
   if (process.env.NODE_ENV === "development") {
-    console.info("dev::", "final web token composed", composed);
+    console.info("dev::", "final flutter token composed", composed);
   }
 
   return composed;
@@ -55,17 +55,25 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
 
   let thisFlutterWidget: flutter.Widget;
   if (widget instanceof core.Column) {
+    const children = compose_item_spacing_children(widget.children, {
+      itemspacing: widget.itemSpacing,
+      axis: widget.direction,
+    });
     thisFlutterWidget = new flutter.Column({
       ...default_props_for_layout,
       ...flex_props(widget),
-      children: handleChildren(widget.children),
+      children: children,
       //   key: _key,
     });
   } else if (widget instanceof core.Row) {
+    const children = compose_item_spacing_children(widget.children, {
+      itemspacing: widget.itemSpacing,
+      axis: widget.direction,
+    });
     thisFlutterWidget = new flutter.Row({
       ...default_props_for_layout,
       ...flex_props(widget),
-      children: handleChildren(widget.children),
+      children: children,
       //   key: _key,
     });
   } else if (widget instanceof core.Flex) {
@@ -254,6 +262,61 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
   }
 
   return thisFlutterWidget;
+}
+
+/**
+ * children under col / row with item spacing on each between with sizedbox.
+ * ```
+ * s = SizedBox()
+ * | 1 | 2 | 3 | 4 |
+ * | 1 | s | 2 | s | 3 | s | 4
+ * ```
+ */
+function compose_item_spacing_children(
+  children: core.Widget[],
+  args: {
+    itemspacing: number;
+    axis: Axis;
+  }
+) {
+  let injection = undefined;
+  if (args.itemspacing) {
+    const wh = args.axis === Axis.horizontal ? "width" : "height";
+    injection = new flutter.SizedBox({
+      [wh]: args.itemspacing,
+    });
+  }
+  return compoes_children_with_injection(children, injection);
+}
+
+/**
+ * children under col / row with item spacing on each between.
+ * ```
+ * | 1 | 2 | 3 | 4 |
+ * | 1 | x | 2 | x | 3 | x | 4
+ * ```
+ */
+function compoes_children_with_injection(
+  children: core.Widget[],
+  between?: flutter.Widget
+): flutter.Widget[] {
+  const composedchildren = children.map((c) => {
+    return compose(c, {
+      is_root: false,
+    });
+  });
+
+  const result: flutter.Widget[] = [];
+  composedchildren.forEach((c, i) => {
+    result.push(c);
+    if (between) {
+      if (i !== children.length - 1) {
+        result.push(between);
+      }
+    }
+  });
+  return result;
+  // const result = array.reduce((r, a) => r.concat(a, 0), [0]);
 }
 
 function wrap_with_sized_and_inject_size(
