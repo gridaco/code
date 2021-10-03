@@ -1,11 +1,13 @@
 import { CrossAxisAlignment } from "@flutter-builder/flutter";
 import * as core from "@reflect-ui/core/lib";
+import { do_explicitly_specify, FlutterPropConversionConfig } from "../_";
 /**
  * returns CrossAxisAlignment by counterAxisAlignItems
  * @param crossAxisAlignItems
  */
 export function crossAxisAlignment(
-  crossAxisAlignItems: core.CrossAxisAlignment
+  crossAxisAlignItems: core.CrossAxisAlignment,
+  config?: FlutterPropConversionConfig
 ): CrossAxisAlignment {
   switch (crossAxisAlignItems) {
     case core.CrossAxisAlignment.start:
@@ -15,7 +17,8 @@ export function crossAxisAlignment(
     case core.CrossAxisAlignment.stretch:
       return CrossAxisAlignment.stretch;
     case core.CrossAxisAlignment.center:
-      return CrossAxisAlignment.center;
+      // CrossAxisAlignment.center is default value
+      return do_explicitly_specify(config) && CrossAxisAlignment.center;
     default:
       return undefined;
   }
