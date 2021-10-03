@@ -20,6 +20,7 @@ import {
   Clip,
   Border,
   ClipRRect,
+  Blurred,
 } from "@reflect-ui/core";
 import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
@@ -239,6 +240,7 @@ function stackChild({
     bottom: undefined,
   };
 
+  const unwrapped = unwrappedChild(child);
   /// this is a snapshot of a w, h. under logic will remove or preserve each property for constraint assignment.
   /// use unswrapped child - since the property we're trying to get is wh
   const _unwrappedChild = unwrappedChild(child);
@@ -431,6 +433,7 @@ function isOverflowingAndShouldBeScrollable(frame: nodes.ReflectFrameNode) {
 
 function unwrappedChild(maybeWrapped: Widget): Widget {
   const wrapped =
+    maybeWrapped instanceof Blurred ||
     maybeWrapped instanceof Opacity ||
     maybeWrapped instanceof Positioned ||
     maybeWrapped instanceof ClipRRect ||

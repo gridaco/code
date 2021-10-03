@@ -24,6 +24,12 @@ _References_
 - background blur - [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter)
 - [`blur()`](<https://developer.mozilla.org/en-US/docs/Web/CSS/filter-function/blur()>)
 
+- text layer blur - [`reference (text-shadow)`](https://css-tricks.com/fun-with-blurred-text/)
+- text background blur = [`reference (clip-path)`](https://css-tricks.com/a-glassy-and-classy-text-effect/)
+- [`text-shadow`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-shadow)
+- [`<clipPath>`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/clipPath)
+- [`<clip-path>`](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path)
+
 **Background blur with `backdrop-filter: blur()`**
 
 ```css
@@ -44,23 +50,20 @@ filter: blur(4px);
 - background blur - [`backdropFilter`](https://api.flutter.dev/flutter/widgets/BackdropFilter-class.html)
 - [`ImageFilter.blur()`](https://api.flutter.dev/flutter/dart-ui/ImageFilter/ImageFilter.blur.html)
 
-In flutter, `layer blur` and `background blur` are the differences in code structure.
-
-[`reference`](https://dev.to/boilplate/how-to-blur-in-flutter-5891)
-
 **layer blur with `ImageFiltered`**
 
 ```dart
-child: ImageFiltered(
+ImageFiltered(
   imageFilter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-  child: ~others
+  child: child
 )
 ```
 
 **background blur with `BackdropFilter`**
 
 ```dart
-child: BackdropFilter(
+BackdropFilter(
   filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+  child: child
 )
 ```

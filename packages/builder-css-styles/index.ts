@@ -16,6 +16,7 @@ export * from "./min-height";
 export * from "./length";
 export * from "./calc";
 export * from "./opacity";
+export * from "./blur";
 
 // shapes & tricks  ---------------------------------------------------------------
 export * as tricks from "./tricks";

@@ -11,10 +11,19 @@ import { detectIf } from "@reflect-ui/detection";
 import { byY, byYX } from "@designto/sanitized/sort-by-y-z";
 import ignore_masking_pipline from "@designto/sanitized/ignore-masking-nodes";
 import { default_tokenizer_config } from "./config";
-import { containsMasking, hasDimmedOpacity, hasStretching } from "./detection";
+import {
+  containsMasking,
+  hasBackgroundBlurType,
+  hasBlurType,
+  hasDimmedOpacity,
+  hasLayerBlurType,
+  hasStretching,
+} from "./detection";
 import { MaskingItemContainingNode, tokenizeMasking } from "./token-masking";
 import { wrap_with_opacity } from "./token-opacity";
 import { wrap_with_stretched } from "./token-stretch";
+import { wrap_with_layer_blur } from "./token-effect/layer-blur";
+import { wrap_with_background_blur } from "./token-effect/background-blur";
 
 export type { Widget };
 
@@ -174,6 +183,18 @@ function post_wrap(node: nodes.ReflectSceneNode, tokenizedTarget: Widget) {
   if (hasDimmedOpacity(node)) {
     tokenizedTarget = wrap_with_opacity(node, tokenizedTarget);
   }
+
+  node.effects.map((d) => {
+    const blurEffect = hasBlurType(d);
+    if (blurEffect) {
+      if (hasLayerBlurType(blurEffect)) {
+        tokenizedTarget = wrap_with_layer_blur(node, tokenizedTarget);
+      } else if (hasBackgroundBlurType(blurEffect)) {
+        tokenizedTarget = wrap_with_background_blur(node, tokenizedTarget);
+      }
+    }
+  });
+
   return tokenizedTarget;
 }
 
