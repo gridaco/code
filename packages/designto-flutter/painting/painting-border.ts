@@ -8,12 +8,22 @@ export function border(border: Border): flutter.Border {
     return;
   }
 
-  return new flutter.Border({
-    left: borderside(border.left),
-    top: borderside(border.top),
-    right: borderside(border.right),
-    bottom: borderside(border.bottom),
-  });
+  if (
+    // at least one side of the border's width shoul be higher than 0.
+    border.left?.width ||
+    border.right?.width ||
+    border.top?.width ||
+    border.bottom?.width
+  ) {
+    return new flutter.Border({
+      left: border.left ? borderside(border.left) : flutter.BorderSide.none,
+      top: border.top ? borderside(border.top) : flutter.BorderSide.none,
+      right: border.right ? borderside(border.right) : flutter.BorderSide.none,
+      bottom: border.bottom
+        ? borderside(border.bottom)
+        : flutter.BorderSide.none,
+    });
+  }
 
   // TODO: support shorthands.
   // 1. flutter.Border.all

@@ -8,7 +8,11 @@ export function makeSafelyAsList<T>(maybeList: Array<T> | T): Array<T> {
   }
 }
 
-// https://github.com/flutter/flutter/issues/49631#issuecomment-582090992
+/**
+ * https://github.com/flutter/flutter/issues/49631#issuecomment-582090992
+ * @param maybeWidgets
+ * @returns
+ */
 export function makeSafelyAsStackList(
   maybeWidgets: Array<flutter.Widget> | flutter.Widget
 ): Array<flutter.Widget> {

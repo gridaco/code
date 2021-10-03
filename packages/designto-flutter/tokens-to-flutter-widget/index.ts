@@ -2,11 +2,14 @@ import * as core from "@reflect-ui/core";
 import * as flutter from "@flutter-builder/flutter";
 import * as painting from "../painting";
 import * as rendering from "../rendering";
+import * as dartui from "../dart-ui";
 import { tokens as special } from "@designto/token";
 import { MainImageRepository } from "@design-sdk/core/assets-repository";
-import { Axis } from "@reflect-ui/core";
-import { Double } from "@flutter-builder/flutter";
+import { Axis, BoxShape } from "@reflect-ui/core";
 import { escapeDartString } from "@coli.codes/escape-string";
+import { boxDecorationPart } from "../painting";
+import { makeSafelyAsStackList } from "../utils/make-as-safe-list";
+import { handle_flutter_case_nested_positioned_stack } from "../case-handling/handle-nested-stack";
 
 export function buildFlutterWidgetFromTokens(
   widget: core.Widget
@@ -92,12 +95,20 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
         : (widget as core.Stack).clipBehavior,
     };
 
-    thisFlutterWidget = new flutter.Stack({
+    const children = makeSafelyAsStackList(
+      handleChildren(widget.children as [])
+    );
+    const stack = new flutter.Stack({
       ...default_props_for_layout,
       ..._remove_overflow_if_root_overflow,
-      children: handleChildren(widget.children as []),
+      children: children,
       //   key: _key,
     });
+    if (!context.is_root) {
+      thisFlutterWidget = handle_flutter_case_nested_positioned_stack(stack);
+    } else {
+      thisFlutterWidget = stack;
+    }
   } else if (widget instanceof core.SingleChildScrollView) {
     const _child = handleChild(widget.child);
     thisFlutterWidget = new flutter.SingleChildScrollView({
@@ -111,20 +122,22 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     };
 
     const _child = handleChild(widget.child);
-    thisFlutterWidget = new flutter.Positioned({
-      left: _tmp_length_convert(widget.left),
-      right: _tmp_length_convert(widget.right),
-      top: _tmp_length_convert(widget.top),
-      bottom: _tmp_length_convert(widget.bottom),
-      child: _child,
-    });
-    // -------------------------------------
-    // override w & h with position provided w/h
-    if (_child instanceof flutter.Container) {
-      _child.width = widget.width;
-      _child.height = widget.height;
+    if (_child) {
+      thisFlutterWidget = new flutter.Positioned({
+        left: widget.left && _tmp_length_convert(widget.left),
+        right: widget.right && _tmp_length_convert(widget.right),
+        top: widget.top && _tmp_length_convert(widget.top),
+        bottom: widget.bottom && _tmp_length_convert(widget.bottom),
+        child: _child,
+      });
+      // -------------------------------------
+      // override w & h with position provided w/h
+      if (_child instanceof flutter.Container) {
+        _child.width = widget.width;
+        _child.height = widget.height;
+      }
+      // -------------------------------------
     }
-    // -------------------------------------
   } else if (widget instanceof core.Opacity) {
     thisFlutterWidget = new flutter.Opacity({
       opacity: widget.opacity,
@@ -200,6 +213,22 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
 
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
   else if (widget instanceof core.Container) {
+    // flutter cannot set both shape circle & border radius.
+    let _deco_part_shape_and_border_radius = {};
+    if (widget.shape == BoxShape.circle) {
+      _deco_part_shape_and_border_radius = {
+        shape: painting.boxshape(widget.shape),
+        borderRadius: undefined,
+      };
+    } else {
+      _deco_part_shape_and_border_radius = {
+        borderRadius: painting.borderRadius(widget.borderRadius),
+        shape: painting.boxshape(widget.shape),
+      };
+    }
+
+    const _deco_part_bg = boxDecorationPart.fromBackground(widget.background);
+
     thisFlutterWidget = new flutter.Container({
       padding: painting.edgeinsets(widget.padding),
       margin: painting.edgeinsets(widget.margin),
@@ -207,8 +236,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
       height: widget.height,
       decoration: new flutter.BoxDecoration({
         border: painting.border(widget.border),
-        borderRadius: painting.borderRadius(widget.borderRadius),
-        shape: painting.boxshape(widget.shape),
+        ..._deco_part_shape_and_border_radius,
+        ..._deco_part_bg,
         // TODO:
         // boxShadow:
         // background:
@@ -236,7 +265,7 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
 
     thisFlutterWidget = handleChild(widget.child);
     thisFlutterWidget = wrap_with_sized_and_inject_size(thisFlutterWidget, {
-      [remove_size]: Double.infinity,
+      [remove_size]: undefined, // Double.infinity,
     });
   }
   // -------------------------------------
