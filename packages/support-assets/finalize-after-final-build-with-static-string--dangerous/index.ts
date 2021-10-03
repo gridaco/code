@@ -47,10 +47,9 @@ export function finalize_temporary_assets_with_prefixed_static_string_keys__dang
   }
 ) {
   Object.keys(assets).forEach((key) => {
-    code = code.replace(
-      new RegExp(`${prefix || ""}${key}`, "g"),
-      assets[key] || safety.fallback
-    );
+    const _replacement_key = `${prefix || ""}${key}`;
+    const _replacement_target = assets[key] || safety.fallback;
+    code = code.replace(new RegExp(_replacement_key, "g"), _replacement_target);
   });
   return code;
 }
