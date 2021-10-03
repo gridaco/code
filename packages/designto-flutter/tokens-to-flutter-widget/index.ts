@@ -8,8 +8,10 @@ import { MainImageRepository } from "@design-sdk/core/assets-repository";
 import { Axis, BoxShape } from "@reflect-ui/core";
 import { escapeDartString } from "@coli.codes/escape-string";
 import { boxDecorationPart } from "../painting";
-import { makeSafelyAsStackList } from "../utils/make-as-safe-list";
-import { handle_flutter_case_nested_positioned_stack } from "../case-handling/handle-nested-stack";
+import {
+  handle_flutter_case_nested_positioned_stack,
+  handle_flutter_case_no_size_stack_children,
+} from "../case-handling";
 
 export function buildFlutterWidgetFromTokens(
   widget: core.Widget
@@ -95,7 +97,7 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
         : (widget as core.Stack).clipBehavior,
     };
 
-    const children = makeSafelyAsStackList(
+    const children = handle_flutter_case_no_size_stack_children(
       handleChildren(widget.children as [])
     );
     const stack = new flutter.Stack({

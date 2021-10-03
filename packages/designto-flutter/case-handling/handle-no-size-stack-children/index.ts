@@ -1,19 +1,12 @@
 import * as flutter from "@flutter-builder/flutter";
-
-export function makeSafelyAsList<T>(maybeList: Array<T> | T): Array<T> {
-  if (Array.isArray(maybeList)) {
-    return maybeList;
-  } else {
-    return [maybeList];
-  }
-}
+import { makeSafelyAsList } from "../../_utils";
 
 /**
  * https://github.com/flutter/flutter/issues/49631#issuecomment-582090992
  * @param maybeWidgets
  * @returns
  */
-export function makeSafelyAsStackList(
+export function handle_flutter_case_no_size_stack_children(
   maybeWidgets: Array<flutter.Widget> | flutter.Widget
 ): Array<flutter.Widget> {
   const list = makeSafelyAsList<flutter.Widget>(maybeWidgets);

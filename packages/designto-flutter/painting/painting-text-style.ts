@@ -2,6 +2,7 @@ import type { ITextStyle } from "@reflect-ui/core";
 import * as flutter from "@flutter-builder/flutter";
 import { textDecoration } from "./painting-text-decoration";
 import { fontStyle } from "./painting-font-style";
+import * as dartui from "../dart-ui";
 
 export function textStyle(style: ITextStyle): flutter.TextStyle {
   const { fontFamily, letterSpacing } = style;
@@ -12,9 +13,9 @@ export function textStyle(style: ITextStyle): flutter.TextStyle {
     fontSize: style.fontSize,
     fontWeight: fontWeight,
     fontFamily: fontFamily,
-    // percentage is not supported
+    color: dartui.color(style.color),
     fontStyle: fontStyle(style.fontStyle),
-    letterSpacing: letterSpacing,
+    letterSpacing: letterSpacing, // percentage is not supported
     decoration: decoration,
   });
 }

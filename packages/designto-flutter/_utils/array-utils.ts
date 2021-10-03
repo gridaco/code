@@ -1,4 +1,11 @@
 import * as flutter from "@flutter-builder/flutter";
+export function makeSafelyAsList<T>(maybeList: Array<T> | T): Array<T> {
+  if (Array.isArray(maybeList)) {
+    return maybeList;
+  } else {
+    return [maybeList];
+  }
+}
 
 export function makeSaflyAsSingle(
   maybeWidget: Array<flutter.Widget> | flutter.Widget

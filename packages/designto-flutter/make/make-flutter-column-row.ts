@@ -3,7 +3,7 @@ import * as flutter from "@flutter-builder/flutter";
 import { Axis as ReflectAxis } from "@reflect-ui/core/lib";
 import * as dartui from "../dart-ui";
 import * as rendering from "../rendering";
-import { makeSafelyAsList } from "../utils/make-as-safe-list";
+import { makeSafelyAsList } from "../utils";
 
 export type RowOrColumn = "Row" | "Column";
 export function makeRowColumn(
@@ -18,6 +18,8 @@ export function makeRowColumn(
     node.mainAxisAlignment
   );
   const _mainAxisSize: flutter.MainAxisSize = rendering.mainAxisSize(
+    // FIXME:
+    // @ts-ignore
     node.layoutGrow
   );
   const _crossAxisAlignment = rendering.crossAxisAlignment(
