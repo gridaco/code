@@ -9,7 +9,7 @@ export function mainAxisSize(
   switch (m) {
     case MainAxisSize.max:
       // MainAxisSize.max is default value for col / row / flex
-      return do_explicitly_specify(config) && flutter.MainAxisSize.max;
+      return do_explicitly_specify(config, flutter.MainAxisSize.max);
     case MainAxisSize.min:
       return flutter.MainAxisSize.min;
   }

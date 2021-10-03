@@ -18,7 +18,7 @@ export function crossAxisAlignment(
       return CrossAxisAlignment.stretch;
     case core.CrossAxisAlignment.center:
       // CrossAxisAlignment.center is default value
-      return do_explicitly_specify(config) && CrossAxisAlignment.center;
+      return do_explicitly_specify(config, CrossAxisAlignment.center);
     default:
       return undefined;
   }

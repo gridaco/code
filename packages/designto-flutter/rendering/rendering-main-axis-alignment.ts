@@ -8,10 +8,8 @@ export function mainAxisAlignment(
 ): MainAxisAlignment {
   switch (mainAxisAlignemt) {
     case ReflectMainAxisAlignment.start:
-      return (
-        // MainAxisAlignment.start is default value for col / row / flex
-        do_explicitly_specify(config) && (MainAxisAlignment.start as Snippet)
-      );
+      // MainAxisAlignment.start is default value for col / row / flex
+      return do_explicitly_specify(config, MainAxisAlignment.start as Snippet);
     case ReflectMainAxisAlignment.start:
       return MainAxisAlignment.center as Snippet;
     case ReflectMainAxisAlignment.center:
