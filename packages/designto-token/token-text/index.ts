@@ -41,7 +41,7 @@ export function fromText(node: nodes.ReflectTextNode): Text {
     alignment: node.textAlign,
     style: new TextStyle({
       decoration: node.textDecoration,
-      fontFamily: node.fontName.family,
+      fontFamily: node.fontName?.family,
       fontSize: node.fontSize,
       fontWeight: node.fontWeight,
       color: node.primaryColor,
