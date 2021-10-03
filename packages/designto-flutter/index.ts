@@ -13,7 +13,7 @@ export function buildFlutterApp(
     widget &&
     makeApp({
       widget: widget,
-      scrollable: true,
+      scrollable: false,
     });
 
   let widgetCode = dartformat(widget?.build()?.finalize()).code;
