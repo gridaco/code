@@ -7,7 +7,7 @@ export function makeApp(home: {
   scrollable: boolean;
 }): MaterialApp {
   return new MaterialApp({
-    title: "app built with bridged.xyz",
+    title: "app built with grida.co",
     debugShowCheckedModeBanner: false,
     home: Widget.prebuilt(
       wrapWithBuilder(
