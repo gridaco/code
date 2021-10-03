@@ -4,7 +4,6 @@ import { Widget } from "@reflect-ui/core";
 import * as toreact from "@designto/react";
 import * as tovanilla from "@designto/vanilla";
 import * as toflutter from "@designto/flutter";
-import { composeAppWithHome } from "@flutter-builder/flutter";
 import {
   fetch_all_assets,
   finalize_temporary_assets_with_prefixed_static_string_keys__dangerously,
@@ -27,14 +26,14 @@ export async function designToCode({
   asset_config: AssetsConfig;
 }): Promise<output.ICodeOutput> {
   const token = tokenize(input.design);
-
+  const _tokenized_widget_input = { widget: token };
   switch (framework.framework) {
     case "vanilla":
-      return designToVanilla({ input: { widget: token }, asset_config });
+      return designToVanilla({ input: _tokenized_widget_input, asset_config });
     case "react":
-      return designToReact({ input: { widget: token }, asset_config });
+      return designToReact({ input: _tokenized_widget_input, asset_config });
     case "flutter":
-      return designToFlutter({ input, asset_config });
+      return designToFlutter({ input: _tokenized_widget_input, asset_config });
   }
   throw `The framework "${framework}" is not supported at this point.`;
   return;
@@ -78,38 +77,31 @@ export async function designToFlutter({
   input,
   asset_config,
 }: {
-  input: input.IDesignInput;
+  input: { widget: Widget };
   asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
   await Promise.resolve();
 
-  const flutterAppBuild = toflutter.buildApp(input.design);
-  const widget = flutterAppBuild?.widget;
-  const app =
-    widget &&
-    toflutter.makeApp({
-      widget: widget,
-      scrollable: flutterAppBuild.scrollable,
-    });
+  const flutterwidget = toflutter.buildFlutterWidget(input.widget);
+  const flutterapp = toflutter.buildFlutterApp(flutterwidget);
 
-  let widgetCode = widget?.build()?.finalize();
-  let rootAppCode = composeAppWithHome(app);
   // ------------------------------------------------------------------------
   // finilize temporary assets
   // this should be placed somewhere else
   if (asset_config?.asset_repository && !asset_config.skip_asset_replacement) {
     const assets = await fetch_all_assets(asset_config?.asset_repository);
-    rootAppCode = dangerous_temporary_asset_replacer(rootAppCode, assets);
-    widgetCode = dangerous_temporary_asset_replacer(widgetCode, assets);
+    flutterapp.scaffold.raw = dangerous_temporary_asset_replacer(
+      flutterapp.scaffold.raw,
+      assets
+    );
+    flutterapp.code.raw = dangerous_temporary_asset_replacer(
+      flutterapp.code.raw,
+      assets
+    );
   }
   // ------------------------------------------------------------------------
 
-  return {
-    code: { raw: widgetCode },
-    scaffold: { raw: rootAppCode },
-    id: input.id,
-    name: input.name,
-  };
+  return flutterapp;
 }
 
 export function designToVue(input: input.IDesignInput): output.ICodeOutput {

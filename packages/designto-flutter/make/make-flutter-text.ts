@@ -1,8 +1,8 @@
 import * as flutter from "@flutter-builder/flutter";
 import { nodes } from "@design-sdk/figma";
-import { makeTextStyle } from "./make-flutter-text-style";
-import { mapTextAlign } from "../core-type-mappers";
 import { escapeDartString } from "@coli.codes/escape-string";
+import * as dartui from "../dart-ui";
+import * as painting from "../painting";
 
 /**
  * [Flutter#Text](https://flutter.dev/docs/development/ui/widgets/text)
@@ -11,7 +11,7 @@ import { escapeDartString } from "@coli.codes/escape-string";
  * @param node text node from desing
  */
 export function makeText(node: nodes.ReflectTextNode): flutter.Text {
-  const textAlign = mapTextAlign(node.textAlign);
+  const textAlign = dartui.textAlign(node.textAlign);
 
   //#region get text content
   let text = node.text;
@@ -28,13 +28,14 @@ export function makeText(node: nodes.ReflectTextNode): flutter.Text {
     case "ORIGINAL":
       break;
   }
-
   //#endregion
+
   const escapedText = escapeDartString(text);
-  const textStyle = makeTextStyle(node);
+  // throw "not used";
+  // const textStyle = painting.textStyle(node);
 
   return new flutter.Text(escapedText, {
-    style: textStyle,
+    // style: textStyle,
     textAlign: textAlign,
   });
 }

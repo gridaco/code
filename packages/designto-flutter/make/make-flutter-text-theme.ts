@@ -1,11 +1,11 @@
 import { TextStyleRepository, TextThemeStyles } from "@design-sdk/figma";
 import * as flutter from "@flutter-builder/flutter";
-import { makeTextStyleFromDesign } from "./make-flutter-text-style";
+import * as painting from "../painting";
 
 export function makeTextTheme(): flutter.TextTheme {
   function buildTextStyle(style: TextThemeStyles): flutter.TextStyle {
     try {
-      return makeTextStyleFromDesign(
+      return painting.textStyle(
         TextStyleRepository.getDefaultDesignTextStyleFromRegistry(style)
       );
     } catch (e) {

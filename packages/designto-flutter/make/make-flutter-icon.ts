@@ -6,7 +6,7 @@ import {
   interpretFlutterMaterialIconData,
 } from "../interpreter/icon.interpreter";
 import { Color, IconManifest, MdiConfig } from "@reflect-ui/core";
-import { makeFlutterColorFromReflectColor } from "./make-flutter-color";
+import * as dartui from "../dart-ui";
 import { DetectedIconData } from "@reflect-ui/detection/lib/icon.detection";
 
 type FlutterDynamicIconLike = flutter.Icon | flutter.Image;
@@ -72,7 +72,7 @@ export function makeIcon({
 }) {
   return new flutter.Icon(icon, {
     size: size,
-    color: makeFlutterColorFromReflectColor(color),
+    color: dartui.color(color),
   });
 }
 
