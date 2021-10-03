@@ -4,7 +4,6 @@ import { flutter as config } from "@designto/config";
 import * as flutter from "@flutter-builder/flutter";
 import { composeAppWithHome } from "@flutter-builder/flutter";
 import { makeApp } from "./make/make-flutter-material-app";
-import { formatCode as dartformat } from "dart-style";
 
 export function buildFlutterApp(
   widget: flutter.Widget
@@ -16,8 +15,8 @@ export function buildFlutterApp(
       scrollable: false,
     });
 
-  let widgetCode = dartformat(widget?.build()?.finalize()).code;
-  let rootAppCode = composeAppWithHome(app);
+  const widgetCode = widget?.build()?.finalize();
+  const rootAppCode = composeAppWithHome(app);
 
   return {
     id: "flutterapp",
