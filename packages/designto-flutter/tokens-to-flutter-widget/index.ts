@@ -3,12 +3,13 @@ import * as flutter from "@flutter-builder/flutter";
 import * as painting from "../painting";
 import * as rendering from "../rendering";
 import * as dartui from "../dart-ui";
-import { tokens as special } from "@designto/token";
+import { tokens as special, t2t } from "@designto/token";
 import { MainImageRepository } from "@design-sdk/core/assets-repository";
 import { Axis, BoxShape } from "@reflect-ui/core";
 import { escapeDartString } from "@coli.codes/escape-string";
 import { boxDecorationPart } from "../painting";
 import {
+  flutter_handle_svg_vector_as_bitmap_converted,
   handle_flutter_case_nested_positioned_stack,
   handle_flutter_case_no_size_stack_children,
 } from "../case-handling";
@@ -164,13 +165,11 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
       //   key: _key,
     });
   } else if (widget instanceof core.VectorWidget) {
+    const id = widget.key.id;
+    // use widget as baked image.
+    thisFlutterWidget = handleChild(t2t.vector_token_to_image_token(widget));
     // TODO: convert vector data to bitmap, host the image, than load.
-    // thisFlutterWidget = new flutter.Svg({
-    //   ...widget,
-    //   data: widget.data,
-    //   fill: widget.fill,
-    //   //   key: _key,
-    // });
+    // thisFlutterWidget = flutter_handle_svg_vector_as_bitmap_converted(widget);
   } else if (widget instanceof core.ImageWidget) {
     thisFlutterWidget = flutter.Image.network(widget.src, {
       width: widget.width,
