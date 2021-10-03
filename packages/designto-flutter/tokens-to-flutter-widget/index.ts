@@ -276,12 +276,13 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
   // -------------------------------------
   else {
     // todo - handle case more specific
-    thisFlutterWidget = new flutter.ErrorWidget.withDetails({
+    const msg = `The input design was not handled. "${
+      widget.key.originName
+    }" type of "${widget._type}" - ${JSON.stringify(widget.key)}`;
+    thisFlutterWidget = flutter.ErrorWidget.withDetails({
       //   key: _key,
-      message: `The input design was not handled. "${
-        widget.key.originName
-      }" type of "${widget._type}" - ${JSON.stringify(widget.key)}`,
-    });
+      message: escapeDartString(msg),
+    }) as flutter.Widget;
   }
   // -------------------------------------
   // -------------------------------------
