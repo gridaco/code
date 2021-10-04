@@ -88,7 +88,9 @@ typesciprt
 }
 ```
 
-[example](https://codepen.io/you-j/pen/PojvOrr)
+[code example](https://codepen.io/you-j/pen/PojvOrr)
+[`clipPath`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/clipPath)
+[`text`](https://developer.mozilla.org/en-US/docs/Web/HTML)
 
 ## Web - css
 
