@@ -17,6 +17,7 @@ import {
   hasBlurType,
   hasDimmedOpacity,
   hasLayerBlurType,
+  hasRotation,
   hasStretching,
 } from "./detection";
 import { MaskingItemContainingNode, tokenizeMasking } from "./token-masking";
@@ -24,6 +25,7 @@ import { wrap_with_opacity } from "./token-opacity";
 import { wrap_with_stretched } from "./token-stretch";
 import { wrap_with_layer_blur } from "./token-effect/layer-blur";
 import { wrap_with_background_blur } from "./token-effect/background-blur";
+import { wrap_with_rotation } from "./token-rotation";
 
 export type { Widget };
 
@@ -194,6 +196,10 @@ function post_wrap(node: nodes.ReflectSceneNode, tokenizedTarget: Widget) {
       }
     }
   });
+
+  if (hasRotation(node)) {
+    tokenizedTarget = wrap_with_rotation(node, tokenizedTarget);
+  }
 
   return tokenizedTarget;
 }

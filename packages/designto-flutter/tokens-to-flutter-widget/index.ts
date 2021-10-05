@@ -147,6 +147,14 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
       child: handleChild(widget.child),
     });
   }
+
+  // FIXME:
+  // else if (widget instanceof core.Rotation){
+  //   thisFlutterWidget = new flutter.Rotation({
+  //     angle: widget.rotation,
+  //     child: handleChild(widget.child)
+  //   })
+  // }
   // ----- region clip path ------
   else if (widget instanceof core.ClipRRect) {
     // FIXME: flutter clip rrect support is not ready.

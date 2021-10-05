@@ -109,7 +109,7 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
   } else if (widget instanceof core.Blurred) {
     thisWebWidget = handleChild(widget.child);
     const isBlurVisibile = widget.blur.visible;
-    if(isBlurVisibile){
+    if (isBlurVisibile) {
       if (widget.blur.type === "LAYER_BLUR") {
         thisWebWidget.extendStyle({
           filter: css.blur(widget.blur.radius),
@@ -120,6 +120,11 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
         });
       }
     }
+  } else if (widget instanceof core.Rotation) {
+    thisWebWidget = handleChild(widget.child);
+    thisWebWidget.extendStyle({
+      transform: css.rotation(widget.rotation),
+    });
   }
   // ----- region clip path ------
   else if (widget instanceof core.ClipRRect) {
