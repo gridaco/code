@@ -47,7 +47,7 @@ And `rotate` and `rotateZ` are [same.](https://www.w3.org/TR/css-transforms-1/#f
 `RotateBox` receives a turn with a value divided by 4, so it is not suitable to express various degree values.
 However, I choose `Transform.rotate` because Transform.rotate can take a variety of values.
 
-**유동성 vs 비유동성**
+**liquidity vs illiquidity**
 
 <!-- design to code는 디자인 그 자체를 코드로 변형하여 사용자의 잡무 없이 바로 사용할 수 있도록 하는 것이 목표입니다. 대부분의 rotation이 사용되는 경우는 크게 두 가지가 있는데 하나는 고정된 형태를 여러 개의 각도에서 돌려 사용하는 경우, 나머지는 하나는 애니메이션입니다.
 
