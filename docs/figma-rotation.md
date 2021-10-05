@@ -133,16 +133,6 @@ Also `rotate` and `rotateZ` can be used in the [same](https://www.w3.org/TR/css-
 `RotateBox` receives a turn with a value represented with Matrix4, so it is not suitable to express various degree values.
 Meanwhile we only support `Transform.rotate` since `Transform.rotate` can be represented with single value - `rotation`
 
-**dynamic use vs static use**
-
-<!-- design to code는 디자인 그 자체를 코드로 변형하여 사용자의 잡무 없이 바로 사용할 수 있도록 하는 것이 목표입니다. 대부분의 rotation이 사용되는 경우는 크게 두 가지가 있는데 하나는 고정된 형태를 여러 개의 각도에서 돌려 사용하는 경우, 나머지는 하나는 애니메이션입니다.
-
-유저가 애니메이션용으로 해당 도형을 돌리는 경우를 생각하면, 애니메이션이지만, 멈춰져있는 애니메이션으로 제공하는 것이 사용성 면에서 더 뛰어납니다. 그러므로 우리는 멈춰져있는 애니메이션으로 제공합니다. -->
-
-The goal of `design to code` is to transform the design itself into code so that users can use it right away without any chores. There are two main cases where most rotations are used. One is when a fixed form is rotated from multiple angles, and the other is animation.
-
-Considering the case where the user rotates the corresponding figure for animation, it is an animation, but it is better in terms of usability to provide it as a stopped animation. Therefore, we provide it as a frozen animation.
-
 **how to set degree**
 
 `degrees * math.pi / 180`
@@ -159,11 +149,50 @@ Considering the case where the user rotates the corresponding figure for animati
 // WIP
 ```
 
-**RotationTransition (For animation)**
+
+
+
+## Rotation as Animated value
+
+> Rotation Animation is a working draft - the flag & code gen is not supported.
+
+<!-- design to code는 디자인 그 자체를 코드로 변형하여 사용자의 잡무 없이 바로 사용할 수 있도록 하는 것이 목표입니다. 대부분의 rotation이 사용되는 경우는 크게 두 가지가 있는데 하나는 고정된 형태를 여러 개의 각도에서 돌려 사용하는 경우, 나머지는 하나는 애니메이션입니다.
+
+유저가 애니메이션용으로 해당 도형을 돌리는 경우를 생각하면, 애니메이션이지만, 멈춰져있는 애니메이션으로 제공하는 것이 사용성 면에서 더 뛰어납니다. 그러므로 우리는 멈춰져있는 애니메이션으로 제공합니다. -->
+
+The goal of `design to code` is to transform the design itself into code so that users can use it right away without any chores. There are two main cases where most rotations are used. One is when a fixed form is rotated from multiple angles, and the other is animation.
+
+Considering the case where the user rotates the corresponding figure for animation, it is an animation, but it is better in terms of usability to provide it as a stopped animation. Therefore, we provide it as a frozen animation.
+
+
+
+```typescript
+// you can set this via setting a animation flag
+
+// if animated, rotation value rather than 0 will automatically interpreted as rotation transition
+node.name = "--animated"
+
+// if `animated-rotation` flag is givven, we will always interpret the rotation as animated value (even if it is 0)
+node.name = "--animated-rotation"
+```
+
+
+
+**Flutter#RotationTransition (For animation)**
 
 ```dart
 // WIP
 ```
+
+
+
+**Css / js - rotate animation**
+
+```
+// WIP
+```
+
+
 
 
 
