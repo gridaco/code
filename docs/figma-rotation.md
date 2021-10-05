@@ -4,7 +4,7 @@
 
 <!-- Figma rotation has -179~180 only. -->
 
-
+> Figma rotation from [figma plugin docs](https://www.figma.com/plugin-docs/api/properties/nodes-rotation/#docsNav)
 
 ## Transform?
 
