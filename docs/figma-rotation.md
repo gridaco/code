@@ -4,6 +4,88 @@
 
 <!-- Figma rotation has -179~180 only. -->
 
+
+
+## Transform?
+
+While figma and other major design tools has both transform value, and explicit rotation value (which can be calculated from transform value), The intuitive way to represent a rotation value is by using a `Rotation` token. Overall all figma node properties, the only two property that has impact to final transform (based on css) is `scale` and `rotation`.
+
+But those two value comes from different property, one from `node#roation` (or `node#relativeTransform`), one from `node#constraint#scale` - a dynamic `scale` representor.
+
+For this reason, while we tokenize the design, we use `Rotation` token rather than `Transform` token.
+
+e.g.
+
+```typescript
+// node example (this is a abstract example, the syntax may differ.)
+// [scale only example]
+{
+    rotation: 0,
+    constraints: "SCALE"
+}
+// in this case, only scale property will be assigned to final transform value.
+// Step 1 tokenization
+Scale(
+  scale: aspect_ratio, // a dynamically calculated value to make scale responsive
+  child: node
+)
+// Step 2 merge transform
+Transform(
+  scale: matrix4, // a scale value that is represented as matrix 4
+  child: node
+)
+
+// ------------------------------------------
+// [rotation only example]
+{
+    rotation: 30,
+    constraints: "MIN"
+}
+// in this case, only scale property will be assigned to final transform value.
+// Step 1 tokenization
+Rotation(
+  rotation: 30,
+  child: node
+)
+
+// Step 2 merge transform
+Transform(
+  rotation: 30,
+  child: node
+)
+
+// ------------------------------------------
+// [rotation + scale example]
+{
+    rotation: 30,
+    constraints: "SCALE"
+}
+
+// Step 1 tokenization
+Transforms(
+	transforms: [
+    Rotation(
+      rotation: 30
+    ),
+    Scale(
+	    scale: aspect_ratio, // a dynamically calculated value to make scale responsive
+	  )
+  ]
+	child: node
+)
+
+// Step 2 merge transform
+Transform(
+  rotation: 30,
+  scale: matrix4,
+  child: node
+)
+```
+
+
+
+
+
 ## Web - css
 
 - [transform](https://developer.mozilla.org/en-US/docs/Web/CSS/transform)
@@ -31,7 +113,11 @@ transform: rotate3d(0, 0, 1, 10deg)
 
 All three can produce the same result, but 2d `rotate` is used because 3d rotate and 2d rotate must be separated.
 
-And `rotate` and `rotateZ` are [same.](https://www.w3.org/TR/css-transforms-1/#funcdef-rotatez) So we plan to use rotate, which is more compatible with browsers.
+Also `rotate` and `rotateZ` can be used in the [same](https://www.w3.org/TR/css-transforms-1/#funcdef-rotatez) Terms. Meanwhile we only support `rotate`, which has more compatibility with various browsers.
+
+---
+
+
 
 ## Flutter
 
@@ -44,10 +130,10 @@ And `rotate` and `rotateZ` are [same.](https://www.w3.org/TR/css-transforms-1/#f
 <!-- RotateBox는 4분할한 값으로 turn을 받으므로, 다양한 degree 값을 표현하기에 적절하지 않습니다.
 하지만 Transform.rotate는 다양한 값을 받을 수 있으므로 Transform.rotate 를 선택합니다. -->
 
-`RotateBox` receives a turn with a value divided by 4, so it is not suitable to express various degree values.
-However, I choose `Transform.rotate` because Transform.rotate can take a variety of values.
+`RotateBox` receives a turn with a value represented with Matrix4, so it is not suitable to express various degree values.
+Meanwhile we only support `Transform.rotate` since `Transform.rotate` can be represented with single value - `rotation`
 
-**liquidity vs illiquidity**
+**dynamic use vs static use**
 
 <!-- design to code는 디자인 그 자체를 코드로 변형하여 사용자의 잡무 없이 바로 사용할 수 있도록 하는 것이 목표입니다. 대부분의 rotation이 사용되는 경우는 크게 두 가지가 있는데 하나는 고정된 형태를 여러 개의 각도에서 돌려 사용하는 경우, 나머지는 하나는 애니메이션입니다.
 
@@ -73,8 +159,16 @@ Considering the case where the user rotates the corresponding figure for animati
 // WIP
 ```
 
-**RotationTransition**
+**RotationTransition (For animation)**
 
 ```dart
 // WIP
 ```
+
+
+
+
+
+## Read Also
+
+- [figma scale](./figma-scale.md)
