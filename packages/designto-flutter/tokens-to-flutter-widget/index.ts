@@ -146,15 +146,25 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
       opacity: widget.opacity,
       child: handleChild(widget.child),
     });
+  } else if (widget instanceof core.Rotation) {
+    thisFlutterWidget = flutter.Transform.rotate({
+      angle: widget.rotation,
+      child: handleChild(widget.child),
+    });
   }
 
-  // FIXME:
-  // else if (widget instanceof core.Rotation){
-  //   thisFlutterWidget = new flutter.Rotation({
-  //     angle: widget.rotation,
-  //     child: handleChild(widget.child)
-  //   })
+  // FIXME: blur flutter control
+  // else if (widget instanceof core.Blurred) {
+  //   const isBlurVisibile = widget.blur.visible;
+  //   if (isBlurVisibile) {
+
+  //     if (widget.blur.type === "LAYER_BLUR") {
+
+  //     } else if (widget.blur.type === "BACKGROUND_BLUR") {
+  //     }
+  //   }
   // }
+
   // ----- region clip path ------
   else if (widget instanceof core.ClipRRect) {
     // FIXME: flutter clip rrect support is not ready.
