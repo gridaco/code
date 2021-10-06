@@ -1,4 +1,6 @@
-# Flags
+# Flags (Proposal)
+> Flag feature is not ready to use
+----
 
 > Flag is a strategy for specified extra context, passing arguments based on the node. Just like CLI, the syntax is `--flag-name` / `--flag-name=value` / `--flag-name value` / custom flags
 
