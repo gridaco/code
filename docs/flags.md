@@ -1,6 +1,8 @@
 # Flags (Proposal)
+
 > Flag feature is not ready to use
-----
+
+---
 
 > Flag is a strategy for specified extra context, passing arguments based on the node. Just like CLI, the syntax is `--flag-name` / `--flag-name=value` / `--flag-name value` / custom flags
 
@@ -52,8 +54,8 @@ flags shall be specified end of the node name like so - `"Header --fixed-positio
 
 ### Position
 
-- `--fixed-position`
-- `--fixed-position-override=bottom`
+- `--position-fixed`
+- `--position-fixed-override=bottom`
 
 ### Dimension
 
@@ -64,6 +66,10 @@ The dimension flags are for specifing the extra context of the layout, which are
 - `--max-height`
 - `--min-height`
 
+## Breakpoints
+
+- `@media`
+
 ### Embedding
 
 - `--as-media`
@@ -71,16 +77,15 @@ The dimension flags are for specifing the extra context of the layout, which are
 - `--video-src` - `--video-src=https://youtube.com/watch?v=xQGEOsCzFJU`
 - `--webview-src` - `--webview-src=https://youtube.com/watch?v=xQGEOsCzFJU` (also knwon as iframe)
 
-
 ### Nested Scenario - on component-instance use
 
 <!-- WIP -->
+
 ```
 (WIP)
 Master - master-component --artwork
 Instance - master-component --dynamic-container
 ```
-
 
 ### Custom flags
 
@@ -90,12 +95,15 @@ Instance - master-component --dynamic-container
 - `---custom-flag-name=value`
 
 ### Tesging
+
 for testing, you can temporarily disable flag input by changing `--flag` to `----flag`. by this our parser will understand that the `flag` is givven, but temporarily disabled. other than `----` might cause error since changing
+
 1. from `--first-flag=a --second-flag=b`
 2. to `--first-flag=a second-flag=b` (Don't)
-will cuase a parsing error & `first-flag`'s value will be interpreted as `"a second-flag=b"`
+   will cuase a parsing error & `first-flag`'s value will be interpreted as `"a second-flag=b"`
 
 **Best practice**
+
 1. from `--first-flag=a --second-flag=b`
 2. to `--first-flag=a ----second-flag=b` (Do)
 3. will cuase a parsing error & `first-flag`'s value will be interpreted as `"a"` as intended.
