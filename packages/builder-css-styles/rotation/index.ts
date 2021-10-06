@@ -1,4 +1,5 @@
 export function rotation(r?: number): string {
-  const formatToRotate = `rotate(${r}reg)`;
+  const formatToRound = Math.round(r);
+  const formatToRotate = `rotate(${formatToRound}reg)`;
   return formatToRotate;
 }
