@@ -71,6 +71,17 @@ The dimension flags are for specifing the extra context of the layout, which are
 - `--video-src` - `--video-src=https://youtube.com/watch?v=xQGEOsCzFJU`
 - `--webview-src` - `--webview-src=https://youtube.com/watch?v=xQGEOsCzFJU` (also knwon as iframe)
 
+
+### Nested Scenario - on component-instance use
+
+<!-- WIP -->
+```
+(WIP)
+Master - master-component --artwork
+Instance - master-component --dynamic-container
+```
+
+
 ### Custom flags
 
 1. you can add your custom flag by using `---arg` instead of `--arg`
