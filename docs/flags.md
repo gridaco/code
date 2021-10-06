@@ -75,3 +75,14 @@ The dimension flags are for specifing the extra context of the layout, which are
 2. you can add your custom flag by using namespace `--com.domain.pkg/key=value`
 
 - `---custom-flag-name=value`
+
+### Tesging
+for testing, you can temporarily disable flag input by changing `--flag` to `----flag`. by this our parser will understand that the `flag` is givven, but temporarily disabled. other than `----` might cause error since changing
+1. from `--first-flag=a --second-flag=b`
+2. to `--first-flag=a second-flag=b` (Don't)
+will cuase a parsing error & `first-flag`'s value will be interpreted as `"a second-flag=b"`
+
+**Best practice**
+1. from `--first-flag=a --second-flag=b`
+2. to `--first-flag=a ----second-flag=b` (Do)
+3. will cuase a parsing error & `first-flag`'s value will be interpreted as `"a"` as intended.
