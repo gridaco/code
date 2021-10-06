@@ -26,6 +26,7 @@ import { wrap_with_stretched } from "./token-stretch";
 import { wrap_with_layer_blur } from "./token-effect/layer-blur";
 import { wrap_with_background_blur } from "./token-effect/background-blur";
 import { wrap_with_rotation } from "./token-rotation";
+import flags_handling_gate from "./token-flags-gate";
 
 export type { Widget };
 
@@ -148,6 +149,10 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
     tokenizedTarget = tokenizeMasking.fromMultichild(
       node as MaskingItemContainingNode
     );
+  }
+
+  if (!tokenizedTarget) {
+    tokenizedTarget = flags_handling_gate(node);
   }
   //
   // -------------------------------------------------------------------------
