@@ -10,7 +10,7 @@ import { array } from "@reflect-ui/uiutils";
 import { detectIf } from "@reflect-ui/detection";
 import { byY, byYX } from "@designto/sanitized/sort-by-y-z";
 import ignore_masking_pipline from "@designto/sanitized/ignore-masking-nodes";
-import { default_tokenizer_config } from "./config";
+import { default_tokenizer_config, TokenizerConfig } from "./config";
 import {
   containsMasking,
   hasBackgroundBlurType,
@@ -36,11 +36,14 @@ export type RuntimeChildrenInput = Array<nodes.ReflectSceneNode | Widget>;
  * ENTRY POINT MAIN FUCTION
  * Main function for converting reflect design node tree to reflect widget token tree
  */
-export function tokenize(node: nodes.ReflectSceneNode): Widget {
+export function tokenize(
+  node: nodes.ReflectSceneNode,
+  config: TokenizerConfig = default_tokenizer_config
+): Widget {
   if (!node) {
     throw "A valid design node should be passed in order to tokenize it into a reflect widget.";
   }
-  return rootHandler(node);
+  return rootHandler(node, config);
 }
 
 /**
@@ -48,8 +51,11 @@ export function tokenize(node: nodes.ReflectSceneNode): Widget {
  * @param node
  * @returns
  */
-function rootHandler(node: nodes.ReflectSceneNode): Widget {
-  return dynamicGenerator(node) as Widget;
+function rootHandler(
+  node: nodes.ReflectSceneNode,
+  config: TokenizerConfig
+): Widget {
+  return dynamicGenerator(node, config) as Widget;
 }
 
 /**
@@ -58,7 +64,8 @@ function rootHandler(node: nodes.ReflectSceneNode): Widget {
  * @returns
  */
 function dynamicGenerator(
-  node: SingleOrArray<nodes.ReflectSceneNode>
+  node: SingleOrArray<nodes.ReflectSceneNode>,
+  config: TokenizerConfig
 ): SingleOrArray<Widget> {
   if (isNotEmptyArray(node)) {
     const widgets: Array<Widget> = [];
@@ -66,13 +73,9 @@ function dynamicGenerator(
     node
       // .reverse()
       // .sort(byY)
-      .filter(
-        ignore_masking_pipline(
-          default_tokenizer_config.sanitizer_ignore_masking_node
-        )
-      )
+      .filter(ignore_masking_pipline(config.sanitizer_ignore_masking_node))
       .forEach((node, index) => {
-        widgets.push(handleNode(node));
+        widgets.push(handleNode(node, config));
       });
 
     // filter empty widgets (safe checker logic)
@@ -81,7 +84,7 @@ function dynamicGenerator(
     return finalWidgets;
   } else {
     node = node as nodes.ReflectSceneNode;
-    const finalWidget = handleNode(node);
+    const finalWidget = handleNode(node, config);
     return finalWidget;
   }
 }
@@ -91,17 +94,23 @@ function dynamicGenerator(
  * @param nodes
  * @returns
  */
-export function handleChildren(nodes: RuntimeChildrenInput): Array<Widget> {
+export function handleChildren(
+  nodes: RuntimeChildrenInput,
+  config: TokenizerConfig
+): Array<Widget> {
   return nodes.map((n) => {
     if (n instanceof Widget) {
       return n;
     } else {
-      return dynamicGenerator(n) as Widget;
+      return dynamicGenerator(n, config) as Widget;
     }
   });
 }
 
-function handleNode(node: nodes.ReflectSceneNode): Widget {
+function handleNode(
+  node: nodes.ReflectSceneNode,
+  config: TokenizerConfig
+): Widget {
   if (!node.type) {
     console.error(
       "cannot handle unknown type of node. node.type was undefined or null"
@@ -147,7 +156,8 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
   let tokenizedTarget: Widget = null;
   if (containsMasking(node)) {
     tokenizedTarget = tokenizeMasking.fromMultichild(
-      node as MaskingItemContainingNode
+      node as MaskingItemContainingNode,
+      config
     );
   }
 
@@ -163,7 +173,7 @@ function handleNode(node: nodes.ReflectSceneNode): Widget {
   // -------------------------------------------------------------------------
   if (!tokenizedTarget) {
     // if none handled by above gates, handle by type. this is the default tokenizer.
-    tokenizedTarget = handle_by_types(node);
+    tokenizedTarget = handle_by_types(node, config);
   }
   //
   // -------------------------------------------------------------------------
@@ -209,7 +219,10 @@ function post_wrap(node: nodes.ReflectSceneNode, tokenizedTarget: Widget) {
   return tokenizedTarget;
 }
 
-function handle_by_types(node: nodes.ReflectSceneNode): Widget {
+function handle_by_types(
+  node: nodes.ReflectSceneNode,
+  config: TokenizerConfig
+): Widget {
   let tokenizedTarget: Widget;
   switch (node.type as string) {
     case nodes.ReflectSceneNodeType.rectangle:
@@ -224,9 +237,14 @@ function handle_by_types(node: nodes.ReflectSceneNode): Widget {
 
     case nodes.ReflectSceneNodeType.frame:
       const _frame = node as nodes.ReflectFrameNode;
-      tokenizedTarget = tokenizeLayout.fromFrame(_frame, _frame.children, {
-        is_root: node.isRoot,
-      });
+      tokenizedTarget = tokenizeLayout.fromFrame(
+        _frame,
+        _frame.children,
+        {
+          is_root: node.isRoot,
+        },
+        config
+      );
       break;
 
     case nodes.ReflectSceneNodeType.vector:
@@ -244,7 +262,12 @@ function handle_by_types(node: nodes.ReflectSceneNode): Widget {
 
     case nodes.ReflectSceneNodeType.group:
       const _group = node as nodes.ReflectGroupNode;
-      tokenizedTarget = tokenizeLayout.fromGroup(_group, _group.children);
+      tokenizedTarget = tokenizeLayout.fromGroup(
+        _group,
+        _group.children,
+        undefined,
+        config
+      );
       break;
 
     case nodes.ReflectSceneNodeType.ellipse:

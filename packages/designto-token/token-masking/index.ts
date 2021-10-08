@@ -13,6 +13,7 @@ import {
 } from "@design-sdk/figma-node";
 import { BorderRadius, ClipPath, ClipRRect, WidgetKey } from "@reflect-ui/core";
 import { tokenizeGraphics } from "..";
+import { TokenizerConfig } from "../config";
 import { containsMasking, ismaskier } from "../detection";
 import { keyFromNode } from "../key";
 import { tokenizeLayout } from "../token-layout";
@@ -42,7 +43,10 @@ type MaskingSplits =
       target: ReflectSceneNode[];
     };
 
-function fromMultichild(node: MaskingItemContainingNode) {
+function fromMultichild(
+  node: MaskingItemContainingNode,
+  config: TokenizerConfig
+) {
   const hierarchy_items = node.children;
   if (containsMasking(node)) {
     // TODO: should we handle the case where that multiple maskier existing in same hierarchy?
@@ -92,7 +96,8 @@ function fromMultichild(node: MaskingItemContainingNode) {
       maskitee,
       {
         is_root: cloned_container.isRoot,
-      }
+      },
+      config
     );
 
     const raw_maskier_key = keyFromNode(maskier); // we do not override key for clipped because maskier it self is not being nested, but being converted as a container-like.
@@ -149,10 +154,15 @@ function fromMultichild(node: MaskingItemContainingNode) {
       // maskings
       clipped, // 2 (order matters)
     ];
-    const container = tokenizeLayout.fromFrameOrGroup(node, children, {
-      is_root: node.isRoot, // probably not needed - who uses masking directly under root frame?
-      references: hierarchy_items,
-    });
+    const container = tokenizeLayout.fromFrameOrGroup(
+      node,
+      children,
+      {
+        is_root: node.isRoot, // probably not needed - who uses masking directly under root frame?
+        references: hierarchy_items,
+      },
+      config
+    );
 
     /* ---- dev logging - preserve.
     console.log(`masking transform gate of ${container.key.originName}`, {
