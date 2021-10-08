@@ -7,7 +7,7 @@ import type { Module } from "../output-module";
  *
  * _references_: the part project is inspired from [package.json manifest](https://docs.npmjs.com/cli/v7/configuring-npm/package-json), yet compatitable across all frameworks, os, envs.
  */
-export interface PartProject {
+export interface ProjectPart {
   _type: "part-project";
 
   engines: { [key: string]: string };
