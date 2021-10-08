@@ -82,6 +82,22 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
       children: children,
       //   key: _key,
     });
+  } else if (widget instanceof core.Wrap) {
+    thisFlutterWidget = new flutter.Wrap({
+      ...default_props_for_layout,
+      direction: painting.axis(widget.direction),
+      alignment: rendering.wrapAlignment(widget.alignment),
+      spacing: widget.spacing,
+      runAlignment: rendering.wrapAlignment(widget.runAlignment),
+      runSpacing: widget.runSpacing,
+      crossAxisAlignment: rendering.wrapCrossAxisAlignment(
+        widget.crossAxisAlignment
+      ),
+      verticalDirection: painting.verticalDirection(widget.verticalDirection),
+      clipBehavior: dartui.clip(widget.clipBehavior),
+      children: handleChildren(widget.children),
+      key: undefined,
+    });
   } else if (widget instanceof core.Flex) {
     // FIXME: FLEX not supported yet.
     // thisFlutterWidget = new flutter.Flex({
@@ -95,7 +111,7 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     const _remove_overflow_if_root_overflow = {
       clipBehavior: context.is_root
         ? undefined
-        : (widget as core.Stack).clipBehavior,
+        : dartui.clip((widget as core.Stack).clipBehavior),
     };
 
     const children = handle_flutter_case_no_size_stack_children(

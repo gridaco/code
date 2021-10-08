@@ -1,3 +1,4 @@
+export * from "./painting-axis";
 export * from "./painting-alignment";
 export * from "./painting-border-radius";
 export * from "./painting-edge-insets";
