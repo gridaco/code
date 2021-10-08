@@ -61,6 +61,8 @@ function validate_input(
   | { error: string } {
   const tokenized = tokenize(node, {
     ...default_tokenizer_config,
+    // we don't want to use flags feature for the root, since if this not enabled, it will cause infinite loop.
+    should_ignore_flag: (flag) => flag.id == node.id,
     max_depth: 1, // the root = 0, first level children = 1
   });
 
@@ -84,10 +86,14 @@ function validate_input(
         error: `mixed children error : wrap can only have columns or rows as children`,
       };
     }
-    //
+
+    const depth2_children = [].concat.apply(
+      [],
+      node.children.map((cr) => cr.children)
+    );
     return {
       wrap_root: node,
-      wrap_children: node.children,
+      wrap_children: depth2_children,
       error: false,
     };
   }

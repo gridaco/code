@@ -169,7 +169,12 @@ function handleNode(
   }
 
   if (!tokenizedTarget) {
-    tokenizedTarget = flags_handling_gate(node);
+    if (
+      !config.disable_flags_support &&
+      config.should_ignore_flag?.(node) !== true
+    ) {
+      tokenizedTarget = flags_handling_gate(node);
+    }
   }
   //
   // -------------------------------------------------------------------------

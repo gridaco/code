@@ -1,6 +1,7 @@
 import { parse as parseflags } from "@design-sdk/flags/parsing-strategy-dashdash";
 
-import { ArtworkFlag, artwork_flag_key } from "./--artwork";
+import { flag_key__artwork } from "./--artwork";
+import { flag_key__as_wrap } from "./--as-wrap";
 
 export * from "./types";
 
@@ -8,7 +9,11 @@ export function parse(name: string) {
   try {
     return parseflags(name, [
       {
-        name: artwork_flag_key,
+        name: flag_key__artwork,
+        type: "bool",
+      },
+      {
+        name: flag_key__as_wrap,
         type: "bool",
       },
       //. TODO: add other flags under here.

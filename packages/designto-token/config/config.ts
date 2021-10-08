@@ -7,6 +7,11 @@ export interface TokenizerConfig {
   sanitizer_ignore_masking_node: boolean;
 
   /**
+   * @default false - flags support enabled by default.
+   */
+  disable_flags_support?: boolean;
+
+  /**
    * stops the tokenizer when max depth is reached relative to starter (root) node.
    * @default "infinite"
    */
@@ -27,6 +32,13 @@ export interface TokenizerConfig {
    * a middleware function that will be called before the each tokenization. if returns `true`, the tokenization will be skipped.
    */
   should_skip?: (node: any) => boolean;
+
+  /**
+   * ignore a flag feature with a explicit gate.
+   * if ignore_flag set to true, the flag will be ignored even if this function returns false.
+   * It only affects when `true` returned as a result.
+   */
+  should_ignore_flag?: (node: any) => boolean;
 
   /**
    * A function that is called in between every tokenization process. (on shot for on node)
