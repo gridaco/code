@@ -1,6 +1,6 @@
 import { parse } from "@code-features/flags";
 import type { ReflectSceneNode } from "@design-sdk/figma";
-import { tokenizeGraphics } from "..";
+import { tokenize_flagged_artwork } from "./token-artwork";
 
 export default function (node: ReflectSceneNode) {
   const flags = parse(node.name);
@@ -8,7 +8,7 @@ export default function (node: ReflectSceneNode) {
 }
 
 function handle_with_flags(node, flags) {
-  if (
+  const artwork_flag_alias =
     flags["artwork"] ||
     flags["export-as"] ||
     flags["export-as-png"] ||
@@ -17,8 +17,8 @@ function handle_with_flags(node, flags) {
     flags["export-as-jpg"] ||
     flags["export-as-webp"] ||
     flags["export-as-jpeg"] ||
-    flags["export-as-gif"]
-  ) {
-    return tokenizeGraphics.fromAnyNode(node);
+    flags["export-as-gif"];
+  if (artwork_flag_alias) {
+    tokenize_flagged_artwork(node, artwork_flag_alias);
   }
 }
