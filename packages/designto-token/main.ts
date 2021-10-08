@@ -32,6 +32,8 @@ export type { Widget };
 
 export type RuntimeChildrenInput = Array<nodes.ReflectSceneNode | Widget>;
 
+let __dangerous_current_config: TokenizerConfig = null;
+
 /**
  * ENTRY POINT MAIN FUCTION
  * Main function for converting reflect design node tree to reflect widget token tree
@@ -43,6 +45,7 @@ export function tokenize(
   if (!node) {
     throw "A valid design node should be passed in order to tokenize it into a reflect widget.";
   }
+  __dangerous_current_config = config;
   return rootHandler(node, config);
 }
 
@@ -96,12 +99,16 @@ function dynamicGenerator(
  */
 export function handleChildren(
   nodes: RuntimeChildrenInput,
-  config: TokenizerConfig
+  config: TokenizerConfig | "dangerously_use_current"
 ): Array<Widget> {
   return nodes.map((n) => {
     if (n instanceof Widget) {
       return n;
     } else {
+      config =
+        config === "dangerously_use_current"
+          ? __dangerous_current_config
+          : config;
       return dynamicGenerator(n, config) as Widget;
     }
   });
