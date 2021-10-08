@@ -441,7 +441,7 @@ function isOverflowingAndShouldBeScrollable(frame: nodes.ReflectFrameNode) {
   );
 }
 
-function unwrappedChild(maybeWrapped: Widget): Widget {
+export function unwrappedChild(maybeWrapped: Widget): Widget {
   const wrapped =
     maybeWrapped instanceof Rotation ||
     maybeWrapped instanceof Blurred ||
