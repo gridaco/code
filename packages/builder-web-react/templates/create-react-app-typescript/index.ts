@@ -1,4 +1,4 @@
-import { PackageManifest } from "../../package/manifest";
+import { PackageManifest } from "../../../builder-web-nodejs/package/manifest";
 
 /**
  * ```

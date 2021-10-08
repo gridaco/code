@@ -18,7 +18,7 @@ import {
   SourceFile,
   VariableDeclaration,
 } from "coli";
-import { react_imports } from "../../build-app/import-specifications";
+import { react_imports } from "../react-import-specifications";
 import { TextChildWidget, WidgetTree } from "@web-builder/core";
 import { ReactComponentExportResult } from "../export-result";
 import {
