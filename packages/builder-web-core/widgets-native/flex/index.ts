@@ -23,6 +23,7 @@ import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import * as css from "@web-builder/styles";
 import { CssMinHeightMixin } from "../_utility";
 
+type FlexWrap = "nowrap" | "wrap" | "wrap-reverse";
 export class Flex extends MultiChildWidget implements CssMinHeightMixin {
   readonly _type: "row" | "column";
 
@@ -45,6 +46,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
   borderRadius?: BorderRadiusManifest;
   border?: Border;
   minHeight?: DimensionLength;
+  flexWrap?: FlexWrap;
 
   constructor(
     p: IFlexManifest<WidgetTree> & {
@@ -64,6 +66,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
       overflow?: CSSProperty.Overflow;
       borderRadius?: BorderRadiusManifest;
       border?: Border;
+      flexWrap?: FlexWrap;
     }
   ) {
     super(p);
@@ -92,6 +95,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
     // css only
     this.overflow = p.overflow;
     this.minHeight = p.minHeight;
+    this.flexWrap = p.flexWrap;
   }
 
   jsxConfig(): StylableJSXElementConfig {
@@ -109,6 +113,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
       "align-items": this.crossAxisAlignment,
       overflow: this.overflow,
       flex: this.flex,
+      "flex-wrap": this.flexWrap,
       gap: this.itemSpacing && css.px(this.itemSpacing),
       "box-shadow": css.boxshadow(this.boxShadow),
       ...css.border(this.border),

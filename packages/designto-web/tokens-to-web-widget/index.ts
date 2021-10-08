@@ -6,6 +6,7 @@ import { keyFromWidget } from "@web-builder/core";
 import { MainImageRepository } from "@design-sdk/core/assets-repository";
 import * as css from "@web-builder/styles";
 import { Axis, Stack } from "@reflect-ui/core";
+import { compose_wrap } from "./compose-wrap";
 
 export function buildWebWidgetFromTokens(widget: core.Widget): WidgetTree {
   const composed = compose(widget, {
@@ -43,6 +44,9 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
   const _key = keyFromWidget(widget);
 
   let thisWebWidget: WidgetTree;
+  // ------------------------------------
+  // region layouts
+  // ------------------------------------
   if (widget instanceof core.Column) {
     thisWebWidget = new web.Column({
       ...default_props_for_layout,
@@ -55,6 +59,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
       children: handleChildren(widget.children),
       key: _key,
     });
+  } else if (widget instanceof core.Wrap) {
+    thisWebWidget = compose_wrap(widget, handleChildren(widget.children));
   } else if (widget instanceof core.Flex) {
     thisWebWidget = new web.Flex({
       ...widget,
@@ -101,7 +107,9 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
       right: widget.right,
       bottom: widget.bottom,
     };
-  } else if (widget instanceof core.Opacity) {
+  }
+  // ENGREGION layouts ------------------------------------------------------------------------
+  else if (widget instanceof core.Opacity) {
     thisWebWidget = handleChild(widget.child);
     thisWebWidget.extendStyle({
       opacity: css.opacity(widget.opacity),

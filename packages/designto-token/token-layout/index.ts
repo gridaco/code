@@ -25,6 +25,7 @@ import {
 } from "@reflect-ui/core";
 import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
+import { TokenizerConfig } from "../config";
 import { keyFromNode } from "../key";
 import { handleChildren, RuntimeChildrenInput } from "../main";
 import { tokenizeBackground } from "../token-background";
@@ -44,9 +45,15 @@ type OriginalChildrenReference = Array<nodes.ReflectSceneNode>;
 function fromFrame(
   frame: nodes.ReflectFrameNode,
   children: RuntimeChildrenInput,
-  context: RuntimeLayoutContext
+  context: RuntimeLayoutContext,
+  config: TokenizerConfig
 ): core.LayoutRepresntatives {
-  const innerlayout = flexOrStackFromFrame(frame, children, context.references);
+  const innerlayout = flex_or_stack_from_frame(
+    frame,
+    children,
+    context.references,
+    config
+  );
   const is_overflow_scrollable = isOverflowingAndShouldBeScrollable(frame);
 
   if (context.is_root) {
@@ -72,12 +79,13 @@ function fromFrame(
   }
 }
 
-function flexOrStackFromFrame(
+function flex_or_stack_from_frame(
   frame: nodes.ReflectFrameNode,
   children: RuntimeChildrenInput,
-  references?: OriginalChildrenReference
+  references: OriginalChildrenReference,
+  config: TokenizerConfig
 ) {
-  const wchildren = handleChildren(children);
+  const wchildren = handleChildren(children, config);
 
   const _key = keyFromNode(frame);
   const _background = tokenizeBackground.fromFills(frame.fills);
@@ -380,9 +388,10 @@ function stackChild({
 function fromGroup(
   group: nodes.ReflectGroupNode,
   children: RuntimeChildrenInput,
-  references?: OriginalChildrenReference
+  references: OriginalChildrenReference,
+  config: TokenizerConfig
 ): core.LayoutRepresntatives {
-  const wchildren = handleChildren(children);
+  const wchildren = handleChildren(children, config);
 
   const stack_children = wchildren.map((c) => {
     if (c instanceof Positioned) {
@@ -432,7 +441,7 @@ function isOverflowingAndShouldBeScrollable(frame: nodes.ReflectFrameNode) {
   );
 }
 
-function unwrappedChild(maybeWrapped: Widget): Widget {
+export function unwrappedChild(maybeWrapped: Widget): Widget {
   const wrapped =
     maybeWrapped instanceof Rotation ||
     maybeWrapped instanceof Blurred ||
@@ -449,16 +458,18 @@ function unwrappedChild(maybeWrapped: Widget): Widget {
 function fromFrameOrGroup(
   node: nodes.ReflectFrameNode | nodes.ReflectGroupNode,
   children: RuntimeChildrenInput,
-  context: RuntimeLayoutContext
+  context: RuntimeLayoutContext,
+  config: TokenizerConfig
 ) {
   if (node.type === ReflectSceneNodeType.frame) {
-    return fromFrame(node as nodes.ReflectFrameNode, children, context);
+    return fromFrame(node as nodes.ReflectFrameNode, children, context, config);
   }
   if (node.type === ReflectSceneNodeType.group) {
     return fromGroup(
       node as nodes.ReflectGroupNode,
       children,
-      context.references
+      context.references,
+      config
     );
   }
 
