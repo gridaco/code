@@ -26,6 +26,7 @@ import {
   getWidgetStylesConfigMap,
   WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
+import { wrap_with_export_assignment_react_component_identifier } from "../react-component-exporting";
 
 const IMPORT_DEFAULT_STYLED_FROM_EMOTION_STYLED = new Import()
   .importDefault("styled")
@@ -157,7 +158,9 @@ function buildReactComponentFile(p: {
   file.imports(...imports);
   file.declare(component);
   file.declare(...styleVariables);
-  file.export(new ExportAssignment(component.id));
+  file.export(
+    wrap_with_export_assignment_react_component_identifier(component.id)
+  );
 
   return file;
 }
