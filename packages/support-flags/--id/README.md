@@ -8,3 +8,7 @@ by specifing the id flag, you can take advantage in below scenarios.
 - id="value" on generated html output.
 
 <!-- TODO: provide more realworld usecase -->
+
+## See also
+
+- [`--hash`](../--hash/README.md)
