@@ -2,7 +2,7 @@
 /// This contains default and fundamental imports required for using react library
 ///
 
-import { standard_libraries } from "../../../builder-web-nodejs";
+import { standard_libraries } from "../../builder-web-nodejs";
 import { Import } from "coli";
 
 /**

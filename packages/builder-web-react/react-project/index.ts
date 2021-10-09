@@ -1,6 +1,6 @@
 import { Widget } from "@web-builder/core";
-import { standard_libraries, templates } from "@coli.codes/nodejs-builder";
-
+import { standard_libraries } from "@coli.codes/nodejs-builder";
+import * as templates from "../templates";
 /**
  * builds create-react-app wrapped react app.
  *

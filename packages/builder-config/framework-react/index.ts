@@ -1,5 +1,6 @@
-import { ComponentOutput } from "../output";
-
-export interface ReactComponentOutput extends ComponentOutput {}
-
-export type ReactStylingStrategy = "css" | "styled-components" | "css-in-jsx";
+export * from "./react-config";
+export * from "./react-config-component-syntax";
+export * from "./react-config-exporting-component";
+export * from "./react-config-functional-component-declaration";
+export * from "./react-config-styling";
+export * from "./react-output";

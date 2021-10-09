@@ -5,22 +5,38 @@ export const react_presets = {
   react_default: <config.ReactFrameworkConfig>{
     framework: Framework.react,
     language: Language.tsx,
-    styling: "styled-components",
+    styling: {
+      type: "styled-components",
+      module: "@emotion/styled",
+    },
   },
   react_with_styled_components: <config.ReactFrameworkConfig>{
     framework: Framework.react,
     language: Language.tsx,
-    styling: "styled-components",
+    styling: {
+      type: "styled-components",
+      module: "styled-components",
+    },
+  },
+  react_with_emotion_styled: <config.ReactFrameworkConfig>{
+    framework: Framework.react,
+    language: Language.tsx,
+    styling: {
+      type: "styled-components",
+      module: "@emotion/styled",
+    },
   },
   react_with_css_in_jsx: <config.ReactFrameworkConfig>{
     framework: Framework.react,
     language: Language.tsx,
-    styling: "css-in-jsx",
+    styling: {
+      type: "css-in-jsx",
+    },
   },
   react_with_css: <config.ReactFrameworkConfig>{
     framework: Framework.react,
     language: Language.tsx,
-    styling: "css",
+    styling: { type: "css" },
   },
 };
 
@@ -63,8 +79,32 @@ export const all_preset_options_map__prod = {
   // react_with_css // NOT ON PRODUCTION
 };
 
-export const react_styles: react.ReactStylingStrategy[] = [
-  "styled-components",
-  "css-in-jsx",
-  "css",
-];
+export const react_styles: {
+  [alias in react.ReactStylingStrategy["type"]]: react.ReactStylingStrategy[];
+} = {
+  "styled-components": [
+    {
+      type: "styled-components",
+      module: "@emotion/styled",
+    },
+    {
+      type: "styled-components",
+      module: "styled-components",
+    },
+  ],
+  "css-in-jsx": [
+    {
+      type: "css-in-jsx",
+    },
+  ],
+  css: [
+    {
+      type: "css",
+      lang: "css",
+    },
+    {
+      type: "css",
+      lang: "scss",
+    },
+  ],
+};

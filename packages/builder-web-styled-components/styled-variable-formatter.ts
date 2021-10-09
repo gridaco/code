@@ -6,7 +6,7 @@
 /**
  * from
  * ```
- * `
+ * styled.span`
  * color: white;
  * width: 24px;
  * `
@@ -14,7 +14,7 @@
  *
  * to
  * ```
- * `
+ * styled.span`
  *  color: white;
  *  width: 24px;
  * `

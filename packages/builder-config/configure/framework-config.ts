@@ -1,16 +1,12 @@
 import { Language } from "@grida/builder-platform-types";
-import { ReactStylingStrategy } from "../framework-react";
+import type { ReactFrameworkConfig } from "../framework-react";
 
 export type FrameworkConfig =
   | ReactFrameworkConfig
   | FlutterFrameworkConfig
   | VanillaFrameworkConfig;
 
-export interface ReactFrameworkConfig {
-  framework: "react";
-  language: Language.jsx | Language.tsx;
-  styling: ReactStylingStrategy;
-}
+export type { ReactFrameworkConfig };
 
 export interface FlutterFrameworkConfig {
   framework: "flutter";
