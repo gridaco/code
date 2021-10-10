@@ -18,3 +18,5 @@ export * from "./token-gradient";
 
 // t2t
 export * as t2t from "./token-to-token";
+
+export { wrap } from "./wrappers";

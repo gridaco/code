@@ -11,7 +11,7 @@ import { keyFromNode } from "../../key";
 import { tokenize } from "../..";
 import { default_tokenizer_config } from "../../config";
 import { handleChildren } from "../../main";
-import { unwrappedChild } from "../../token-layout";
+import { unwrappedChild } from "../../wrappers";
 
 // type InputLayout = Array<Column> | Array<Row>;
 

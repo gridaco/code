@@ -1,0 +1,38 @@
+import {
+  Opacity,
+  Positioned,
+  SizedBox,
+  ClipRRect,
+  Blurred,
+  Rotation,
+  Widget,
+} from "@reflect-ui/core";
+import { Stretched } from "../tokens";
+
+export type WrapperToken =
+  // layout / positioning / sizing wrappers
+  | SizedBox
+  | Stretched
+  | Positioned
+  // transform wrappers
+  | Rotation
+  | Opacity
+  // effect wrappers
+  | Blurred
+  // clip wrappers
+  | ClipRRect;
+
+export function unwrappedChild(maybeWrapped: Widget): Widget {
+  const wrapped =
+    maybeWrapped instanceof SizedBox ||
+    maybeWrapped instanceof Stretched ||
+    maybeWrapped instanceof Positioned ||
+    maybeWrapped instanceof Rotation ||
+    maybeWrapped instanceof Opacity ||
+    maybeWrapped instanceof Blurred ||
+    maybeWrapped instanceof ClipRRect;
+  if (wrapped) {
+    return unwrappedChild(maybeWrapped.child);
+  }
+  return maybeWrapped;
+}

@@ -31,6 +31,7 @@ import { handleChildren, RuntimeChildrenInput } from "../main";
 import { tokenizeBackground } from "../token-background";
 import { tokenizeBorder } from "../token-border";
 import { Stretched } from "../tokens";
+import { unwrappedChild } from "../wrappers";
 
 // type ChildrenTransformer
 // type LayoutBuilder<N extends nodes.ReflectSceneNode> = (node: N, ) =>
@@ -439,20 +440,6 @@ function isOverflowingAndShouldBeScrollable(frame: nodes.ReflectFrameNode) {
     // if parent is scrollable, then this frame is scrollable
     frame.width < children_container_size
   );
-}
-
-export function unwrappedChild(maybeWrapped: Widget): Widget {
-  const wrapped =
-    maybeWrapped instanceof Rotation ||
-    maybeWrapped instanceof Blurred ||
-    maybeWrapped instanceof Opacity ||
-    maybeWrapped instanceof Positioned ||
-    maybeWrapped instanceof ClipRRect ||
-    maybeWrapped instanceof Stretched;
-  if (wrapped) {
-    return unwrappedChild(maybeWrapped.child);
-  }
-  return maybeWrapped;
 }
 
 function fromFrameOrGroup(
