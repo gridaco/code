@@ -1,5 +1,5 @@
 import { input, output, config } from "../proc";
-import { tokenize } from "@designto/token";
+import { tokenize, wrap } from "@designto/token";
 import { Widget } from "@reflect-ui/core";
 import * as toreact from "@designto/react";
 import * as tovanilla from "@designto/vanilla";
@@ -10,6 +10,7 @@ import {
 } from "@code-features/assets";
 import { BaseImageRepositories } from "@design-sdk/core/assets-repository";
 import { k } from "@web-builder/core";
+import { default_tokenizer_config } from "@designto/token/config";
 
 interface AssetsConfig {
   asset_repository?: BaseImageRepositories<string>;
@@ -20,18 +21,39 @@ export async function designToCode({
   input,
   framework,
   asset_config,
+  build_config,
 }: {
   input: input.IDesignInput;
   framework: config.FrameworkConfig;
+  build_config: config.BuildConfiguration;
   asset_config: AssetsConfig;
 }): Promise<output.ICodeOutput> {
-  const token = tokenize(input.design);
+  // post token processing
+  let config = default_tokenizer_config;
+  if (build_config.force_root_widget_fixed_size_no_scroll) {
+    config.custom_wrapping_provider = (w, n, d) => {
+      if (d === 0) {
+        return wrap.withSizedBox(wrap.withOverflowBox(w), {
+          width: n.width,
+          height: n.height,
+        });
+      }
+      return false;
+    };
+  }
+  const token = tokenize(input.design, config);
+
   const _tokenized_widget_input = { widget: token };
   switch (framework.framework) {
     case "vanilla":
       return designToVanilla({ input: _tokenized_widget_input, asset_config });
     case "react":
-      return designToReact({ input: _tokenized_widget_input, asset_config });
+      return designToReact({
+        input: _tokenized_widget_input,
+        build_config: build_config,
+        react_config: framework,
+        asset_config: asset_config,
+      });
     case "flutter":
       return designToFlutter({ input: _tokenized_widget_input, asset_config });
   }
@@ -47,12 +69,17 @@ export const designTo = {
 
 export async function designToReact({
   input,
+  react_config,
+  build_config,
   asset_config,
 }: {
   input: { widget: Widget };
+  react_config: config.ReactFrameworkConfig;
+  build_config: config.BuildConfiguration;
   asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
   const reactwidget = toreact.buildReactWidget(input.widget);
+
   const res = toreact.buildReactApp(reactwidget, {
     template: "cra",
   });
