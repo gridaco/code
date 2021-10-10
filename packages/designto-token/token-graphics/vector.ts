@@ -21,7 +21,7 @@ function fromPoligon(): VectorWidget {
 }
 
 function fromVector(vector: ReflectVectorNode) {
-  if (vector?.vectorPaths?.length ?? 0 === 0) {
+  if (!vector?.vectorPaths || vector.vectorPaths.length === 0) {
     // we are not sure when specifically this happens, but as reported, curvy lines does not contain a vector paths.
     // so we just return a image bake of it.
     console.warn(
