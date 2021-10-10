@@ -1,4 +1,6 @@
-type AssetStringReplacementMap = { [key: string]: string };
+type AssetStringReplacementMap =
+  | { [key: string]: string }
+  | Map<string, string>;
 
 /**
  * this replaces the asset strings in the given string with the given map
