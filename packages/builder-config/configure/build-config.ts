@@ -10,3 +10,7 @@ export interface BuildConfiguration {
    */
   force_root_widget_fixed_size_no_scroll?: boolean;
 }
+
+export const default_build_configuration: BuildConfiguration = {
+  force_root_widget_fixed_size_no_scroll: false,
+};

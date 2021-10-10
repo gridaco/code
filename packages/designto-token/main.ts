@@ -70,6 +70,17 @@ function dynamicGenerator(
   node: SingleOrArray<nodes.ReflectSceneNode>,
   config: TokenizerConfig
 ): SingleOrArray<Widget> {
+  const node_handler = (node, config) => {
+    return handle_with_custom_wrapping_provider(
+      config.custom_wrapping_provider,
+      {
+        token: handleNode(node, config),
+        node: node,
+        depth: undefined, // TODO:
+      }
+    );
+  };
+
   if (isNotEmptyArray(node)) {
     const widgets: Array<Widget> = [];
     node = node as Array<nodes.ReflectSceneNode>;
@@ -78,7 +89,7 @@ function dynamicGenerator(
       // .sort(byY)
       .filter(ignore_masking_pipline(config.sanitizer_ignore_masking_node))
       .forEach((node, index) => {
-        widgets.push(handleNode(node, config));
+        widgets.push(node_handler(node, config));
       });
 
     // filter empty widgets (safe checker logic)
@@ -87,8 +98,24 @@ function dynamicGenerator(
     return finalWidgets;
   } else {
     node = node as nodes.ReflectSceneNode;
-    const finalWidget = handleNode(node, config);
+    const finalWidget = node_handler(node, config);
     return finalWidget;
+  }
+}
+
+function handle_with_custom_wrapping_provider(
+  provider: TokenizerConfig["custom_wrapping_provider"] | undefined,
+  input: {
+    token: Widget;
+    node: nodes.ReflectSceneNode;
+    depth: number;
+  }
+): Widget {
+  const wrapped_or_not = provider?.(input.token, input.node, input.depth);
+  if (wrapped_or_not) {
+    return wrapped_or_not;
+  } else {
+    return input.token;
   }
 }
 

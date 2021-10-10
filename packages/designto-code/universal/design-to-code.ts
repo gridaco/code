@@ -21,18 +21,18 @@ export async function designToCode({
   input,
   framework,
   asset_config,
-  build_config,
+  build_config = config.default_build_configuration,
 }: {
   input: input.IDesignInput;
   framework: config.FrameworkConfig;
-  build_config: config.BuildConfiguration;
+  build_config?: config.BuildConfiguration;
   asset_config: AssetsConfig;
 }): Promise<output.ICodeOutput> {
   // post token processing
   let config = default_tokenizer_config;
   if (build_config.force_root_widget_fixed_size_no_scroll) {
     config.custom_wrapping_provider = (w, n, d) => {
-      if (d === 0) {
+      if (n.id === input.design.id) {
         return wrap.withSizedBox(wrap.withOverflowBox(w), {
           width: n.width,
           height: n.height,
