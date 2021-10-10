@@ -169,10 +169,10 @@ function handleNode(
   }
 
   // - button -
-  const _detect_if_button = detectIf.button(node);
-  if (_detect_if_button.result) {
-    return tokenizeButton.fromManifest(node, _detect_if_button.data);
-  }
+  // const _detect_if_button = detectIf.button(node);
+  // if (_detect_if_button.result) {
+  //   return tokenizeButton.fromManifest(node, _detect_if_button.data);
+  // }
 
   // -------------------------------------------------------------------------
   // --------------------------- Detected tokens -----------------------------
