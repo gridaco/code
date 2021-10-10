@@ -2,6 +2,8 @@ import { Clip } from "@reflect-ui/core";
 import * as flutter from "@flutter-builder/flutter";
 export function clip(clip: Clip): flutter.Clip {
   switch (clip) {
+    case undefined:
+      return;
     case Clip.none:
       return flutter.Clip.none;
     case Clip.hardEdge:
