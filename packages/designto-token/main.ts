@@ -45,7 +45,7 @@ export function tokenize(
   if (!node) {
     throw "A valid design node should be passed in order to tokenize it into a reflect widget.";
   }
-  __dangerous_current_config = config;
+  __dangerous_current_config = { ...config }; // unwrapping so every call can have a new config variable changed.
   return rootHandler(node, config);
 }
 

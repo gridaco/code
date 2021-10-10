@@ -7,6 +7,11 @@ import type { ReflectSceneNode } from "@design-sdk/figma-node";
  * The default tokenizer config is: @see {default_tokenizer_config}
  */
 export interface TokenizerConfig {
+  /**
+   * dynamic id for debugging perpose. this does not impact any logic.
+   */
+  id?: string;
+
   sanitizer_ignore_masking_node: boolean;
 
   /**

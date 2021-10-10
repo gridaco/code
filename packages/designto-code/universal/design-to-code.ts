@@ -28,8 +28,18 @@ export async function designToCode({
   build_config?: config.BuildConfiguration;
   asset_config: AssetsConfig;
 }): Promise<output.ICodeOutput> {
+  if (process.env.NODE_ENV === "development") {
+    console.info(
+      "dev: starting designtocode with user input",
+      input,
+      framework,
+      build_config,
+      asset_config
+    );
+  }
+
   // post token processing
-  let config = default_tokenizer_config;
+  let config = { ...default_tokenizer_config, id: input.id };
   if (build_config.force_root_widget_fixed_size_no_scroll) {
     config.custom_wrapping_provider = (w, n, d) => {
       if (n.id === input.design.id) {
@@ -60,7 +70,12 @@ export async function designToCode({
         asset_config: asset_config,
       });
     case "flutter":
-      return designToFlutter({ input: _tokenized_widget_input, asset_config });
+      return designToFlutter({
+        input: _tokenized_widget_input,
+        build_config: build_config,
+        flutter_config: framework,
+        asset_config: asset_config,
+      });
   }
   throw `The framework "${framework}" is not supported at this point.`;
   return;
@@ -108,9 +123,13 @@ export async function designToReact({
 export async function designToFlutter({
   input,
   asset_config,
+  build_config,
+  flutter_config,
 }: {
   input: { widget: Widget };
   asset_config?: AssetsConfig;
+  build_config: config.BuildConfiguration;
+  flutter_config: config.FlutterFrameworkConfig;
 }): Promise<output.ICodeOutput> {
   await Promise.resolve();
 

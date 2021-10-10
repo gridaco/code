@@ -309,13 +309,20 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
   // end of logic gate
   // -------------------------------------
   else {
-    // todo - handle case more specific
-    const msg = `The input design was not handled. "${
+    const err_user_msg = `The input design was not handled. "${
       widget.key.originName
     }" type of "${widget._type}" - ${JSON.stringify(widget.key)}`;
+    console.error(
+      "flutter: error while handling the design token",
+      err_user_msg,
+      "the input token was",
+      widget
+    );
+
+    // todo - handle case more specific
     thisFlutterWidget = flutter.ErrorWidget.withDetails({
       //   key: _key,
-      message: escapeDartString(msg),
+      message: escapeDartString(err_user_msg),
     }) as flutter.Widget;
   }
   // -------------------------------------
