@@ -7,6 +7,13 @@ import { MainImageRepository } from "@design-sdk/core/assets-repository";
 import * as css from "@web-builder/styles";
 import { Axis, Stack } from "@reflect-ui/core";
 import { compose_wrap } from "./compose-wrap";
+import { compose_wrapped_with_clip_rrect } from "./compose-wrapped-with-clip-rrect";
+import { compose_wrapped_with_rotation } from "./compose-wrapped-with-rotation";
+import { compose_wrapped_with_blurred } from "./compose-wrapped-with-blurred";
+import { compose_wrapped_with_opacity } from "./compose-wrapped-with-opacity";
+import { compose_wrapped_with_positioned } from "./compose-wrapped-with-positioned";
+import { compose_wrapped_with_clip_stretched } from "./compose-wrapped-with-stretched";
+import { compose_wrapped_with_sized_box } from "./compose-wrapped-with-sized-box";
 
 export function buildWebWidgetFromTokens(widget: core.Widget): WidgetTree {
   const composed = compose(widget, {
@@ -19,6 +26,11 @@ export function buildWebWidgetFromTokens(widget: core.Widget): WidgetTree {
 
   return composed;
 }
+
+export type Composer = (
+  widget: core.Widget,
+  context?: { is_root: boolean }
+) => WidgetTree;
 
 function compose(widget: core.Widget, context: { is_root: boolean }) {
   const handleChildren = (children: core.Widget[]): WidgetTree[] => {
@@ -93,56 +105,21 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     });
     //
   } else if (widget instanceof core.Positioned) {
-    thisWebWidget = handleChild(widget.child);
-    // -------------------------------------
-    // override w & h with position provided w/h
-    thisWebWidget.extendStyle({
-      width: css.px(widget.width),
-      height: css.px(widget.height),
-    });
-    // -------------------------------------
-    thisWebWidget.constraint = {
-      left: widget.left,
-      top: widget.top,
-      right: widget.right,
-      bottom: widget.bottom,
-    };
+    thisWebWidget = compose_wrapped_with_positioned(widget, handleChild);
+  } else if (widget instanceof core.SizedBox) {
+    thisWebWidget = compose_wrapped_with_sized_box(widget, handleChild);
   }
   // ENGREGION layouts ------------------------------------------------------------------------
   else if (widget instanceof core.Opacity) {
-    thisWebWidget = handleChild(widget.child);
-    thisWebWidget.extendStyle({
-      opacity: css.opacity(widget.opacity),
-    });
+    thisWebWidget = compose_wrapped_with_opacity(widget, handleChild);
   } else if (widget instanceof core.Blurred) {
-    thisWebWidget = handleChild(widget.child);
-    const isBlurVisibile = widget.blur.visible;
-    if (isBlurVisibile) {
-      if (widget.blur.type === "LAYER_BLUR") {
-        thisWebWidget.extendStyle({
-          filter: css.blur(widget.blur.radius),
-        });
-      } else if (widget.blur.type === "BACKGROUND_BLUR") {
-        thisWebWidget.extendStyle({
-          "backdrop-filter": css.blur(widget.blur.radius),
-        });
-      }
-    }
+    thisWebWidget = compose_wrapped_with_blurred(widget, handleChild);
   } else if (widget instanceof core.Rotation) {
-    thisWebWidget = handleChild(widget.child);
-    thisWebWidget.extendStyle({
-      transform: css.rotation(widget.rotation),
-    });
+    thisWebWidget = compose_wrapped_with_rotation(widget, handleChild);
   }
   // ----- region clip path ------
   else if (widget instanceof core.ClipRRect) {
-    thisWebWidget = handleChild(widget.child);
-    thisWebWidget.extendStyle({
-      ...css.borderRadius(widget.borderRadius),
-      overflow: "hidden",
-      width: "100%", // ----- need better approach
-      height: "100%", // ----- need better approach
-    });
+    thisWebWidget = compose_wrapped_with_clip_rrect(widget, handleChild);
   } else if (widget instanceof core.ClipPath) {
     thisWebWidget = handleChild(widget.child);
     thisWebWidget.extendStyle({
@@ -225,21 +202,7 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
   // special tokens
   // -------------------------------------
   else if (widget instanceof special.Stretched) {
-    let remove_size;
-    switch (widget.axis) {
-      case Axis.horizontal:
-        remove_size = "height";
-        break;
-      case Axis.vertical:
-        remove_size = "width";
-        break;
-    }
-
-    thisWebWidget = handleChild(widget.child);
-    thisWebWidget.extendStyle({
-      "align-self": "stretch",
-      [remove_size]: undefined,
-    });
+    thisWebWidget = compose_wrapped_with_clip_stretched(widget, handleChild);
   }
   // -------------------------------------
 

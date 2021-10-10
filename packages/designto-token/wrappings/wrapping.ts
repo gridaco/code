@@ -22,6 +22,11 @@ export type WrappingToken =
   // clip wrappers
   | ClipRRect;
 
+/**
+ * CAUTION - this is not related to `Wrap` Widget. this unwrapps a (nested) token that is wrapped with typeof `WrappingToken`
+ * @param maybeWrapped
+ * @returns
+ */
 export function unwrappedChild(maybeWrapped: Widget): Widget {
   const wrapped =
     maybeWrapped instanceof SizedBox ||
