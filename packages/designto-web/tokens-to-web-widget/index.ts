@@ -167,6 +167,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
 
         thisWebWidget = new web.ImageElement({
           ...widget,
+          width: widget.size,
+          height: widget.size,
           src:
             _tmp_icon_as_img.url ||
             /*fallback*/ "https://bridged-service-static.s3.us-west-1.amazonaws.com/branding/logo/32.png", // TODO: change this
@@ -177,6 +179,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
       case "remote-uri": {
         thisWebWidget = new web.ImageElement({
           ...widget,
+          width: widget.size,
+          height: widget.size,
           src: widget.icon.uri,
           key: _key,
           alt: "icon",
