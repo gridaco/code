@@ -74,7 +74,7 @@ export interface TokenizerConfig {
    * you can either return a original, wrapped or a modified token to transform the result, or return false to skip.
    * returning a value ohter thatn `Widget | fales` will throw - null / undefined / ...
    */
-  custom_wrapping_provider: (
+  custom_wrapping_provider?: (
     tokenized_child: Widget,
     node: ReflectSceneNode,
     depth?: number,

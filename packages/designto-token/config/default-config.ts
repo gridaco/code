@@ -9,4 +9,5 @@ export const default_tokenizer_config: TokenizerConfig = <TokenizerConfig>{
   should_break: () => false,
   should_skip: () => false,
   process_listener: () => {},
+  custom_wrapping_provider: undefined,
 };
