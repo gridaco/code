@@ -46,7 +46,12 @@ export async function designToCode({
   const _tokenized_widget_input = { widget: token };
   switch (framework.framework) {
     case "vanilla":
-      return designToVanilla({ input: _tokenized_widget_input, asset_config });
+      return designToVanilla({
+        input: _tokenized_widget_input,
+        build_config: build_config,
+        vanilla_config: framework,
+        asset_config: asset_config,
+      });
     case "react":
       return designToReact({
         input: _tokenized_widget_input,
@@ -138,8 +143,12 @@ export function designToVue(input: input.IDesignInput): output.ICodeOutput {
 export async function designToVanilla({
   input,
   asset_config,
+  vanilla_config,
+  build_config,
 }: {
   input: { widget: Widget };
+  build_config: config.BuildConfiguration;
+  vanilla_config: config.VanillaFrameworkConfig;
   asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
   const vanillawidget = tovanilla.buildVanillaWidget(input.widget);

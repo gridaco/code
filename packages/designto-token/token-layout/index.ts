@@ -31,7 +31,7 @@ import { handleChildren, RuntimeChildrenInput } from "../main";
 import { tokenizeBackground } from "../token-background";
 import { tokenizeBorder } from "../token-border";
 import { Stretched } from "../tokens";
-import { unwrappedChild } from "../wrappers";
+import { unwrappedChild } from "../wrappings";
 
 // type ChildrenTransformer
 // type LayoutBuilder<N extends nodes.ReflectSceneNode> = (node: N, ) =>

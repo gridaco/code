@@ -9,7 +9,7 @@ import {
 } from "@reflect-ui/core";
 import { Stretched } from "../tokens";
 
-export type WrapperToken =
+export type WrappingToken =
   // layout / positioning / sizing wrappers
   | SizedBox
   | Stretched
