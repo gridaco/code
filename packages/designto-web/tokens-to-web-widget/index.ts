@@ -5,7 +5,6 @@ import { WidgetTree } from "@web-builder/core";
 import { keyFromWidget } from "@web-builder/core";
 import { MainImageRepository } from "@design-sdk/core/assets-repository";
 import * as css from "@web-builder/styles";
-import { Axis, Stack } from "@reflect-ui/core";
 import { compose_wrap } from "./compose-wrap";
 import { compose_wrapped_with_clip_rrect } from "./compose-wrapped-with-clip-rrect";
 import { compose_wrapped_with_rotation } from "./compose-wrapped-with-rotation";
@@ -14,6 +13,7 @@ import { compose_wrapped_with_opacity } from "./compose-wrapped-with-opacity";
 import { compose_wrapped_with_positioned } from "./compose-wrapped-with-positioned";
 import { compose_wrapped_with_clip_stretched } from "./compose-wrapped-with-stretched";
 import { compose_wrapped_with_sized_box } from "./compose-wrapped-with-sized-box";
+import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overflow-box";
 
 export function buildWebWidgetFromTokens(widget: core.Widget): WidgetTree {
   const composed = compose(widget, {
@@ -84,7 +84,7 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     const _remove_overflow_if_root_overflow = {
       clipBehavior: context.is_root
         ? undefined
-        : (widget as Stack).clipBehavior,
+        : (widget as core.Stack).clipBehavior,
     };
 
     thisWebWidget = new web.Stack({
@@ -108,6 +108,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     thisWebWidget = compose_wrapped_with_positioned(widget, handleChild);
   } else if (widget instanceof core.SizedBox) {
     thisWebWidget = compose_wrapped_with_sized_box(widget, handleChild);
+  } else if (widget instanceof core.OverflowBox) {
+    thisWebWidget = compose_wrapped_with_overflow_box(widget, handleChild);
   }
   // ENGREGION layouts ------------------------------------------------------------------------
   else if (widget instanceof core.Opacity) {

@@ -6,6 +6,7 @@ import {
   Blurred,
   Rotation,
   Widget,
+  OverflowBox,
 } from "@reflect-ui/core";
 import { Stretched } from "../tokens";
 
@@ -14,6 +15,7 @@ export type WrappingToken =
   | SizedBox
   | Stretched
   | Positioned
+  | OverflowBox
   // transform wrappers
   | Rotation
   | Opacity
@@ -32,6 +34,7 @@ export function unwrappedChild(maybeWrapped: Widget): Widget {
     maybeWrapped instanceof SizedBox ||
     maybeWrapped instanceof Stretched ||
     maybeWrapped instanceof Positioned ||
+    maybeWrapped instanceof OverflowBox ||
     maybeWrapped instanceof Rotation ||
     maybeWrapped instanceof Opacity ||
     maybeWrapped instanceof Blurred ||
