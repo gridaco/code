@@ -11,6 +11,7 @@ import {
 import { BaseImageRepositories } from "@design-sdk/core/assets-repository";
 import { k } from "@web-builder/core";
 import { default_tokenizer_config } from "@designto/token/config";
+import { default_build_configuration } from "@designto/config";
 
 interface AssetsConfig {
   asset_repository?: BaseImageRepositories<string>;
@@ -95,6 +96,9 @@ export async function designToReact({
 }: {
   input: { widget: Widget };
   react_config: config.ReactFrameworkConfig;
+  /**
+   * TODO: pass this to tokenizer +@
+   */
   build_config: config.BuildConfiguration;
   asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
@@ -123,13 +127,16 @@ export async function designToReact({
 export async function designToFlutter({
   input,
   asset_config,
-  build_config,
+  build_config = default_build_configuration,
   flutter_config,
 }: {
   input: { widget: Widget };
   asset_config?: AssetsConfig;
-  build_config: config.BuildConfiguration;
-  flutter_config: config.FlutterFrameworkConfig;
+  /**
+   * TODO: pass this to tokenizer +@
+   */
+  build_config?: config.BuildConfiguration;
+  flutter_config?: config.FlutterFrameworkConfig;
 }): Promise<output.ICodeOutput> {
   await Promise.resolve();
 
@@ -166,6 +173,9 @@ export async function designToVanilla({
   build_config,
 }: {
   input: { widget: Widget };
+  /**
+   * TODO: pass this to tokenizer +@
+   */
   build_config: config.BuildConfiguration;
   vanilla_config: config.VanillaFrameworkConfig;
   asset_config?: AssetsConfig;
