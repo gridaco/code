@@ -6,6 +6,7 @@ import { borderside } from "../painting/painting-border-side";
 import { makeDetectedIcon } from "./make-flutter-icon";
 import { onPressed } from "../static-snippets";
 import { retrievePrimaryColor } from "@design-sdk/core/utils";
+import { roundDouble } from "../_utils";
 
 export function makeFlatButton(manifest: manifests.DetectedButtonManifest) {
   const text = new flutter.Text(manifest.text?.text);
@@ -29,8 +30,8 @@ export function makeFlatButton(manifest: manifests.DetectedButtonManifest) {
       icon: icon,
       color: color,
       textColor: textColor,
-      minWidth: minWidth,
-      height: height,
+      minWidth: roundDouble(minWidth),
+      height: roundDouble(height),
       shape: shape,
     });
   }
@@ -40,8 +41,8 @@ export function makeFlatButton(manifest: manifests.DetectedButtonManifest) {
     child: text,
     color: color,
     textColor: textColor,
-    minWidth: minWidth,
-    height: height,
+    minWidth: roundDouble(minWidth),
+    height: roundDouble(height),
     shape: shape,
   });
 }
