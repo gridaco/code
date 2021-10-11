@@ -13,7 +13,7 @@ import {
   handle_flutter_case_nested_positioned_stack,
   handle_flutter_case_no_size_stack_children,
 } from "../case-handling";
-import { roundDouble } from "../_utils";
+import { rd } from "../_utils";
 
 export function buildFlutterWidgetFromTokens(
   widget: core.Widget
@@ -41,8 +41,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
   };
 
   const _remove_width_height_if_root_wh = {
-    width: context.is_root ? undefined : roundDouble(widget.width),
-    height: context.is_root ? undefined : roundDouble(widget.height),
+    width: context.is_root ? undefined : rd(widget.width),
+    height: context.is_root ? undefined : rd(widget.height),
   };
 
   const default_props_for_layout = {
@@ -138,7 +138,7 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     });
   } else if (widget instanceof core.Positioned) {
     const _tmp_length_convert = (l) => {
-      return l as number;
+      return rd(l) as number;
     };
 
     const _child = handleChild(widget.child);
@@ -153,8 +153,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
       // -------------------------------------
       // override w & h with position provided w/h
       if (_child instanceof flutter.Container) {
-        _child.width = widget.width;
-        _child.height = widget.height;
+        _child.width = rd(widget.width);
+        _child.height = rd(widget.height);
       }
       // -------------------------------------
     }
@@ -207,8 +207,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     // thisFlutterWidget = flutter_handle_svg_vector_as_bitmap_converted(widget);
   } else if (widget instanceof core.ImageWidget) {
     thisFlutterWidget = flutter.Image.network(widget.src, {
-      width: roundDouble(widget.width),
-      height: roundDouble(widget.height),
+      width: rd(widget.width),
+      height: rd(widget.height),
       // fit?: BoxFit;
       //   key: _key,
     });
@@ -227,8 +227,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
           _tmp_icon_as_img.url ||
             /*fallback*/ "https://bridged-service-static.s3.us-west-1.amazonaws.com/branding/logo/32.png", // TODO: change this
           {
-            width: roundDouble(widget.width),
-            height: roundDouble(widget.height),
+            width: rd(widget.width),
+            height: rd(widget.height),
             // fit?: BoxFit;
             //   key: _key,
           }
@@ -237,8 +237,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
       }
       case "remote-uri": {
         thisFlutterWidget = flutter.Image.network(widget.icon.uri, {
-          width: roundDouble(widget.size),
-          height: roundDouble(widget.size),
+          width: rd(widget.size),
+          height: rd(widget.size),
           semanticLabel: "icon",
           //   key: _key,
         });
@@ -268,8 +268,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     thisFlutterWidget = new flutter.Container({
       padding: painting.edgeinsets(widget.padding),
       margin: painting.edgeinsets(widget.margin),
-      width: roundDouble(widget.width),
-      height: roundDouble(widget.height),
+      width: rd(widget.width),
+      height: rd(widget.height),
       decoration: new flutter.BoxDecoration({
         border: painting.border(widget.border),
         ..._deco_part_shape_and_border_radius,
@@ -356,7 +356,7 @@ function compose_item_spacing_children(
   if (args.itemspacing) {
     const wh = args.axis === Axis.horizontal ? "width" : "height";
     injection = new flutter.SizedBox({
-      [wh]: args.itemspacing,
+      [wh]: rd(args.itemspacing),
     });
   }
   return compoes_children_with_injection(children, injection);
@@ -409,8 +409,8 @@ function wrap_with_sized_and_inject_size(
   } else {
     return new flutter.SizedBox({
       child: widget,
-      width: roundDouble(size.width),
-      height: roundDouble(size.height),
+      width: rd(size.width),
+      height: rd(size.height),
     });
   }
 }

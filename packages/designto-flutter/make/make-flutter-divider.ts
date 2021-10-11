@@ -3,7 +3,7 @@ import * as core from "@reflect-ui/core";
 import * as flutter from "@flutter-builder/flutter";
 import { makeColor } from "./make-flutter-color";
 import * as dartui from "../dart-ui";
-import { roundDouble } from "../_utils";
+import { rd } from "../_utils";
 
 /**
  *
@@ -34,7 +34,7 @@ export function makeFlutterDivider(
  */
 export function makeVerticalDivider(node: nodes.ReflectDefaultShapeMixin) {
   return new flutter.VerticalDivider({
-    width: roundDouble(node.width),
+    width: rd(node.width),
     color: makeColor(node.fills),
     thickness: node.strokeWeight,
   });

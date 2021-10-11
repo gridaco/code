@@ -3,7 +3,7 @@ import { nodes } from "@design-sdk/core";
 import { array } from "@reflect-ui/uiutils";
 import * as flutter from "@flutter-builder/flutter";
 import { makeBoxDecoration } from "../make/make-flutter-box-decoration";
-import { roundDouble } from "../_utils";
+import { rd } from "../_utils";
 import * as painting from "../painting";
 
 export function wrapWithContainer(
@@ -44,8 +44,8 @@ export function wrapWithContainer(
   // Container is a container if [_size] or [_boxDecoration] are set.
   if (_size || _boxDecoration) {
     return new flutter.Container({
-      width: roundDouble(_size.width),
-      height: roundDouble(_size.height),
+      width: rd(_size.width),
+      height: rd(_size.height),
       child: child,
       padding: _padding,
       // region : decoration or color

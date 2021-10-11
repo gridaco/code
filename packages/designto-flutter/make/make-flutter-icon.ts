@@ -8,7 +8,7 @@ import {
 import { Color, IconManifest, MdiConfig } from "@reflect-ui/core";
 import * as dartui from "../dart-ui";
 import { DetectedIconData } from "@reflect-ui/detection/lib/icon.detection";
-import { roundDouble } from "../_utils";
+import { rd } from "../_utils";
 
 type FlutterDynamicIconLike = flutter.Icon | flutter.Image;
 export function makeDetectedIcon(d: DetectedIconData): FlutterDynamicIconLike {
@@ -44,8 +44,8 @@ function makeDesignNodeIconAsImage(
 ): flutter.Image {
   const iconContent = interpretFlutterImageIcon(d.icon);
   return flutter.Image.network(iconContent.url, {
-    width: roundDouble(d.size),
-    height: roundDouble(d.size),
+    width: rd(d.size),
+    height: rd(d.size),
     fit: flutter.BoxFit.cover as flutter.Snippet,
   })
     .addComment("Detected as Icon")
@@ -56,8 +56,8 @@ function makeDesignNodeIconAsImage(
 
 function makeIconAsImage(d: IconManifest<string>) {
   return flutter.Image.network(d.icon, {
-    width: roundDouble(d.size),
-    height: roundDouble(d.size),
+    width: rd(d.size),
+    height: rd(d.size),
     fit: flutter.BoxFit.cover as flutter.Snippet,
   });
 }
@@ -72,7 +72,7 @@ export function makeIcon({
   color: Color;
 }) {
   return new flutter.Icon(icon, {
-    size: roundDouble(size),
+    size: rd(size),
     color: dartui.color(color),
   });
 }
