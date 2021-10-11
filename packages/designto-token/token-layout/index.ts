@@ -285,13 +285,13 @@ function stackChild({
     // throw `${ogchild.toString()} has no constraints. this can happen when node under group item tokenization is incomplete. this is engine's error.`;
   } else {
     switch (ogchild.constraints.horizontal) {
+      case "SCALE": /** scale fallbacks to min */
       case "MIN":
         constraint.left = _l;
         break;
       case "MAX":
         constraint.right = _r;
         break;
-      case "SCALE": /** scale fallbacks to stretch */
       case "STRETCH":
         constraint.left = _l;
         constraint.right = _r;
@@ -331,13 +331,13 @@ function stackChild({
         break;
     }
     switch (ogchild.constraints.vertical) {
+      case "SCALE": /** scale fallbacks to min */
       case "MIN":
         constraint.top = _t;
         break;
       case "MAX":
         constraint.bottom = _b;
         break;
-      case "SCALE": /** scale fallbacks to stretch */
       case "STRETCH":
         constraint.top = _t;
         constraint.bottom = _b;
