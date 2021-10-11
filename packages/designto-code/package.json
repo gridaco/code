@@ -10,7 +10,7 @@
         "@designto/web": "0.0.0",
         "@design-sdk/universal": "0.0.0",
         "@reflect-ui/detection": "0.1.1",
-        "@flutter-builder/flutter": "^2.5.0-f7"
+        "@flutter-builder/flutter": "2.5.0-f12"
     },
     "files": [
         "README.md",
