@@ -40,7 +40,7 @@ export class Text extends TextChildWidget {
   }
 
   styleData(): CSSProperties {
-    return <CSSProperties>{
+    let textStyle: any = {
       // text style
       // ------------------------------------------
       color: css.color((this.textStyle.color as any) as RGBA),
@@ -49,19 +49,25 @@ export class Text extends TextChildWidget {
       "font-family": css.fontFamily(this.textStyle.fontFamily),
       "font-weight": css.convertToCssFontWeight(this.textStyle.fontWeight),
       "letter-spacing": css.length(this.textStyle.letterSpacing),
-      "line-height":
-        css.lineHeight(this.textStyle.lineHeight) ??
-        css.length(this.textStyle.lineHeight),
       "word-spacing": this.textStyle.wordSpacing,
       "text-align": this.alignment,
       "text-decoration": css.textDecoration(this.textStyle.decoration),
       // ------------------------------------------
       "min-height": css.px(this.height),
-
       // TODO: do not specify width when parent is a flex container.
       // Also flex: 1 is required to make the text wrap.
       width: css.px(this.width),
     };
+
+    // Not specified in case of auto
+    if (!!this.textStyle.lineHeight) {
+      textStyle = {
+        ...textStyle,
+        "line-height": css.length(this.textStyle.lineHeight),
+      };
+    }
+
+    return <CSSProperties>textStyle;
   }
 
   jsxConfig(): StylableJSXElementConfig {
