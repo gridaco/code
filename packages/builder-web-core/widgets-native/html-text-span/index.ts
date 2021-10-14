@@ -49,7 +49,9 @@ export class Text extends TextChildWidget {
       "font-family": css.fontFamily(this.textStyle.fontFamily),
       "font-weight": css.convertToCssFontWeight(this.textStyle.fontWeight),
       "letter-spacing": css.length(this.textStyle.letterSpacing),
-      "line-height": css.length(this.textStyle.lineHeight),
+      "line-height":
+        css.lineHeight(this.textStyle.lineHeight) ??
+        css.length(this.textStyle.lineHeight),
       "word-spacing": this.textStyle.wordSpacing,
       "text-align": this.alignment,
       "text-decoration": css.textDecoration(this.textStyle.decoration),
