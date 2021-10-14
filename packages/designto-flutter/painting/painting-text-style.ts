@@ -10,7 +10,6 @@ export function textStyle(style: ITextStyle): flutter.TextStyle {
   const { fontFamily, letterSpacing } = style;
   let decoration: flutter.TextDecoration = textDecoration(style.decoration);
   const fontWeight: flutter.FontWeight = flutter.FontWeight[style.fontWeight];
-
   return new flutter.TextStyle({
     fontSize: rd(style.fontSize),
     fontWeight: fontWeight,

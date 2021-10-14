@@ -40,6 +40,7 @@ export class Text extends TextChildWidget {
   }
 
   styleData(): CSSProperties {
+    console.log(this.textStyle.letterSpacing);
     let textStyle: any = {
       // text style
       // ------------------------------------------
