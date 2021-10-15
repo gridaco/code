@@ -16,7 +16,7 @@ export function textStyle(style: ITextStyle): flutter.TextStyle {
     fontFamily: fontFamily,
     color: dartui.color(style.color),
     fontStyle: fontStyle(style.fontStyle),
-    letterSpacing: multiple(style.fontSize, letterSpacing), // percentage is not supported
+    letterSpacing: rd(letterSpacing as number), // percentage is not supported
     height: multiple(style.fontSize, style.lineHeight),
     decoration: decoration,
   });
