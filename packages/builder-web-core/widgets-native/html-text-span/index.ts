@@ -48,7 +48,6 @@ export class Text extends TextChildWidget {
       "font-size": css.px(this.textStyle.fontSize),
       "font-family": css.fontFamily(this.textStyle.fontFamily),
       "font-weight": css.convertToCssFontWeight(this.textStyle.fontWeight),
-      "letter-spacing": css.length(this.textStyle.letterSpacing),
       "word-spacing": this.textStyle.wordSpacing,
       "text-align": this.alignment,
       "text-decoration": css.textDecoration(this.textStyle.decoration),
@@ -64,6 +63,12 @@ export class Text extends TextChildWidget {
       textStyle = {
         ...textStyle,
         "line-height": css.length(this.textStyle.lineHeight),
+      };
+    }
+    if (!!this.textStyle.letterSpacing) {
+      textStyle = {
+        ...textStyle,
+        "letter-spacing": css.length(this.textStyle.letterSpacing),
       };
     }
 
