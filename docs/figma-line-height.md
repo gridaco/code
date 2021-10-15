@@ -4,6 +4,10 @@
 
 figma line-height is separated into three parts: px, %, and auto. auto is the default set when the user does not set line-height.
 
+**auto**
+
+If it is auto, it is not specified because it is the default.
+
 # css
 
 [`line-height`](https://developer.mozilla.org/en-US/docs/Web/CSS/line-height)
@@ -17,22 +21,14 @@ line-height: 10px;
 line-height: 10%;
 ```
 
-**auto**
-
-If it is auto, it is not specified because it is the default.
-
 # flutter
 
-[`StrutStyle`](https://api.flutter.dev/flutter/painting/StrutStyle-class.html)
-
-[`height`](https://api.flutter.dev/flutter/painting/StrutStyle/height.html)
+[`height`](https://api.flutter.dev/flutter/painting/TextStyle-class.html)
 
 ```dart
 Text(
   'Hi!\nWe are Grida!',
-  strutStyle: StrutStyle(
-    height: 1.2,
-  ),
+  style: TextStyle(height: 1),
 );
 
 ```
