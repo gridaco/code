@@ -18,7 +18,7 @@ export function multiple(origin: number, target: DimensionLength) {
   }
 
   if (typeof target === "number") {
-    return origin / target;
+    return target / origin;
   }
 
   // if (target.type == "calc") {
