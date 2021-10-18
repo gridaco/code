@@ -1,3 +1,6 @@
+/**
+ * FIXME: To be merged with multiple in the future
+ */
 import { Dimension } from "@reflect-ui/core";
 import { rd } from "../_utils";
 
