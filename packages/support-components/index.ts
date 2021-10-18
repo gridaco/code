@@ -1,5 +1,9 @@
 import { Figma } from "@design-sdk/figma";
-import { compare_instance_with_master, NodeDiff } from "@design-sdk/diff";
+import {
+  compare_instance_with_master,
+  InstanceDiff,
+  NodeDiff,
+} from "@design-sdk/diff";
 import { ComponentsUsageRepository } from "./components-usage-repository";
 import { MasterComponentMetaToken } from "./tokens/token-master-component";
 import { InstanceMetaToken } from "./tokens/token-instance";
@@ -30,22 +34,24 @@ interface Input {
   references?: Figma.InstanceNode[];
 }
 
+interface Definition {
+  type: string;
+  master: string;
+  use: string;
+  default_value: string;
+  overrided_value: string;
+}
+
 export function make_instance_component_meta({ entry, components }: Input) {
   const property_meta = overrided_property_meta({ entry, components });
-
-  const define = (
-    diff: NodeDiff
-  ): {
-    type: string;
-    master: string;
-    use: string;
-    default_value: string;
-    overrided_value: string;
-  }[] => {
+  console.log("property_meta", property_meta);
+  const define = (diff: NodeDiff): Definition[] | Definition[][] => {
     if (diff.diff) {
       const master = diff.ids[0];
       const use = diff.ids[1];
       switch (diff.type) {
+        case "instance-to-master":
+          return define_instance(diff);
         case "text-node":
           return [
             diff.characters.diff
@@ -59,17 +65,19 @@ export function make_instance_component_meta({ entry, components }: Input) {
               : null,
           ];
           break;
-        case "instance-to-master": {
-          const definitions = diff.values.map((d) => {
-            return define(d);
-          });
-          return definitions.filter((d) => d).flat();
-        }
       }
     }
   };
 
-  const properties = define(property_meta);
+  const define_instance = (diff: InstanceDiff) => {
+    const definitions = diff.values.map((d) => {
+      return define(d);
+    });
+    return definitions.filter((d) => d) as any;
+  };
+
+  const properties = define_instance(property_meta);
+  console.log("properties", properties);
 
   const master = new MasterComponentMetaToken({
     key: property_meta.ids[0], // TODO:
@@ -78,13 +86,20 @@ export function make_instance_component_meta({ entry, components }: Input) {
         key: p.type,
         type: p.type,
         defaultValue: p.default_value,
+        link: {
+          type: "design-link",
+          linksto: {
+            type: "path-property-link",
+            path: "",
+            property: p.type,
+          }, // TODO:
+        },
       };
     }),
-    propertiesLink: {},
     child: components[property_meta.ids[0]],
   });
 
-  const use = new InstanceMetaToken({
+  const entryInstance = new InstanceMetaToken({
     master: master,
     key: entry.id,
     arguments: properties.reduce(function (result, item, index, array) {
@@ -98,7 +113,7 @@ export function make_instance_component_meta({ entry, components }: Input) {
 
   return new ComponentsUsageRepository({
     components: [master],
-    usage: { [entry.id]: use },
+    usage: { [entry.id]: entryInstance },
   });
 }
 

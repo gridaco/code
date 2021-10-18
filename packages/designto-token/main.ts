@@ -26,7 +26,7 @@ import { wrap_with_stretched } from "./token-stretch";
 import { wrap_with_layer_blur } from "./token-effect/layer-blur";
 import { wrap_with_background_blur } from "./token-effect/background-blur";
 import { wrap_with_rotation } from "./token-rotation";
-import flags_handling_gate from "./token-flags-gate";
+import flags_handling_gate from "./support-flags";
 
 export type { Widget };
 

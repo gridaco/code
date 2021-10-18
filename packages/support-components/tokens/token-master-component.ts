@@ -1,44 +1,40 @@
+import type { Link } from "../property-path";
+
 export class MasterComponentMetaToken<T> {
   readonly key: string;
   /**
    * property definition
    */
-  readonly properties: Property[];
+  readonly properties: Property<T>[];
 
   /**
    * property link to design property
    */
-  readonly propertiesLink: PropertyLink<T>[];
   readonly child: T;
 
   constructor({
     key,
     properties,
-    propertiesLink,
     child,
   }: {
     readonly key: string;
-    readonly properties: Property[];
-    readonly propertiesLink;
+    readonly properties: Property<T>[];
     readonly child: T;
   }) {
     this.key = key;
     this.properties = properties;
-    this.propertiesLink = propertiesLink;
     this.child = child;
   }
 }
 
-interface Property {
+interface Property<T> {
   key: string;
   type: any;
   defaultValue: any;
+  link: PropertyLink<T>;
 }
 
-interface PropertyLink<T> {
-  key: string;
-  link: InstanciationPropertyLink<T> | DesignPropertyLink<T>;
-}
+type PropertyLink<T> = InstanciationPropertyLink<T> | DesignPropertyLink<T>;
 
 /**
  * Property link to a instanciation of (another) component.
@@ -46,7 +42,7 @@ interface PropertyLink<T> {
 interface InstanciationPropertyLink<T> {
   type: "instanciation-link";
   master: MasterComponentMetaToken<T>;
-  linksto: string;
+  linksto: Link;
 }
 
 interface DesignPropertyLink<T> {
@@ -55,5 +51,5 @@ interface DesignPropertyLink<T> {
    * path to a property as indexpath.
    * e.g. [0,1,'text[@data]']
    */
-  linksto: string;
+  linksto: Link;
 }
