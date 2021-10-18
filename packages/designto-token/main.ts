@@ -46,18 +46,6 @@ export function tokenize(
     throw "A valid design node should be passed in order to tokenize it into a reflect widget.";
   }
   __dangerous_current_config = { ...config }; // unwrapping so every call can have a new config variable changed.
-  return rootHandler(node, config);
-}
-
-/**
- * generator for root node
- * @param node
- * @returns
- */
-function rootHandler(
-  node: nodes.ReflectSceneNode,
-  config: TokenizerConfig
-): Widget {
   return dynamicGenerator(node, config) as Widget;
 }
 
