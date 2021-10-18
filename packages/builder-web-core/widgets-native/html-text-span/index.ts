@@ -68,7 +68,7 @@ export class Text extends TextChildWidget {
     if (!!this.textStyle.letterSpacing) {
       textStyle = {
         ...textStyle,
-        "letter-spacing": css.length(this.textStyle.letterSpacing),
+        "letter-spacing": css.letterSpacing(this.textStyle.letterSpacing),
       };
     }
 
