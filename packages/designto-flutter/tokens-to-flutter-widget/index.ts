@@ -191,7 +191,7 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     thisFlutterWidget = handleChild(widget.child);
   }
   // ----- endregion clip path ------
-  else if (widget instanceof core.Text) {
+  else if (widget instanceof core.RenderedText) {
     const _escaped_dart_string = escapeDartString(widget.data);
     thisFlutterWidget = new flutter.Text(_escaped_dart_string, {
       ...widget,

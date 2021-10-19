@@ -133,7 +133,7 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     });
   }
   // ----- endregion clip path ------
-  else if (widget instanceof core.Text) {
+  else if (widget instanceof core.RenderedText) {
     thisWebWidget = new web.Text({
       ...widget,
       textStyle:
