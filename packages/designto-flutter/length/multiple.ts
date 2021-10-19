@@ -3,18 +3,16 @@ import { DimensionLength } from "@reflect-ui/core";
 
 export function multiple(origin: number, target: DimensionLength) {
   if (typeof target === "string") {
-    const regx = /\d+/;
-    const targetToNum = parseInt(target.match(regx)[0]);
-
+   
     if (target.endsWith("%")) {
-      return origin * (targetToNum / 100);
+      return origin * (parseFloat(target) / 100);
     }
 
     if (target.endsWith("px")) {
-      return targetToNum / origin;
+      return (parseFloat(target) / origin);
     }
 
-    return targetToNum;
+    return (parseFloat(target));
   }
 
   if (typeof target === "number") {
