@@ -49,6 +49,8 @@ export class Text extends TextChildWidget {
       "font-family": css.fontFamily(this.textStyle.fontFamily),
       "font-weight": css.convertToCssFontWeight(this.textStyle.fontWeight),
       "word-spacing": this.textStyle.wordSpacing,
+      "letter-spacing": css.letterSpacing(this.textStyle.letterSpacing),
+      "line-height": css.length(this.textStyle.lineHeight),
       "text-align": this.textAlign,
       "text-decoration": css.textDecoration(this.textStyle.decoration),
       // ------------------------------------------
@@ -57,20 +59,6 @@ export class Text extends TextChildWidget {
       // Also flex: 1 is required to make the text wrap.
       width: css.px(this.width),
     };
-
-    // Not specified in case of auto
-    if (!!this.textStyle.lineHeight) {
-      textStyle = {
-        ...textStyle,
-        "line-height": css.length(this.textStyle.lineHeight),
-      };
-    }
-    if (!!this.textStyle.letterSpacing) {
-      textStyle = {
-        ...textStyle,
-        "letter-spacing": css.letterSpacing(this.textStyle.letterSpacing),
-      };
-    }
 
     return <CSSProperties>textStyle;
   }
