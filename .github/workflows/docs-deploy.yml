@@ -17,4 +17,4 @@ jobs:
           destination-github-username: "gridaco"
           destination-repository-name: "ci-playground"
           user-email: github@grida.co
-          target-branch: docs
+          target-branch: main
