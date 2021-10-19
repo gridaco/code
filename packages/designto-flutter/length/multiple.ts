@@ -7,7 +7,7 @@ export function multiple(origin: number, target: DimensionLength) {
     const targetToNum = parseInt(target.match(regx)[0]);
 
     if (target.endsWith("%")) {
-      return origin * (origin / 100);
+      return origin * (targetToNum / 100);
     }
 
     if (target.endsWith("px")) {
@@ -18,7 +18,7 @@ export function multiple(origin: number, target: DimensionLength) {
   }
 
   if (typeof target === "number") {
-    return origin / target;
+    return target / origin;
   }
 
   // if (target.type == "calc") {

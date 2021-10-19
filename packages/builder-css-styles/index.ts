@@ -14,6 +14,7 @@ export * from "./position";
 export * from "./justify-content";
 export * from "./min-height";
 export * from "./length";
+export * from "./letter-spacing";
 export * from "./calc";
 export * from "./opacity";
 export * from "./blur";
