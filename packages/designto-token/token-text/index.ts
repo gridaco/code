@@ -46,7 +46,7 @@ export function fromText(node: nodes.ReflectTextNode): Text {
       fontWeight: node.fontWeight,
       color: node.primaryColor,
       lineHeight: node.lineHeight,
-      // letter spacing
+      letterSpacing: node.letterSpacing,
     }),
     ...wh,
   });
