@@ -12,6 +12,7 @@ import { BaseImageRepositories } from "@design-sdk/core/assets-repository";
 import { k } from "@web-builder/core";
 import { default_tokenizer_config } from "@designto/token/config";
 import { default_build_configuration } from "@designto/config";
+import { reusable } from "@code-features/component";
 
 interface AssetsConfig {
   asset_repository?: BaseImageRepositories<string>;
@@ -43,7 +44,7 @@ export async function designToCode({
   let config = { ...default_tokenizer_config, id: input.id };
   if (build_config.force_root_widget_fixed_size_no_scroll) {
     config.custom_wrapping_provider = (w, n, d) => {
-      if (n.id === input.design.id) {
+      if (n.id === input.entry.id) {
         return wrap.withSizedBox(wrap.withOverflowBox(w), {
           width: n.width,
           height: n.height,
@@ -52,7 +53,16 @@ export async function designToCode({
       return false;
     };
   }
-  const token = tokenize(input.design, config);
+  const token = tokenize(input.entry, config);
+
+  // post token processing for componentization
+  if (!build_config.disable_components) {
+    const reusableTokensTree = reusable({
+      token,
+      repository: input.repository,
+    });
+    // TODO: WIP
+  }
 
   const _tokenized_widget_input = { widget: token };
   switch (framework.framework) {

@@ -1,4 +1,5 @@
 import { ReflectSceneNode } from "@design-sdk/figma-node";
+import { Figma } from "@design-sdk/figma-types";
 import { tokenize } from "@designto/token";
 import React from "react";
 import { canvas } from "../../components";
@@ -7,6 +8,7 @@ import { visualize_node } from "../../components/visualization";
 import {
   JsonTree,
   WidgetTree,
+  WidgetTreeLegend,
 } from "../../components/visualization/json-visualization/json-tree";
 import { DefaultEditorWorkspaceLayout } from "../../layout/default-editor-workspace-layout";
 import LoadingLayout from "../../layout/loading-overlay";
@@ -16,6 +18,7 @@ import {
 } from "../../layout/panel";
 import { WorkspaceBottomPanelDockLayout } from "../../layout/panel/workspace-bottom-panel-dock-layout";
 import { useDesign } from "../../query-hooks";
+import { make_instance_component_meta } from "@code-features/component";
 
 export default function InspectComponent() {
   //
@@ -42,10 +45,11 @@ export default function InspectComponent() {
   const { node, reflect, raw, remote, figma, url } = design;
   //
 
-  let tokenTree;
-  if (design.reflect) {
-    tokenTree = tokenize(design.reflect);
-  }
+  const tokenTree = tokenize(design.reflect);
+  const componentMetaTree = make_instance_component_meta({
+    entry: design.figma,
+    components: design.raw.components as any,
+  });
 
   return (
     <>
@@ -78,12 +82,37 @@ export default function InspectComponent() {
                 }}
               >
                 <div style={{ flex: 1 }}>
-                  <WidgetTree data={design.figma} />
+                  <div>
+                    <WidgetTreeLegend title="Raw" />
+                    <WidgetTree data={design.raw as any} />
+                  </div>
                 </div>
                 <div style={{ flex: 1 }}>
+                  <WidgetTreeLegend title="Figma" />
+                  <WidgetTree
+                    data={json_only_component_related_fields(design.figma)}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div>
+                    <WidgetTreeLegend title="Reflect" />
+                    <WidgetTree data={design.reflect} />
+                  </div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <WidgetTreeLegend title="Component Meta" />
+                  <WidgetTree data={componentMetaTree as any} />
+                </div>
+                {/* <div style={{ flex: 1 }}>
+                  <WidgetTreeLegend title="Component tokens" />
+                  <WidgetTree data={componentMetaTree as any} />
+                </div> */}
+                {/* <div style={{ flex: 1 }}>
+                  <WidgetTreeLegend title="Reflect" />
                   <WidgetTree data={design.reflect} />
-                </div>
+                </div> */}
                 <div style={{ flex: 1 }}>
+                  <WidgetTreeLegend title="Tokens" />
                   <JsonTree hideRoot data={tokenTree} />
                 </div>
               </div>
@@ -94,6 +123,27 @@ export default function InspectComponent() {
       <JsonTree hideRoot data={reflect} />
     </>
   );
+}
+
+function json_only_component_related_fields(
+  node: Figma.InstanceNode | Figma.ComponentNode
+) {
+  const fields = node.children
+    .map((child) => {
+      if (child.type === "INSTANCE") {
+        return json_only_component_related_fields(child);
+      }
+    })
+    .filter(Boolean);
+
+  return {
+    id: node.id,
+    type: node.type,
+    name: node.name,
+    mainComponentId: node["mainComponentId"],
+    parentId: node.parentId,
+    children: fields,
+  };
 }
 
 function nodeToTreeVisualData(node: ReflectSceneNode): visualize_node.TreeNode {

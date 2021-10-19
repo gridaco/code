@@ -37,8 +37,8 @@ export function fromText(node: nodes.ReflectTextNode): Text {
 
   return new Text({
     key: keyFromNode(node),
-    data: node.text,
-    alignment: node.textAlign,
+    data: node.data,
+    textAlign: node.textAlign,
     style: new TextStyle({
       decoration: node.textDecoration,
       fontFamily: node.fontName?.family,

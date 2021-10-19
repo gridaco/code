@@ -195,6 +195,7 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     const _escaped_dart_string = escapeDartString(widget.data);
     thisFlutterWidget = new flutter.Text(_escaped_dart_string, {
       ...widget,
+      textAlign: dartui.textAlign(widget.textAlign),
       style: painting.textStyle(widget.style),
       /** explicit assignment - field name is different */
       //   key: _key,
