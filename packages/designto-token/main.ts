@@ -46,6 +46,16 @@ export function tokenize(
     throw "A valid design node should be passed in order to tokenize it into a reflect widget.";
   }
   __dangerous_current_config = { ...config }; // unwrapping so every call can have a new config variable changed.
+  return independantTokenizer(node, config);
+}
+
+/**
+ * tokenize a single node, without any reference of component use.
+ */
+function independantTokenizer(
+  node: SingleOrArray<nodes.ReflectSceneNode>,
+  config: TokenizerConfig
+) {
   return dynamicGenerator(node, config) as Widget;
 }
 
@@ -73,7 +83,6 @@ function dynamicGenerator(
     const widgets: Array<Widget> = [];
     node = node as Array<nodes.ReflectSceneNode>;
     node
-      // .reverse()
       // .sort(byY)
       .filter(ignore_masking_pipline(config.sanitizer_ignore_masking_node))
       .forEach((node, index) => {
@@ -82,12 +91,9 @@ function dynamicGenerator(
 
     // filter empty widgets (safe checker logic)
     const finalWidgets = widgets.filter((w) => array.filters.notEmpty(w));
-    // console.log("flutterWidgetGenerator complete", widgets)
     return finalWidgets;
   } else {
-    node = node as nodes.ReflectSceneNode;
-    const finalWidget = node_handler(node, config);
-    return finalWidget;
+    return node_handler(node, config);
   }
 }
 
@@ -176,6 +182,7 @@ function handleNode(
   // --------------------------- Pre processors ------------------------------
   // -------------------------------------------------------------------------
   let tokenizedTarget: Widget = null;
+  // masking handler
   if (containsMasking(node)) {
     tokenizedTarget = tokenizeMasking.fromMultichild(
       node as MaskingItemContainingNode,
@@ -183,6 +190,7 @@ function handleNode(
     );
   }
 
+  // flags handler
   if (!tokenizedTarget) {
     if (
       !config.disable_flags_support &&
