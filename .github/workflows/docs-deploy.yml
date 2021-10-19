@@ -1,7 +1,7 @@
 name: docsdeploy
 on:
   push:
-    branches: [main, docs-deploy]
+    branches: [main]
   pull_request:
     branches: [main]
 jobs:
@@ -16,7 +16,7 @@ jobs:
         with:
           source-directory: "docs"
           destination-github-username: "gridaco"
-          destination-repository-name: "ci-playground"
+          destination-repository-name: "grida.co"
           user-email: github@grida.co
-          target-branch: main
-          target-directory: "docs"
+          target-branch: docs
+          target-directory: "docs/@designto-code"
