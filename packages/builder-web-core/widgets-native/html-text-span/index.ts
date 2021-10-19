@@ -15,7 +15,7 @@ export class Text extends TextChildWidget {
   data: string;
   overflow: TextOverflow;
   textStyle: core.ITextStyle;
-  alignment: core.TextAlign;
+  textAlign: core.TextAlign;
   width?: number;
   height?: number;
 
@@ -24,7 +24,7 @@ export class Text extends TextChildWidget {
     data: string;
     overflow: TextOverflow;
     textStyle: core.ITextStyle;
-    alignment: core.TextAlign;
+    textAlign: core.TextAlign;
     width?: number;
     height?: number;
   }) {
@@ -34,7 +34,7 @@ export class Text extends TextChildWidget {
     this.data = p.data;
     this.overflow = p.overflow;
     this.textStyle = p.textStyle;
-    this.alignment = p.alignment;
+    this.textAlign = p.textAlign;
     this.width = p.width;
     this.height = p.height;
   }
@@ -48,9 +48,10 @@ export class Text extends TextChildWidget {
       "font-size": css.px(this.textStyle.fontSize),
       "font-family": css.fontFamily(this.textStyle.fontFamily),
       "font-weight": css.convertToCssFontWeight(this.textStyle.fontWeight),
-      "letter-spacing": css.length(this.textStyle.letterSpacing),
       "word-spacing": this.textStyle.wordSpacing,
-      "text-align": this.alignment,
+      "letter-spacing": css.letterSpacing(this.textStyle.letterSpacing),
+      "line-height": css.length(this.textStyle.lineHeight),
+      "text-align": this.textAlign,
       "text-decoration": css.textDecoration(this.textStyle.decoration),
       // ------------------------------------------
       "min-height": css.px(this.height),
@@ -58,14 +59,6 @@ export class Text extends TextChildWidget {
       // Also flex: 1 is required to make the text wrap.
       width: css.px(this.width),
     };
-
-    // Not specified in case of auto
-    if (!!this.textStyle.lineHeight) {
-      textStyle = {
-        ...textStyle,
-        "line-height": css.length(this.textStyle.lineHeight),
-      };
-    }
 
     return <CSSProperties>textStyle;
   }

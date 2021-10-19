@@ -37,8 +37,8 @@ export function fromText(node: nodes.ReflectTextNode): Text {
 
   return new Text({
     key: keyFromNode(node),
-    data: node.text,
-    alignment: node.textAlign,
+    data: node.data,
+    textAlign: node.textAlign,
     style: new TextStyle({
       decoration: node.textDecoration,
       fontFamily: node.fontName?.family,
@@ -46,7 +46,7 @@ export function fromText(node: nodes.ReflectTextNode): Text {
       fontWeight: node.fontWeight,
       color: node.primaryColor,
       lineHeight: node.lineHeight,
-      // letter spacing
+      letterSpacing: node.letterSpacing,
     }),
     ...wh,
   });

@@ -9,3 +9,7 @@
 ## style props layer
 
 - string for text style
+
+## Property
+
+### Text Property
