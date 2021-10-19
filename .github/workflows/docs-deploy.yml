@@ -1,0 +1,20 @@
+name: docsdeploy
+on:
+  push:
+    branches: [main]
+jobs:
+  copy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: copy docs to gridaco/grida.co
+        uses: DevOpenWRT-Router/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: "docs"
+          destination-github-username: "gridaco"
+          destination-repository-name: "grida.co"
+          user-email: github@grida.co
+          target-branch: docs
+          target-directory: "docs/@designto-code"
