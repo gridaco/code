@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [main]
 jobs:
-  build:
+  copy:
     runs-on: ubuntu-latest
     steps:
       - name: copy docs to gridaco/grida.co
@@ -13,7 +13,7 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          source-directory: "docs/design-to-code"
+          source-directory: "docs"
           destination-github-username: "gridaco"
           destination-repository-name: "ci-playground"
           user-email: github@grida.co
