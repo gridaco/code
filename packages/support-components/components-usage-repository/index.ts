@@ -17,6 +17,17 @@ export class ComponentsUsageRepository {
   }
 
   getMasterComponentOf(id: string) {
-    return this.usage[id].master;
+    return this.getUsageOf(id).master;
+  }
+
+  getUsageOf(id: string) {
+    return this.usage[id];
+  }
+
+  merge(other: ComponentsUsageRepository) {
+    return new ComponentsUsageRepository({
+      components: this.components.concat(other.components),
+      usage: Object.assign({}, this.usage, other.usage),
+    });
   }
 }
