@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: copy docs to gridaco/grida.co
-        uses: cpina/github-action-push-to-another-repository@main
+        uses: DevOpenWRT-Router/github-action-push-to-another-repository@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
@@ -19,3 +19,4 @@ jobs:
           destination-repository-name: "ci-playground"
           user-email: github@grida.co
           target-branch: main
+          target-directory: "docs"
