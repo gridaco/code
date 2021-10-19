@@ -15,7 +15,7 @@ export class Text extends TextChildWidget {
   data: string;
   overflow: TextOverflow;
   textStyle: core.ITextStyle;
-  alignment: core.TextAlign;
+  textAlign: core.TextAlign;
   width?: number;
   height?: number;
 
@@ -24,7 +24,7 @@ export class Text extends TextChildWidget {
     data: string;
     overflow: TextOverflow;
     textStyle: core.ITextStyle;
-    alignment: core.TextAlign;
+    textAlign: core.TextAlign;
     width?: number;
     height?: number;
   }) {
@@ -34,7 +34,7 @@ export class Text extends TextChildWidget {
     this.data = p.data;
     this.overflow = p.overflow;
     this.textStyle = p.textStyle;
-    this.alignment = p.alignment;
+    this.textAlign = p.textAlign;
     this.width = p.width;
     this.height = p.height;
   }
@@ -50,7 +50,7 @@ export class Text extends TextChildWidget {
       "font-weight": css.convertToCssFontWeight(this.textStyle.fontWeight),
       "letter-spacing": css.length(this.textStyle.letterSpacing),
       "word-spacing": this.textStyle.wordSpacing,
-      "text-align": this.alignment,
+      "text-align": this.textAlign,
       "text-decoration": css.textDecoration(this.textStyle.decoration),
       // ------------------------------------------
       "min-height": css.px(this.height),
