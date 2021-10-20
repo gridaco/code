@@ -27,7 +27,6 @@ export function reusable({
   });
 
   const components = component_use_repository.components.map((component) => {
-    console.log("tokenize component", component);
     const componentNode = component.body as ComponentNode;
     const componentTokenizedBody = tokenizeComponent.fromComponentNode(
       componentNode

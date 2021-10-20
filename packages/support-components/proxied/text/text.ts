@@ -59,6 +59,12 @@ export class ProxiedText extends Text implements ProxiedTextManifest {
       maxLines,
     });
 
+    this.data = data;
+    this.overflow = overflow;
+    this.style = style;
+    this.textAlign = textAlign;
+    this.maxLines = maxLines;
+
     this.width = width;
     this.height = height;
   }
