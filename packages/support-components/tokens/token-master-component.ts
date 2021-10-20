@@ -10,7 +10,7 @@ export class MasterComponentMetaToken<T> {
   /**
    * property link to design property
    */
-  readonly child: T;
+  readonly body: T;
 
   constructor({
     key,
@@ -23,7 +23,7 @@ export class MasterComponentMetaToken<T> {
   }) {
     this.key = key;
     this.properties = properties;
-    this.child = child;
+    this.body = child;
   }
 }
 

@@ -8,26 +8,27 @@ import {
   TextStyleManifest,
   WidgetKey,
 } from "@reflect-ui/core";
-import { Proxied } from "@reflect-ui/core/lib/_utility-types";
+import { Proxied, Rendered } from "@reflect-ui/core/lib/_utility-types";
+import { TextDataProxied } from "./text-data";
 
 interface ProxiedTextManifest extends TextManifest {
-  data: Proxied<string>;
-  style: Proxied<TextStyleManifest>;
-  overflow: Proxied<TextOverflow>;
-  textAlign: Proxied<TextAlignManifest>;
+  data: TextDataProxied;
+  style: Rendered<TextStyleManifest>;
+  overflow: Rendered<TextOverflow>;
+  textAlign: Rendered<TextAlignManifest>;
   //   textAlignVertical?: Proxied<TextAlignVerticalManifest>;
-  maxLines?: Proxied<number>;
+  maxLines?: Rendered<number>;
 }
 
 export class ProxiedText extends Text implements ProxiedTextManifest {
   // #region text manifest
   readonly _type: "Text" = "Text";
-  readonly data: Proxied<string>;
-  readonly overflow: Proxied<TextOverflow>;
-  readonly style: Proxied<ITextStyle>;
-  readonly textAlign: Proxied<TextAlign>;
+  readonly data: TextDataProxied;
+  readonly overflow: Rendered<TextOverflow>;
+  readonly style: Rendered<ITextStyle>;
+  readonly textAlign: Rendered<TextAlign>;
   // textAlignVertical: TextAlignVertical;
-  readonly maxLines?: Proxied<number>;
+  readonly maxLines?: Rendered<number>;
   // #endregion text manifest
 
   width?: number;
@@ -43,7 +44,7 @@ export class ProxiedText extends Text implements ProxiedTextManifest {
     width,
     height,
   }: {
-    key: WidgetKey;
+    key?: WidgetKey;
     width?: number;
     height?: number;
   } & Omit<ProxiedTextManifest, "overflow"> & {
