@@ -1,5 +1,6 @@
 import { nodes } from "@design-sdk/core";
 import { Text, TextStyle } from "@reflect-ui/core";
+import { TextShadowManifest } from "@reflect-ui/core";
 import { keyFromNode } from "../key";
 
 /**
@@ -47,6 +48,7 @@ export function fromText(node: nodes.ReflectTextNode): Text {
       color: node.primaryColor,
       lineHeight: node.lineHeight,
       letterSpacing: node.letterSpacing,
+      textShadow: node.shadows as TextShadowManifest[],
     }),
     ...wh,
   });
