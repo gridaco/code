@@ -27,16 +27,7 @@ import {
   WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
 import { wrap_with_export_assignment_react_component_identifier } from "../react-component-exporting";
-
-const IMPORT_DEFAULT_STYLED_FROM_EMOTION_STYLED = new Import()
-  .importDefault("styled")
-  .from("@emotion/styled")
-  .make();
-
-const imports = [
-  react_imports.import_react_from_react,
-  IMPORT_DEFAULT_STYLED_FROM_EMOTION_STYLED,
-];
+import { react } from "@designto/config";
 
 /**
  * styled components pattern with either emotion or styled-component
@@ -45,9 +36,14 @@ const imports = [
  * @returns
  */
 export function stringfyReactWidget_STYLED_COMPONENTS(
-  entry: WidgetTree
+  entry: WidgetTree,
+  {
+    config,
+  }: {
+    config: react.ReactStyledComponentsConfig;
+  }
 ): ReactComponentExportResult {
-  const builder = new ReactStyledComponentsBuilder({ entry });
+  const builder = new ReactStyledComponentsBuilder({ entry, config });
   return builder.asFile().finalize();
 }
 
@@ -56,8 +52,15 @@ class ReactStyledComponentsBuilder {
   private readonly widgetName: string;
   private readonly styledConfigWidgetMap: WidgetStyleConfigMap;
   private readonly namer: ScopedVariableNamer;
+  readonly config: react.ReactStyledComponentsConfig;
 
-  constructor({ entry }: { entry: WidgetTree }) {
+  constructor({
+    entry,
+    config,
+  }: {
+    entry: WidgetTree;
+    config: react.ReactStyledComponentsConfig;
+  }) {
     this.entry = entry;
     this.widgetName = entry.key.name;
     this.namer = new ScopedVariableNamer(
@@ -68,6 +71,7 @@ class ReactStyledComponentsBuilder {
       namer: this.namer,
       rename_tag: true /** styled component tag shoule be renamed */,
     });
+    this.config = config;
   }
 
   private styledConfig(
@@ -111,6 +115,29 @@ class ReactStyledComponentsBuilder {
     });
   }
 
+  partImports() {
+    return [this.partImportReact(), this.partImportStyled()];
+  }
+
+  partImportStyled() {
+    switch (this.config.module) {
+      case "@emotion/styled":
+        return new Import()
+          .importDefault("styled")
+          .from("@emotion/styled")
+          .make();
+      case "styled-components":
+        return new Import()
+          .importDefault("styled")
+          .from("styled-components")
+          .make();
+    }
+  }
+
+  partImportReact() {
+    return react_imports.import_react_from_react;
+  }
+
   partFunction(): FunctionDeclaration {
     let jsxTree = this.jsxBuilder(this.entry);
     const componentFunction = new FunctionDeclaration(this.widgetName, {
@@ -138,7 +165,7 @@ class ReactStyledComponentsBuilder {
 
     const functionDeclaration = this.partFunction();
 
-    file.imports(...imports);
+    file.imports(...this.partImports());
     file.declare(functionDeclaration);
     file.declare(...this.partDeclarations());
     file.export(
@@ -147,15 +174,22 @@ class ReactStyledComponentsBuilder {
       )
     );
 
-    return new Exportable(file);
+    return new Exportable(file, {
+      dependencies: ["@emotion/styled", "react"],
+    });
   }
 }
 
 class Exportable {
   readonly name: string;
   readonly file: SourceFile;
+  readonly dependencies: string[];
 
-  constructor(file: SourceFile) {
+  constructor(
+    file: SourceFile,
+    { dependencies = [] }: { dependencies?: string[] }
+  ) {
+    this.dependencies = dependencies;
     this.file = file;
   }
 
@@ -166,7 +200,7 @@ class Exportable {
     return {
       code: final,
       name: this.name,
-      dependencies: ["@emotion/styled", "react"],
+      dependencies: this.dependencies,
     };
   }
 }

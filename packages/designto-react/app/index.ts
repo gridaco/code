@@ -4,19 +4,29 @@ import {
   WidgetTree,
   stringfyReactWidget_STYLED_COMPONENTS,
 } from "@web-builder/react";
-import { react as config } from "@designto/config";
+import { react as config, react } from "@designto/config";
 import assert from "assert";
 export function buildReactApp(
   entry: WidgetTree,
-  options: { template: "cra" | "nextjs" }
+  config: react.ReactFrameworkConfig
 ): config.ReactComponentOutput {
-  const res = stringfyReactWidget_STYLED_COMPONENTS(entry);
-  return {
-    id: entry.key.id,
-    name: entry.key.name,
-    code: { raw: res.code },
-    scaffold: { raw: res.code },
-  };
+  switch (config.styling.type) {
+    case "styled-components": {
+      const res = stringfyReactWidget_STYLED_COMPONENTS(entry, {
+        config: config.styling,
+      });
+      return {
+        id: entry.key.id,
+        name: entry.key.name,
+        code: { raw: res.code },
+        scaffold: { raw: res.code },
+      };
+    }
+    case "css":
+    case "css-in-jsx":
+      throw new Error(`${config.styling.type} not supported yet`);
+      break;
+  }
 }
 
 export function buildReactWidget(widget: Widget) {

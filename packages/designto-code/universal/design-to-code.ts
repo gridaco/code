@@ -122,9 +122,7 @@ export async function designToReact({
   if (build_config.disable_components || !input.reusable_widget_tree) {
     const reactwidget = toreact.buildReactWidget(input.widget);
 
-    const res = toreact.buildReactApp(reactwidget, {
-      template: "cra",
-    });
+    const res = toreact.buildReactApp(reactwidget, react_config);
     // ------------------------------------------------------------------------
     // finilize temporary assets
     // this should be placed somewhere else
