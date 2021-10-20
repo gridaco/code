@@ -2,7 +2,8 @@ import { Widget } from "@reflect-ui/core";
 import { buildWebWidgetFromTokens } from "@designto/web/tokens-to-web-widget";
 import {
   WidgetTree,
-  stringfyReactWidget_STYLED_COMPONENTS,
+  finalizeReactWidget_StyledComponents,
+  finalizeReactReusable_StyledComponents__Experimental,
 } from "@web-builder/react";
 import { react as config, react } from "@designto/config";
 import assert from "assert";
@@ -12,7 +13,7 @@ export function buildReactApp(
 ): config.ReactComponentOutput {
   switch (config.styling.type) {
     case "styled-components": {
-      const res = stringfyReactWidget_STYLED_COMPONENTS(entry, {
+      const res = finalizeReactWidget_StyledComponents(entry, {
         styling: config.styling,
         exporting: config.component_declaration_style.exporting_style,
       });
@@ -39,6 +40,22 @@ export function buildReactWidget(widget: Widget) {
   return buildWebWidgetFromTokens(widget);
 }
 
-export function buildReusableReactApp__Experimental() {
-  //
+export function buildReusableReactApp__Experimental({
+  tree,
+  components,
+}: {
+  tree;
+  components;
+}) {
+  const res = finalizeReactReusable_StyledComponents__Experimental({
+    tree,
+    components,
+  });
+
+  return {
+    id: tree.key.id,
+    name: tree.key.name,
+    code: { raw: res.code }, //res.code
+    scaffold: { raw: res.code }, //res.code
+  };
 }

@@ -34,6 +34,7 @@ import { react } from "@designto/config";
 import { ReactModuleFile } from "../react-module-file";
 import { StyledComponentDeclaration } from "@web-builder/styled/styled-component-declaration";
 import { SyntaxKind } from "@coli.codes/core-syntax-kind";
+import { InstanceMetaToken } from "@code-features/component/tokens/token-instance";
 
 /**
  * styled components pattern with either emotion or styled-component
@@ -41,7 +42,7 @@ import { SyntaxKind } from "@coli.codes/core-syntax-kind";
  * @param entry
  * @returns
  */
-export function stringfyReactWidget_STYLED_COMPONENTS(
+export function finalizeReactWidget_StyledComponents(
   entry: WidgetTree,
   {
     styling,
@@ -53,6 +54,39 @@ export function stringfyReactWidget_STYLED_COMPONENTS(
 ): ReactComponentExportResult {
   const builder = new ReactStyledComponentsBuilder({ entry, config: styling });
   return builder.asExportableModule().finalize(exporting);
+}
+
+/**
+ * @deprecated wip
+ * @param param0
+ * @returns
+ */
+export function finalizeReactReusable_StyledComponents__Experimental({
+  tree,
+  components,
+}: {
+  tree;
+  components;
+}) {
+  const hanlde = (token) => {
+    if (token instanceof InstanceMetaToken) {
+      const children = token.master["children"]?.map(hanlde);
+      return {
+        ...token.master,
+        children,
+      };
+    } else {
+      return token;
+    }
+  };
+
+  const token = hanlde(tree);
+  //
+  console.log("reusable", tree, components, token);
+
+  return {
+    code: "wip",
+  };
 }
 
 class ReactStyledComponentsBuilder {

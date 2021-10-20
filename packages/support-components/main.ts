@@ -1,6 +1,9 @@
 import { ComponentNode, InstanceNode, NodeRepository } from "@design-sdk/figma";
 import { unwrappedChild } from "@designto/token/wrappings";
-import { Widget, WidgetKey } from "@reflect-ui/core";
+import {
+  RenderObjectWidget,
+  MultiChildRenderObjectWidget,
+} from "@reflect-ui/core";
 import { ComponentsUsageRepository } from "./components-usage-repository";
 import { make_instance_component_meta } from "./define";
 import { tokenizeComponent } from "./tokenize-component";
@@ -10,13 +13,13 @@ import { tokenizeComponent } from "./tokenize-component";
  */
 export function reusable({
   repository,
-  token,
+  entry,
 }: {
   repository: NodeRepository;
   /**
    * tokenized widget tree (entry) from previous result
    */
-  token: Widget;
+  entry: RenderObjectWidget;
 }): ReusableWidgetResult {
   const instances = repository.nodes.filter(
     (node) => node.origin === "INSTANCE"
@@ -41,13 +44,13 @@ export function reusable({
 
   return {
     // asumming root is always a multi child widget
-    tree: composeInstanciationTree(token, repository, component_use_repository),
+    tree: composeInstanciationTree(entry, repository, component_use_repository),
     components: components,
   };
 }
 
 const composeInstanciationTree = (
-  widget: Widget,
+  widget: RenderObjectWidget,
   repository: NodeRepository,
   componentsUsageRepository: ComponentsUsageRepository
 ) => {
@@ -60,7 +63,10 @@ const composeInstanciationTree = (
   } else {
     let child;
     let children;
-    if (Array.isArray(widget.children) && widget.children.length > 0) {
+    if (
+      widget instanceof MultiChildRenderObjectWidget &&
+      widget.children.length > 0
+    ) {
       children = widget.children.map((c) => {
         return composeInstanciationTree(
           c,

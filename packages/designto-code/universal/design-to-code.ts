@@ -60,12 +60,13 @@ export async function designToCode({
   if (!build_config.disable_components) {
     try {
       reusable_widget_tree = reusable({
-        token: vanilla_token,
+        entry: vanilla_token,
         repository: input.repository,
       });
-      console.log("reusableTokensTree", reusable_widget_tree);
       // TODO: WIP
-    } catch (_) {}
+    } catch (_) {
+      console.error(_);
+    }
   }
 
   const _tokenized_widget_input = {
@@ -119,7 +120,11 @@ export async function designToReact({
   build_config: config.BuildConfiguration;
   asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
-  if (build_config.disable_components || !input.reusable_widget_tree) {
+  if (
+    build_config.disable_components ||
+    // automatically fallbacks if no valid data was passed
+    !input.reusable_widget_tree
+  ) {
     const reactwidget = toreact.buildReactWidget(input.widget);
 
     const res = toreact.buildReactApp(reactwidget, react_config);
@@ -141,7 +146,9 @@ export async function designToReact({
 
     return res;
   } else {
-    //
+    return toreact.buildReusableReactApp__Experimental(
+      input.reusable_widget_tree
+    ) as any;
   }
 }
 
