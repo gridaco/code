@@ -1,4 +1,4 @@
-import { input, output, config } from "../proc";
+import { input, output, config, build } from "../proc";
 import { tokenize, wrap } from "@designto/token";
 import { Widget } from "@reflect-ui/core";
 import * as toreact from "@designto/react";
@@ -53,18 +53,25 @@ export async function designToCode({
       return false;
     };
   }
-  const token = tokenize(input.entry, config);
+  const vanilla_token = tokenize(input.entry, config);
 
   // post token processing for componentization
+  let reusable_widget_tree;
   if (!build_config.disable_components) {
-    const reusableTokensTree = reusable({
-      token,
-      repository: input.repository,
-    });
-    // TODO: WIP
+    try {
+      reusable_widget_tree = reusable({
+        token: vanilla_token,
+        repository: input.repository,
+      });
+      console.log("reusableTokensTree", reusable_widget_tree);
+      // TODO: WIP
+    } catch (_) {}
   }
 
-  const _tokenized_widget_input = { widget: token };
+  const _tokenized_widget_input = {
+    widget: vanilla_token,
+    reusable_widget_tree: reusable_widget_tree,
+  };
   switch (framework.framework) {
     case "vanilla":
       return designToVanilla({
@@ -104,7 +111,7 @@ export async function designToReact({
   build_config,
   asset_config,
 }: {
-  input: { widget: Widget };
+  input: { widget: Widget; reusable_widget_tree? };
   react_config: config.ReactFrameworkConfig;
   /**
    * TODO: pass this to tokenizer +@
@@ -112,26 +119,32 @@ export async function designToReact({
   build_config: config.BuildConfiguration;
   asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
-  const reactwidget = toreact.buildReactWidget(input.widget);
+  if (build_config.disable_components || !input.reusable_widget_tree) {
+    const reactwidget = toreact.buildReactWidget(input.widget);
 
-  const res = toreact.buildReactApp(reactwidget, {
-    template: "cra",
-  });
+    const res = toreact.buildReactApp(reactwidget, {
+      template: "cra",
+    });
+    // ------------------------------------------------------------------------
+    // finilize temporary assets
+    // this should be placed somewhere else
+    if (
+      asset_config?.asset_repository &&
+      !asset_config.skip_asset_replacement
+    ) {
+      const assets = await fetch_all_assets(asset_config.asset_repository);
+      res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
+      res.scaffold.raw = dangerous_temporary_asset_replacer(
+        res.scaffold.raw,
+        assets
+      );
+    }
+    // ------------------------------------------------------------------------
 
-  // ------------------------------------------------------------------------
-  // finilize temporary assets
-  // this should be placed somewhere else
-  if (asset_config?.asset_repository && !asset_config.skip_asset_replacement) {
-    const assets = await fetch_all_assets(asset_config.asset_repository);
-    res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
-    res.scaffold.raw = dangerous_temporary_asset_replacer(
-      res.scaffold.raw,
-      assets
-    );
+    return res;
+  } else {
+    //
   }
-  // ------------------------------------------------------------------------
-
-  return res;
 }
 
 export async function designToFlutter({
