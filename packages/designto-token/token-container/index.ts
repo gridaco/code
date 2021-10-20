@@ -7,7 +7,6 @@ import { tokenizeBorder } from "../token-border";
 function fromRectangle(rect: nodes.ReflectRectangleNode): core.Container {
   const container = new core.Container({
     key: keyFromNode(rect),
-    children: undefined,
     width: rect.width,
     height: rect.height,
     borderRadius: rect.cornerRadius,
@@ -25,7 +24,6 @@ function fromRectangle(rect: nodes.ReflectRectangleNode): core.Container {
 function fromEllipse(ellipse: nodes.ReflectEllipseNode): core.Container {
   const container = new core.Container({
     key: keyFromNode(ellipse),
-    children: undefined,
     width: ellipse.width,
     height: ellipse.height,
     boxShadow: ellipse.primaryShadow,

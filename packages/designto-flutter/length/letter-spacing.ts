@@ -1,10 +1,7 @@
-/**
- * FIXME: To be merged with multiple in the future
- */
-import { Dimension } from "@reflect-ui/core";
+import { LetterSpacing } from "@design-sdk/figma-types";
 import { rd } from "../_utils";
 
-export function multipleToDimension(origin: number, target: Dimension) {
+export function letterSpacing(origin: number, target: LetterSpacing) {
   if (target.unit === "PIXELS") {
     return rd(target.value / origin);
   }
@@ -12,5 +9,4 @@ export function multipleToDimension(origin: number, target: Dimension) {
   if (target.unit === "PERCENT") {
     return rd(origin * (target.value / 100));
   }
-  return 0;
 }

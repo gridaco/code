@@ -16,7 +16,7 @@ import {
 import { rd } from "../_utils";
 
 export function buildFlutterWidgetFromTokens(
-  widget: core.Widget
+  widget: core.DefaultStyleWidget
 ): flutter.Widget {
   const composed = compose(widget, {
     is_root: true,
@@ -29,14 +29,19 @@ export function buildFlutterWidgetFromTokens(
   return composed;
 }
 
-function compose(widget: core.Widget, context: { is_root: boolean }) {
-  const handleChildren = (children: core.Widget[]): flutter.Widget[] => {
+function compose(
+  widget: core.DefaultStyleWidget,
+  context: { is_root: boolean }
+) {
+  const handleChildren = (
+    children: core.DefaultStyleWidget[]
+  ): flutter.Widget[] => {
     return children?.map((c) => {
       return handleChild(c);
     });
   };
 
-  const handleChild = (child: core.Widget): flutter.Widget => {
+  const handleChild = (child: core.DefaultStyleWidget): flutter.Widget => {
     return compose(child, { ...context, is_root: false });
   };
 
@@ -191,7 +196,7 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     thisFlutterWidget = handleChild(widget.child);
   }
   // ----- endregion clip path ------
-  else if (widget instanceof core.Text) {
+  else if (widget instanceof core.RenderedText) {
     const _escaped_dart_string = escapeDartString(widget.data);
     thisFlutterWidget = new flutter.Text(_escaped_dart_string, {
       ...widget,
@@ -347,7 +352,7 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
  * ```
  */
 function compose_item_spacing_children(
-  children: core.Widget[],
+  children: core.DefaultStyleWidget[],
   args: {
     itemspacing: number;
     axis: Axis;
@@ -371,7 +376,7 @@ function compose_item_spacing_children(
  * ```
  */
 function compoes_children_with_injection(
-  children: core.Widget[],
+  children: core.DefaultStyleWidget[],
   between?: flutter.Widget
 ): flutter.Widget[] {
   const composedchildren = children.map((c) => {

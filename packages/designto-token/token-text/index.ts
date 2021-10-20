@@ -1,5 +1,5 @@
 import { nodes } from "@design-sdk/core";
-import { Text, TextStyle } from "@reflect-ui/core";
+import { RenderedText, TextStyle } from "@reflect-ui/core";
 import { keyFromNode } from "../key";
 
 /**
@@ -7,7 +7,7 @@ import { keyFromNode } from "../key";
  * @param node
  * @returns
  */
-export function fromText(node: nodes.ReflectTextNode): Text {
+export function fromText(node: nodes.ReflectTextNode): RenderedText {
   // 1. check if text is rich text
   // if () //
 
@@ -35,7 +35,7 @@ export function fromText(node: nodes.ReflectTextNode): Text {
   }
   // -------------------------------
 
-  return new Text({
+  return new RenderedText({
     key: keyFromNode(node),
     data: node.data,
     textAlign: node.textAlign,

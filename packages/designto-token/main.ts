@@ -259,11 +259,9 @@ function handle_by_types(
   config: TokenizerConfig
 ): Widget {
   let tokenizedTarget: Widget;
-  switch (node.type as string) {
+  switch (node.type) {
     case nodes.ReflectSceneNodeType.rectangle:
-      tokenizedTarget = tokenizeContainer.fromRectangle(
-        node as nodes.ReflectRectangleNode
-      );
+      tokenizedTarget = tokenizeContainer.fromRectangle(node);
       break;
 
     case nodes.ReflectSceneNodeType.text:
@@ -271,10 +269,9 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.frame:
-      const _frame = node as nodes.ReflectFrameNode;
       tokenizedTarget = tokenizeLayout.fromFrame(
-        _frame,
-        _frame.children,
+        node,
+        node.children,
         {
           is_root: node.isRoot,
         },
@@ -283,49 +280,43 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.vector:
-      const _vector = node as nodes.ReflectVectorNode;
-      tokenizedTarget = tokenizeVector.fromVector(_vector);
+      tokenizedTarget = tokenizeVector.fromVector(node);
       break;
 
-    case nodes.ReflectSceneNodeType.star:
-      tokenizedTarget = tokenizeVector.fromStar();
-      break;
+    // case nodes.ReflectSceneNodeType.star:
+    //   tokenizedTarget = tokenizeVector.fromStar();
+    //   break;
 
-    case nodes.ReflectSceneNodeType.poligon:
-      tokenizedTarget = tokenizeVector.fromPoligon();
-      break;
+    // case nodes.ReflectSceneNodeType.poligon:
+    //   tokenizedTarget = tokenizeVector.fromPoligon();
+    //   break;
 
     case nodes.ReflectSceneNodeType.group:
-      const _group = node as nodes.ReflectGroupNode;
       tokenizedTarget = tokenizeLayout.fromGroup(
-        _group,
-        _group.children,
+        node,
+        node.children,
         undefined,
         config
       );
       break;
 
     case nodes.ReflectSceneNodeType.ellipse:
-      const _ellipse = node as nodes.ReflectEllipseNode;
-      tokenizedTarget = tokenizeContainer.fromEllipse(_ellipse);
+      tokenizedTarget = tokenizeContainer.fromEllipse(node);
       break;
 
     case nodes.ReflectSceneNodeType.boolean_operation:
-      const _bool_op = node as nodes.ReflectBooleanOperationNode;
-      tokenizedTarget = tokenizeGraphics.fromBooleanOperation(_bool_op);
+      tokenizedTarget = tokenizeGraphics.fromBooleanOperation(node);
       break;
 
     case nodes.ReflectSceneNodeType.line:
       // FIXME: this is a temporary fallback. line should be handled with unique handler. (using rect's handler instead.)
-      tokenizedTarget = tokenizeContainer.fromRectangle(
-        node as nodes.ReflectRectangleNode
-      );
+      tokenizedTarget = tokenizeContainer.fromRectangle(node as any);
       break;
     // const _line = node as nodes.ReflectLineNode;
     // tokenizedTarget = tokenizeDivider.fromLine(_line);
 
     default:
-      console.error(`${node.type} is not yet handled by "@designto/token"`);
+      console.error(`${node["type"]} is not yet handled by "@designto/token"`);
       tokenizedTarget = tokenizeGraphics.fromAnyNode(node); // this is expensive
       tokenizedTarget.key.originName = `Fallbacked to image from - "${tokenizedTarget.key.originName}". this is a bug.`;
       break;
