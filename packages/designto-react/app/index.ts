@@ -13,7 +13,8 @@ export function buildReactApp(
   switch (config.styling.type) {
     case "styled-components": {
       const res = stringfyReactWidget_STYLED_COMPONENTS(entry, {
-        config: config.styling,
+        styling: config.styling,
+        exporting: config.component_declaration_style.exporting_style,
       });
       return {
         id: entry.key.id,

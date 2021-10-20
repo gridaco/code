@@ -26,8 +26,14 @@ import {
   getWidgetStylesConfigMap,
   WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
-import { wrap_with_export_assignment_react_component_identifier } from "../react-component-exporting";
+import {
+  add_export_keyword_modifier_to_declaration,
+  wrap_with_export_assignment_react_component_identifier,
+} from "../react-component-exporting";
 import { react } from "@designto/config";
+import { ReactModuleFile } from "../react-module-file";
+import { StyledComponentDeclaration } from "@web-builder/styled/styled-component-declaration";
+import { SyntaxKind } from "@coli.codes/core-syntax-kind";
 
 /**
  * styled components pattern with either emotion or styled-component
@@ -38,13 +44,15 @@ import { react } from "@designto/config";
 export function stringfyReactWidget_STYLED_COMPONENTS(
   entry: WidgetTree,
   {
-    config,
+    styling,
+    exporting,
   }: {
-    config: react.ReactStyledComponentsConfig;
+    styling: react.ReactStyledComponentsConfig;
+    exporting: react.ReactComponentExportingCofnig;
   }
 ): ReactComponentExportResult {
-  const builder = new ReactStyledComponentsBuilder({ entry, config });
-  return builder.asFile().finalize();
+  const builder = new ReactStyledComponentsBuilder({ entry, config: styling });
+  return builder.asExportableModule().finalize(exporting);
 }
 
 class ReactStyledComponentsBuilder {
@@ -138,13 +146,9 @@ class ReactStyledComponentsBuilder {
     return react_imports.import_react_from_react;
   }
 
-  partFunction(): FunctionDeclaration {
+  partBody(): BlockStatement {
     let jsxTree = this.jsxBuilder(this.entry);
-    const componentFunction = new FunctionDeclaration(this.widgetName, {
-      body: new BlockStatement(new Return(jsxTree)),
-    });
-
-    return componentFunction;
+    return new BlockStatement(new Return(jsxTree));
   }
 
   partDeclarations() {
@@ -157,44 +161,133 @@ class ReactStyledComponentsBuilder {
       .filter((s) => s);
   }
 
-  asFile() {
-    const file = new SourceFile({
-      name: `${this.widgetName}.tsx`,
-      path: "src/components",
-    });
-
-    const functionDeclaration = this.partFunction();
-
-    file.imports(...this.partImports());
-    file.declare(functionDeclaration);
-    file.declare(...this.partDeclarations());
-    file.export(
-      wrap_with_export_assignment_react_component_identifier(
-        functionDeclaration.id
-      )
+  asExportableModule() {
+    const body = this.partBody();
+    const imports = this.partImports();
+    const styled_declarations = this.partDeclarations();
+    return new ReactStyledComponentWidgetModuleExportable(
+      this.widgetName,
+      {
+        body,
+        imports,
+        declarations: styled_declarations,
+      },
+      {
+        dependencies: ["react", this.config.module],
+      }
     );
-
-    return new Exportable(file, {
-      dependencies: ["@emotion/styled", "react"],
-    });
   }
 }
 
-class Exportable {
+class ReactStyledComponentWidgetModuleExportable {
   readonly name: string;
-  readonly file: SourceFile;
   readonly dependencies: string[];
+  readonly body: BlockStatement;
+  readonly imports: ImportDeclaration[];
+  readonly declarations: StyledComponentDeclaration[];
 
   constructor(
-    file: SourceFile,
-    { dependencies = [] }: { dependencies?: string[] }
+    name,
+    {
+      body,
+      imports,
+      declarations,
+    }: {
+      body: BlockStatement;
+      imports: ImportDeclaration[];
+      declarations: StyledComponentDeclaration[];
+    },
+    {
+      dependencies = [],
+    }: {
+      dependencies?: string[];
+    }
   ) {
+    this.name = name;
+    this.body = body;
+    this.imports = imports;
+    this.declarations = declarations;
+
     this.dependencies = dependencies;
-    this.file = file;
   }
 
-  finalize() {
-    const final = stringfy(this.file.blocks, {
+  asFile({ exporting }: { exporting: react.ReactComponentExportingCofnig }) {
+    const file = new ReactModuleFile({
+      name: `${this.name}.tsx`,
+      path: "src/components",
+    });
+    file.imports(...this.imports);
+
+    console.log("exporting", exporting);
+    switch (exporting.type) {
+      case "export-default-anonymous-functional-component": {
+        // exporting.declaration_syntax_choice;
+        // exporting.export_declaration_syntax_choice;
+        // exporting.exporting_position;
+
+        const export_default_anaonymous_functional_component = new FunctionDeclaration(
+          undefined,
+          {
+            body: this.body,
+            modifiers: {
+              default: SyntaxKind.DefaultKeyword,
+              export: SyntaxKind.ExportKeyword,
+            },
+          }
+        );
+        file.declare(export_default_anaonymous_functional_component);
+        file.declare(...this.declarations);
+        break;
+      }
+      case "export-named-functional-component": {
+        // exporting.declaration_syntax_choice;
+        // exporting.export_declaration_syntax_choice;
+
+        const named_function_declaration = new FunctionDeclaration(this.name, {
+          body: this.body,
+        });
+
+        switch (exporting.exporting_position) {
+          case "after-declaration":
+            file.declare(named_function_declaration);
+            file.export(
+              wrap_with_export_assignment_react_component_identifier(
+                named_function_declaration.id
+              )
+            );
+            file.declare(...this.declarations);
+            break;
+          case "end-of-file":
+            file.declare(named_function_declaration);
+            file.declare(...this.declarations);
+            file.export(
+              wrap_with_export_assignment_react_component_identifier(
+                named_function_declaration.id
+              )
+            );
+            break;
+          case "with-declaration":
+            const _exported_named_function_declaration = add_export_keyword_modifier_to_declaration<FunctionDeclaration>(
+              named_function_declaration
+            );
+            file.declare(_exported_named_function_declaration);
+            file.declare(...this.declarations);
+            break;
+        }
+        break;
+      }
+      case "export-named-class-component":
+        break;
+      case "export-anonymous-class-component":
+        throw new Error("Class component not supported");
+    }
+
+    return file;
+  }
+
+  finalize(config: react.ReactComponentExportingCofnig) {
+    const file = this.asFile({ exporting: config });
+    const final = stringfy(file.blocks, {
       language: "tsx",
     });
     return {
