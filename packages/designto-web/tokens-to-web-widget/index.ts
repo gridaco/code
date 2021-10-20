@@ -14,6 +14,7 @@ import { compose_wrapped_with_positioned } from "./compose-wrapped-with-position
 import { compose_wrapped_with_clip_stretched } from "./compose-wrapped-with-stretched";
 import { compose_wrapped_with_sized_box } from "./compose-wrapped-with-sized-box";
 import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overflow-box";
+import { IWHStyleWidget } from "@reflect-ui/core";
 
 export function buildWebWidgetFromTokens(widget: core.Widget): WidgetTree {
   const composed = compose(widget, {
@@ -44,8 +45,8 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
   };
 
   const _remove_width_height_if_root_wh = {
-    width: context.is_root ? undefined : widget.width,
-    height: context.is_root ? undefined : widget.height,
+    width: context.is_root ? undefined : (widget as IWHStyleWidget).width,
+    height: context.is_root ? undefined : (widget as IWHStyleWidget).height,
   };
 
   const default_props_for_layout = {
