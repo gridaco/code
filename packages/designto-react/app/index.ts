@@ -5,23 +5,29 @@ import {
   stringfyReactWidget_STYLED_COMPONENTS,
 } from "@web-builder/react";
 import { react as config } from "@designto/config";
-
+import assert from "assert";
 export function buildReactApp(
-  widget: WidgetTree,
+  entry: WidgetTree,
   options: { template: "cra" | "nextjs" }
 ): config.ReactComponentOutput {
-  const res = stringfyReactWidget_STYLED_COMPONENTS(widget);
+  const res = stringfyReactWidget_STYLED_COMPONENTS(entry);
   return {
-    id: widget.key.id,
-    name: widget.key.name,
+    id: entry.key.id,
+    name: entry.key.name,
     code: { raw: res.code },
     scaffold: { raw: res.code },
   };
 }
 
 export function buildReactWidget(widget: Widget) {
-  if (!widget) {
-    throw "A valid reflect widget manifest should be passed as an input. none was passed.";
-  }
+  assert(
+    widget,
+    "A valid reflect widget manifest should be passed as an input. none was passed."
+  );
+
   return buildWebWidgetFromTokens(widget);
+}
+
+export function buildReusableReactApp__Experimental() {
+  //
 }
