@@ -41,126 +41,132 @@ const imports = [
 /**
  * styled components pattern with either emotion or styled-component
  * @todo - this is not fully implemented
- * @param component
+ * @param entry
  * @returns
  */
 export function stringfyReactWidget_STYLED_COMPONENTS(
-  component: WidgetTree
+  entry: WidgetTree
 ): ReactComponentExportResult {
-  const componentName = component.key.name;
-  const styledComponentNamer = new ScopedVariableNamer(
-    component.key.id,
-    ReservedKeywordPlatformPresets.react
-  );
-  // buildWidgetExportable(component);
+  const builder = new ReactStyledComponentsBuilder({ entry });
+  return builder.asFile().finalize();
+}
 
-  const styledConfigWidgetMap: WidgetStyleConfigMap = getWidgetStylesConfigMap(
-    component,
-    {
-      namer: styledComponentNamer,
+class ReactStyledComponentsBuilder {
+  private readonly entry: WidgetTree;
+  private readonly widgetName: string;
+  private readonly styledConfigWidgetMap: WidgetStyleConfigMap;
+  private readonly namer: ScopedVariableNamer;
+
+  constructor({ entry }: { entry: WidgetTree }) {
+    this.entry = entry;
+    this.widgetName = entry.key.name;
+    this.namer = new ScopedVariableNamer(
+      entry.key.id,
+      ReservedKeywordPlatformPresets.react
+    );
+    this.styledConfigWidgetMap = getWidgetStylesConfigMap(entry, {
+      namer: this.namer,
       rename_tag: true /** styled component tag shoule be renamed */,
-    }
-  );
-
-  function getStyledConfigById(
-    id: string
-  ): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
-    return styledConfigWidgetMap.get(id);
+    });
   }
 
-  function buildComponentFunction(): FunctionDeclaration {
-    function jsxBuilder(widget: WidgetTree) {
-      const _jsxcfg = widget.jsxConfig();
-      if (_jsxcfg.type === "static-tree") {
-        return _jsxcfg.tree;
+  private styledConfig(
+    id: string
+  ): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
+    return this.styledConfigWidgetMap.get(id);
+  }
+
+  private jsxBuilder(widget: WidgetTree) {
+    const _jsxcfg = widget.jsxConfig();
+    if (_jsxcfg.type === "static-tree") {
+      return _jsxcfg.tree;
+    }
+
+    const children = widget.children?.map((comp) => {
+      const config = this.styledConfig(comp.key.id);
+      if (comp instanceof TextChildWidget) {
+        return buildTextChildJsx(comp, config);
       }
 
-      const children = widget.children?.map((comp) => {
-        const config = getStyledConfigById(comp.key.id);
-        if (comp instanceof TextChildWidget) {
-          return buildTextChildJsx(comp, config);
-        }
-
-        const childrenJSX = comp.children?.map((cc) => jsxBuilder(cc));
-        return new JSXElement({
-          openingElement: new JSXOpeningElement(config.tag, {
-            attributes: config.attributes,
-          }),
-          closingElement: new JSXClosingElement(config.tag),
-          children: childrenJSX,
-        });
-      });
-
-      const config = getStyledConfigById(widget.key.id);
-      if (widget instanceof TextChildWidget) {
-        return buildTextChildJsx(widget, config);
-      }
+      const childrenJSX = comp.children?.map((cc) => this.jsxBuilder(cc));
       return new JSXElement({
         openingElement: new JSXOpeningElement(config.tag, {
           attributes: config.attributes,
         }),
         closingElement: new JSXClosingElement(config.tag),
-        children: children,
+        children: childrenJSX,
       });
-    }
+    });
 
-    let jsxTree = jsxBuilder(component);
-    const componentFunction = new FunctionDeclaration(componentName, {
+    const config = this.styledConfig(widget.key.id);
+    if (widget instanceof TextChildWidget) {
+      return buildTextChildJsx(widget, config);
+    }
+    return new JSXElement({
+      openingElement: new JSXOpeningElement(config.tag, {
+        attributes: config.attributes,
+      }),
+      closingElement: new JSXClosingElement(config.tag),
+      children: children,
+    });
+  }
+
+  partFunction(): FunctionDeclaration {
+    let jsxTree = this.jsxBuilder(this.entry);
+    const componentFunction = new FunctionDeclaration(this.widgetName, {
       body: new BlockStatement(new Return(jsxTree)),
     });
 
     return componentFunction;
   }
 
-  const componentFunction = buildComponentFunction();
+  partDeclarations() {
+    return Array.from(this.styledConfigWidgetMap.keys())
+      .map((k) => {
+        return (this.styledConfigWidgetMap.get(
+          k
+        ) as StyledComponentJSXElementConfig).styledComponent;
+      })
+      .filter((s) => s);
+  }
 
-  const styledComponentDeclarations = Array.from(styledConfigWidgetMap.keys())
-    .map((k) => {
-      return (styledConfigWidgetMap.get(k) as StyledComponentJSXElementConfig)
-        .styledComponent;
-    })
-    .filter((s) => s);
+  asFile() {
+    const file = new SourceFile({
+      name: `${this.widgetName}.tsx`,
+      path: "src/components",
+    });
 
-  const file = buildReactComponentFile({
-    componentName: componentName,
-    imports: imports,
-    component: componentFunction,
-    styleVariables: styledComponentDeclarations,
-  });
+    const functionDeclaration = this.partFunction();
 
-  const final = stringfy(file.blocks, {
-    language: "tsx",
-    // formatter: {
-    //   parser: "typescript",
-    //   use: "pritter",
-    // },
-  });
+    file.imports(...imports);
+    file.declare(functionDeclaration);
+    file.declare(...this.partDeclarations());
+    file.export(
+      wrap_with_export_assignment_react_component_identifier(
+        functionDeclaration.id
+      )
+    );
 
-  return {
-    code: final,
-    name: componentFunction.id.name,
-    dependencies: ["@emotion/styled", "react"],
-  };
+    return new Exportable(file);
+  }
 }
 
-function buildReactComponentFile(p: {
-  componentName: string;
-  imports: Array<ImportDeclaration>;
-  component: FunctionDeclaration;
-  styleVariables: Array<VariableDeclaration>;
-}): SourceFile {
-  const { imports, componentName, component, styleVariables } = p;
-  const file = new SourceFile({
-    name: `${componentName}.tsx`,
-    path: "src/components",
-  });
+class Exportable {
+  readonly name: string;
+  readonly file: SourceFile;
 
-  file.imports(...imports);
-  file.declare(component);
-  file.declare(...styleVariables);
-  file.export(
-    wrap_with_export_assignment_react_component_identifier(component.id)
-  );
+  constructor(file: SourceFile) {
+    this.file = file;
+  }
 
-  return file;
+  finalize() {
+    const final = stringfy(this.file.blocks, {
+      language: "tsx",
+    });
+    return {
+      code: final,
+      name: this.name,
+      dependencies: ["@emotion/styled", "react"],
+    };
+  }
 }
