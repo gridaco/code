@@ -19,6 +19,8 @@ interface AssetsConfig {
   skip_asset_replacement?: boolean;
 }
 
+export type Result = output.ICodeOutput & { widget: Widget };
+
 export async function designToCode({
   input,
   framework,
@@ -29,7 +31,7 @@ export async function designToCode({
   framework: config.FrameworkConfig;
   build_config?: config.BuildConfiguration;
   asset_config: AssetsConfig;
-}): Promise<output.ICodeOutput> {
+}): Promise<Result> {
   if (process.env.NODE_ENV === "development") {
     console.info(
       "dev: starting designtocode with user input",
@@ -74,28 +76,38 @@ export async function designToCode({
     widget: vanilla_token,
     reusable_widget_tree: reusable_widget_tree,
   };
+
   switch (framework.framework) {
     case "vanilla":
-      return designToVanilla({
-        input: _tokenized_widget_input,
-        build_config: build_config,
-        vanilla_config: framework,
-        asset_config: asset_config,
-      });
+      return {
+        ...(await designToVanilla({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          vanilla_config: framework,
+          asset_config: asset_config,
+        })),
+        ..._tokenized_widget_input,
+      };
     case "react":
-      return designToReact({
-        input: _tokenized_widget_input,
-        build_config: build_config,
-        react_config: framework,
-        asset_config: asset_config,
-      });
+      return {
+        ...(await designToReact({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          react_config: framework,
+          asset_config: asset_config,
+        })),
+        ..._tokenized_widget_input,
+      };
     case "flutter":
-      return designToFlutter({
-        input: _tokenized_widget_input,
-        build_config: build_config,
-        flutter_config: framework,
-        asset_config: asset_config,
-      });
+      return {
+        ...(await designToFlutter({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          flutter_config: framework,
+          asset_config: asset_config,
+        })),
+        ..._tokenized_widget_input,
+      };
   }
   throw `The framework "${framework}" is not supported at this point.`;
   return;
