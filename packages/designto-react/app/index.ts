@@ -1,14 +1,14 @@
 import { Widget } from "@reflect-ui/core";
 import { buildWebWidgetFromTokens } from "@designto/web/tokens-to-web-widget";
 import {
-  WidgetTree,
+  StylableJsxWidget,
   finalizeReactWidget_StyledComponents,
   finalizeReactReusable_StyledComponents__Experimental,
 } from "@web-builder/react";
 import { react as config, react } from "@designto/config";
 import assert from "assert";
 export function buildReactApp(
-  entry: WidgetTree,
+  entry: StylableJsxWidget,
   config: react.ReactFrameworkConfig
 ): config.ReactComponentOutput {
   switch (config.styling.type) {

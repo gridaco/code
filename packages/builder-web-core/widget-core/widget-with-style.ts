@@ -1,7 +1,5 @@
-import { Widget, IMultiChildWidget } from ".";
-import { ColiObject, JSXAttributes, JSXElementLike, JSXIdentifier } from "coli";
+import { JsxWidget, IMultiChildJsxWidget, JSXElementConfig } from ".";
 import { CSSProperties } from "@coli.codes/css";
-import { ColiObjectLike } from "@coli.codes/builder";
 import {
   Color,
   DimensionLength,
@@ -16,37 +14,15 @@ import { Background } from "@reflect-ui/core/lib/background";
 import { WidgetKey } from "../widget-key";
 import { positionAbsolute } from "@web-builder/styles";
 
-interface TagAndAttributeSegment {
-  tag: ColiObjectLike<JSXIdentifier>;
-  attributes?: JSXAttributes;
-}
-
-interface StaticTree {
-  tree: ColiObjectLike<JSXElementLike>;
-}
-
-export type UnstylableJSXElementConfig = StaticTree & {
-  type?: "static-tree";
-};
-
-export type StylableJSXElementConfig = TagAndAttributeSegment & {
-  type?: "tag-and-attr";
-};
-
-export type JSXElementConfig =
-  | StylableJSXElementConfig
-  | UnstylableJSXElementConfig;
-
 export interface IWidgetWithStyle {
   styleData(): CSSProperties;
-  jsxConfig(): JSXElementConfig;
 }
 
 /**
  * Since html based framework's widget can be represented withou any style definition, this WidgetWithStyle class indicates, that the sub instance of this class will contain style data within it.
  */
 export abstract class WidgetWithStyle
-  extends Widget
+  extends JsxWidget
   implements
     IWHStyleWidget,
     IPositionedWidget,
@@ -113,8 +89,8 @@ export abstract class WidgetWithStyle
  */
 export abstract class MultiChildWidgetWithStyle
   extends WidgetWithStyle
-  implements IWidgetWithStyle, IMultiChildWidget {
-  readonly children: Array<WidgetWithStyle> = [];
+  implements IWidgetWithStyle, IMultiChildJsxWidget {
+  readonly children: Array<JsxWidget> = [];
 
   constructor({ key }: { key: WidgetKey }) {
     super({ key: key });

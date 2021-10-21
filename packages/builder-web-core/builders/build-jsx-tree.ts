@@ -3,7 +3,8 @@ import {
   JSXElementConfig,
   StylableJSXElementConfig,
   TextChildWidget,
-  WidgetTree,
+  StylableJsxWidget,
+  JsxWidget,
 } from "@web-builder/core";
 import {
   JSXClosingElement,
@@ -21,15 +22,14 @@ export function buildTextChildJsx(
   textchildwidget: TextChildWidget,
   config: StylableJSXElementConfig
 ) {
-  const text = textchildwidget.text;
+  const text = textchildwidget.textData().jsxConfig();
   const tag = handle<JSXIdentifier>(config.tag);
 
-  const jsxtext = new JSXText(text);
   return new JSXElement({
     openingElement: new JSXOpeningElement(tag, {
       attributes: config.attributes,
     }),
-    children: jsxtext,
+    children: text.tree,
     closingElement: new JSXClosingElement(tag),
   });
 }
@@ -57,14 +57,14 @@ export function buildContainingJsx(
   }
 }
 
-export function buildJsx(widget: WidgetTree): JSXElementLike {
+export function buildJsx(widget: JsxWidget): JSXElementLike {
   const children = buildChildrenJsx(widget.children);
   const container = buildContainingJsx(widget.jsxConfig(), children);
   return container;
 }
 
 export function buildChildrenJsx(
-  children: Array<WidgetTree>
+  children: Array<JsxWidget>
 ): Array<JSXElementLike> {
   return children?.map((c) => {
     return buildJsx(c);

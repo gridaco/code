@@ -16,7 +16,11 @@ import {
   Return,
 } from "coli";
 import { react_imports } from "../react-import-specifications";
-import { TextChildWidget, WidgetTree } from "@web-builder/core";
+import {
+  TextChildWidget,
+  StylableJsxWidget,
+  JsxWidget,
+} from "@web-builder/core";
 import { ReactComponentExportResult } from "../export-result";
 import {
   buildTextChildJsx,
@@ -39,7 +43,7 @@ import { SyntaxKind } from "@coli.codes/core-syntax-kind";
  * @returns
  */
 export function finalizeReactWidget_StyledComponents(
-  entry: WidgetTree,
+  entry: StylableJsxWidget,
   {
     styling,
     exporting,
@@ -53,7 +57,7 @@ export function finalizeReactWidget_StyledComponents(
 }
 
 class ReactStyledComponentsBuilder {
-  private readonly entry: WidgetTree;
+  private readonly entry: StylableJsxWidget;
   private readonly widgetName: string;
   private readonly styledConfigWidgetMap: WidgetStyleConfigMap;
   private readonly namer: ScopedVariableNamer;
@@ -63,7 +67,7 @@ class ReactStyledComponentsBuilder {
     entry,
     config,
   }: {
-    entry: WidgetTree;
+    entry: StylableJsxWidget;
     config: react.ReactStyledComponentsConfig;
   }) {
     this.entry = entry;
@@ -85,7 +89,7 @@ class ReactStyledComponentsBuilder {
     return this.styledConfigWidgetMap.get(id);
   }
 
-  private jsxBuilder(widget: WidgetTree) {
+  private jsxBuilder(widget: JsxWidget) {
     const _jsxcfg = widget.jsxConfig();
     if (_jsxcfg.type === "static-tree") {
       return _jsxcfg.tree;
@@ -107,17 +111,19 @@ class ReactStyledComponentsBuilder {
       });
     });
 
-    const config = this.styledConfig(widget.key.id);
-    if (widget instanceof TextChildWidget) {
-      return buildTextChildJsx(widget, config);
+    if (widget instanceof StylableJsxWidget) {
+      const config = this.styledConfig(widget.key.id);
+      if (widget instanceof TextChildWidget) {
+        return buildTextChildJsx(widget, config);
+      }
+      return new JSXElement({
+        openingElement: new JSXOpeningElement(config.tag, {
+          attributes: config.attributes,
+        }),
+        closingElement: new JSXClosingElement(config.tag),
+        children: children,
+      });
     }
-    return new JSXElement({
-      openingElement: new JSXOpeningElement(config.tag, {
-        attributes: config.attributes,
-      }),
-      closingElement: new JSXClosingElement(config.tag),
-      children: children,
-    });
   }
 
   partImports() {

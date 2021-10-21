@@ -1,6 +1,11 @@
 import { buildCssStandard } from "@coli.codes/css";
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
-import { k, TextChildWidget, WidgetTree } from "@web-builder/core";
+import {
+  k,
+  TextChildWidget,
+  StylableJsxWidget,
+  JsxWidget,
+} from "@web-builder/core";
 import {
   buildTextChildJsx,
   getWidgetStylesConfigMap,
@@ -35,7 +40,7 @@ ${indenter(body, 2)}
 </html>`;
 };
 
-export function export_inlined_css_html_file(widget: WidgetTree) {
+export function export_inlined_css_html_file(widget: StylableJsxWidget) {
   const componentName = widget.key.name;
   const styledComponentNamer = new ScopedVariableNamer(
     widget.key.id,
@@ -53,7 +58,7 @@ export function export_inlined_css_html_file(widget: WidgetTree) {
     return styles_map.get(id);
   }
 
-  function buildBodyHtml(widget: WidgetTree) {
+  function buildBodyHtml(widget: JsxWidget) {
     const children = widget.children?.map((comp) => {
       const jsxcfg = comp.jsxConfig();
       if (jsxcfg.type === "static-tree") {
@@ -84,22 +89,23 @@ export function export_inlined_css_html_file(widget: WidgetTree) {
       return jsxcfg.tree;
     }
 
-    const config = getStyleConfigById(widget.key.id);
-    if (widget instanceof TextChildWidget) {
-      const jsx = buildTextChildJsx(widget, config);
+    if (widget instanceof StylableJsxWidget) {
+      const config = getStyleConfigById(widget.key.id);
+      if (widget instanceof TextChildWidget) {
+        const jsx = buildTextChildJsx(widget, config);
+        injectIdToJsx(jsx, config.id);
+        return jsx;
+      }
+      const jsx = new JSXElement({
+        openingElement: new JSXOpeningElement(config.tag, {
+          attributes: config.attributes,
+        }),
+        closingElement: new JSXClosingElement(config.tag),
+        children: children,
+      });
       injectIdToJsx(jsx, config.id);
       return jsx;
     }
-
-    const jsx = new JSXElement({
-      openingElement: new JSXOpeningElement(config.tag, {
-        attributes: config.attributes,
-      }),
-      closingElement: new JSXClosingElement(config.tag),
-      children: children,
-    });
-    injectIdToJsx(jsx, config.id);
-    return jsx;
   }
 
   const css_declarations = Array.from(styles_map.keys())

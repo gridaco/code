@@ -1,7 +1,7 @@
 import * as core from "@reflect-ui/core";
 import { tokens as special } from "@designto/token";
 import * as web from "@web-builder/core";
-import { WidgetTree } from "@web-builder/core";
+import { StylableJsxWidget } from "@web-builder/core";
 import { keyFromWidget } from "@web-builder/core";
 import { MainImageRepository } from "@design-sdk/core/assets-repository";
 import * as css from "@web-builder/styles";
@@ -16,7 +16,9 @@ import { compose_wrapped_with_sized_box } from "./compose-wrapped-with-sized-box
 import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overflow-box";
 import { IWHStyleWidget } from "@reflect-ui/core";
 
-export function buildWebWidgetFromTokens(widget: core.Widget): WidgetTree {
+export function buildWebWidgetFromTokens(
+  widget: core.Widget
+): StylableJsxWidget {
   const composed = compose(widget, {
     is_root: true,
   });
@@ -31,16 +33,16 @@ export function buildWebWidgetFromTokens(widget: core.Widget): WidgetTree {
 export type Composer = (
   widget: core.Widget,
   context?: { is_root: boolean }
-) => WidgetTree;
+) => StylableJsxWidget;
 
 function compose(widget: core.Widget, context: { is_root: boolean }) {
-  const handleChildren = (children: core.Widget[]): WidgetTree[] => {
+  const handleChildren = (children: core.Widget[]): StylableJsxWidget[] => {
     return children?.map((c) => {
       return handleChild(c);
     });
   };
 
-  const handleChild = (child: core.Widget): WidgetTree => {
+  const handleChild = (child: core.Widget): StylableJsxWidget => {
     return compose(child, { ...context, is_root: false });
   };
 
@@ -56,7 +58,7 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
 
   const _key = keyFromWidget(widget);
 
-  let thisWebWidget: WidgetTree;
+  let thisWebWidget: StylableJsxWidget;
   // ------------------------------------
   // region layouts
   // ------------------------------------

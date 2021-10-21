@@ -1,5 +1,5 @@
 import { CSSProperties } from "@coli.codes/css";
-import { JSXElementConfig, StylableJSXElementConfig, WidgetKey } from "../..";
+import { StylableJSXElementConfig, WidgetKey } from "../..";
 import {
   Border,
   BorderRadiusManifest,
@@ -8,12 +8,12 @@ import {
 import { Background } from "@reflect-ui/core/lib/background";
 import * as css from "@web-builder/styles";
 import { JSX } from "coli";
-import { WidgetTree } from "@web-builder/core/widget-tree/widget";
+import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
 
-export class Container extends WidgetTree {
+export class Container extends StylableJsxWidget {
   _type = "Container";
 
-  children?: WidgetTree[];
+  children?: StylableJsxWidget[];
   borderRadius?: BorderRadiusManifest;
   border?: Border;
 

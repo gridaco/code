@@ -1,5 +1,9 @@
 import { JSXElementConfig, StylableJSXElementConfig, WidgetKey } from "../..";
-import { TextChildWidget, WidgetTree } from "@web-builder/core";
+import {
+  TextDataWidget,
+  TextChildWidget,
+  StylableJsxWidget,
+} from "@web-builder/core";
 import * as core from "@reflect-ui/core";
 import { TextOverflow } from "@reflect-ui/core";
 import { CSSProperties } from "@coli.codes/css";
@@ -9,7 +13,7 @@ import * as css from "@web-builder/styles";
 
 export class Text extends TextChildWidget {
   _type: "Text";
-  children?: WidgetTree[];
+  children?: StylableJsxWidget[];
 
   // text properties
   data: string;
@@ -37,6 +41,13 @@ export class Text extends TextChildWidget {
     this.textAlign = p.textAlign;
     this.width = p.width;
     this.height = p.height;
+  }
+
+  textData() {
+    return new TextDataWidget({
+      key: { ...this.key, id: this.key.id + ".text-data" },
+      data: this.data,
+    });
   }
 
   styleData(): CSSProperties {

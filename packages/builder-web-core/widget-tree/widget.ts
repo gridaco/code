@@ -1,21 +1,23 @@
 import {
   WidgetKey,
   WidgetWithStyle,
+  JsxWidget,
   MultiChildWidgetWithStyle,
   UnstylableJSXElementConfig,
   StylableJSXElementConfig,
 } from "@web-builder/core";
+import { JSXText } from "coli";
 
 /**
  * Widget that requires no additional custom import rather than react
  */
-export abstract class WidgetTree extends WidgetWithStyle {
-  abstract readonly children?: WidgetTree[];
+export abstract class StylableJsxWidget extends WidgetWithStyle {
+  abstract readonly children?: JsxWidget[];
 }
 
 export abstract class SelfClosingWidget
-  extends WidgetTree
-  implements Omit<WidgetTree, "children"> {
+  extends StylableJsxWidget
+  implements Omit<StylableJsxWidget, "children"> {
   readonly children?: undefined;
   abstract jsxConfig(): StylableJSXElementConfig;
 }
@@ -24,11 +26,11 @@ export abstract class SelfClosingWidget
  * widget that contains multiple children in the same depth 1 hierarchy
  */
 export abstract class MultiChildWidget
-  extends WidgetTree
+  extends StylableJsxWidget
   implements MultiChildWidgetWithStyle {
-  readonly children: WidgetTree[] = [];
+  readonly children: JsxWidget[] = [];
   tag: string;
-  constructor(p: { key: WidgetKey; children: Array<WidgetTree> }) {
+  constructor(p: { key: WidgetKey; children: Array<JsxWidget> }) {
     super({ key: p.key });
     this.children = p.children;
   }
@@ -41,12 +43,11 @@ export abstract class MultiChildWidget
  * which is present for representing connection between prebuilt widget that accepts single child,
  * or for creating constraints for simple layouts such as margin wrap.
  */
-export abstract class SingleChildWidget extends MultiChildWidget {
-  readonly child: WidgetTree;
-  constructor(parameters: { key: WidgetKey; child: WidgetTree }) {
+export abstract class SingleChildWidget extends StylableJsxWidget {
+  readonly child?: JsxWidget;
+  constructor(parameters: { key: WidgetKey; child?: JsxWidget }) {
     super({
       key: parameters.key,
-      children: [parameters.child],
     });
 
     this.child = parameters.child;
@@ -59,7 +60,7 @@ export abstract class SingleChildWidget extends MultiChildWidget {
  * [SPECIAL] Independant widget that does not follow default builder's children handing logic, but containing it's own prebuilt children jsx
  * @todo @deprecated (not ready for use)
  */
-export abstract class IndependantWidget extends WidgetTree {
+export abstract class IndependantWidget extends StylableJsxWidget {
   abstract jsxConfig(): UnstylableJSXElementConfig;
 }
 
@@ -67,15 +68,30 @@ export abstract class IndependantWidget extends WidgetTree {
  * widget containing only text values.
  * e.g. <div>I'm Text</div>, <Typography>I'm Text</Typography>, <h1>I'm Text</h1>
  */
-export abstract class TextChildWidget extends WidgetTree {
-  readonly text: string;
-  children?: WidgetTree[];
-  constructor(p: { key: WidgetKey; data: string }) {
+export abstract class TextChildWidget extends SingleChildWidget {
+  readonly child: StylableJsxWidget;
+  children?: StylableJsxWidget[];
+  constructor(p: { key: WidgetKey }) {
     super({
       key: p.key,
     });
-
-    this.text = p.data;
   }
   abstract jsxConfig(): StylableJSXElementConfig;
+
+  abstract textData(): TextDataWidget;
+}
+
+export class TextDataWidget extends JsxWidget {
+  readonly data: string;
+  constructor({ data, key }: { data: string; key: WidgetKey }) {
+    super({ key: key });
+    this.data = data;
+  }
+
+  jsxConfig(): UnstylableJSXElementConfig<JSXText> {
+    return {
+      type: "static-tree",
+      tree: new JSXText(this.data),
+    };
+  }
 }

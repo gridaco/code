@@ -1,5 +1,5 @@
 import { CSSProperties } from "@coli.codes/css";
-import type { WidgetKeyId, WidgetTree } from "@web-builder/core";
+import { WidgetKeyId, StylableJsxWidget, JsxWidget } from "@web-builder/core";
 import { JSXAttributes, JSXIdentifier, ScopedVariableNamer } from "coli";
 import { buildStyledComponentConfig } from "../../builder-web-styled-components";
 
@@ -22,7 +22,7 @@ export type WidgetStyleConfigMap = Map<
 >;
 
 export function getWidgetStylesConfigMap(
-  rootWidget: WidgetTree,
+  rootWidget: StylableJsxWidget,
   preferences: {
     namer: ScopedVariableNamer;
     rename_tag: boolean;
@@ -30,27 +30,28 @@ export function getWidgetStylesConfigMap(
 ): WidgetStyleConfigMap {
   const styledConfigWidgetMap: WidgetStyleConfigMap = new Map();
 
-  function mapper(widget: WidgetTree) {
+  function mapper(widget: JsxWidget) {
     if (!widget) {
       throw `cannot map trough ${widget}`;
     }
-
     if (widget.jsxConfig().type === "static-tree") {
       return;
     }
 
     const isRoot = widget.key.id == rootWidget.key.id;
     const id = widget.key.id;
-    const styledConfig = buildStyledComponentConfig(widget, {
-      transformRootName: true,
-      namer: preferences.namer,
-      rename_tag: preferences.rename_tag,
-      context: {
-        root: isRoot,
-      },
-    });
+    if (widget instanceof StylableJsxWidget) {
+      const styledConfig = buildStyledComponentConfig(widget, {
+        transformRootName: true,
+        namer: preferences.namer,
+        rename_tag: preferences.rename_tag,
+        context: {
+          root: isRoot,
+        },
+      });
 
-    styledConfigWidgetMap.set(id, styledConfig);
+      styledConfigWidgetMap.set(id, styledConfig);
+    }
     widget.children?.map((childwidget) => {
       mapper(childwidget);
     });
