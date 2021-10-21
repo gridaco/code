@@ -13,6 +13,10 @@ export function boxShadow(
 
   const boxShadows: Array<flutter.BoxShadow> = shadows.map(
     (d: BoxShadowManifest) => {
+      if (!d) {
+        return;
+      }
+      
       return new flutter.BoxShadow({
         color: dartui.color(d.color),
         blurRadius: requiredNumber(d.blurRadius),
