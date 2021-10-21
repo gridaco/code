@@ -56,6 +56,15 @@ function composeInstanciationTree(
   widget = unwrappedChild(widget); // unwrap child to reach original input.
   const { key, _type: _widget_type } = widget;
   const node = repository.get(key.id);
+  if (!node) {
+    console.warn(
+      "node not found",
+      key,
+      repository,
+      "this is a know issue when trying to find a masking group. this will be fixed in the future."
+    );
+    return;
+  }
   if (node.origin === "INSTANCE") {
     const instanceMeta = componentsUsageRepository.getUsageOf(node.id);
     const instance = new InstanceWidget({

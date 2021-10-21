@@ -47,6 +47,7 @@ export class DesignInput implements IDesignInput {
   }): DesignInput {
     const _allnodes = mapGrandchildren(entry, 0, {
       includeThis: true,
+      ignoreGroup: false,
     });
 
     const repository = new NodeRepository({
