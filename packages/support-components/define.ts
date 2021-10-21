@@ -7,6 +7,7 @@ import {
 import { ComponentsUsageRepository } from "./components-usage-repository";
 import { MasterComponentMetaToken } from "./tokens/token-master-component";
 import { InstanceMetaToken } from "./tokens/token-instance";
+import { keyFromNode } from "@designto/token/key";
 
 type IDMappable<T> =
   | {
@@ -78,7 +79,7 @@ export function make_instance_component_meta({ entry, components }: Input) {
   const properties = define_instance(property_meta);
 
   const master = new MasterComponentMetaToken({
-    key: property_meta.ids[0], // TODO:
+    key: keyFromNode(findIn(components, property_meta.ids[0])),
     properties: properties.map((p) => {
       return {
         key: p.type,
@@ -99,7 +100,7 @@ export function make_instance_component_meta({ entry, components }: Input) {
 
   const entryInstance = new InstanceMetaToken({
     master: master,
-    key: entry.id,
+    key: keyFromNode(entry),
     arguments: properties.reduce(function (result, item, index, array) {
       result[item.type] = {
         key: item.type,

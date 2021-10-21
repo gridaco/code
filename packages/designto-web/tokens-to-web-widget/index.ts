@@ -1,7 +1,7 @@
 import * as core from "@reflect-ui/core";
 import { tokens as special } from "@designto/token";
 import * as web from "@web-builder/core";
-import { WidgetTree } from "@web-builder/core";
+import { JsxWidget, StylableJsxWidget } from "@web-builder/core";
 import { keyFromWidget } from "@web-builder/core";
 import { MainImageRepository } from "@design-sdk/core/assets-repository";
 import * as css from "@web-builder/styles";
@@ -14,8 +14,11 @@ import { compose_wrapped_with_positioned } from "./compose-wrapped-with-position
 import { compose_wrapped_with_clip_stretched } from "./compose-wrapped-with-stretched";
 import { compose_wrapped_with_sized_box } from "./compose-wrapped-with-sized-box";
 import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overflow-box";
+import { compose_instanciation } from "./compose-instanciation";
+import { IWHStyleWidget } from "@reflect-ui/core";
+import * as reusable from "@code-features/component/tokens";
 
-export function buildWebWidgetFromTokens(widget: core.Widget): WidgetTree {
+export function buildWebWidgetFromTokens(widget: core.Widget): JsxWidget {
   const composed = compose(widget, {
     is_root: true,
   });
@@ -30,22 +33,27 @@ export function buildWebWidgetFromTokens(widget: core.Widget): WidgetTree {
 export type Composer = (
   widget: core.Widget,
   context?: { is_root: boolean }
-) => WidgetTree;
+) => StylableJsxWidget;
 
-function compose(widget: core.Widget, context: { is_root: boolean }) {
-  const handleChildren = (children: core.Widget[]): WidgetTree[] => {
+function compose<T extends JsxWidget>(
+  widget: core.Widget,
+  context: { is_root: boolean }
+): T {
+  const handleChildren = <T extends JsxWidget>(
+    children: core.Widget[]
+  ): T[] => {
     return children?.map((c) => {
       return handleChild(c);
     });
   };
 
-  const handleChild = (child: core.Widget): WidgetTree => {
+  const handleChild = <T extends JsxWidget>(child: core.Widget): T => {
     return compose(child, { ...context, is_root: false });
   };
 
   const _remove_width_height_if_root_wh = {
-    width: context.is_root ? undefined : widget.width,
-    height: context.is_root ? undefined : widget.height,
+    width: context.is_root ? undefined : (widget as IWHStyleWidget).width,
+    height: context.is_root ? undefined : (widget as IWHStyleWidget).height,
   };
 
   const default_props_for_layout = {
@@ -55,7 +63,7 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
 
   const _key = keyFromWidget(widget);
 
-  let thisWebWidget: WidgetTree;
+  let thisWebWidget: JsxWidget;
   // ------------------------------------
   // region layouts
   // ------------------------------------
@@ -123,17 +131,18 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
   else if (widget instanceof core.ClipRRect) {
     thisWebWidget = compose_wrapped_with_clip_rrect(widget, handleChild);
   } else if (widget instanceof core.ClipPath) {
-    thisWebWidget = handleChild(widget.child);
-    thisWebWidget.extendStyle({
+    const child = handleChild<StylableJsxWidget>(widget.child);
+    child.extendStyle({
       ...css.clipPath(widget),
       top: undefined,
       left: undefined,
       right: undefined,
       bottom: undefined,
     });
+    thisWebWidget = child;
   }
   // ----- endregion clip path ------
-  else if (widget instanceof core.Text) {
+  else if (widget instanceof core.RenderedText) {
     thisWebWidget = new web.Text({
       ...widget,
       textStyle:
@@ -192,16 +201,17 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
 
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
   else if (widget instanceof core.Container) {
-    thisWebWidget = new web.Container({
+    const container = new web.Container({
       ...widget,
       key: _key,
       borderRadius: widget.borderRadius,
       width: widget.width,
       height: widget.height,
     });
-    thisWebWidget.x = widget.x;
-    thisWebWidget.y = widget.y;
-    thisWebWidget.background = widget.background;
+    container.x = widget.x;
+    container.y = widget.y;
+    container.background = widget.background;
+    thisWebWidget = container;
   }
 
   // -------------------------------------
@@ -211,7 +221,13 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
     thisWebWidget = compose_wrapped_with_clip_stretched(widget, handleChild);
   }
   // -------------------------------------
-
+  // -------------------------------------
+  // support component / instance
+  else if (widget instanceof reusable.InstanceWidget) {
+    thisWebWidget = compose_instanciation(widget, handleChild);
+  }
+  //
+  // -------------------------------------
   // -------------------------------------
   // end of logic gate
   // -------------------------------------
@@ -229,11 +245,11 @@ function compose(widget: core.Widget, context: { is_root: boolean }) {
 
   // post extending - do not abuse this
   if (context.is_root) {
-    thisWebWidget.extendStyle({
-      // TODO: add overflow x hide handling by case.
-      // "overflow-x": "hidden",
-    });
+    // thisWebWidget.extendStyle({
+    //   // TODO: add overflow x hide handling by case.
+    //   // "overflow-x": "hidden",
+    // });
   }
 
-  return thisWebWidget;
+  return thisWebWidget as T;
 }

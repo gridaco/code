@@ -1,7 +1,17 @@
+import { Widget, WidgetKey } from "@reflect-ui/core";
 import type { MasterComponentMetaToken } from "./token-master-component";
 
+export class InstanceWidget extends Widget {
+  readonly meta: InstanceMetaToken<any>;
+
+  constructor({ key, meta }: { key: WidgetKey; meta: InstanceMetaToken<any> }) {
+    super({ key });
+    this.meta = meta;
+  }
+}
+
 export class InstanceMetaToken<T> {
-  readonly key: string;
+  readonly key: WidgetKey;
   readonly master: MasterComponentMetaToken<T>;
   readonly arguments: { [key: string]: any };
 
@@ -10,7 +20,7 @@ export class InstanceMetaToken<T> {
     master,
     arguments: _arguments,
   }: {
-    readonly key: string;
+    readonly key: WidgetKey;
     readonly master: MasterComponentMetaToken<T>;
     readonly arguments: { [key: string]: any };
   }) {

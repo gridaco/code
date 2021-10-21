@@ -1,4 +1,4 @@
-import { WidgetTree } from "@web-builder/core/widget-tree/widget";
+import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
 import { ImportDeclaration, Import, JSX, JSXElementLike } from "coli";
 import {
   JSXElementConfig,
@@ -7,8 +7,8 @@ import {
 } from "@web-builder/core";
 import { ColiObjectLike } from "@coli.codes/builder";
 
-export abstract class ReflectReactWidget<T = any> extends WidgetTree {
-  children?: WidgetTree[];
+export abstract class ReflectReactWidget<T = any> extends StylableJsxWidget {
+  children?: StylableJsxWidget[];
   readonly _type: string;
   readonly imports: string;
   readonly tag: string;

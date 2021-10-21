@@ -1,4 +1,4 @@
-import { Widget } from "@web-builder/core";
+import { JsxWidget } from "@web-builder/core";
 import { standard_libraries } from "@coli.codes/nodejs-builder";
 import * as templates from "../templates";
 /**
@@ -17,7 +17,7 @@ import * as templates from "../templates";
  * @param options
  */
 export function buildWrapedCreateReactApp(
-  rootApp: Widget,
+  rootApp: JsxWidget,
   options: {
     language: "ts" | "js";
   }

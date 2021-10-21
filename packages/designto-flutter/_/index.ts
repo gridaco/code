@@ -1,1 +1,1 @@
-export * from "./flutter-props-conversion-fonfig";
+export * from "./flutter-props-conversion-config";

@@ -1,4 +1,4 @@
-import { WidgetTree } from "@web-builder/core/widget-tree/widget";
+import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
 import { CSSProperties } from "@coli.codes/css";
 import { JSXElementConfig, StylableJSXElementConfig, WidgetKey } from "../..";
 import { px, color } from "@web-builder/styles";
@@ -35,7 +35,7 @@ import { UnstylableJSXElementConfig } from "..";
     </svg>
  * ```
  */
-export class SvgElement extends WidgetTree {
+export class SvgElement extends StylableJsxWidget {
   _type = "svg";
 
   /**
@@ -84,7 +84,7 @@ export class SvgElement extends WidgetTree {
 
   private _init_children() {
     const path_with_fill = (fill: string | false) =>
-      <WidgetTree>{
+      <StylableJsxWidget>{
         key: new WidgetKey(`${this.key.id}.svg-path`, "svg-path"),
         styleData: () => null,
         jsxConfig: () => {
@@ -154,7 +154,7 @@ export class SvgElement extends WidgetTree {
                 closingElement: new JSXClosingElement(_def_id),
               });
 
-              const fill = <WidgetTree>{
+              const fill = <StylableJsxWidget>{
                 key: new WidgetKey(
                   `${this.key.id}.linear-gradient-fill`,
                   "linear-gradient-fill"

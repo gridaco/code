@@ -1,3 +1,9 @@
+---
+title: "Automatic property interfacing strategy for Components"
+version: 0.1.0
+revision: 1
+---
+
 # Automatic property interfacing strategy for Components
 
 > Learn more at [support-components](../packages/support-components/README.md)
@@ -8,6 +14,7 @@ This is based on diff checking of master `A` and instance `A'`, supporting below
 
 - text data
 - color on **single fill**
+- image as src uri on **single image fill**
 - item spacing
 - margin / padding
 

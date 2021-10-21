@@ -1,3 +1,9 @@
+---
+title: "CSS Clip path"
+version: 0.1.0
+revision: 1
+---
+
 # Css Clip path
 
 > css clip path for graphics making support

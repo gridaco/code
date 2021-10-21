@@ -4,7 +4,7 @@ import { textDecoration } from "./painting-text-decoration";
 import { fontStyle } from "./painting-font-style";
 import * as dartui from "../dart-ui";
 import { rd } from "../_utils";
-import { multiple, multipleToDimension } from "../length";
+import * as length from "../length";
 
 export function textStyle(style: ITextStyle): flutter.TextStyle {
   const { fontFamily, letterSpacing } = style;
@@ -25,8 +25,8 @@ export function textStyle(style: ITextStyle): flutter.TextStyle {
     fontFamily: fontFamily,
     color: dartui.color(style.color),
     fontStyle: fontStyle(style.fontStyle),
-    letterSpacing: multipleToDimension(style.fontSize, letterSpacing),
-    height: multiple(style.fontSize, style.lineHeight),
+    letterSpacing: length.letterSpacing(style.fontSize, letterSpacing),
+    height: length.multiple(style.fontSize, style.lineHeight),
     decoration: decoration,
     shadows: shadows,
   });
