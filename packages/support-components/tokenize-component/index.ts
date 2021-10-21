@@ -16,6 +16,9 @@ function fromComponentNode(component: ComponentNode) {
 function handleNode(node: ReflectSceneNode) {
   switch (node.type) {
     case "TEXT": {
+      //
+      // TODO: check overrided data, then process it.
+      //
       const _normal_text_token = tokenizeText.fromText(node);
       return new ProxiedText({
         ..._normal_text_token,

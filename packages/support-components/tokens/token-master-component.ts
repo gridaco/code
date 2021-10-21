@@ -1,7 +1,26 @@
+import { ProxyWidget, Widget, WidgetKey } from "@reflect-ui/core";
 import type { Link } from "../property-path";
 
+export class MasterComponentWidget extends ProxyWidget {
+  readonly _type: "MasterComponent" = "MasterComponent";
+  readonly meta: MasterComponentMetaToken<any>;
+
+  constructor({
+    key,
+    meta,
+    child,
+  }: {
+    key?: WidgetKey;
+    meta: MasterComponentMetaToken<any>;
+    child: Widget;
+  }) {
+    super({ key, child });
+    this.meta = meta;
+  }
+}
+
 export class MasterComponentMetaToken<T> {
-  readonly key: string;
+  readonly key: WidgetKey;
   /**
    * property definition
    */
@@ -17,7 +36,7 @@ export class MasterComponentMetaToken<T> {
     properties,
     child,
   }: {
-    readonly key: string;
+    readonly key: WidgetKey;
     readonly properties: Property<T>[];
     readonly child: T;
   }) {

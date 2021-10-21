@@ -8,7 +8,7 @@ import {
   TextStyleManifest,
   WidgetKey,
 } from "@reflect-ui/core";
-import { Proxied, Rendered } from "@reflect-ui/core/lib/_utility-types";
+import { Rendered } from "@reflect-ui/core/lib/_utility-types";
 import { TextDataProxied } from "./text-data";
 
 interface ProxiedTextManifest extends TextManifest {

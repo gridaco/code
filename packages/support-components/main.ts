@@ -3,10 +3,17 @@ import { unwrappedChild } from "@designto/token/wrappings";
 import {
   RenderObjectWidget,
   MultiChildRenderObjectWidget,
+  Widget,
+  SingleChildRenderObjectWidget,
 } from "@reflect-ui/core";
 import { ComponentsUsageRepository } from "./components-usage-repository";
 import { make_instance_component_meta } from "./define";
 import { tokenizeComponent } from "./tokenize-component";
+import { InstanceWidget } from "./tokens/token-instance";
+import {
+  MasterComponentMetaToken,
+  MasterComponentWidget,
+} from "./tokens/token-master-component";
 
 /**
  * make widget tree with reusable components
@@ -21,6 +28,7 @@ export function reusable({
    */
   entry: RenderObjectWidget;
 }): ReusableWidgetResult {
+  // all instances in the input scope
   const instances = repository.nodes.filter(
     (node) => node.origin === "INSTANCE"
   );
@@ -29,18 +37,9 @@ export function reusable({
     components: repository.components,
   });
 
-  const components = component_use_repository.components.map((component) => {
-    const componentNode = component.body as ComponentNode;
-    const componentTokenizedBody = tokenizeComponent.fromComponentNode(
-      componentNode
-    );
-
-    // .body = componentTokenizedBody;
-    return {
-      ...component,
-      body: componentTokenizedBody,
-    };
-  });
+  const components = component_use_repository.components.map(
+    composeComponentMeta
+  );
 
   return {
     // asumming root is always a multi child widget
@@ -49,48 +48,65 @@ export function reusable({
   };
 }
 
-const composeInstanciationTree = (
+function composeInstanciationTree(
   widget: RenderObjectWidget,
   repository: NodeRepository,
   componentsUsageRepository: ComponentsUsageRepository
-) => {
+) {
   widget = unwrappedChild(widget); // unwrap child to reach original input.
   const { key, _type: _widget_type } = widget;
   const node = repository.get(key.id);
   if (node.origin === "INSTANCE") {
-    const instanciation = componentsUsageRepository.getUsageOf(node.id);
-    return instanciation;
+    const instanceMeta = componentsUsageRepository.getUsageOf(node.id);
+    const instance = new InstanceWidget({
+      key: instanceMeta.key,
+      meta: instanceMeta,
+    });
+    return instance;
   } else {
-    let child;
-    let children;
     if (
       widget instanceof MultiChildRenderObjectWidget &&
       widget.children.length > 0
     ) {
-      children = widget.children.map((c) => {
-        return composeInstanciationTree(
-          c,
+      return {
+        ...widget,
+        children: widget.children.map((c) => {
+          return composeInstanciationTree(
+            c,
+            repository,
+            componentsUsageRepository
+          );
+        }),
+      };
+    } else if (widget instanceof SingleChildRenderObjectWidget) {
+      return {
+        ...widget,
+        child: composeInstanciationTree(
+          widget.child,
           repository,
           componentsUsageRepository
-        );
-      });
-    } else if ("child" in widget) {
-      child = composeInstanciationTree(
-        (widget as any).child,
-        repository,
-        componentsUsageRepository
-      );
+        ),
+      };
+    } else {
+      return widget;
     }
-
-    const tree = {
-      ...widget,
-      children: children,
-      child: child,
-    };
-
-    return tree;
   }
-};
+}
+
+function composeComponentMeta(
+  component: MasterComponentMetaToken<any>
+): MasterComponentWidget {
+  const componentNode = component.body as ComponentNode;
+  const componentTokenizedBody = tokenizeComponent.fromComponentNode(
+    componentNode
+  );
+
+  return new MasterComponentWidget({
+    key: component.key,
+    child: componentTokenizedBody,
+    meta: component,
+  });
+}
 
 /**
  * make full component use repository based on all used instances & component map.
@@ -125,6 +141,6 @@ function make_component_use_repository({
 }
 
 interface ReusableWidgetResult {
-  tree;
+  tree: Widget;
   components;
 }
