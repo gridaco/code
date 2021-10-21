@@ -23,7 +23,8 @@ export async function fetch_all_assets(
 
     fetches = {
       ...fetches,
-      ...(await asset_repository.fetchAll(...should_fetcg_keys)),
+      ...(should_fetcg_keys &&
+        (await asset_repository.fetchAll(...should_fetcg_keys))),
     };
 
     const fetched = {};
