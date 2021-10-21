@@ -1,3 +1,4 @@
+import { Dynamic } from "@reflect-ui/core/lib/_utility-types";
 import {
   WidgetKey,
   WidgetWithStyle,
@@ -6,7 +7,7 @@ import {
   UnstylableJSXElementConfig,
   StylableJSXElementConfig,
 } from "@web-builder/core";
-import { JSXText } from "coli";
+import { JSXExpression, JSXText, StringLiteral } from "coli";
 
 /**
  * Widget that requires no additional custom import rather than react
@@ -82,16 +83,26 @@ export abstract class TextChildWidget extends SingleChildWidget {
 }
 
 export class TextDataWidget extends JsxWidget {
-  readonly data: string;
-  constructor({ data, key }: { data: string; key: WidgetKey }) {
+  readonly data: Dynamic<string>;
+  constructor({ data, key }: { key: WidgetKey; data: Dynamic<string> }) {
     super({ key: key });
     this.data = data;
   }
 
-  jsxConfig(): UnstylableJSXElementConfig<JSXText> {
-    return {
-      type: "static-tree",
-      tree: new JSXText(this.data),
-    };
+  jsxConfig(): UnstylableJSXElementConfig<JSXText | JSXExpression> {
+    switch (typeof this.data) {
+      case "string": {
+        return {
+          type: "static-tree",
+          tree: new JSXText(this.data),
+        };
+      }
+      default: {
+        return {
+          type: "static-tree",
+          tree: new JSXExpression(new StringLiteral("wip")),
+        };
+      }
+    }
   }
 }

@@ -22,7 +22,7 @@ export type WidgetStyleConfigMap = Map<
 >;
 
 export function getWidgetStylesConfigMap(
-  rootWidget: StylableJsxWidget,
+  rootWidget: JsxWidget,
   preferences: {
     namer: ScopedVariableNamer;
     rename_tag: boolean;

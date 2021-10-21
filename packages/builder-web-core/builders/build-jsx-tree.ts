@@ -3,16 +3,14 @@ import {
   JSXElementConfig,
   StylableJSXElementConfig,
   TextChildWidget,
-  StylableJsxWidget,
   JsxWidget,
 } from "@web-builder/core";
 import {
+  JSXChildLike,
   JSXClosingElement,
   JSXElement,
-  JSXElementLike,
   JSXIdentifier,
   JSXOpeningElement,
-  JSXText,
 } from "coli";
 
 ////
@@ -36,11 +34,11 @@ export function buildTextChildJsx(
 
 export function buildContainingJsx(
   container: JSXElementConfig,
-  children: Array<JSXElementLike>
-): JSXElementLike {
+  children: Array<JSXChildLike>
+): JSXChildLike {
   switch (container.type) {
     case "static-tree": {
-      return handle<JSXElementLike>(container.tree);
+      return handle<JSXChildLike>(container.tree);
     }
     case "tag-and-attr": {
       const tag = handle<JSXIdentifier>(container.tag);
@@ -57,7 +55,7 @@ export function buildContainingJsx(
   }
 }
 
-export function buildJsx(widget: JsxWidget): JSXElementLike {
+export function buildJsx(widget: JsxWidget): JSXChildLike {
   const children = buildChildrenJsx(widget.children);
   const container = buildContainingJsx(widget.jsxConfig(), children);
   return container;
@@ -65,7 +63,7 @@ export function buildJsx(widget: JsxWidget): JSXElementLike {
 
 export function buildChildrenJsx(
   children: Array<JsxWidget>
-): Array<JSXElementLike> {
+): Array<JSXChildLike> {
   return children?.map((c) => {
     return buildJsx(c);
   });

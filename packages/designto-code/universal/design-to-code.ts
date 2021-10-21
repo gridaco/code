@@ -63,6 +63,7 @@ export async function designToCode({
         entry: vanilla_token,
         repository: input.repository,
       });
+      console.log("reusable_widget_tree", reusable_widget_tree);
       // TODO: WIP
     } catch (_) {
       console.error(_);

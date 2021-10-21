@@ -1,6 +1,6 @@
 import type { WidgetKey, WidgetKeyLike } from "../widget-key";
-import { ColiObjectLike } from "@coli.codes/builder";
-import { JSXAttributes, JSXElementLike, JSXIdentifier, JSXText } from "coli";
+import type { JSXAttributes, JSXChildLike, JSXIdentifier } from "coli";
+import type { ColiObjectLike } from "@coli.codes/builder";
 
 export abstract class JsxWidget {
   readonly _type: string;
@@ -22,12 +22,12 @@ interface TagAndAttributeSegment {
   attributes?: JSXAttributes;
 }
 
-interface StaticTree<T = ColiObjectLike<JSXElementLike | JSXText>> {
+interface StaticTree<T = ColiObjectLike<JSXChildLike>> {
   tree: T;
 }
 
 export type UnstylableJSXElementConfig<
-  T = ColiObjectLike<JSXElementLike | JSXText>
+  T = ColiObjectLike<JSXChildLike>
 > = StaticTree<T> & {
   type?: "static-tree";
 };

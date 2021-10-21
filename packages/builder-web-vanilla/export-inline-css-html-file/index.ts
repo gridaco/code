@@ -40,7 +40,7 @@ ${indenter(body, 2)}
 </html>`;
 };
 
-export function export_inlined_css_html_file(widget: StylableJsxWidget) {
+export function export_inlined_css_html_file(widget: JsxWidget) {
   const componentName = widget.key.name;
   const styledComponentNamer = new ScopedVariableNamer(
     widget.key.id,

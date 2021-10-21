@@ -10,13 +10,13 @@ import { CSSProperties } from "@coli.codes/css";
 import { JSX } from "coli";
 import { RGBA } from "@reflect-ui/core";
 import * as css from "@web-builder/styles";
+import { Dynamic } from "@reflect-ui/core/lib/_utility-types";
 
 export class Text extends TextChildWidget {
   _type: "Text";
-  children?: StylableJsxWidget[];
 
   // text properties
-  data: string;
+  data: Dynamic<string>;
   overflow: TextOverflow;
   textStyle: core.ITextStyle;
   textAlign: core.TextAlign;
