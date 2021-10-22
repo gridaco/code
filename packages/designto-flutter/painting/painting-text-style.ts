@@ -10,14 +10,6 @@ export function textStyle(style: ITextStyle): flutter.TextStyle {
   const { fontFamily, letterSpacing } = style;
   let decoration: flutter.TextDecoration = textDecoration(style.decoration);
   const fontWeight: flutter.FontWeight = flutter.FontWeight[style.fontWeight];
-  const shadows = style.textShadow.map((d: TextShadowManifest) => {
-    return new flutter.Shadow({
-      color: dartui.color(d.color),
-      blurRadius: rd(d.blurRadius),
-      spreadRadius: d.spreadRadius,
-      offset: dartui.offset(d.offset),
-    });
-  });
 
   return new flutter.TextStyle({
     fontSize: rd(style.fontSize),
@@ -28,6 +20,6 @@ export function textStyle(style: ITextStyle): flutter.TextStyle {
     letterSpacing: length.letterSpacing(style.fontSize, letterSpacing),
     height: length.multiple(style.fontSize, style.lineHeight),
     decoration: decoration,
-    shadows: shadows,
+    shadows: dartui.shadow(style.textShadow),
   });
 }
