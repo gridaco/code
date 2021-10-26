@@ -1,3 +1,4 @@
+import { handle } from "@coli.codes/builder";
 import { buildCssStandard } from "@coli.codes/css";
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
 import {
@@ -59,53 +60,50 @@ export function export_inlined_css_html_file(widget: JsxWidget) {
   }
 
   function buildBodyHtml(widget: JsxWidget) {
-    const children = widget.children?.map((comp) => {
-      const jsxcfg = comp.jsxConfig();
+    const mapper = (widget) => {
+      const jsxcfg = widget.jsxConfig();
       if (jsxcfg.type === "static-tree") {
         return jsxcfg.tree;
       }
 
-      const config = getStyleConfigById(comp.key.id);
-      if (comp instanceof TextChildWidget) {
-        const jsx = buildTextChildJsx(comp, config);
-        injectIdToJsx(jsx, config.id);
-        return jsx;
-      }
-
-      const childrenJSX = comp.children?.map((cc) => buildBodyHtml(cc));
-      const jsx = new JSXElement({
-        openingElement: new JSXOpeningElement(config.tag, {
-          attributes: config.attributes,
-        }),
-        closingElement: new JSXClosingElement(config.tag),
-        children: childrenJSX,
-      });
-      injectIdToJsx(jsx, config.id);
-      return jsx;
-    });
-
-    const jsxcfg = widget.jsxConfig();
-    if (jsxcfg.type === "static-tree") {
-      return jsxcfg.tree;
-    }
-
-    if (widget instanceof StylableJsxWidget) {
       const config = getStyleConfigById(widget.key.id);
       if (widget instanceof TextChildWidget) {
         const jsx = buildTextChildJsx(widget, config);
         injectIdToJsx(jsx, config.id);
         return jsx;
       }
-      const jsx = new JSXElement({
-        openingElement: new JSXOpeningElement(config.tag, {
-          attributes: config.attributes,
-        }),
-        closingElement: new JSXClosingElement(config.tag),
-        children: children,
-      });
-      injectIdToJsx(jsx, config.id);
-      return jsx;
-    }
+
+      const childrenJSX = widget.children?.map((cc) => mapper(cc));
+
+      if (widget instanceof StylableJsxWidget) {
+        const config = getStyleConfigById(widget.key.id);
+        const jsx = new JSXElement({
+          openingElement: new JSXOpeningElement(config.tag, {
+            attributes: config.attributes,
+          }),
+          closingElement: new JSXClosingElement(config.tag),
+          children: childrenJSX,
+        });
+        injectIdToJsx(jsx, config.id);
+        return jsx;
+      } else {
+        const config = widget.jsxConfig();
+        if (config.type === "tag-and-attr") {
+          const _tag = handle(config.tag);
+          const jsx = new JSXElement({
+            openingElement: new JSXOpeningElement(_tag, {
+              attributes: config.attributes,
+            }),
+            closingElement: new JSXClosingElement(_tag),
+            children: childrenJSX,
+          });
+          return jsx;
+        }
+        return;
+      }
+    };
+
+    return mapper(widget);
   }
 
   const css_declarations = Array.from(styles_map.keys())

@@ -91,6 +91,7 @@ export class SvgElement extends StylableJsxWidget {
           const _tag = JSX.identifier("path");
           return {
             tag: _tag,
+            type: "tag-and-attr",
             attributes: [
               fill &&
                 new JSXAttribute("fill", new StringLiteral(fill || "current")),

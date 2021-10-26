@@ -61,9 +61,10 @@ export abstract class WidgetWithStyle
     return {
       ...this.styleData(),
       /**
-       * // FIXME: position shall not be specified when parent has a layout. (e.g. under flex)
+       * FIXME: position shall not be specified when parent has a layout. (e.g. under flex)
+       * aboce issue might be already resolved, but still the constraint property should be extracted as a hierarchy token item.
        */
-      ...((this.constraint && positionAbsolute(this.constraint)) || {}),
+      ...positionAbsolute(this.constraint),
       // --------------------------------------------------------------------
       // ALWAYS ON BOTTOM
       // extended to override
