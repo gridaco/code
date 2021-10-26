@@ -15,7 +15,6 @@ export function shadow(
     return new flutter.Shadow({
       color: dartui.color(d.color),
       blurRadius: requiredNumber(d.blurRadius),
-      spreadRadius: undefined,
       offset: dartui.offset(d.offset),
     });
   });

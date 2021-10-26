@@ -1511,10 +1511,10 @@
   resolved "https://registry.yarnpkg.com/@flutter-builder/flutter-material-icons/-/flutter-material-icons-0.0.4.tgz#98fddb0f0295f99c8952c9b214c9755de7c6333e"
   integrity sha512-kfzmpVnOJysPBfvrtDuuNJZvpUoO7tGXncRi4WYtoHkmG1ll635D88Ze6OUYhaRLoT7+TXpVl0lk8CDESE/Ykw==
 
-"@flutter-builder/flutter@2.5.0-f15":
-  version "2.5.0-f15"
-  resolved "https://registry.yarnpkg.com/@flutter-builder/flutter/-/flutter-2.5.0-f15.tgz#fd0e45b43ea0ff90298d166e7c969da84422ea5d"
-  integrity sha512-30I0Ae3qlXtl+xkW133vR5vrR8FSqvBxf6OVvr993hBDOvk9h0B7cD9XwqfK4mly+GPExfe+3g7xkAIr0Mkqsg==
+"@flutter-builder/flutter@2.5.0-f16":
+  version "2.5.0-f16"
+  resolved "https://registry.yarnpkg.com/@flutter-builder/flutter/-/flutter-2.5.0-f16.tgz#ac524cc35474a2b2d5669c9976d65935694f6244"
+  integrity sha512-LHT5eOAxqc0bxPjp5lDr+RKQS2fgG2e221LlcdDlDUtuBaIwILAZYWfFQqPQeapqdrpn5+AiXzCZqx8pRX7BHQ==
   dependencies:
     "@abraham/reflection" "^0.8.0"
     "@flutter-builder/flutter-material-icons" "0.0.4"
