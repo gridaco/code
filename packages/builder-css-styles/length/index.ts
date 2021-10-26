@@ -8,10 +8,7 @@ export function length(d: DimensionLength | string, a?: Axis) {
     return;
   }
   if (typeof d === "number") {
-    if (d) {
-      return px(d);
-    }
-    return;
+    return px(d);
   }
 
   if (typeof d === "string") {
@@ -23,9 +20,6 @@ export function length(d: DimensionLength | string, a?: Axis) {
           return vh(100);
       }
       throw new Error("Invalid axis");
-    }
-    if (!parseFloat(d)) {
-      return;
     }
 
     if (d.endsWith("px")) {
