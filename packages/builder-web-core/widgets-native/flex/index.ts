@@ -15,13 +15,13 @@ import { MainAxisSize } from "@reflect-ui/core/lib/main-axis-size";
 import { JSX } from "coli";
 import {
   MultiChildWidget,
-  WidgetTree,
+  StylableJsxWidget,
 } from "@web-builder/core/widget-tree/widget";
 import { JSXElementConfig } from "@web-builder/core";
 import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import * as css from "@web-builder/styles";
-import { CssMinHeightMixin } from "../_utility";
+import { CssMinHeightMixin } from "../../widgets";
 
 type FlexWrap = "nowrap" | "wrap" | "wrap-reverse";
 export class Flex extends MultiChildWidget implements CssMinHeightMixin {
@@ -49,7 +49,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
   flexWrap?: FlexWrap;
 
   constructor(
-    p: IFlexManifest<WidgetTree> & {
+    p: IFlexManifest<StylableJsxWidget> & {
       // direction: "row" | "column";
       key: WidgetKey;
       width?: number;

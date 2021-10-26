@@ -7,6 +7,12 @@ export function length(d: DimensionLength | string, a?: Axis) {
   if (d === undefined) {
     return;
   }
+  if (typeof d === "number") {
+    if (d) {
+      return px(d);
+    }
+    return;
+  }
 
   if (typeof d === "string") {
     if (d === "match-screen-size") {
@@ -17,6 +23,9 @@ export function length(d: DimensionLength | string, a?: Axis) {
           return vh(100);
       }
       throw new Error("Invalid axis");
+    }
+    if (!parseFloat(d)) {
+      return;
     }
 
     if (d.endsWith("px")) {
@@ -39,8 +48,6 @@ export function length(d: DimensionLength | string, a?: Axis) {
     else {
       return d;
     }
-  } else if (typeof d === "number") {
-    return px(d);
   }
 
   if (d.type == "calc") {

@@ -4,7 +4,7 @@ import { keyFromWidget } from "@web-builder/core";
 
 export function compose_wrap(
   wrap: core.Wrap,
-  children: web.WidgetTree[]
+  children: web.StylableJsxWidget[]
 ): web.Flex {
   return new web.Flex({
     ...wrap,

@@ -18,6 +18,7 @@ git clone https://github.com/gridaco/designto-code.git
 cd designto-code
 yarn
 yarn editor
+# visit http://localhost:6626
 ```
 
 update pulling - `git submodule update --init --recursive`

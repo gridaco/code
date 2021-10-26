@@ -2,7 +2,7 @@ import { JSX } from "coli";
 import {
   MultiChildWidget,
   StylableJSXElementConfig,
-  WidgetTree,
+  StylableJsxWidget,
 } from "@web-builder/core";
 import { JSXElementConfig, WidgetKey } from "../..";
 import { CSSProperties, CSSProperty } from "@coli.codes/css";
@@ -14,7 +14,7 @@ import {
   Clip,
   DimensionLength,
 } from "@reflect-ui/core";
-import { CssMinHeightMixin } from "../_utility";
+import { CssMinHeightMixin } from "../../widgets";
 import { Background } from "@reflect-ui/core/lib/background";
 
 export class Stack extends MultiChildWidget implements CssMinHeightMixin {
@@ -29,7 +29,7 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
 
   constructor(p: {
     key: WidgetKey;
-    children: Array<WidgetTree>;
+    children: Array<StylableJsxWidget>;
     width: number;
     height: number;
     minHeight?: DimensionLength;

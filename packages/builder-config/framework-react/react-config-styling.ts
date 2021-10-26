@@ -19,7 +19,7 @@ interface ScssStylingConfig {
   lang: "scss";
 }
 
-type ReactStyledComponentsConfig =
+export type ReactStyledComponentsConfig =
   | ReactTheStyledComponentsConfig
   | ReactEmotionStyledConfig;
 

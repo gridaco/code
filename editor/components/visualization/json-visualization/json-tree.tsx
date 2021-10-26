@@ -1,9 +1,15 @@
-import { Widget as WebWidget } from "@web-builder/core";
+import { JsxWidget } from "@web-builder/core";
 import { ReflectSceneNode } from "@design-sdk/core";
 import { Figma } from "@design-sdk/figma";
 import { Widget as ReflectWidget } from "@reflect-ui/core";
 import React from "react";
 import JSONTree from "react-json-tree";
+
+interface CompactNodeTree {
+  id: string;
+  name: string;
+  children?: CompactNodeTree[];
+}
 
 const theme = {
   scheme: "monokai",
@@ -45,7 +51,8 @@ export function JsonTree(props: { data: any; hideRoot?: boolean }) {
 }
 
 type WidgetDataLike =
-  | WebWidget
+  | CompactNodeTree
+  | JsxWidget
   | ReflectWidget
   | Figma.SceneNode
   | ReflectSceneNode;
@@ -57,7 +64,7 @@ export function WidgetTree(props: {
     if (data.name) {
       return data.name.substring(0, 20);
     }
-    if (data instanceof WebWidget) {
+    if (data instanceof JsxWidget) {
       return data.key.name;
     } else if (data instanceof ReflectWidget) {
       return data.key.originName;
@@ -89,5 +96,20 @@ export function WidgetTree(props: {
         );
       }}
     />
+  );
+}
+
+export function WidgetTreeLegend({
+  title,
+  description,
+}: {
+  title: string;
+  description?: string;
+}) {
+  return (
+    <div style={{ margin: 8 }}>
+      <h5>{title}</h5>
+      {description && <p>{description}</p>}
+    </div>
   );
 }

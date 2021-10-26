@@ -13,6 +13,7 @@ const withTM = require("next-transpile-modules")([
   "@designto/react",
 
   "@code-features/assets",
+  "@code-features/component",
   "@code-features/flags",
   // -----------------------------
 
@@ -22,6 +23,7 @@ const withTM = require("next-transpile-modules")([
   "@design-sdk/core",
   "@design-sdk/core-types",
   "@design-sdk/universal",
+  "@design-sdk/diff",
   "@design-sdk/figma",
   "@design-sdk/figma-node",
   "@design-sdk/figma-types",
@@ -78,18 +80,25 @@ const withTM = require("next-transpile-modules")([
   // -----------------------------
 ]);
 
-const withCSS = require("@zeit/next-css");
-module.exports = withTM(
-  withCSS({
-    webpack: (config) => {
-      config.node = {
-        fs: "empty",
-      };
-      config.module.rules.push({
-        test: /\.txt$/,
-        use: "raw-loader",
-      });
-      return config;
-    },
-  })
-);
+module.exports = withTM({
+  webpack: (config) => {
+    config.node = {
+      fs: "empty",
+    };
+    config.module.rules.push({
+      test: /\.txt$/,
+      use: "raw-loader",
+    });
+    return config;
+  },
+  async redirects() {
+    return [
+      {
+        // typo gaurd
+        source: "/preference",
+        destination: "/preferences",
+        permanent: true,
+      },
+    ];
+  },
+});

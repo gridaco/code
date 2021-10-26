@@ -1,6 +1,15 @@
 import { config, react } from "@designto/config";
 import { Framework, Language } from "@grida/builder-platform-types";
 
+const _react_component_declaration_style = {
+  exporting_style: {
+    type: "export-named-functional-component",
+    exporting_position: "with-declaration",
+    declaration_syntax_choice: "function",
+    export_declaration_syntax_choice: "export",
+  },
+};
+
 export const react_presets = {
   react_default: <config.ReactFrameworkConfig>{
     framework: Framework.react,
@@ -9,6 +18,7 @@ export const react_presets = {
       type: "styled-components",
       module: "@emotion/styled",
     },
+    component_declaration_style: _react_component_declaration_style,
   },
   react_with_styled_components: <config.ReactFrameworkConfig>{
     framework: Framework.react,
@@ -17,6 +27,7 @@ export const react_presets = {
       type: "styled-components",
       module: "styled-components",
     },
+    component_declaration_style: _react_component_declaration_style,
   },
   react_with_emotion_styled: <config.ReactFrameworkConfig>{
     framework: Framework.react,
@@ -25,6 +36,7 @@ export const react_presets = {
       type: "styled-components",
       module: "@emotion/styled",
     },
+    component_declaration_style: _react_component_declaration_style,
   },
   react_with_css_in_jsx: <config.ReactFrameworkConfig>{
     framework: Framework.react,
@@ -32,12 +44,14 @@ export const react_presets = {
     styling: {
       type: "css-in-jsx",
     },
+    component_declaration_style: _react_component_declaration_style,
   },
   react_with_css: <config.ReactFrameworkConfig>{
     framework: Framework.react,
     language: Language.tsx,
     styling: { type: "css" },
   },
+  component_declaration_style: _react_component_declaration_style,
 };
 
 export const vanilla_presets = {

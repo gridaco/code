@@ -1,4 +1,4 @@
-import { input, output, config } from "../proc";
+import { input, output, config, build } from "../proc";
 import { tokenize, wrap } from "@designto/token";
 import { Widget } from "@reflect-ui/core";
 import * as toreact from "@designto/react";
@@ -12,11 +12,14 @@ import { BaseImageRepositories } from "@design-sdk/core/assets-repository";
 import { k } from "@web-builder/core";
 import { default_tokenizer_config } from "@designto/token/config";
 import { default_build_configuration } from "@designto/config";
+import { reusable } from "@code-features/component";
 
 interface AssetsConfig {
   asset_repository?: BaseImageRepositories<string>;
   skip_asset_replacement?: boolean;
 }
+
+export type Result = output.ICodeOutput & { widget: Widget };
 
 export async function designToCode({
   input,
@@ -28,7 +31,7 @@ export async function designToCode({
   framework: config.FrameworkConfig;
   build_config?: config.BuildConfiguration;
   asset_config: AssetsConfig;
-}): Promise<output.ICodeOutput> {
+}): Promise<Result> {
   if (process.env.NODE_ENV === "development") {
     console.info(
       "dev: starting designtocode with user input",
@@ -43,7 +46,7 @@ export async function designToCode({
   let config = { ...default_tokenizer_config, id: input.id };
   if (build_config.force_root_widget_fixed_size_no_scroll) {
     config.custom_wrapping_provider = (w, n, d) => {
-      if (n.id === input.design.id) {
+      if (n.id === input.entry.id) {
         return wrap.withSizedBox(wrap.withOverflowBox(w), {
           width: n.width,
           height: n.height,
@@ -52,31 +55,59 @@ export async function designToCode({
       return false;
     };
   }
-  const token = tokenize(input.design, config);
+  const vanilla_token = tokenize(input.entry, config);
 
-  const _tokenized_widget_input = { widget: token };
+  // post token processing for componentization
+  let reusable_widget_tree;
+  if (!build_config.disable_components) {
+    try {
+      reusable_widget_tree = reusable({
+        entry: vanilla_token,
+        repository: input.repository,
+      });
+      console.log("reusable_widget_tree", reusable_widget_tree);
+      // TODO: WIP
+    } catch (_) {
+      console.error(_);
+    }
+  }
+
+  const _tokenized_widget_input = {
+    widget: vanilla_token,
+    reusable_widget_tree: reusable_widget_tree,
+  };
+
   switch (framework.framework) {
     case "vanilla":
-      return designToVanilla({
-        input: _tokenized_widget_input,
-        build_config: build_config,
-        vanilla_config: framework,
-        asset_config: asset_config,
-      });
+      return {
+        ...(await designToVanilla({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          vanilla_config: framework,
+          asset_config: asset_config,
+        })),
+        ..._tokenized_widget_input,
+      };
     case "react":
-      return designToReact({
-        input: _tokenized_widget_input,
-        build_config: build_config,
-        react_config: framework,
-        asset_config: asset_config,
-      });
+      return {
+        ...(await designToReact({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          react_config: framework,
+          asset_config: asset_config,
+        })),
+        ..._tokenized_widget_input,
+      };
     case "flutter":
-      return designToFlutter({
-        input: _tokenized_widget_input,
-        build_config: build_config,
-        flutter_config: framework,
-        asset_config: asset_config,
-      });
+      return {
+        ...(await designToFlutter({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          flutter_config: framework,
+          asset_config: asset_config,
+        })),
+        ..._tokenized_widget_input,
+      };
   }
   throw `The framework "${framework}" is not supported at this point.`;
   return;
@@ -94,7 +125,7 @@ export async function designToReact({
   build_config,
   asset_config,
 }: {
-  input: { widget: Widget };
+  input: { widget: Widget; reusable_widget_tree? };
   react_config: config.ReactFrameworkConfig;
   /**
    * TODO: pass this to tokenizer +@
@@ -102,26 +133,36 @@ export async function designToReact({
   build_config: config.BuildConfiguration;
   asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
-  const reactwidget = toreact.buildReactWidget(input.widget);
+  if (
+    build_config.disable_components ||
+    // automatically fallbacks if no valid data was passed
+    !input.reusable_widget_tree
+  ) {
+    const reactwidget = toreact.buildReactWidget(input.widget);
 
-  const res = toreact.buildReactApp(reactwidget, {
-    template: "cra",
-  });
+    const res = toreact.buildReactApp(reactwidget, react_config);
+    // ------------------------------------------------------------------------
+    // finilize temporary assets
+    // this should be placed somewhere else
+    if (
+      asset_config?.asset_repository &&
+      !asset_config.skip_asset_replacement
+    ) {
+      const assets = await fetch_all_assets(asset_config.asset_repository);
+      res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
+      res.scaffold.raw = dangerous_temporary_asset_replacer(
+        res.scaffold.raw,
+        assets
+      );
+    }
+    // ------------------------------------------------------------------------
 
-  // ------------------------------------------------------------------------
-  // finilize temporary assets
-  // this should be placed somewhere else
-  if (asset_config?.asset_repository && !asset_config.skip_asset_replacement) {
-    const assets = await fetch_all_assets(asset_config.asset_repository);
-    res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
-    res.scaffold.raw = dangerous_temporary_asset_replacer(
-      res.scaffold.raw,
-      assets
-    );
+    return res;
+  } else {
+    return toreact.buildReusableReactApp__Experimental(
+      input.reusable_widget_tree
+    ) as any;
   }
-  // ------------------------------------------------------------------------
-
-  return res;
 }
 
 export async function designToFlutter({

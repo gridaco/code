@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { designToCode } from "@designto/code";
+import { designToCode, Result } from "@designto/code";
 import { useDesign } from "../../query-hooks";
 import styled from "@emotion/styled";
 import { DefaultEditorWorkspaceLayout } from "../../layout/default-editor-workspace-layout";
@@ -17,26 +17,32 @@ import {
 } from "@grida/builder-config-preset";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
-import { FrameworkConfig, output } from "@designto/config";
+import { config, FrameworkConfig, output } from "@designto/config";
 import { RemoteImageRepositories } from "@design-sdk/figma-remote/lib/asset-repository/image-repository";
 import {
   ImageRepository,
   MainImageRepository,
 } from "@design-sdk/core/assets-repository";
 import LoadingLayout from "../../layout/loading-overlay";
+import { DesignInput } from "@designto/config/input";
+import { ClearRemoteDesignSessionCache } from "../../components/clear-remote-design-session-cache";
+import { WidgetTree } from "../../components/visualization/json-visualization/json-tree";
 
 export default function DesignToCodeUniversalPage() {
   const router = useRouter();
   const design = useDesign();
-  const [result, setResult] = useState<output.ICodeOutput>();
-  const [preview, setPreview] = useState<output.ICodeOutput>();
+  const [result, setResult] = useState<Result>();
+  const [preview, setPreview] = useState<Result>();
 
   const framework_config = get_framework_config_from_query(router.query);
   const preview_runner_framework = get_preview_runner_framework(router.query);
+  const enable_components = get_enable_components_config_from_query(
+    router.query
+  );
 
   useEffect(() => {
     if (design) {
-      const { reflect } = design;
+      const { reflect, raw } = design;
       const { id, name } = reflect;
       // ------------------------------------------------------------
       // other platforms are not supported yet
@@ -50,13 +56,13 @@ export default function DesignToCodeUniversalPage() {
       );
       // ------------------------------------------------------------
       designToCode({
-        input: {
-          id: id,
-          name: name,
-          design: reflect,
-        },
+        input: DesignInput.fromApiResponse({ entry: reflect, raw }),
         framework: framework_config,
         asset_config: { asset_repository: MainImageRepository.instance },
+        build_config: {
+          ...config.default_build_configuration,
+          disable_components: !enable_components,
+        },
       }).then((result) => {
         setResult(result);
         if (framework_config.framework == preview_runner_framework.framework) {
@@ -69,7 +75,11 @@ export default function DesignToCodeUniversalPage() {
           input: {
             id: id,
             name: name,
-            design: reflect,
+            entry: reflect,
+          },
+          build_config: {
+            ...config.default_build_configuration,
+            disable_components: true,
           },
           framework: preview_runner_framework,
           asset_config: { asset_repository: MainImageRepository.instance },
@@ -137,7 +147,7 @@ export default function DesignToCodeUniversalPage() {
               />
             </InspectionPanelContentWrap>
           </WorkspaceContentPanel>
-          <WorkspaceBottomPanelDockLayout>
+          <WorkspaceBottomPanelDockLayout resizable>
             <WorkspaceContentPanel>
               <div
                 style={{
@@ -146,12 +156,33 @@ export default function DesignToCodeUniversalPage() {
                   alignItems: "stretch",
                 }}
               >
-                {/* <div style={{ flex: 1 }}>
-                  <WidgetTree data={reflectWidget} />
-                </div>
                 <div style={{ flex: 1 }}>
-                  <WidgetTree data={widgetTree} />
-                </div> */}
+                  <ClearRemoteDesignSessionCache
+                    key={design.url}
+                    url={design.url}
+                  />
+                  <br />
+                  {(design.reflect.origin === "INSTANCE" ||
+                    design.reflect.origin === "COMPONENT") && (
+                    <button
+                      onClick={() => {
+                        router.push({
+                          pathname: "/figma/inspect-component",
+                          query: router.query,
+                        });
+                      }}
+                    >
+                      inspect component
+                    </button>
+                  )}
+                </div>
+
+                <div style={{ flex: 2 }}>
+                  <WidgetTree data={design.reflect} />
+                </div>
+                <div style={{ flex: 2 }}>
+                  <WidgetTree data={result.widget} />
+                </div>
               </div>
             </WorkspaceContentPanel>
           </WorkspaceBottomPanelDockLayout>
@@ -159,6 +190,16 @@ export default function DesignToCodeUniversalPage() {
       </DefaultEditorWorkspaceLayout>
     </>
   );
+}
+
+function get_enable_components_config_from_query(
+  query: ParsedUrlQuery
+): boolean {
+  const enable_components = query["components"];
+  if (enable_components) {
+    return enable_components === "true";
+  }
+  return false;
 }
 
 function get_framework_config_from_query(query: ParsedUrlQuery) {
@@ -173,6 +214,10 @@ function get_framework_config(framework: string) {
     case "react-default":
     case "react.default":
       return react_presets.react_default;
+    case "react-with-styled-components":
+      return react_presets.react_with_styled_components;
+    case "react-with-emotion-styled":
+      return react_presets.react_with_emotion_styled;
     case "flutter":
     case "flutter_default":
     case "flutter-default":

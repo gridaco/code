@@ -9,8 +9,15 @@ export interface BuildConfiguration {
    * @default false
    */
   force_root_widget_fixed_size_no_scroll?: boolean;
+
+  /**
+   * if disabled(true), we won't use components as reference to generate component compat code.
+   * @default false
+   */
+  disable_components?: boolean;
 }
 
 export const default_build_configuration: BuildConfiguration = {
   force_root_widget_fixed_size_no_scroll: false,
+  disable_components: false,
 };

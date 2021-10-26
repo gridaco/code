@@ -26,7 +26,7 @@ import { wrap_with_stretched } from "./token-stretch";
 import { wrap_with_layer_blur } from "./token-effect/layer-blur";
 import { wrap_with_background_blur } from "./token-effect/background-blur";
 import { wrap_with_rotation } from "./token-rotation";
-import flags_handling_gate from "./token-flags-gate";
+import flags_handling_gate from "./support-flags";
 
 export type { Widget };
 
@@ -46,18 +46,16 @@ export function tokenize(
     throw "A valid design node should be passed in order to tokenize it into a reflect widget.";
   }
   __dangerous_current_config = { ...config }; // unwrapping so every call can have a new config variable changed.
-  return rootHandler(node, config);
+  return independantTokenizer(node, config);
 }
 
 /**
- * generator for root node
- * @param node
- * @returns
+ * tokenize a single node, without any reference of component use.
  */
-function rootHandler(
-  node: nodes.ReflectSceneNode,
+function independantTokenizer(
+  node: SingleOrArray<nodes.ReflectSceneNode>,
   config: TokenizerConfig
-): Widget {
+) {
   return dynamicGenerator(node, config) as Widget;
 }
 
@@ -85,7 +83,6 @@ function dynamicGenerator(
     const widgets: Array<Widget> = [];
     node = node as Array<nodes.ReflectSceneNode>;
     node
-      // .reverse()
       // .sort(byY)
       .filter(ignore_masking_pipline(config.sanitizer_ignore_masking_node))
       .forEach((node, index) => {
@@ -94,12 +91,9 @@ function dynamicGenerator(
 
     // filter empty widgets (safe checker logic)
     const finalWidgets = widgets.filter((w) => array.filters.notEmpty(w));
-    // console.log("flutterWidgetGenerator complete", widgets)
     return finalWidgets;
   } else {
-    node = node as nodes.ReflectSceneNode;
-    const finalWidget = node_handler(node, config);
-    return finalWidget;
+    return node_handler(node, config);
   }
 }
 
@@ -188,6 +182,7 @@ function handleNode(
   // --------------------------- Pre processors ------------------------------
   // -------------------------------------------------------------------------
   let tokenizedTarget: Widget = null;
+  // masking handler
   if (containsMasking(node)) {
     tokenizedTarget = tokenizeMasking.fromMultichild(
       node as MaskingItemContainingNode,
@@ -195,6 +190,7 @@ function handleNode(
     );
   }
 
+  // flags handler
   if (!tokenizedTarget) {
     if (
       !config.disable_flags_support &&
@@ -263,11 +259,9 @@ function handle_by_types(
   config: TokenizerConfig
 ): Widget {
   let tokenizedTarget: Widget;
-  switch (node.type as string) {
+  switch (node.type) {
     case nodes.ReflectSceneNodeType.rectangle:
-      tokenizedTarget = tokenizeContainer.fromRectangle(
-        node as nodes.ReflectRectangleNode
-      );
+      tokenizedTarget = tokenizeContainer.fromRectangle(node);
       break;
 
     case nodes.ReflectSceneNodeType.text:
@@ -275,10 +269,9 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.frame:
-      const _frame = node as nodes.ReflectFrameNode;
       tokenizedTarget = tokenizeLayout.fromFrame(
-        _frame,
-        _frame.children,
+        node,
+        node.children,
         {
           is_root: node.isRoot,
         },
@@ -287,49 +280,43 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.vector:
-      const _vector = node as nodes.ReflectVectorNode;
-      tokenizedTarget = tokenizeVector.fromVector(_vector);
+      tokenizedTarget = tokenizeVector.fromVector(node);
       break;
 
-    case nodes.ReflectSceneNodeType.star:
-      tokenizedTarget = tokenizeVector.fromStar();
-      break;
+    // case nodes.ReflectSceneNodeType.star:
+    //   tokenizedTarget = tokenizeVector.fromStar();
+    //   break;
 
-    case nodes.ReflectSceneNodeType.poligon:
-      tokenizedTarget = tokenizeVector.fromPoligon();
-      break;
+    // case nodes.ReflectSceneNodeType.poligon:
+    //   tokenizedTarget = tokenizeVector.fromPoligon();
+    //   break;
 
     case nodes.ReflectSceneNodeType.group:
-      const _group = node as nodes.ReflectGroupNode;
       tokenizedTarget = tokenizeLayout.fromGroup(
-        _group,
-        _group.children,
+        node,
+        node.children,
         undefined,
         config
       );
       break;
 
     case nodes.ReflectSceneNodeType.ellipse:
-      const _ellipse = node as nodes.ReflectEllipseNode;
-      tokenizedTarget = tokenizeContainer.fromEllipse(_ellipse);
+      tokenizedTarget = tokenizeContainer.fromEllipse(node);
       break;
 
     case nodes.ReflectSceneNodeType.boolean_operation:
-      const _bool_op = node as nodes.ReflectBooleanOperationNode;
-      tokenizedTarget = tokenizeGraphics.fromBooleanOperation(_bool_op);
+      tokenizedTarget = tokenizeGraphics.fromBooleanOperation(node);
       break;
 
     case nodes.ReflectSceneNodeType.line:
       // FIXME: this is a temporary fallback. line should be handled with unique handler. (using rect's handler instead.)
-      tokenizedTarget = tokenizeContainer.fromRectangle(
-        node as nodes.ReflectRectangleNode
-      );
+      tokenizedTarget = tokenizeContainer.fromRectangle(node as any);
       break;
     // const _line = node as nodes.ReflectLineNode;
     // tokenizedTarget = tokenizeDivider.fromLine(_line);
 
     default:
-      console.error(`${node.type} is not yet handled by "@designto/token"`);
+      console.error(`${node["type"]} is not yet handled by "@designto/token"`);
       tokenizedTarget = tokenizeGraphics.fromAnyNode(node); // this is expensive
       tokenizedTarget.key.originName = `Fallbacked to image from - "${tokenizedTarget.key.originName}". this is a bug.`;
       break;

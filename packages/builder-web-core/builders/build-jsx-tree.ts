@@ -3,15 +3,14 @@ import {
   JSXElementConfig,
   StylableJSXElementConfig,
   TextChildWidget,
-  WidgetTree,
+  JsxWidget,
 } from "@web-builder/core";
 import {
+  JSXChildLike,
   JSXClosingElement,
   JSXElement,
-  JSXElementLike,
   JSXIdentifier,
   JSXOpeningElement,
-  JSXText,
 } from "coli";
 
 ////
@@ -21,26 +20,25 @@ export function buildTextChildJsx(
   textchildwidget: TextChildWidget,
   config: StylableJSXElementConfig
 ) {
-  const text = textchildwidget.text;
+  const text = textchildwidget.textData().jsxConfig();
   const tag = handle<JSXIdentifier>(config.tag);
 
-  const jsxtext = new JSXText(text);
   return new JSXElement({
     openingElement: new JSXOpeningElement(tag, {
       attributes: config.attributes,
     }),
-    children: jsxtext,
+    children: text.tree,
     closingElement: new JSXClosingElement(tag),
   });
 }
 
 export function buildContainingJsx(
   container: JSXElementConfig,
-  children: Array<JSXElementLike>
-): JSXElementLike {
+  children: Array<JSXChildLike>
+): JSXChildLike {
   switch (container.type) {
     case "static-tree": {
-      return handle<JSXElementLike>(container.tree);
+      return handle<JSXChildLike>(container.tree);
     }
     case "tag-and-attr": {
       const tag = handle<JSXIdentifier>(container.tag);
@@ -57,15 +55,15 @@ export function buildContainingJsx(
   }
 }
 
-export function buildJsx(widget: WidgetTree): JSXElementLike {
+export function buildJsx(widget: JsxWidget): JSXChildLike {
   const children = buildChildrenJsx(widget.children);
   const container = buildContainingJsx(widget.jsxConfig(), children);
   return container;
 }
 
 export function buildChildrenJsx(
-  children: Array<WidgetTree>
-): Array<JSXElementLike> {
+  children: Array<JsxWidget>
+): Array<JSXChildLike> {
   return children?.map((c) => {
     return buildJsx(c);
   });

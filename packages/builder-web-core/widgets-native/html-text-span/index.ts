@@ -1,21 +1,25 @@
 import { JSXElementConfig, StylableJSXElementConfig, WidgetKey } from "../..";
-import { TextChildWidget, WidgetTree } from "@web-builder/core";
+import {
+  TextDataWidget,
+  TextChildWidget,
+  StylableJsxWidget,
+} from "@web-builder/core";
 import * as core from "@reflect-ui/core";
 import { TextOverflow } from "@reflect-ui/core";
 import { CSSProperties } from "@coli.codes/css";
 import { JSX } from "coli";
 import { RGBA } from "@reflect-ui/core";
 import * as css from "@web-builder/styles";
+import { Dynamic } from "@reflect-ui/core/lib/_utility-types";
 
 export class Text extends TextChildWidget {
   _type: "Text";
-  children?: WidgetTree[];
 
   // text properties
-  data: string;
+  data: Dynamic<string>;
   overflow: TextOverflow;
   textStyle: core.ITextStyle;
-  alignment: core.TextAlign;
+  textAlign: core.TextAlign;
   width?: number;
   height?: number;
 
@@ -24,7 +28,7 @@ export class Text extends TextChildWidget {
     data: string;
     overflow: TextOverflow;
     textStyle: core.ITextStyle;
-    alignment: core.TextAlign;
+    textAlign: core.TextAlign;
     width?: number;
     height?: number;
   }) {
@@ -34,13 +38,20 @@ export class Text extends TextChildWidget {
     this.data = p.data;
     this.overflow = p.overflow;
     this.textStyle = p.textStyle;
-    this.alignment = p.alignment;
+    this.textAlign = p.textAlign;
     this.width = p.width;
     this.height = p.height;
   }
 
+  textData() {
+    return new TextDataWidget({
+      key: { ...this.key, id: this.key.id + ".text-data" },
+      data: this.data,
+    });
+  }
+
   styleData(): CSSProperties {
-    return <CSSProperties>{
+    let textStyle: any = {
       // text style
       // ------------------------------------------
       color: css.color((this.textStyle.color as any) as RGBA),
@@ -48,18 +59,19 @@ export class Text extends TextChildWidget {
       "font-size": css.px(this.textStyle.fontSize),
       "font-family": css.fontFamily(this.textStyle.fontFamily),
       "font-weight": css.convertToCssFontWeight(this.textStyle.fontWeight),
-      "letter-spacing": css.length(this.textStyle.letterSpacing),
-      "line-height": css.length(this.textStyle.lineHeight),
       "word-spacing": this.textStyle.wordSpacing,
-      "text-align": this.alignment,
+      "letter-spacing": css.letterSpacing(this.textStyle.letterSpacing),
+      "line-height": css.length(this.textStyle.lineHeight),
+      "text-align": this.textAlign,
       "text-decoration": css.textDecoration(this.textStyle.decoration),
       // ------------------------------------------
       "min-height": css.px(this.height),
-
       // TODO: do not specify width when parent is a flex container.
       // Also flex: 1 is required to make the text wrap.
       width: css.px(this.width),
     };
+
+    return <CSSProperties>textStyle;
   }
 
   jsxConfig(): StylableJSXElementConfig {

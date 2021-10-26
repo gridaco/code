@@ -1,4 +1,4 @@
-import { WidgetTree } from "@web-builder/core/widget-tree/widget";
+import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
 import { WidgetKey } from "../..";
 import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
 import {
@@ -13,7 +13,7 @@ import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 export class Row extends Flex {
   readonly _type = "row";
   constructor(
-    p: Omit<IFlexManifest<WidgetTree>, "direction"> & {
+    p: Omit<IFlexManifest<StylableJsxWidget>, "direction"> & {
       key: WidgetKey;
       margin?: EdgeInsets;
       padding?: EdgeInsets;
