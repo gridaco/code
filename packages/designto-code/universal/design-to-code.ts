@@ -19,6 +19,8 @@ interface AssetsConfig {
   skip_asset_replacement?: boolean;
 }
 
+export type Result = output.ICodeOutput & { widget: Widget };
+
 export async function designToCode({
   input,
   framework,
@@ -29,7 +31,7 @@ export async function designToCode({
   framework: config.FrameworkConfig;
   build_config?: config.BuildConfiguration;
   asset_config: AssetsConfig;
-}): Promise<output.ICodeOutput> {
+}): Promise<Result> {
   if (process.env.NODE_ENV === "development") {
     console.info(
       "dev: starting designtocode with user input",
@@ -41,9 +43,9 @@ export async function designToCode({
   }
 
   // post token processing
-  let config = { ...default_tokenizer_config, id: input.id };
+  let tokenizer_config = { ...default_tokenizer_config, id: input.id };
   if (build_config.force_root_widget_fixed_size_no_scroll) {
-    config.custom_wrapping_provider = (w, n, d) => {
+    tokenizer_config.custom_wrapping_provider = (w, n, d) => {
       if (n.id === input.entry.id) {
         return wrap.withSizedBox(wrap.withOverflowBox(w), {
           width: n.width,
@@ -53,7 +55,7 @@ export async function designToCode({
       return false;
     };
   }
-  const vanilla_token = tokenize(input.entry, config);
+  const vanilla_token = tokenize(input.entry, tokenizer_config);
 
   // post token processing for componentization
   let reusable_widget_tree;
@@ -74,28 +76,38 @@ export async function designToCode({
     widget: vanilla_token,
     reusable_widget_tree: reusable_widget_tree,
   };
+
   switch (framework.framework) {
     case "vanilla":
-      return designToVanilla({
-        input: _tokenized_widget_input,
-        build_config: build_config,
-        vanilla_config: framework,
-        asset_config: asset_config,
-      });
+      return {
+        ...(await designToVanilla({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          vanilla_config: framework,
+          asset_config: asset_config,
+        })),
+        ..._tokenized_widget_input,
+      };
     case "react":
-      return designToReact({
-        input: _tokenized_widget_input,
-        build_config: build_config,
-        react_config: framework,
-        asset_config: asset_config,
-      });
+      return {
+        ...(await designToReact({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          react_config: framework,
+          asset_config: asset_config,
+        })),
+        ..._tokenized_widget_input,
+      };
     case "flutter":
-      return designToFlutter({
-        input: _tokenized_widget_input,
-        build_config: build_config,
-        flutter_config: framework,
-        asset_config: asset_config,
-      });
+      return {
+        ...(await designToFlutter({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          flutter_config: framework,
+          asset_config: asset_config,
+        })),
+        ..._tokenized_widget_input,
+      };
   }
   throw `The framework "${framework}" is not supported at this point.`;
   return;

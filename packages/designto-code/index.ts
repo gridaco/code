@@ -6,3 +6,4 @@ export * as token from "@designto/token";
 
 /* main function */
 export { designToCode, designTo } from "./universal";
+export type { Result } from "./universal";
