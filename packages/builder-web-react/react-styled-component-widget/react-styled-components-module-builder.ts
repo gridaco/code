@@ -22,7 +22,7 @@ import {
   JsxWidget,
 } from "@web-builder/core";
 import {
-  buildTextChildJsx,
+  buildJsx,
   getWidgetStylesConfigMap,
   WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
@@ -70,48 +70,9 @@ export class ReactStyledComponentsBuilder {
   }
 
   private jsxBuilder(widget: JsxWidget) {
-    const _jsxcfg = widget.jsxConfig();
-    if (_jsxcfg.type === "static-tree") {
-      return _jsxcfg.tree;
-    }
-
-    const children = widget.children?.map((comp) => {
-      const config = this.styledConfig(comp.key.id);
-      if (comp instanceof TextChildWidget) {
-        return buildTextChildJsx(comp, config);
-      }
-
-      const childrenJSX = comp.children?.map((cc) => this.jsxBuilder(cc));
-      return new JSXElement({
-        openingElement: new JSXOpeningElement(config.tag, {
-          attributes: config.attributes,
-        }),
-        closingElement: new JSXClosingElement(config.tag),
-        children: childrenJSX,
-      });
+    return buildJsx(widget, {
+      styledConfig: (id) => this.styledConfig(id),
     });
-
-    if (widget instanceof StylableJsxWidget) {
-      const styledconfig = this.styledConfig(widget.key.id);
-      if (widget instanceof TextChildWidget) {
-        return buildTextChildJsx(widget, styledconfig);
-      }
-      return new JSXElement({
-        openingElement: new JSXOpeningElement(styledconfig.tag, {
-          attributes: styledconfig.attributes,
-        }),
-        closingElement: new JSXClosingElement(styledconfig.tag),
-        children: children,
-      });
-    } else {
-      return new JSXElement({
-        openingElement: new JSXOpeningElement(handle(_jsxcfg.tag), {
-          attributes: _jsxcfg.attributes,
-        }),
-        closingElement: new JSXClosingElement(handle(_jsxcfg.tag)),
-        children: children,
-      });
-    }
   }
 
   partImports() {

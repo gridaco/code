@@ -4,7 +4,12 @@ import {
   StylableJSXElementConfig,
   TextChildWidget,
   JsxWidget,
+  StylableJsxWidget,
 } from "@web-builder/core";
+import {
+  NoStyleJSXElementConfig,
+  StyledComponentJSXElementConfig,
+} from "@web-builder/styled";
 import {
   JSXChildLike,
   JSXClosingElement,
@@ -55,16 +60,58 @@ export function buildContainingJsx(
   }
 }
 
-export function buildJsx(widget: JsxWidget): JSXChildLike {
-  const children = buildChildrenJsx(widget.children);
-  const container = buildContainingJsx(widget.jsxConfig(), children);
-  return container;
-}
+export function buildJsx(
+  widget: JsxWidget,
+  repository: {
+    styledConfig: (
+      key: string
+    ) => StyledComponentJSXElementConfig | NoStyleJSXElementConfig;
+    /**
+     * required for id based styling strategy
+     */
+    idTransformer?: (jsx, id: string) => void;
+  }
+): JSXChildLike {
+  const mapper = (widget: JsxWidget) => {
+    const _jsxcfg = widget.jsxConfig();
+    if (_jsxcfg.type === "static-tree") {
+      return _jsxcfg.tree;
+    }
 
-export function buildChildrenJsx(
-  children: Array<JsxWidget>
-): Array<JSXChildLike> {
-  return children?.map((c) => {
-    return buildJsx(c);
-  });
+    const children = widget.children?.map(mapper);
+
+    if (widget instanceof StylableJsxWidget) {
+      const styledconfig = repository.styledConfig(widget.key.id);
+      if (widget instanceof TextChildWidget) {
+        const jsx = buildTextChildJsx(widget, styledconfig);
+        repository.idTransformer?.(jsx, styledconfig.id);
+        return jsx;
+      }
+      const jsx = new JSXElement({
+        openingElement: new JSXOpeningElement(styledconfig.tag, {
+          attributes: styledconfig.attributes,
+        }),
+        closingElement: new JSXClosingElement(styledconfig.tag),
+        children: children,
+      });
+      repository.idTransformer?.(jsx, styledconfig.id);
+      return jsx;
+    } else {
+      const config = widget.jsxConfig();
+      if (config.type === "tag-and-attr") {
+        const _tag = handle(config.tag);
+        const jsx = new JSXElement({
+          openingElement: new JSXOpeningElement(_tag, {
+            attributes: config.attributes,
+          }),
+          closingElement: new JSXClosingElement(_tag),
+          children: children,
+        });
+        return jsx;
+      }
+      return;
+    }
+  };
+
+  return mapper(widget);
 }
