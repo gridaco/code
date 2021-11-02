@@ -6,6 +6,7 @@
     },
     "workspaces": [
         "editor",
+        "editor-packages/*",
         "packages/*",
         "ui/*",
         "packages/reflect-core/packages/*",
