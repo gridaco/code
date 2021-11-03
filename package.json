@@ -7,6 +7,7 @@
     "workspaces": [
         "editor",
         "editor-packages/*",
+        "editor-packages/base-sdk/_firstparty/*",
         "packages/*",
         "ui/*",
         "packages/reflect-core/packages/*",
