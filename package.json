@@ -2,6 +2,7 @@
     "name": "designto.codes",
     "private": true,
     "scripts": {
+        "checkout:all": "git submodule update --init --recursive",
         "editor": "yarn workspace editor dev"
     },
     "workspaces": [
