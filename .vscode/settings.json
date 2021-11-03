@@ -11,6 +11,7 @@
     "**/node_modules": true,
     "**/bower_components": true,
     "**/*.code-search": true,
-    "**/yarn.lock": true
+    "**/yarn.lock": true,
+    "**/.next": true
   }
 }
