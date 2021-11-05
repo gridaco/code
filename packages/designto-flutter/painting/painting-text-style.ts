@@ -1,4 +1,4 @@
-import type { ITextStyle } from "@reflect-ui/core";
+import type { ITextStyle, TextShadowManifest } from "@reflect-ui/core";
 import * as flutter from "@flutter-builder/flutter";
 import { textDecoration } from "./painting-text-decoration";
 import { fontStyle } from "./painting-font-style";
@@ -10,6 +10,7 @@ export function textStyle(style: ITextStyle): flutter.TextStyle {
   const { fontFamily, letterSpacing } = style;
   let decoration: flutter.TextDecoration = textDecoration(style.decoration);
   const fontWeight: flutter.FontWeight = flutter.FontWeight[style.fontWeight];
+
   return new flutter.TextStyle({
     fontSize: rd(style.fontSize),
     fontWeight: fontWeight,
@@ -19,5 +20,6 @@ export function textStyle(style: ITextStyle): flutter.TextStyle {
     letterSpacing: length.letterSpacing(style.fontSize, letterSpacing),
     height: length.multiple(style.fontSize, style.lineHeight),
     decoration: decoration,
+    shadows: dartui.shadow(style.textShadow),
   });
 }

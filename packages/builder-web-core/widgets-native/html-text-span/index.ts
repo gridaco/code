@@ -64,6 +64,7 @@ export class Text extends TextChildWidget {
       "line-height": css.length(this.textStyle.lineHeight),
       "text-align": this.textAlign,
       "text-decoration": css.textDecoration(this.textStyle.decoration),
+      "text-shadow": css.textShadow(this.textStyle.textShadow),
       // ------------------------------------------
       "min-height": css.px(this.height),
       // TODO: do not specify width when parent is a flex container.
