@@ -3,6 +3,11 @@ import * as dartui from ".";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { TextShadowManifest } from "@reflect-ui/core";
 
+/**
+ * README
+ * https://api.flutter.dev/flutter/dart-ui/Shadow-class.html
+ */
+
 export function shadow(
   shadows: ReadonlyArray<TextShadowManifest>
 ): Array<flutter.Shadow> {
