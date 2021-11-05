@@ -1,14 +1,12 @@
 # Figma text shadow
 
-<!-- FIXME:  -->
+The text shadow is handled as the shadow of the effect from figma.
 
 ![](https://static.figma.com/uploads/9def6cce093b164306328ee228028155d13d72d0)
 
 [figma DropShadowEffect](https://www.figma.com/plugin-docs/api/Effect/#dropshadoweffect)
 
 [W3C](https://www.w3.org/TR/css-text-decor-4/#propdef-text-shadow)
-
-The text shadow is handled as the shadow of the effect from figma.
 
 ## drop-shadow
 
