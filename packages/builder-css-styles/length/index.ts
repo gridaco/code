@@ -12,6 +12,11 @@ export function length(d: DimensionLength | string, a?: Axis) {
   }
 
   if (typeof d === "string") {
+    // To handle cases such as "0%"
+    const extractNum = d.replace(/[^0-9]/, "");
+    if (parseInt(extractNum) === 0) {
+      return;
+    }
     if (d === "match-screen-size") {
       switch (a) {
         case Axis.horizontal:
