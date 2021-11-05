@@ -38,6 +38,10 @@ Shadow(
 )
 ```
 
+### inner-shadow
+
+It is not currently supported, and it appears to be replaced with drop-shadow.
+
 ## Why text shadow isn't support `spread radius`?
 
 The spread radius, the 4th arg of box shadow, is not supported by text shadow. According to W3C,
