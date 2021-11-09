@@ -46,7 +46,7 @@ export abstract class WidgetWithStyle
   y?: number;
 
   // IBoxShadowWidget
-  boxShadow?: BoxShadowManifest;
+  boxShadow?: BoxShadowManifest[];
 
   // IEdgeInsetsWidget
   margin?: EdgeInsets;
