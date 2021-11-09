@@ -12,6 +12,8 @@ The box shadow is handled as the shadow of the effect from figma.
 
 [figma DropShadowEffect](https://www.figma.com/plugin-docs/api/Effect/#dropshadoweffect)
 
+[W3C](https://drafts.csswg.org/css-backgrounds/#box-shadow)
+
 ## drop-shadow
 
 **css**
