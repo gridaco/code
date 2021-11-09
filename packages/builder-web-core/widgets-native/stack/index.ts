@@ -33,7 +33,7 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
     width: number;
     height: number;
     minHeight?: DimensionLength;
-    boxShadow?: BoxShadowManifest;
+    boxShadow?: BoxShadowManifest[];
     borderRadius?: BorderRadiusManifest;
     border?: Border;
     background?: Background;

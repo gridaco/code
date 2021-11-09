@@ -25,7 +25,7 @@ export class Container extends StylableJsxWidget {
     height?: number;
     background?: Background;
     borderRadius?: BorderRadiusManifest;
-    boxShadow?: BoxShadowManifest;
+    boxShadow?: BoxShadowManifest[];
     border?: Border;
   }) {
     super(p);
@@ -40,6 +40,7 @@ export class Container extends StylableJsxWidget {
   }
 
   styleData(): CSSProperties {
+    console.log(this.boxShadow);
     return {
       width: css.px(this.width),
       height: css.px(this.height),

@@ -60,7 +60,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
       crossAxisAlignment?: CrossAxisAlignment;
       verticalDirection?: VerticalDirection;
       margin?: EdgeInsets;
-      boxShadow?: BoxShadowManifest;
+      boxShadow?: BoxShadowManifest[];
       padding?: EdgeInsets;
       background?: Background;
       overflow?: CSSProperty.Overflow;
