@@ -7,7 +7,7 @@ export function boxShadow(
   shadows: ReadonlyArray<BoxShadowManifest>
 ): Array<flutter.BoxShadow> {
   // if no shadow filtered available, return undefined
-  if (shadows.length == 0) {
+  if (!shadows || shadows.length == 0) {
     return undefined;
   }
 
@@ -16,7 +16,7 @@ export function boxShadow(
       if (!d) {
         return;
       }
-      
+
       return new flutter.BoxShadow({
         color: dartui.color(d.color),
         blurRadius: requiredNumber(d.blurRadius),
