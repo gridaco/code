@@ -40,7 +40,6 @@ export class Container extends StylableJsxWidget {
   }
 
   styleData(): CSSProperties {
-    console.log(this.boxShadow);
     return {
       width: css.px(this.width),
       height: css.px(this.height),
