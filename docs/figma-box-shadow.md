@@ -49,6 +49,39 @@ BoxShadow(
 )
 ```
 
+## multi shadow
+
+ref: https://drafts.csswg.org/css-backgrounds/#shadow-layers
+
+> The priority in which the layers are expressed is from the one in front. That is, what was written first is expressed at the top of the layer.
+
+css multiple shadows are supported, separated by commas.
+
+ex
+
+```css
+box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, 0.2), 5px -1px 2px 1px rgb(59, 0, 19);
+```
+
+flutter multiple shadows are supported separated by array
+
+```dart
+boxShadow: [
+  BoxShadow(
+    offset: Offset(10.0, 10.0),
+    blurRadius: 3.0,
+    color: Color.fromARGB(255, 103, 90),
+    spreadRadius: 5.0,
+  ),
+  BoxShadow(
+    offset: Offset(9.0, 6.0),
+    blurRadius: 8.0,
+    color: Color.fromARGB(25, 57, 0),
+    spreadRadius: 1.0,
+  )
+]
+```
+
 ## inner-shadow
 
 **cs**
