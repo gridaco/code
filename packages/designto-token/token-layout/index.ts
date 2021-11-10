@@ -116,7 +116,7 @@ function flex_or_stack_from_frame(
     crossAxisAlignment: frame.crossAxisAlignment,
     mainAxisAlignment: frame.mainAxisAlignment,
     verticalDirection: VerticalDirection.down,
-    boxShadow: frame.primaryShadow,
+    boxShadow: frame.shadows as BoxShadowManifest[],
     padding: frame.padding,
     background: _background,
     children: wchildren,
@@ -168,7 +168,7 @@ function flex_or_stack_from_frame(
     children: stack_children,
     width: frame.width,
     height: frame.height,
-    boxShadow: frame.primaryShadow,
+    boxShadow: frame.shadows as BoxShadowManifest[],
     borderRadius: frame.cornerRadius,
     border: _border,
     padding: frame.padding,
@@ -418,7 +418,7 @@ function fromGroup(
     children: stack_children,
     width: group.width,
     height: group.height,
-    boxShadow: group.primaryShadow,
+    boxShadow: group.shadows as BoxShadowManifest[],
     padding: group.padding,
     background: undefined, // group does not have fills.
   });
