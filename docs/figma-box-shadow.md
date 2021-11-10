@@ -64,9 +64,3 @@ box-shadow: inset 10px 10px red;
 ```dart
 <!-- WIP -->
 ```
-
-### What is spread radius?
-
-ref: fhttps://drafts.csswg.org/css-backgrounds/#spread-distance
-
-WIP
