@@ -45,10 +45,8 @@ export function boxShadow(
     }
   );
 
-  const _boxShadows = boxShadows.reverse();
-
   // return undefined if array is empty, since it's not needed.
-  return _boxShadows.length > 0 ? _boxShadows.reverse() : undefined;
+  return boxShadows.length > 0 ? boxShadows : undefined;
 }
 
 function requiredNumber(number: number): number {
