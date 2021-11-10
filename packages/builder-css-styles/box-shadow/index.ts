@@ -18,5 +18,5 @@ export function boxshadow(bs: BoxShadowManifest[]): string {
     )} ${_spreadRadius} ${color(shadow.color)}`;
   });
 
-  return res.reverse.toString();
+  return res.reverse().toString();
 }
