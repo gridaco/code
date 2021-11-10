@@ -67,7 +67,7 @@ box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, 0.2), 5px -1px 2px 1px rgb(59, 0, 
 
 **flutter**
 
-WIP
+Unlike css, the priority in which layers are expressed is from the back.
 
 flutter multiple shadows are supported separated by array
 

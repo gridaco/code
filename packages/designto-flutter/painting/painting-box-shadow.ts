@@ -4,8 +4,7 @@ import { roundNumber } from "@reflect-ui/uiutils";
 import { BoxShadowManifest } from "@reflect-ui/core";
 
 /**
- * @returns The priority in which the layers are expressed is from the one in front.
- * However, the value passed in is reversed, so it inverts the array.
+ * @returns Unlike css, the priority in which layers are expressed is from the back.
  */
 export function boxShadow(
   shadows: ReadonlyArray<BoxShadowManifest>
