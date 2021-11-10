@@ -7,9 +7,11 @@ export function boxshadow(bs: BoxShadowManifest[]): string {
     return;
   }
   const res = bs.map((shadow) => {
+    const _spreadRadius = px(shadow.spreadRadius) ?? "";
+
     return `${px(shadow.offset.dx)} ${px(shadow.offset.dy)} ${px(
       shadow.blurRadius
-    )} ${px(shadow.spreadRadius)} ${color(shadow.color)}`;
+    )} ${_spreadRadius} ${color(shadow.color)}`;
   });
 
   return res.toString();
