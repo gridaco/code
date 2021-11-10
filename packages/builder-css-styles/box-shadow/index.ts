@@ -2,6 +2,10 @@ import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
 import { color } from "../color";
 import { px } from "../dimensions";
 
+/**
+ * @returns The priority in which the layers are expressed is from the one in front.
+ * However, the value passed in is reversed, so it inverts the array.
+ */
 export function boxshadow(bs: BoxShadowManifest[]): string {
   if (!bs || bs.length === 0) {
     return;
@@ -14,5 +18,5 @@ export function boxshadow(bs: BoxShadowManifest[]): string {
     )} ${_spreadRadius} ${color(shadow.color)}`;
   });
 
-  return res.toString();
+  return res.reverse.toString();
 }

@@ -3,6 +3,10 @@ import * as dartui from "../dart-ui";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { BoxShadowManifest } from "@reflect-ui/core";
 
+/**
+ * @returns The priority in which the layers are expressed is from the one in front.
+ * However, the value passed in is reversed, so it inverts the array.
+ */
 export function boxShadow(
   shadows: ReadonlyArray<BoxShadowManifest>
 ): Array<flutter.BoxShadow> {
@@ -41,8 +45,10 @@ export function boxShadow(
     }
   );
 
+  const _boxShadows = boxShadows.reverse();
+
   // return undefined if array is empty, since it's not needed.
-  return boxShadows.length > 0 ? boxShadows : undefined;
+  return _boxShadows.length > 0 ? _boxShadows.reverse() : undefined;
 }
 
 function requiredNumber(number: number): number {
