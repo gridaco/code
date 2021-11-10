@@ -100,7 +100,7 @@ function flex_or_stack_from_frame(
 
   const initializer: Omit<IFlexManifest, "direction"> & {
     key: WidgetKey;
-    boxShadow: BoxShadowManifest;
+    boxShadow: BoxShadowManifest[];
     padding: EdgeInsets;
     background?: Background;
     color?: Color;
