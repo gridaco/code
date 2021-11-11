@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 import VanillaPreview from "@code-editor/vanilla-preview";
+import "@vscode/webview-ui-toolkit";
 
 export default function VSCodeEmbedGridaExplorerPreview() {
   const router = useRouter(); // use router only for loading initial params.
   const [preview, setPreview] = useState<MinimalPreviewProps>(undefined);
+  const [loading, setLoading] = useState(false);
 
   const isEmpty = preview === undefined;
 
@@ -28,6 +30,10 @@ export default function VSCodeEmbedGridaExplorerPreview() {
             setPreview(event.payload.preview);
             break;
           }
+          case "set-loading": {
+            setLoading(event.payload.isLoading);
+            break;
+          }
         }
       }
       //
@@ -43,7 +49,7 @@ export default function VSCodeEmbedGridaExplorerPreview() {
     return <EmptyState />;
   }
 
-  return <PreviewState {...preview} />;
+  return <PreviewState {...preview} loading={loading} />;
 }
 
 function __lifecycle_event_page_loaded() {
@@ -55,6 +61,27 @@ function EmptyState({ message = "Nothing is selected" }: { message?: string }) {
     <EmptyStateContainer>
       <NothingIsSelected>{message}</NothingIsSelected>
     </EmptyStateContainer>
+  );
+}
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      "vscode-progress-ring": any;
+    }
+  }
+}
+
+function LoadingOverlay() {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        zIndex: 1,
+      }}
+    >
+      <vscode-progress-ring></vscode-progress-ring>
+    </div>
   );
 }
 
@@ -94,16 +121,24 @@ interface MinimalPreviewProps {
   };
 }
 
-function PreviewState({ id, srcDoc, size }: MinimalPreviewProps) {
+function PreviewState({
+  id,
+  srcDoc,
+  size,
+  loading,
+}: MinimalPreviewProps & { loading: boolean }) {
   return (
-    <VanillaPreview
-      type="responsive"
-      id={id ?? "no-id"}
-      data={srcDoc}
-      margin={0}
-      borderRadius={0}
-      origin_size={size}
-    />
+    <>
+      {loading && <LoadingOverlay />}
+      <VanillaPreview
+        type="responsive"
+        id={id ?? "no-id"}
+        data={srcDoc}
+        margin={0}
+        borderRadius={0}
+        origin_size={size}
+      />
+    </>
   );
 }
 
@@ -113,7 +148,7 @@ interface EventFromClient<T extends Commands = Commands> {
   payload: T;
 }
 
-type Commands = UpdatePreviewCommand | ClearPreviewCommand;
+type Commands = UpdatePreviewCommand | ClearPreviewCommand | SetLoadingCommand;
 
 interface UpdatePreviewCommand {
   type: "update-preview";
@@ -122,6 +157,11 @@ interface UpdatePreviewCommand {
 
 interface ClearPreviewCommand {
   type: "clear-preview";
+}
+
+interface SetLoadingCommand {
+  type: "set-loading";
+  isLoading: boolean;
 }
 
 ///

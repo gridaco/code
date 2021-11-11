@@ -28,6 +28,7 @@
     "@visx/group": "^1.7.0",
     "@visx/hierarchy": "^1.7.0",
     "@visx/shape": "^1.8.0",
+    "@vscode/webview-ui-toolkit": "^0.8.4",
     "codemirror": "^5.61.0",
     "codesandbox": "^2.2.3",
     "cuid": "^2.1.8",
