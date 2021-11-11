@@ -46,15 +46,15 @@ export function tokenize_gradient(
       });
     case "GRADIENT_RADIAL":
       console.error("GRADIENT_RADIAL not handled");
-      // TODO
+      // TODO:
       break;
     case "GRADIENT_ANGULAR":
       console.error("GRADIENT_ANGULAR not handled");
-      // TODO
+      // TODO:
       break;
     case "GRADIENT_DIAMOND":
       console.error("GRADIENT_DIAMOND not handled");
-      // TODO
+      // TODO:
       break;
   }
 }
