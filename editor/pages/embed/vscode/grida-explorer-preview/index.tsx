@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 import VanillaPreview from "@code-editor/vanilla-preview";
+import { ProgressBar } from "@modulz/design-system";
 
 export default function VSCodeEmbedGridaExplorerPreview() {
   const router = useRouter(); // use router only for loading initial params.
   const [preview, setPreview] = useState<MinimalPreviewProps>(undefined);
+  const [loading, setLoading] = useState(false);
 
   const isEmpty = preview === undefined;
 
@@ -22,11 +24,16 @@ export default function VSCodeEmbedGridaExplorerPreview() {
         switch (event.payload.type) {
           case "clear-preview": {
             setPreview(undefined);
+            setLoading(false);
             break;
           }
           case "update-preview": {
             setPreview(event.payload.preview);
+            setLoading(false);
             break;
+          }
+          case "set-loading": {
+            setLoading(event.payload.isLoading);
           }
         }
       }
@@ -40,20 +47,26 @@ export default function VSCodeEmbedGridaExplorerPreview() {
   }, []);
 
   if (isEmpty) {
-    return <EmptyState />;
+    return <EmptyState loading={loading} />;
   }
 
-  return <PreviewState {...preview} />;
+  return <PreviewState {...preview} loading={loading} />;
 }
 
 function __lifecycle_event_page_loaded() {
   window.postMessage({ __signature: "event-from-host", type: "page-loaded" });
 }
 
-function EmptyState({ message = "Nothing is selected" }: { message?: string }) {
+function EmptyState({
+  message = "Nothing is selected",
+  loading,
+}: {
+  message?: string;
+  loading: boolean;
+}) {
   return (
     <EmptyStateContainer>
-      <NothingIsSelected>{message}</NothingIsSelected>
+      <NothingIsSelected>{loading ? "Loading..." : message}</NothingIsSelected>
     </EmptyStateContainer>
   );
 }
@@ -94,17 +107,29 @@ interface MinimalPreviewProps {
   };
 }
 
-function PreviewState({ id, srcDoc, size }: MinimalPreviewProps) {
+function PreviewState({
+  id,
+  srcDoc,
+  size,
+  loading,
+}: MinimalPreviewProps & { loading: boolean }) {
   return (
-    <VanillaPreview
-      type="responsive"
-      id={id ?? "no-id"}
-      data={srcDoc}
-      margin={0}
-      borderRadius={0}
-      origin_size={size}
-    />
+    <>
+      {loading && <LoadingOverlay />}
+      <VanillaPreview
+        type="responsive"
+        id={id ?? "no-id"}
+        data={srcDoc}
+        margin={0}
+        borderRadius={0}
+        origin_size={size}
+      />
+    </>
   );
+}
+
+function LoadingOverlay() {
+  return <ProgressBar />;
 }
 
 const __eventfromclient__signature = "event-from-client";
@@ -113,7 +138,7 @@ interface EventFromClient<T extends Commands = Commands> {
   payload: T;
 }
 
-type Commands = UpdatePreviewCommand | ClearPreviewCommand;
+type Commands = UpdatePreviewCommand | ClearPreviewCommand | SetLoadingCommand;
 
 interface UpdatePreviewCommand {
   type: "update-preview";
@@ -122,6 +147,11 @@ interface UpdatePreviewCommand {
 
 interface ClearPreviewCommand {
   type: "clear-preview";
+}
+
+interface SetLoadingCommand {
+  type: "set-loading";
+  isLoading: boolean;
 }
 
 ///
