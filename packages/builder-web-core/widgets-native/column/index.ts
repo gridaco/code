@@ -18,7 +18,7 @@ export class Column extends Flex {
       key: WidgetKey;
       margin?: EdgeInsets;
       padding?: EdgeInsets;
-      boxShadow?: BoxShadowManifest;
+      boxShadow?: BoxShadowManifest[];
       color?: Color;
       borderRadius?: BorderRadiusManifest;
     }

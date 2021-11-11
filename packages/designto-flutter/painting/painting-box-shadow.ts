@@ -3,11 +3,14 @@ import * as dartui from "../dart-ui";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { BoxShadowManifest } from "@reflect-ui/core";
 
+/**
+ * @returns Unlike css, the priority in which layers are expressed is from the back.
+ */
 export function boxShadow(
   shadows: ReadonlyArray<BoxShadowManifest>
 ): Array<flutter.BoxShadow> {
   // if no shadow filtered available, return undefined
-  if (shadows.length == 0) {
+  if (!shadows || shadows.length == 0) {
     return undefined;
   }
 
@@ -16,7 +19,7 @@ export function boxShadow(
       if (!d) {
         return;
       }
-      
+
       return new flutter.BoxShadow({
         color: dartui.color(d.color),
         blurRadius: requiredNumber(d.blurRadius),

@@ -12,7 +12,7 @@ export function shadow(
   shadows: ReadonlyArray<TextShadowManifest>
 ): Array<flutter.Shadow> {
   // if no shadow filtered available, return undefined
-  if (shadows.length == 0) {
+  if (!shadow || shadows.length == 0) {
     return undefined;
   }
 
