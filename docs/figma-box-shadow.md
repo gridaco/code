@@ -69,6 +69,8 @@ box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, 0.2), 5px -1px 2px 1px rgb(59, 0, 
 
 Unlike css, the priority in which layers are expressed is from the back.
 
+- [Open question - Stackoverflow: What is the docs on layer display order when Flutter supports more than one shadow?](https://stackoverflow.com/questions/69913136/what-is-the-docs-on-layer-display-order-when-flutter-supports-more-than-one-shad?noredirect=1#comment123585258_69913136)
+
 flutter multiple shadows are supported separated by array
 
 ```dart
