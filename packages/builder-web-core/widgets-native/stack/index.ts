@@ -74,7 +74,7 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
       // for stacking elements under parent, parent's position shall be relative, children shall be absolute with anchor (e.g. bottom: 0)
       // can it be always relative?
       position: "relative",
-      "box-shadow": css.boxshadow(this.boxShadow),
+      "box-shadow": css.boxshadow(...this.boxShadow),
     };
   }
 }

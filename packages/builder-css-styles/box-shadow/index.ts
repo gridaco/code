@@ -6,7 +6,7 @@ import { px } from "../dimensions";
  * @returns The priority in which the layers are expressed is from the one in front.
  * However, the value passed in is reversed, so it inverts the array.
  */
-export function boxshadow(bs: BoxShadowManifest[]): string {
+export function boxshadow(...bs: BoxShadowManifest[]): string {
   if (!bs || bs.length === 0) {
     return;
   }

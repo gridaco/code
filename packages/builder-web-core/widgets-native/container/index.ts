@@ -43,7 +43,7 @@ export class Container extends StylableJsxWidget {
     return {
       width: css.px(this.width),
       height: css.px(this.height),
-      "box-shadow": css.boxshadow(this.boxShadow),
+      "box-shadow": css.boxshadow(...this.boxShadow),
       ...css.background(this.background),
       ...css.border(this.border),
       ...css.borderRadius(this.borderRadius),
