@@ -1,9 +1,13 @@
 import { Figma } from "@design-sdk/figma-types";
-import { Color, LinearGradient, Gradient } from "@reflect-ui/core";
+import {
+  Color,
+  LinearGradient,
+  Gradient,
+  RadialGradient,
+} from "@reflect-ui/core";
 import { color_utils } from "@design-sdk/core";
 import { tokenize_gradient_direction_from_angle } from "../token-gradient";
 import { roundNumber } from "@reflect-ui/uiutils";
-import { RadialGradient } from "@reflect-ui/core/lib/radial-gradient";
 
 export function tokenize_gradient(gradient: Figma.GradientPaint): Gradient {
   // TODO: Handle transform percisely.

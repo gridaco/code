@@ -1,7 +1,9 @@
 import { BoxDecoration } from "@flutter-builder/flutter";
-import { Color } from "@reflect-ui/core";
+import { Color, Gradient, GradientType } from "@reflect-ui/core";
 import { Background } from "@reflect-ui/core/lib/background";
 import * as dartui from "../dart-ui";
+import { linearGradient } from "./painting-linear-gradient";
+import { radialGradient } from "./painting-radial-gradient";
 
 function fromColor(color: Color): BoxDecoration {
   return new BoxDecoration({
@@ -20,6 +22,7 @@ function fromBackground(b: Background): BoxDecoration {
     switch (b.type) {
       case "gradient": {
         console.error("gradient bg not ready");
+        return fromGradient(b as Gradient);
         break;
       }
       case "graphics": {
@@ -33,8 +36,25 @@ function fromBackground(b: Background): BoxDecoration {
   }
 }
 
-function fromGradient(): BoxDecoration {
-  throw "not ready.";
+function fromGradient(g: Gradient): BoxDecoration {
+  switch (g._type) {
+    case GradientType.LINEAR: {
+      return new BoxDecoration({
+        gradient: linearGradient(g),
+      });
+    }
+    case GradientType.RADIAL: {
+      return new BoxDecoration({
+        gradient: radialGradient(g),
+      });
+    }
+    default: {
+      // TODO: add;
+      // GRADIENT_ANGULAR;
+      // GRADIENT_DIAMOND;
+      throw "not ready.";
+    }
+  }
 }
 
 function fromImage(): BoxDecoration {

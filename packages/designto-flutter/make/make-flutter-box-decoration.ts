@@ -6,6 +6,7 @@ import { interpretImageFill } from "../interpreter/image.interpret";
 import * as painting from "../painting";
 import { makeColorFromRGBO } from "./make-flutter-color";
 import { tokenizeBorder, tokenize_gradient } from "@designto/token";
+import { LinearGradient, RadialGradient } from "@reflect-ui/core";
 
 type DecorationBackgroundLike =
   | flutter.Color
@@ -106,16 +107,19 @@ export function makeBoxDecorationColorBg(
   switch (fill.type) {
     case "GRADIENT_ANGULAR":
     case "GRADIENT_DIAMOND":
-    case "GRADIENT_RADIAL":
       // TODO: handle above gradient types (only linear is handled)
       console.log(
         "not handled: `GRADIENT_RADIAL` | `GRADIENT_DIAMOND` | `GRADIENT_ANGULAR`"
       );
       return undefined;
     case "GRADIENT_LINEAR":
-      const g = tokenize_gradient(fill as Figma.GradientPaint);
-      return painting.linearGradient(g);
+      const lg = tokenize_gradient(fill as Figma.GradientPaint);
+      return painting.linearGradient(lg as LinearGradient);
+    case "GRADIENT_RADIAL":
+      const rg = tokenize_gradient(fill as Figma.GradientPaint);
+      return painting.radialGradient(rg as RadialGradient);
     case "SOLID":
+      console.log("solid color");
       return makeColorFromRGBO(fill.color, opacity);
     default:
       throw `making colored box decoraton with fill type "${fill?.type}" is not allowed."`;
