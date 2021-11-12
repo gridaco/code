@@ -14,7 +14,7 @@
 
 **css**
 
-- [linear-gradient()](<https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient())
+- [linear-gradient()](<https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient()>)
 
 `linear-gradient()` css function
 
@@ -23,6 +23,7 @@ background: linear-gradient(45deg, blue, red);
 ```
 
 > **syntax**
+>
 > wip
 
 **flutter**
@@ -43,6 +44,9 @@ background: radial-gradient(red, blue);
 
 - [RadialGradient()](https://api.flutter.dev/flutter/painting/RadialGradient-class.html)
 
-## gradient paint opacity
+> **gradient paint opacity**
+>
+> gradient color's opacity \* fill's opacity
 
-gradient color's opacity \* fill's opacity
+> **gradient paint degree**
+> WIP

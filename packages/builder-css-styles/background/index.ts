@@ -7,6 +7,7 @@ import { color } from "../color";
 import { array } from "@reflect-ui/uiutils";
 import { Color, GradientType } from "@reflect-ui/core";
 import { linearGradient } from "../linear-gradient";
+import { radialGradient } from "../radial-gradient";
 
 /**
  * @todo - not implemented
@@ -29,9 +30,14 @@ export function background(bg: Background): CSSProperties {
               background: linearGradient(_primary),
             };
           }
+          case GradientType.RADIAL: {
+            return {
+              background: radialGradient(_primary),
+            };
+          }
           default:
             console.error(
-              "other than linear-gradient is not supported yet.",
+              "other than linear, radial gradient is not supported yet.",
               _primary
             );
         }
