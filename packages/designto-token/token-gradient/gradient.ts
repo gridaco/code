@@ -55,7 +55,6 @@ export function tokenize_gradient(gradient: Figma.GradientPaint): Gradient {
         // TODO: support radius
       });
 
-      console.error("GRADIENT_RADIAL not handled");
     // TODO:
     case "GRADIENT_ANGULAR":
       console.error("GRADIENT_ANGULAR not handled");
