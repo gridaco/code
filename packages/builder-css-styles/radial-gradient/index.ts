@@ -11,10 +11,8 @@ import { color } from "../color";
 export function radialGradient(g: RadialGradientManifest): CSSProperty.Color {
   // throw "css gradient not ready";
   // TODO:
-  // 1. stops support
-  // 2. angle support
-  var angleDeg =
-    (Math.atan2(g.begin.y - g.end.y, g.begin.x - g.end.x) * 180) / Math.PI;
+  // 1. center support
+  // 2. radius support
 
   const colors = g.colors.map(color).join(", ");
   return `radial-gradient(${colors})`;

@@ -49,10 +49,10 @@ export function tokenize_gradient(gradient: Figma.GradientPaint): Gradient {
       });
     case "GRADIENT_RADIAL":
       return new RadialGradient({
-        begin: direction.begin,
-        end: direction.end,
+        center: direction.begin,
         colors: colors,
         stops: stopPoints,
+        // TODO: support radius
       });
 
       console.error("GRADIENT_RADIAL not handled");
