@@ -9,7 +9,6 @@ import { color } from "../color";
  * @returns
  */
 export function radialGradient(g: RadialGradientManifest): CSSProperty.Color {
-  // throw "css gradient not ready";
   // TODO:
   // 1. center support
   // 2. radius support
