@@ -280,8 +280,8 @@ function compose(
         ..._deco_part_shape_and_border_radius,
         ..._deco_part_bg,
         boxShadow: painting.boxShadow(widget.boxShadow),
-        // TODO:
-        // background:
+        // TODO: background list
+        // background: painting.linearGradient(widget.background.gradient),
       }),
       //   key: _key,
     });

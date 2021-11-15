@@ -1,13 +1,16 @@
 import { Figma } from "@design-sdk/figma-types";
-import { Color, LinearGradient } from "@reflect-ui/core";
+import {
+  Color,
+  LinearGradient,
+  Gradient,
+  RadialGradient,
+} from "@reflect-ui/core";
 import { color_utils } from "@design-sdk/core";
 import { tokenize_gradient_direction_from_angle } from "../token-gradient";
 import { roundNumber } from "@reflect-ui/uiutils";
 
-export function tokenize_gradient(
-  gradient: Figma.GradientPaint
-): LinearGradient {
-  // TODO Handle transform percisely.
+export function tokenize_gradient(gradient: Figma.GradientPaint): Gradient {
+  // TODO: Handle transform percisely.
   // https://www.figma.com/plugin-docs/api/Transform/
   // https://www.mathworks.com/discovery/affine-transformation.html
   const direction = tokenize_gradient_direction_from_angle(
@@ -45,16 +48,21 @@ export function tokenize_gradient(
         stops: stopPoints,
       });
     case "GRADIENT_RADIAL":
-      console.error("GRADIENT_RADIAL not handled");
-      // TODO
-      break;
+      return new RadialGradient({
+        center: direction.begin,
+        colors: colors,
+        stops: stopPoints,
+        // TODO: support radius
+      });
+
+    // TODO:
     case "GRADIENT_ANGULAR":
       console.error("GRADIENT_ANGULAR not handled");
-      // TODO
+      // TODO:
       break;
     case "GRADIENT_DIAMOND":
       console.error("GRADIENT_DIAMOND not handled");
-      // TODO
+      // TODO:
       break;
   }
 }

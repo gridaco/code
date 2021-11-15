@@ -6,6 +6,7 @@ export * from "./painting-box-shape";
 export * from "./painting-box-shadow";
 export * from "./painting-border";
 export * from "./painting-border-side";
+export * from "./painting-radial-gradient";
 export * from "./painting-text-style";
 export * from "./painting-text-decoration";
 export * from "./painting-font-style";
