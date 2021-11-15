@@ -21,7 +21,6 @@ function fromBackground(b: Background): BoxDecoration {
   } else {
     switch (b.type) {
       case "gradient": {
-        console.error("gradient bg not ready");
         return fromGradient(b as Gradient);
         break;
       }
@@ -37,7 +36,7 @@ function fromBackground(b: Background): BoxDecoration {
 }
 
 function fromGradient(g: Gradient): BoxDecoration {
-  switch (g._type) {
+  switch (g?._type) {
     case GradientType.LINEAR: {
       return new BoxDecoration({
         gradient: linearGradient(g),
