@@ -47,6 +47,11 @@ function fromGradient(g: Gradient): BoxDecoration {
         gradient: radialGradient(g),
       });
     }
+
+    // It is only used to make it safer in case of an emergency.
+    case undefined: {
+      return;
+    }
     default: {
       // TODO: add;
       // GRADIENT_ANGULAR;
