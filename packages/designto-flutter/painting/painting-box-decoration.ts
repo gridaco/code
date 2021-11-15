@@ -51,7 +51,9 @@ function fromGradient(g: Gradient): BoxDecoration {
       // TODO: add;
       // GRADIENT_ANGULAR;
       // GRADIENT_DIAMOND;
-      throw "not ready.";
+      throw new Error(
+        `Gradient type of "${g}" is not yet supported on flutter platform.`
+      );
     }
   }
 }
