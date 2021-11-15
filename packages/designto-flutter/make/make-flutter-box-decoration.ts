@@ -108,9 +108,7 @@ export function makeBoxDecorationColorBg(
     case "GRADIENT_ANGULAR":
     case "GRADIENT_DIAMOND":
       // TODO: handle above gradient types (only linear is handled)
-      console.log(
-        "not handled: `GRADIENT_RADIAL` | `GRADIENT_DIAMOND` | `GRADIENT_ANGULAR`"
-      );
+      console.log("not handled: `GRADIENT_DIAMOND` | `GRADIENT_ANGULAR`");
       return undefined;
     case "GRADIENT_LINEAR":
       const lg = tokenize_gradient(fill as Figma.GradientPaint);
