@@ -1,5 +1,5 @@
 import { BoxDecoration } from "@flutter-builder/flutter";
-import { Color, Gradient, GradientType } from "@reflect-ui/core";
+import { Color, GradientGroup, GradientType } from "@reflect-ui/core";
 import { Background } from "@reflect-ui/core/lib/background";
 import * as dartui from "../dart-ui";
 import { linearGradient } from "./painting-linear-gradient";
@@ -21,7 +21,7 @@ function fromBackground(b: Background): BoxDecoration {
   } else {
     switch (b.type) {
       case "gradient": {
-        return fromGradient(b as Gradient);
+        return fromGradient(b.gradient);
         break;
       }
       case "graphics": {
@@ -35,30 +35,34 @@ function fromBackground(b: Background): BoxDecoration {
   }
 }
 
-function fromGradient(g: Gradient): BoxDecoration {
-  switch (g?._type) {
-    case GradientType.LINEAR: {
-      return new BoxDecoration({
-        gradient: linearGradient(g),
-      });
-    }
-    case GradientType.RADIAL: {
-      return new BoxDecoration({
-        gradient: radialGradient(g),
-      });
-    }
+function fromGradient(g: GradientGroup): BoxDecoration {
+  if (Array.isArray(g)) {
+    // TODO: multiple gradient not supported.
+  } else {
+    switch (g?._type) {
+      case GradientType.LINEAR: {
+        return new BoxDecoration({
+          gradient: linearGradient(g),
+        });
+      }
+      case GradientType.RADIAL: {
+        return new BoxDecoration({
+          gradient: radialGradient(g),
+        });
+      }
 
-    // It is only used to make it safer in case of an emergency.
-    case undefined: {
-      return;
-    }
-    default: {
-      // TODO: add;
-      // GRADIENT_ANGULAR;
-      // GRADIENT_DIAMOND;
-      throw new Error(
-        `Gradient type of "${g}" is not yet supported on flutter platform.`
-      );
+      // It is only used to make it safer in case of an emergency.
+      case undefined: {
+        return;
+      }
+      default: {
+        // TODO: add;
+        // GRADIENT_ANGULAR;
+        // GRADIENT_DIAMOND;
+        throw new Error(
+          `Gradient type of "${g}" is not yet supported on flutter platform.`
+        );
+      }
     }
   }
 }
