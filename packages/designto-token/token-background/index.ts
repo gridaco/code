@@ -29,7 +29,7 @@ function forceSingleFill(fills: ReflectSceneNode["fills"]): Background {
     case "GRADIENT_ANGULAR":
       return {
         type: "gradient",
-        ...tokenize_gradient(fill),
+        gradient: tokenize_gradient(fill),
       };
     case "IMAGE":
       // TODO:

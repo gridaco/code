@@ -2,14 +2,16 @@ import { Figma } from "@design-sdk/figma-types";
 import {
   Color,
   LinearGradient,
-  Gradient,
   RadialGradient,
+  GradientGroup,
 } from "@reflect-ui/core";
 import { color_utils } from "@design-sdk/core";
 import { tokenize_gradient_direction_from_angle } from "../token-gradient";
 import { roundNumber } from "@reflect-ui/uiutils";
 
-export function tokenize_gradient(gradient: Figma.GradientPaint): Gradient {
+export function tokenize_gradient(
+  gradient: Figma.GradientPaint
+): GradientGroup {
   // TODO: Handle transform percisely.
   // https://www.figma.com/plugin-docs/api/Transform/
   // https://www.mathworks.com/discovery/affine-transformation.html

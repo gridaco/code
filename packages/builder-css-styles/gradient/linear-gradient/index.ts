@@ -1,6 +1,6 @@
 import { LinearGradientManifest } from "@reflect-ui/core";
 import { CSSProperty } from "@coli.codes/css";
-import { color } from "../color";
+import { color } from "../../color";
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/linear-gradient()
@@ -8,7 +8,13 @@ import { color } from "../color";
  * @param g
  * @returns
  */
-export function linearGradient(g: LinearGradientManifest): CSSProperty.Color {
+export function linearGradient(
+  g: LinearGradientManifest | LinearGradientManifest[]
+): CSSProperty.Color {
+  if (Array.isArray(g)) {
+    return g.map((g) => linearGradient(g)).join(", ");
+  }
+
   // throw "css gradient not ready";
   // TODO:
   // 1. stops support

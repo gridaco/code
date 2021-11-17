@@ -5,9 +5,14 @@ import {
 } from "@reflect-ui/core/lib/background";
 import { color } from "../color";
 import { array } from "@reflect-ui/uiutils";
-import { Color, GradientType } from "@reflect-ui/core";
-import { linearGradient } from "../linear-gradient";
-import { radialGradient } from "../radial-gradient";
+import {
+  Color,
+  GradientType,
+  GradientGroup,
+  LinearGradientGroup,
+  RadialGradientGroup,
+} from "@reflect-ui/core";
+import { linearGradient, radialGradient } from "../gradient";
 
 /**
  * @todo - not implemented
@@ -24,23 +29,9 @@ export function background(bg: Background): CSSProperties {
   if (_primary) {
     switch (_primary.type) {
       case "gradient": {
-        switch (_primary._type) {
-          case GradientType.LINEAR: {
-            return {
-              background: linearGradient(_primary),
-            };
-          }
-          case GradientType.RADIAL: {
-            return {
-              background: radialGradient(_primary),
-            };
-          }
-          default:
-            console.error(
-              "other than linear, radial gradient is not supported yet.",
-              _primary
-            );
-        }
+        return {
+          background: _handle_gradient_bg(_primary.gradient),
+        };
       }
       case "solid-color": {
         return {
@@ -57,5 +48,26 @@ export function background(bg: Background): CSSProperties {
         throw "graphics bg not supported";
       }
     }
+  }
+}
+
+function _handle_gradient_bg(g: GradientGroup): string {
+  let type: GradientType;
+  if (Array.isArray(g)) {
+    type = g[0]?._type;
+  }
+
+  switch (type) {
+    case GradientType.LINEAR: {
+      return linearGradient(g as LinearGradientGroup);
+    }
+    case GradientType.RADIAL: {
+      return radialGradient(g as RadialGradientGroup);
+    }
+    default:
+      console.error(
+        "other than linear, radial gradient is not supported yet.",
+        g
+      );
   }
 }
