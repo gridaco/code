@@ -1,4 +1,4 @@
-# ID Flag
+# A Semantic ID Flag
 
 ## When to use and what can it do?
 
