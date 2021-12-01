@@ -8,6 +8,7 @@ export * from "./dimensions";
 export * from "./font-weight";
 export * from "./font-family";
 export * from "./text-decoration";
+export * from "./text-shadow";
 export * from "./gradient";
 export * from "./padding";
 export * from "./position";

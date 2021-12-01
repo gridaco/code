@@ -270,7 +270,6 @@ function compose(
     }
 
     const _deco_part_bg = boxDecorationPart.fromBackground(widget.background);
-
     thisFlutterWidget = new flutter.Container({
       padding: painting.edgeinsets(widget.padding),
       margin: painting.edgeinsets(widget.margin),
@@ -280,9 +279,9 @@ function compose(
         border: painting.border(widget.border),
         ..._deco_part_shape_and_border_radius,
         ..._deco_part_bg,
-        // TODO:
-        // boxShadow:
-        // background:
+        boxShadow: painting.boxShadow(widget.boxShadow),
+        // TODO: background list
+        // background: painting.linearGradient(widget.background.gradient),
       }),
       //   key: _key,
     });

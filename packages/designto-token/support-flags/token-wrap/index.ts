@@ -1,3 +1,4 @@
+import { BoxShadowManifest } from "@reflect-ui/core";
 ///
 ///
 
@@ -50,7 +51,7 @@ export function tokenize_flagged_wrap(
       // crossAxisAlignment: frame.crossAxisAlignment,
       // mainAxisAlignment: frame.mainAxisAlignment,
       // verticalDirection: VerticalDirection.down,
-      boxShadow: validated.wrap_root.primaryShadow,
+      boxShadow: validated.wrap_root.shadows as BoxShadowManifest[],
       padding: validated.wrap_root.padding,
       // background: _background,
       borderRadius: validated.wrap_root.cornerRadius,

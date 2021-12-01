@@ -43,9 +43,9 @@ export async function designToCode({
   }
 
   // post token processing
-  let config = { ...default_tokenizer_config, id: input.id };
+  let tokenizer_config = { ...default_tokenizer_config, id: input.id };
   if (build_config.force_root_widget_fixed_size_no_scroll) {
-    config.custom_wrapping_provider = (w, n, d) => {
+    tokenizer_config.custom_wrapping_provider = (w, n, d) => {
       if (n.id === input.entry.id) {
         return wrap.withSizedBox(wrap.withOverflowBox(w), {
           width: n.width,
@@ -55,7 +55,7 @@ export async function designToCode({
       return false;
     };
   }
-  const vanilla_token = tokenize(input.entry, config);
+  const vanilla_token = tokenize(input.entry, tokenizer_config);
 
   // post token processing for componentization
   let reusable_widget_tree;

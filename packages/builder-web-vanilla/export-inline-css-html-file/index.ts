@@ -8,7 +8,7 @@ import {
   JsxWidget,
 } from "@web-builder/core";
 import {
-  buildTextChildJsx,
+  buildJsx,
   getWidgetStylesConfigMap,
   JSXWithoutStyleElementConfig,
   JSXWithStyleElementConfig,
@@ -60,50 +60,10 @@ export function export_inlined_css_html_file(widget: JsxWidget) {
   }
 
   function buildBodyHtml(widget: JsxWidget) {
-    const mapper = (widget) => {
-      const jsxcfg = widget.jsxConfig();
-      if (jsxcfg.type === "static-tree") {
-        return jsxcfg.tree;
-      }
-
-      const config = getStyleConfigById(widget.key.id);
-      if (widget instanceof TextChildWidget) {
-        const jsx = buildTextChildJsx(widget, config);
-        injectIdToJsx(jsx, config.id);
-        return jsx;
-      }
-
-      const childrenJSX = widget.children?.map((cc) => mapper(cc));
-
-      if (widget instanceof StylableJsxWidget) {
-        const config = getStyleConfigById(widget.key.id);
-        const jsx = new JSXElement({
-          openingElement: new JSXOpeningElement(config.tag, {
-            attributes: config.attributes,
-          }),
-          closingElement: new JSXClosingElement(config.tag),
-          children: childrenJSX,
-        });
-        injectIdToJsx(jsx, config.id);
-        return jsx;
-      } else {
-        const config = widget.jsxConfig();
-        if (config.type === "tag-and-attr") {
-          const _tag = handle(config.tag);
-          const jsx = new JSXElement({
-            openingElement: new JSXOpeningElement(_tag, {
-              attributes: config.attributes,
-            }),
-            closingElement: new JSXClosingElement(_tag),
-            children: childrenJSX,
-          });
-          return jsx;
-        }
-        return;
-      }
-    };
-
-    return mapper(widget);
+    return buildJsx(widget, {
+      styledConfig: (id) => getStyleConfigById(id),
+      idTransformer: (jsx, id) => injectIdToJsx(jsx, id),
+    });
   }
 
   const css_declarations = Array.from(styles_map.keys())
