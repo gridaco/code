@@ -23,7 +23,9 @@ import {
   Blurred,
   Rotation,
   IWHStyleWidget,
+  Operation,
 } from "@reflect-ui/core";
+
 import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { TokenizerConfig } from "../config";
@@ -309,10 +311,16 @@ function stackChild({
           container.width / 2;
         constraint.left = <Calculation>{
           type: "calc",
-          operations: {
+          operations: <Operation>{
+            type: "op",
             left: {
               type: "calc",
-              operations: { left: "50%", op: "+", right: centerdiff },
+              operations: <Operation>{
+                type: "op",
+                left: "50%",
+                op: "+",
+                right: centerdiff,
+              },
             },
             op: "-", // this part is different
             right: half_w,
@@ -358,10 +366,12 @@ function stackChild({
 
         constraint.top = <Calculation>{
           type: "calc",
-          operations: {
+          operations: <Operation>{
+            type: "op",
             left: {
               type: "calc",
-              operations: {
+              operations: <Operation>{
+                type: "op",
                 left: "50%",
                 op: "+",
                 right: centerdiff,
