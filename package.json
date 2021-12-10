@@ -13,7 +13,7 @@
         "editor-packages/*",
         "editor-packages/base-sdk/_firstparty/*",
         "packages/*",
-        "ui/*",
+        "ui/editor-ui/packages/*",
         "externals/reflect-core/packages/*",
         "externals/design-sdk/*",
         "externals/coli/packages/*"
