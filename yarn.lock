@@ -4005,6 +4005,18 @@
   dependencies:
     "@types/yargs-parser" "*"
 
+"@use-gesture/core@10.2.2":
+  version "10.2.2"
+  resolved "https://registry.yarnpkg.com/@use-gesture/core/-/core-10.2.2.tgz#80e5e5ec6551bcca66f5d9a3302744b0979caf0f"
+  integrity sha512-jIaKSHsruYcFEhUHVoFYLuucIVTx1QjUc8CEHD+SPZtwpY8kBPG0lHeNd6ZpX01llBaEygm3cPWFm+SstjTRoQ==
+
+"@use-gesture/react@^10.2.2":
+  version "10.2.2"
+  resolved "https://registry.yarnpkg.com/@use-gesture/react/-/react-10.2.2.tgz#3cb5023a5182872863fcb6a7be2a936e5f58e184"
+  integrity sha512-ZRi/xAm/LWfWuAY3IKwCjdXylXAVIubcj3j100KcTdGPqfxxyYUhoT7bNOMMWu8H3oWiXbdwvZ90Wd5f/KfHMA==
+  dependencies:
+    "@use-gesture/core" "10.2.2"
+
 "@visx/curve@1.7.0":
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/@visx/curve/-/curve-1.7.0.tgz#b8c8ae902de469ae43014c78ed9bfda8aed8137c"
