@@ -35,7 +35,18 @@ export class DesignInput implements IDesignInput {
   }
 
   static fromDesign(design: ReflectSceneNode): DesignInput {
-    return new DesignInput({ entry: design });
+    const _allnodes = mapGrandchildren(design, 0, {
+      includeThis: true,
+      ignoreGroup: false,
+    });
+
+    const repository = new NodeRepository({
+      // TODO: components not supported for `fromdesign`
+      components: [],
+      nodes: [...(_allnodes as any)],
+    });
+
+    return new DesignInput({ entry: design, repository: repository });
   }
 
   static fromApiResponse({
