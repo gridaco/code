@@ -17,6 +17,10 @@ import { reusable } from "@code-features/component";
 interface AssetsConfig {
   asset_repository?: BaseImageRepositories<string>;
   skip_asset_replacement?: boolean;
+  /**
+   * this is currently only supported on vanilla framework - for preview.
+   */
+  custom_asset_replacement?: { type: "static"; resource: string };
 }
 
 export type Result = output.ICodeOutput & { widget: Widget };
@@ -227,13 +231,30 @@ export async function designToVanilla({
   // ------------------------------------------------------------------------
   // finilize temporary assets
   // this should be placed somewhere else
-  if (asset_config?.asset_repository && !asset_config.skip_asset_replacement) {
-    const assets = await fetch_all_assets(asset_config.asset_repository);
-    res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
-    res.scaffold.raw = dangerous_temporary_asset_replacer(
-      res.scaffold.raw,
-      assets
+  if (asset_config.custom_asset_replacement) {
+    const keys = Object.keys(asset_config.asset_repository.mergeAll());
+    res.code.raw = dangerous_custom_static_resource_replacer(
+      res.code.raw,
+      keys,
+      asset_config.custom_asset_replacement.resource
     );
+    res.scaffold.raw = dangerous_custom_static_resource_replacer(
+      res.scaffold.raw,
+      keys,
+      asset_config.custom_asset_replacement.resource
+    );
+  } else {
+    if (
+      asset_config?.asset_repository &&
+      !asset_config.skip_asset_replacement
+    ) {
+      const assets = await fetch_all_assets(asset_config.asset_repository);
+      res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
+      res.scaffold.raw = dangerous_temporary_asset_replacer(
+        res.scaffold.raw,
+        assets
+      );
+    }
   }
   // ------------------------------------------------------------------------
 
@@ -246,6 +267,22 @@ const dangerous_temporary_asset_replacer = (r, a) => {
     r,
     default_asset_replacement_prefix,
     a,
+    { fallback: k.image_smallest_fallback_source_base_64 }
+  );
+};
+
+const dangerous_custom_static_resource_replacer = (
+  code: string,
+  keys: string[],
+  staticres: string
+) => {
+  return finalize_temporary_assets_with_prefixed_static_string_keys__dangerously(
+    code,
+    default_asset_replacement_prefix,
+    {
+      replacer: (k) => staticres,
+      keys,
+    },
     { fallback: k.image_smallest_fallback_source_base_64 }
   );
 };
