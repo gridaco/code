@@ -13418,6 +13418,11 @@ traverse@0.6.6:
   resolved "https://registry.yarnpkg.com/traverse/-/traverse-0.6.6.tgz#cbdf560fd7b9af632502fed40f918c157ea97137"
   integrity sha1-y99WD9e5r2MlAv7UD5GMFX6pcTc=
 
+tree-visit@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/tree-visit/-/tree-visit-0.1.0.tgz#ec35cfc13548b41ca5eabd5cbd7f83b574a8ed83"
+  integrity sha512-5lARH0BoZY70TwE+MV7v0KRtApSP4LSxC2JLRCUyK6KUCb8f/Qv9dS+PaWx9h3yKyNYjX2/JHwDx8DyQHHFzlw==
+
 ts-jest@^27.0.2, ts-jest@^27.0.3, ts-jest@^27.0.5:
   version "27.1.1"
   resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-27.1.1.tgz#5a54aca96db1dac37c681f3029dd10f3a8c36192"
