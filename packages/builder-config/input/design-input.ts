@@ -28,8 +28,8 @@ export class DesignInput implements IDesignInput {
     repository?: NodeRepository;
   }) {
     this.entry = entry;
-    this.id = id ?? entry.id;
-    this.name = name ?? entry.name;
+    this.id = id ?? entry?.id ?? "unknown";
+    this.name = name ?? entry?.name ?? "unknown";
     this.repository =
       repository ?? new NodeRepository({ nodes: [entry as any] });
   }
