@@ -105,8 +105,19 @@ function define_props(diff: NodeDiff): PropertyDefinition[] {
               use: instanceId,
             }
           : null,
+        diff.fills.diff
+          ? {
+              type: "text.fill",
+              default_value: JSON.stringify(diff.fills.values[0]),
+              overrided_value: JSON.stringify(diff.fills.values[1]),
+              master: masterId,
+              use: instanceId,
+            }
+          : null,
         // TODO: add text styles diff support
       ].filter((d) => d);
+    default:
+      throw "not handled yet - " + diff["type"];
   }
 }
 
@@ -116,7 +127,7 @@ const define_props__instance = (diff: InstanceDiff_1on1) => {
       return define_props(d);
     })
     .flat()
-    .filter((d) => d); // remove nulls
+    .filter(Boolean);
 };
 
 export function make_instance_component_meta({ entry, components }: Input) {
@@ -137,7 +148,8 @@ export function make_instance_component_meta({ entry, components }: Input) {
    * @param propertyOriginId - the origin node of the property will be targetted. e.g. in `master(group(text))`, the master's text's id will be used.
    * @returns
    */
-  const get_property_key = (propertyOriginId?: string) => {
+  const get_property_key = (type: string, propertyOriginId: string) => {
+    const uid = type + "-" + propertyOriginId;
     const originNodeName = findDeepUnderComponent(
       master,
       propertyOriginId
@@ -148,10 +160,10 @@ export function make_instance_component_meta({ entry, components }: Input) {
         case: NameCases.camel,
         register: false,
       });
-      if (__name_cache[propertyOriginId]) {
-        return __name_cache[propertyOriginId];
+      if (__name_cache[uid]) {
+        return __name_cache[uid];
       } else {
-        __name_cache[propertyOriginId] = name;
+        __name_cache[uid] = name;
         register();
         return name;
       }
@@ -163,7 +175,7 @@ export function make_instance_component_meta({ entry, components }: Input) {
     key: keyFromNode(findIn(components, masterId)),
     properties: properties.map((p) => {
       return <Property<any>>{
-        key: get_property_key(p.master),
+        key: get_property_key(p.type, p.master),
         type: p.type,
         defaultValue: p.default_value,
         link: {
@@ -184,7 +196,7 @@ export function make_instance_component_meta({ entry, components }: Input) {
     key: keyFromNode(entry),
     arguments: properties.reduce(function (result, item, index, array) {
       result[item.type] = {
-        key: get_property_key(item.master),
+        key: get_property_key(item.type, item.master),
         value: item.overrided_value,
       };
       return result;
@@ -219,6 +231,6 @@ function overrided_property_meta({ entry, components }: Input) {
     master: _master,
     components: Array.from(Object.values(components)),
   });
-  // TODO: make meta based on diff
+  // TODO: make meta based on diff `{ diff, ... }`
   return diff;
 }
