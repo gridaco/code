@@ -1,11 +1,14 @@
 import { Figma, ReflectSceneNode } from "@design-sdk/figma";
 import {
   compare_instance_with_master,
-  InstanceDiff,
+  InstanceDiff_1on1,
   NodeDiff,
 } from "@design-sdk/diff";
 import { ComponentsUsageRepository } from "./components-usage-repository";
-import { MasterComponentMetaToken } from "./tokens/token-master-component";
+import {
+  MasterComponentMetaToken,
+  Property,
+} from "./tokens/token-master-component";
 import { InstanceMetaToken } from "./tokens/token-instance";
 import { keyFromNode } from "@designto/token/key";
 
@@ -35,53 +38,79 @@ interface Input {
   references?: Figma.InstanceNode[];
 }
 
-interface Definition {
+/**
+ * A single property definition
+ */
+interface PropertyDefinition {
   type: string;
+  /**
+   * id of the master
+   */
   master: string;
+  /**
+   * id of the instance
+   */
   use: string;
+  /**
+   * default value from master
+   */
   default_value: string;
+  /**
+   * overrided value from instance
+   */
   overrided_value: string;
 }
 
+/**
+ * defines properties as array of PropertyDefinition from whole diff data between master/instance
+ * @param diff
+ * @returns
+ */
+function define_props(diff: NodeDiff): PropertyDefinition[] {
+  if (!diff.diff) return;
+  const masterId = diff.ids[0];
+  const instanceId = diff.ids[1];
+  console.log("diff.type", diff.type);
+  switch (diff.type) {
+    case "instance-to-master":
+      throw "instance-to-master - not implemented"; // TODO:
+      return define_props__instance(diff as any) as any;
+      break;
+    case "text-node":
+      return [
+        diff.characters.diff
+          ? {
+              type: "text.data",
+              default_value: diff.characters.values[0],
+              overrided_value: diff.characters.values[1],
+              master: masterId,
+              use: instanceId,
+            }
+          : null,
+        // TODO: add text styles diff support
+      ];
+      break;
+  }
+}
+
+const define_props__instance = (diff: InstanceDiff_1on1) => {
+  return diff.values
+    .map((d) => {
+      return define_props(d);
+    })
+    .flat()
+    .filter((d) => d); // remove nulls
+};
+
 export function make_instance_component_meta({ entry, components }: Input) {
   const property_meta = overrided_property_meta({ entry, components });
-  const define = (diff: NodeDiff): Definition[] | Definition[][] => {
-    if (diff.diff) {
-      const master = diff.ids[0];
-      const use = diff.ids[1];
-      switch (diff.type) {
-        case "instance-to-master":
-          return define_instance(diff);
-        case "text-node":
-          return [
-            diff.characters.diff
-              ? {
-                  type: "text.data",
-                  default_value: diff.characters.values[0],
-                  overrided_value: diff.characters.values[1],
-                  master: master,
-                  use: use,
-                }
-              : null,
-          ];
-          break;
-      }
-    }
-  };
 
-  const define_instance = (diff: InstanceDiff) => {
-    const definitions = diff.values.map((d) => {
-      return define(d);
-    });
-    return definitions.filter((d) => d) as any;
-  };
-
-  const properties = define_instance(property_meta);
+  const properties = define_props__instance(property_meta).flat();
 
   const master = new MasterComponentMetaToken({
     key: keyFromNode(findIn(components, property_meta.ids[0])),
     properties: properties.map((p) => {
-      return {
+      return <Property<any>>{
         key: p.type,
         type: p.type,
         defaultValue: p.default_value,
@@ -89,8 +118,8 @@ export function make_instance_component_meta({ entry, components }: Input) {
           type: "design-link",
           linksto: {
             type: "path-property-link",
-            path: "",
-            property: p.type,
+            path: p.type,
+            property: [{ type: "name", value: p.type }],
           }, // TODO:
         },
       };
@@ -120,12 +149,19 @@ function overrided_property_meta({ entry, components }: Input) {
   if (
     // TODO: needs cleanup
     "origin" in entry
-      ? ((entry as any) as ReflectSceneNode).origin !== "INSTANCE"
+      ? (entry as any as ReflectSceneNode).origin !== "INSTANCE"
       : entry.type !== "INSTANCE"
   ) {
     throw new Error("not a instance");
   }
   const _master = findIn(components, entry.mainComponentId);
+  if (!_master)
+    throw new Error(
+      "cannot find master with `mainComponentId` - id " +
+        entry.mainComponentId +
+        `\nIn map provided - length of ${components.length}`
+    );
+
   const diff = compare_instance_with_master({
     instance: entry,
     master: _master,

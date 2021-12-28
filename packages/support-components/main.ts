@@ -28,6 +28,7 @@ export function reusable({
    */
   entry: RenderObjectWidget;
 }): ReusableWidgetResult {
+  console.log("repository", repository);
   // all instances in the input scope
   const instances = repository.nodes.filter(
     (node) => node.origin === "INSTANCE"
@@ -37,9 +38,8 @@ export function reusable({
     components: repository.components,
   });
 
-  const components = component_use_repository.components.map(
-    composeComponentMeta
-  );
+  const components =
+    component_use_repository.components.map(composeComponentMeta);
 
   return {
     // asumming root is always a multi child widget
@@ -106,9 +106,8 @@ function composeComponentMeta(
   component: MasterComponentMetaToken<any>
 ): MasterComponentWidget {
   const componentNode = component.body as ComponentNode;
-  const componentTokenizedBody = tokenizeComponent.fromComponentNode(
-    componentNode
-  );
+  const componentTokenizedBody =
+    tokenizeComponent.fromComponentNode(componentNode);
 
   return new MasterComponentWidget({
     key: component.key,
