@@ -23,10 +23,6 @@ export function buildWebWidgetFromTokens(widget: core.Widget): JsxWidget {
     is_root: true,
   });
 
-  if (process.env.NODE_ENV === "development") {
-    console.info("dev::", "final web token composed", composed);
-  }
-
   return composed;
 }
 

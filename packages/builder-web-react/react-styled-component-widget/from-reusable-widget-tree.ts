@@ -31,9 +31,9 @@ export function finalizeReactReusable_StyledComponents__Experimental({
   };
 
   const token = hanlde(tree);
-  console.log("token", token);
+  console.log("from-reusable-widget-tree::token", { token, tree });
   const webwi = buildWebWidgetFromTokens(token);
-  console.log("webwi", webwi);
+  console.log("from-reusable-widget-tree::web-widget", webwi);
   const builder = new ReactStyledComponentsBuilder({
     entry: webwi,
     config: {

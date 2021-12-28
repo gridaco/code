@@ -37,13 +37,16 @@ export async function designToCode({
   asset_config: AssetsConfig;
 }): Promise<Result> {
   if (process.env.NODE_ENV === "development") {
-    console.info(
-      "dev: starting designtocode with user input",
-      input,
-      framework,
-      build_config,
-      asset_config
-    );
+    if (framework.framework == "vanilla") {
+    } else {
+      console.info(
+        "dev: starting designtocode with user input",
+        input,
+        framework,
+        build_config,
+        asset_config
+      );
+    }
   }
 
   // post token processing
@@ -143,6 +146,12 @@ export async function designToReact({
     !input.reusable_widget_tree
   ) {
     const reactwidget = toreact.buildReactWidget(input.widget);
+    if (process.env.NODE_ENV === "development") {
+      console.info("dev::", "final web token composed", {
+        input: input.widget,
+        reactwidget,
+      });
+    }
 
     const res = toreact.buildReactApp(reactwidget, react_config);
     // ------------------------------------------------------------------------
