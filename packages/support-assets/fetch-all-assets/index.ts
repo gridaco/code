@@ -11,20 +11,18 @@ export async function fetch_all_assets(
 ) {
   try {
     let fetches: { [key: string]: Promise<string> | string } = {};
-    let should_fetcg_keys = [];
-    Object.keys(asset_repository.repositories).map((k) => {
-      const repo: ImageRepository = asset_repository.repositories[k];
-      Object.keys(repo.images).forEach((ik) => {
-        const i = repo.images[ik];
-        i.hash && (fetches[i.hash] = asset_repository._fetchDataByHash(i.hash));
-        i.key && should_fetcg_keys.push(i.key);
-      });
+    let should_fetch_keys = [];
+
+    Object.keys(asset_repository.mergeAll()).map((k) => {
+      const i = asset_repository.find(k);
+      i.hash && (fetches[i.hash] = asset_repository._fetchDataByHash(i.hash));
+      i.key && should_fetch_keys.push(i.key);
     });
 
     fetches = {
       ...fetches,
-      ...(should_fetcg_keys &&
-        (await asset_repository.fetchAll(...should_fetcg_keys))),
+      ...(should_fetch_keys &&
+        (await asset_repository.fetchAll(...should_fetch_keys))),
     };
 
     const fetched = {};
