@@ -28,7 +28,6 @@ export function reusable({
    */
   entry: RenderObjectWidget;
 }): ReusableWidgetResult {
-  console.log("repository", repository);
   // all instances in the input scope
   const instances = repository.nodes.filter(
     (node) => node.origin === "INSTANCE"
@@ -41,11 +40,13 @@ export function reusable({
   const components =
     component_use_repository.components.map(composeComponentMeta);
 
-  return {
+  const _ = {
     // asumming root is always a multi child widget
     tree: composeInstanciationTree(entry, repository, component_use_repository),
     components: components,
   };
+  // console.log("reusable", _);
+  return _;
 }
 
 function composeInstanciationTree(

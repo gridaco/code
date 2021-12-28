@@ -72,7 +72,7 @@ export async function designToCode({
       console.log("reusable_widget_tree", reusable_widget_tree);
       // TODO: WIP
     } catch (_) {
-      console.error(_);
+      console.error("error while building reusable widget tree.", _);
     }
   }
 

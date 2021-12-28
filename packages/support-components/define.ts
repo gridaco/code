@@ -1,4 +1,4 @@
-import { Figma, ReflectSceneNode } from "@design-sdk/figma";
+import { ComponentNode, Figma, ReflectSceneNode } from "@design-sdk/figma";
 import {
   compare_instance_with_master,
   InstanceDiff_1on1,
@@ -11,7 +11,9 @@ import {
 } from "./tokens/token-master-component";
 import { InstanceMetaToken } from "./tokens/token-instance";
 import { keyFromNode } from "@designto/token/key";
-
+import { NameCases, nameit, ScopedVariableNamer } from "coli";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import { visit } from "tree-visit";
 type IDMappable<T> =
   | {
       [key: string]: T;
@@ -24,6 +26,25 @@ function findIn<T>(map: IDMappable<T>, id: string) {
   } else {
     return map[id];
   }
+}
+
+function findDeepUnderComponent(component: ComponentNode, id: string) {
+  let found = null;
+  visit<{ id; children }>(component, {
+    getChildren: (node) => {
+      if ("children" in node) {
+        return node.children;
+      }
+      return [];
+    },
+    onEnter: (node) => {
+      if (node.id === id) {
+        found = node;
+        return "stop";
+      }
+    },
+  });
+  return found;
 }
 
 // based on default strategy
@@ -70,12 +91,9 @@ function define_props(diff: NodeDiff): PropertyDefinition[] {
   if (!diff.diff) return;
   const masterId = diff.ids[0];
   const instanceId = diff.ids[1];
-  console.log("diff.type", diff.type);
   switch (diff.type) {
     case "instance-to-master":
-      throw "instance-to-master - not implemented"; // TODO:
       return define_props__instance(diff as any) as any;
-      break;
     case "text-node":
       return [
         diff.characters.diff
@@ -88,8 +106,7 @@ function define_props(diff: NodeDiff): PropertyDefinition[] {
             }
           : null,
         // TODO: add text styles diff support
-      ];
-      break;
+      ].filter((d) => d);
   }
 }
 
@@ -103,15 +120,50 @@ const define_props__instance = (diff: InstanceDiff_1on1) => {
 };
 
 export function make_instance_component_meta({ entry, components }: Input) {
+  const propertyNamer = new ScopedVariableNamer(
+    "property",
+    ReservedKeywordPlatformPresets.universal
+  );
+
   const property_meta = overrided_property_meta({ entry, components });
+  const masterId = property_meta.ids[0];
+  const master = findIn(components, masterId);
 
   const properties = define_props__instance(property_meta).flat();
 
-  const master = new MasterComponentMetaToken({
-    key: keyFromNode(findIn(components, property_meta.ids[0])),
+  const __name_cache = {};
+  /**
+   *
+   * @param propertyOriginId - the origin node of the property will be targetted. e.g. in `master(group(text))`, the master's text's id will be used.
+   * @returns
+   */
+  const get_property_key = (propertyOriginId?: string) => {
+    const originNodeName = findDeepUnderComponent(
+      master,
+      propertyOriginId
+    )?.name;
+
+    if (originNodeName) {
+      const { name, register } = propertyNamer.nameit(originNodeName, {
+        case: NameCases.camel,
+        register: false,
+      });
+      if (__name_cache[propertyOriginId]) {
+        return __name_cache[propertyOriginId];
+      } else {
+        __name_cache[propertyOriginId] = name;
+        register();
+        return name;
+      }
+    }
+    throw new Error("origin layer does not contain a valid name");
+  };
+
+  const masterMeta = new MasterComponentMetaToken({
+    key: keyFromNode(findIn(components, masterId)),
     properties: properties.map((p) => {
       return <Property<any>>{
-        key: p.type,
+        key: get_property_key(p.master),
         type: p.type,
         defaultValue: p.default_value,
         link: {
@@ -124,15 +176,15 @@ export function make_instance_component_meta({ entry, components }: Input) {
         },
       };
     }),
-    child: findIn(components, property_meta.ids[0]),
+    child: findIn(components, masterId),
   });
 
-  const entryInstance = new InstanceMetaToken({
-    master: master,
+  const entryInstanceMeta = new InstanceMetaToken({
+    master: masterMeta,
     key: keyFromNode(entry),
     arguments: properties.reduce(function (result, item, index, array) {
       result[item.type] = {
-        key: item.type,
+        key: get_property_key(item.master),
         value: item.overrided_value,
       };
       return result;
@@ -140,8 +192,8 @@ export function make_instance_component_meta({ entry, components }: Input) {
   });
 
   return new ComponentsUsageRepository({
-    components: [master],
-    usage: { [entry.id]: entryInstance },
+    components: [masterMeta],
+    usage: { [entry.id]: entryInstanceMeta },
   });
 }
 
