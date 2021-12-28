@@ -60,6 +60,26 @@ export class DesignInput implements IDesignInput {
     return new DesignInput({ entry: design, repository: repository });
   }
 
+  static forMasterComponent({
+    all,
+    master,
+    components,
+  }: {
+    /**
+     * usually pages. Document#pages
+     */
+    all: { id: string; name: string; children: ReflectSceneNode[] }[];
+    master: ReflectSceneNode;
+    components: { [key: string]: ComponentNode } | ComponentNode[];
+  }) {
+    const repository = new NodeRepository({
+      components: Object.values(components),
+      nodes: all.map((p) => p.children.map(this._flat_all).flat()).flat(),
+    });
+
+    return new DesignInput({ entry: master, repository: repository });
+  }
+
   static fromApiResponse({
     raw,
     entry,
