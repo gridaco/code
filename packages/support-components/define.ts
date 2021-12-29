@@ -2,6 +2,7 @@ import { ComponentNode, Figma, ReflectSceneNode } from "@design-sdk/figma";
 import {
   compare_instance_with_master,
   InstanceDiff_1on1,
+  MultichildDiff,
   NodeDiff,
 } from "@design-sdk/diff";
 import { ComponentsUsageRepository } from "./components-usage-repository";
@@ -93,7 +94,7 @@ function define_props(diff: NodeDiff): PropertyDefinition[] {
   const instanceId = diff.ids[1];
   switch (diff.type) {
     case "instance-to-master":
-      return define_props__instance(diff as any) as any;
+      return define_props__instance(diff);
     case "text-node":
       return [
         diff.characters.diff
@@ -116,10 +117,21 @@ function define_props(diff: NodeDiff): PropertyDefinition[] {
           : null,
         // TODO: add text styles diff support
       ].filter((d) => d);
+    case "multi-child":
+      return define_props_multichild(diff);
     default:
       throw "not handled yet - " + diff["type"];
   }
 }
+
+const define_props_multichild = (diff: MultichildDiff) => {
+  return diff.values
+    .map((d) => {
+      return define_props(d);
+    })
+    .flat()
+    .filter(Boolean);
+};
 
 const define_props__instance = (diff: InstanceDiff_1on1) => {
   return diff.values
