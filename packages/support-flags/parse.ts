@@ -16,6 +16,7 @@ import type {
   AsTextSpanFlag,
   SimpleBooleanValueFlag,
 } from "./types";
+import { WHDeclarationFlag } from ".";
 
 export type FlagsParseResult = Results & {
   __meta: {
@@ -70,17 +71,22 @@ export function parse(name: string): FlagsParseResult {
       keys.alias.as_span
     );
 
-    console.log("_raw_parsed", _raw_parsed);
+    const wh_declaration_flag =
+      transform_wh_declaration_alias_from_raw(_raw_parsed);
+
+    // console.log("_raw_parsed", _raw_parsed);
 
     return {
       ..._raw_parsed,
       ...as_heading_flag,
       ...(as_paragraph_flag ?? {}),
       ...(as_span_flag ?? {}),
+      ...(wh_declaration_flag ?? {}),
       __meta: {
         contains_heading_flag: notempty(as_heading_flag),
         contains_paragraph_flag: notempty(as_paragraph_flag),
         contains_span_flag: notempty(as_span_flag),
+        contains_wh_declaration_flag: notempty(as_span_flag),
       },
     };
   } catch (_) {
@@ -238,3 +244,38 @@ const __max_height_alias_pref =
   _simple_custom_string_value_flag_prefernce_mapper(keys.alias.max_height);
 const __min_height_alias_pref =
   _simple_custom_string_value_flag_prefernce_mapper(keys.alias.min_height);
+
+function transform_wh_declaration_alias_from_raw(raw: { [key: string]: any }): {
+  [key: string]: WHDeclarationFlag;
+} {
+  const handle = (key) => {
+    if (raw[key]) {
+      return {
+        [key]: {
+          flag: key,
+          value: Number(raw[key]), // TODO: add more parser
+          _raw: raw[key] as string,
+        } as WHDeclarationFlag,
+      };
+    }
+  };
+
+  return [
+    keys.flag_key__width,
+    keys.flag_key__min_width,
+    keys.flag_key__max_width,
+
+    keys.flag_key__height,
+    keys.flag_key__min_height,
+    keys.flag_key__max_height,
+  ].reduce((acc, c) => {
+    const d = handle(c);
+    if (d) {
+      return {
+        ...acc,
+        ...d,
+      };
+    }
+    return acc;
+  }, {});
+}

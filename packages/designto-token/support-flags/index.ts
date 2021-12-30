@@ -5,6 +5,7 @@ import { tokenize_flagged_heading } from "./token-heading";
 import { tokenize_flagged_paragraph } from "./token-p";
 import { tokenize_flagged_span } from "./token-span";
 import { tokenize_flagged_wrap } from "./token-wrap";
+import { tokenize_flagged_wh_declaration } from "./token-wh";
 
 export default function (node: ReflectSceneNode) {
   const flags = parse(node.name);
@@ -54,5 +55,17 @@ function handle_with_flags(node, flags: FlagsParseResult) {
   const paragraph_flag_alias = flags[keys.flag_key__as_p];
   if (paragraph_flag_alias) {
     return tokenize_flagged_paragraph(node, paragraph_flag_alias);
+  }
+
+  const wh_declaration_flag_alias =
+    flags[keys.flag_key__width] ||
+    flags[keys.flag_key__min_width] ||
+    flags[keys.flag_key__max_width] ||
+    flags[keys.flag_key__height] ||
+    flags[keys.flag_key__min_height] ||
+    flags[keys.flag_key__max_height];
+
+  if (wh_declaration_flag_alias) {
+    return tokenize_flagged_wh_declaration(node, wh_declaration_flag_alias);
   }
 }
