@@ -1,0 +1,24 @@
+# `--fix-width` Flag (Draft)
+
+When applied, this will force dedicated layer's `width` to be ignore responsive width, use current width as fixed width instead.
+
+## Syntax
+
+```ts
+`--fix-width${"="typeof boolean}`
+```
+
+## Example
+
+```
+--fix-width
+
+--fix-width=true
+--fix-width=false
+
+--fix-width=True
+--fix-width=False
+
+--fix-width=yes
+--fix-width=no
+```
