@@ -4,6 +4,7 @@ import {
   Border,
   BorderRadiusManifest,
   BoxShadowManifest,
+  DimensionLength,
 } from "@reflect-ui/core";
 import { Background } from "@reflect-ui/core/lib/background";
 import * as css from "@web-builder/styles";
@@ -21,8 +22,8 @@ export class Container extends StylableJsxWidget {
     key: WidgetKey;
     x?: number;
     y?: number;
-    width?: number;
-    height?: number;
+    width?: DimensionLength;
+    height?: DimensionLength;
     background?: Background;
     borderRadius?: BorderRadiusManifest;
     boxShadow?: BoxShadowManifest[];
@@ -41,8 +42,8 @@ export class Container extends StylableJsxWidget {
 
   styleData(): CSSProperties {
     return {
-      width: css.px(this.width),
-      height: css.px(this.height),
+      width: css.length(this.width),
+      height: css.length(this.height),
       "box-shadow": css.boxshadow(...(this.boxShadow ?? [])),
       ...css.background(this.background),
       ...css.border(this.border),
@@ -59,6 +60,7 @@ export class Container extends StylableJsxWidget {
 
 export abstract class SelfClosingContainer
   extends Container
-  implements Omit<Container, "children"> {
+  implements Omit<Container, "children">
+{
   readonly children?: undefined;
 }

@@ -20,8 +20,8 @@ import { Background } from "@reflect-ui/core/lib/background";
 export class Stack extends MultiChildWidget implements CssMinHeightMixin {
   readonly _type = "stack";
 
-  width: number;
-  height: number;
+  width: DimensionLength;
+  height: DimensionLength;
   minHeight?: DimensionLength;
   borderRadius?: BorderRadiusManifest;
   border?: Border;
@@ -30,8 +30,8 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
   constructor(p: {
     key: WidgetKey;
     children: Array<StylableJsxWidget>;
-    width: number;
-    height: number;
+    width: DimensionLength;
+    height: DimensionLength;
     minHeight?: DimensionLength;
     boxShadow?: BoxShadowManifest[];
     borderRadius?: BorderRadiusManifest;
@@ -63,8 +63,8 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
 
   styleData(): CSSProperties {
     return {
-      width: css.px(this.width),
-      height: css.px(this.height),
+      width: css.length(this.width),
+      height: css.length(this.height),
 
       "min-height": css.minHeight(this.minHeight),
       overflow: clip(this.clipBehavior),

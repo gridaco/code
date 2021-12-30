@@ -1,7 +1,7 @@
 import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
 import { CSSProperties } from "@coli.codes/css";
-import { JSXElementConfig, StylableJSXElementConfig, WidgetKey } from "../..";
-import { px, color } from "@web-builder/styles";
+import { StylableJSXElementConfig, WidgetKey } from "../..";
+import * as css from "@web-builder/styles";
 import {
   JSX,
   JSXAttribute,
@@ -10,7 +10,6 @@ import {
   JSXIdentifier,
   JSXOpeningElement,
   JSXSelfClosingElement,
-  Snippet,
   StringLiteral,
 } from "coli";
 import { Color, GradientType } from "@reflect-ui/core";
@@ -110,7 +109,7 @@ export class SvgElement extends StylableJsxWidget {
     } else {
       switch (this.fill.type) {
         case "solid-color": {
-          return [path_with_fill(color(this.fill as Color))];
+          return [path_with_fill(css.color(this.fill as Color))];
         }
         case "graphics": {
           console.error("graphics fill for svg not supported.");
@@ -127,7 +126,7 @@ export class SvgElement extends StylableJsxWidget {
                     new JSXAttribute("offset", new StringLiteral(`${stop}%`)),
                     new JSXAttribute(
                       "style",
-                      new StringLiteral(`stop-color: ${color(c)}`)
+                      new StringLiteral(`stop-color: ${css.color(c)}`)
                     ),
                   ],
                 });
@@ -194,9 +193,9 @@ export class SvgElement extends StylableJsxWidget {
       };
     }
     return {
-      width: px(this.width),
-      height: px(this.height),
-      color: color(this.color),
+      width: css.length(this.width),
+      height: css.length(this.height),
+      color: css.color(this.color),
     };
   }
 

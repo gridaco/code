@@ -52,8 +52,8 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
     p: IFlexManifest<StylableJsxWidget> & {
       // direction: "row" | "column";
       key: WidgetKey;
-      width?: number;
-      height?: number;
+      width?: DimensionLength;
+      height?: DimensionLength;
       minHeight?: DimensionLength;
       mainAxisAlignment?: MainAxisAlignment;
       mainAxisSize?: MainAxisSize;
@@ -146,8 +146,8 @@ function flexsizing({
 }: {
   direction: Axis;
   mainAxisSize?: MainAxisSize;
-  width?: number;
-  height?: number;
+  width?: DimensionLength;
+  height?: DimensionLength;
   flex?: number;
 }): CSSProperties {
   switch (mainAxisSize) {
@@ -163,8 +163,8 @@ function flexsizing({
         case Axis.vertical:
           return {
             flex: "none",
-            width: width && css.px(width),
-            height: height && css.px(height),
+            width: width && css.length(width),
+            height: height && css.length(height),
           };
       }
     }
