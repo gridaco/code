@@ -8,7 +8,7 @@ type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 export function tokenize_flagged_heading(
   node: ReflectSceneNode,
   flag: HeadingFlag
-) {
+): Text {
   if (flag.value === false) return;
   if (node.type !== "TEXT") return;
 
