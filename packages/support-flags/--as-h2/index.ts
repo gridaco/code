@@ -14,5 +14,6 @@ export interface AsHeading2Flag {
     | typeof flag_key__heading2
     | typeof flag_key__headline2;
 
-  value?: boolean;
+  value: boolean;
+  _raw?: string;
 }

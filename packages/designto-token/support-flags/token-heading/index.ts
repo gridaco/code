@@ -9,11 +9,11 @@ export function tokenize_flagged_heading(
   node: ReflectSceneNode,
   flag: HeadingFlag
 ) {
-  if (flag.value === false) return node;
-  if (node.type !== "TEXT") return node;
+  if (flag.value === false) return;
+  if (node.type !== "TEXT") return;
 
   const level = get_level(flag);
-  if (level === undefined) return node; // this won't be happening
+  if (level === undefined) return; // this won't be happening
 
   const text = tokenizeText.fromText(node);
   text.element_preference_experimental = `h${level}`;

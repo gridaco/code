@@ -13,5 +13,7 @@ export interface AsHeading4Flag {
     | typeof flag_key__h4
     | typeof flag_key__heading4
     | typeof flag_key__headline4;
-  value?: boolean;
+
+  value: boolean;
+  _raw?: string;
 }

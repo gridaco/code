@@ -36,7 +36,7 @@ export function tokenize_flagged_wrap(
   node: ReflectSceneNode,
   flag: AsWrapFlag
 ) {
-  if (flag.value === false) return node;
+  if (flag.value === false) return;
 
   const validated = validate_input(node as any);
   if (validated.error === false) {

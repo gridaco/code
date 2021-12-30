@@ -13,5 +13,7 @@ export interface AsHeading5Flag {
     | typeof flag_key__h5
     | typeof flag_key__heading5
     | typeof flag_key__headline5;
-  value?: boolean;
+
+  value: boolean;
+  _raw?: string;
 }
