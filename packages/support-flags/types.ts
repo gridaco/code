@@ -26,3 +26,11 @@ export type HeadingFlag =
   | AsHeading4Flag
   | AsHeading5Flag
   | AsHeading6Flag;
+
+export type { ArtworkFlag };
+export type { AsHeading1Flag };
+export type { AsHeading2Flag };
+export type { AsHeading3Flag };
+export type { AsHeading4Flag };
+export type { AsHeading5Flag };
+export type { AsHeading6Flag };
