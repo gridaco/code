@@ -1,3 +1,10 @@
+---
+stage:
+  - production
+  - staging
+  - experimental
+---
+
 # `--as-h5` As Heading5
 
 **Accepted keys**
