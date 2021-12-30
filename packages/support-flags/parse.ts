@@ -44,11 +44,11 @@ export function parse(name: string) {
     const as_heading_flag = transform_heading_alias_from_raw(_raw_parsed);
     const as_paragraph_flag = handle_single_boolean_flag_alias<AsParagraphFlag>(
       _raw_parsed,
-      __p_alias
+      keys.alias.as_p
     );
     const as_span_flag = handle_single_boolean_flag_alias<AsTextSpanFlag>(
       _raw_parsed,
-      __textspan_alias
+      keys.alias.as_span
     );
 
     return {
@@ -104,110 +104,62 @@ function transform_heading_alias_from_raw(raw: { [key: string]: boolean }): {
 } {
   const _h1_alias = handle_single_boolean_flag_alias<HeadingFlag>(
     raw,
-    __h1_alias
+    keys.alias.as_h1
   );
   if (_h1_alias) return _h1_alias;
 
   const _h2_alias = handle_single_boolean_flag_alias<HeadingFlag>(
     raw,
-    __h2_alias
+    keys.alias.as_h2
   );
   if (_h2_alias) return _h2_alias;
 
   const _h3_alias = handle_single_boolean_flag_alias<HeadingFlag>(
     raw,
-    __h3_alias
+    keys.alias.as_h3
   );
   if (_h3_alias) return _h3_alias;
 
   const _h4_alias = handle_single_boolean_flag_alias<HeadingFlag>(
     raw,
-    __h4_alias
+    keys.alias.as_h4
   );
   if (_h4_alias) return _h4_alias;
 
   const _h5_alias = handle_single_boolean_flag_alias<HeadingFlag>(
     raw,
-    __h5_alias
+    keys.alias.as_h5
   );
   if (_h5_alias) return _h5_alias;
 
   const _h6_alias = handle_single_boolean_flag_alias<HeadingFlag>(
     raw,
-    __h6_alias
+    keys.alias.as_h6
   );
   if (_h6_alias) return _h6_alias;
 }
 
-const __h1_alias = [
-  keys.flag_key__as_h1,
-  keys.flag_key__as_heading1,
-  keys.flag_key__as_headline1,
-  keys.flag_key__h1,
-  keys.flag_key__heading1,
-  keys.flag_key__headline1,
-];
-const __h1_alias_pref = __h1_alias.map(
+const __h1_alias_pref = keys.alias.as_h1.map(
   _simple_boolean_value_flag_prefernce_mapper
 );
 
-const __h2_alias = [
-  keys.flag_key__as_h2,
-  keys.flag_key__as_heading2,
-  keys.flag_key__as_headline2,
-  keys.flag_key__h2,
-  keys.flag_key__heading2,
-  keys.flag_key__headline2,
-];
-const __h2_alias_pref = __h2_alias.map(
+const __h2_alias_pref = keys.alias.as_h2.map(
   _simple_boolean_value_flag_prefernce_mapper
 );
 
-const __h3_alias = [
-  keys.flag_key__as_h3,
-  keys.flag_key__as_heading3,
-  keys.flag_key__as_headline3,
-  keys.flag_key__h3,
-  keys.flag_key__heading3,
-  keys.flag_key__headline3,
-];
-const __h3_alias_pref = __h3_alias.map(
+const __h3_alias_pref = keys.alias.as_h3.map(
   _simple_boolean_value_flag_prefernce_mapper
 );
 
-const __h4_alias = [
-  keys.flag_key__as_h4,
-  keys.flag_key__as_heading4,
-  keys.flag_key__as_headline4,
-  keys.flag_key__h4,
-  keys.flag_key__heading4,
-  keys.flag_key__headline4,
-];
-const __h4_alias_pref = __h4_alias.map(
+const __h4_alias_pref = keys.alias.as_h4.map(
   _simple_boolean_value_flag_prefernce_mapper
 );
 
-const __h5_alias = [
-  keys.flag_key__as_h5,
-  keys.flag_key__as_heading5,
-  keys.flag_key__as_headline5,
-  keys.flag_key__h5,
-  keys.flag_key__heading5,
-  keys.flag_key__headline5,
-];
-const __h5_alias_pref = __h5_alias.map(
+const __h5_alias_pref = keys.alias.as_h5.map(
   _simple_boolean_value_flag_prefernce_mapper
 );
 
-const __h6_alias = [
-  keys.flag_key__as_h6,
-  keys.flag_key__as_heading6,
-  keys.flag_key__as_headline6,
-  keys.flag_key__h6,
-  keys.flag_key__heading6,
-  keys.flag_key__headline6,
-];
-const __h6_alias_pref = __h6_alias.map(
+const __h6_alias_pref = keys.alias.as_h6.map(
   _simple_boolean_value_flag_prefernce_mapper
 );
 
@@ -215,22 +167,22 @@ const __h6_alias_pref = __h6_alias.map(
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const __p_alias = [
-  keys.flag_key__as_p,
-  keys.flag_key__as_paragraph,
-  keys.flag_key__paragraph,
-];
-const __p_alias_pref = __p_alias.map(
+const __p_alias_pref = keys.alias.as_p.map(
   _simple_boolean_value_flag_prefernce_mapper
 );
 
-const __textspan_alias = [
-  keys.flag_key__as_span,
-  keys.flag_key__as_text_span,
-  keys.flag_key__as_textspan,
-  keys.flag_key__text_span,
-  keys.flag_key__textspan,
-];
-const __textspan_alias_pref = __textspan_alias.map(
+const __textspan_alias_pref = keys.alias.as_span.map(
   _simple_boolean_value_flag_prefernce_mapper
 );
+
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+
+const __width_alias_pref = 0;
+const __max_width_alias_pref = 0;
+const __min_width_alias_pref = 0;
+
+const __height_alias_pref = 0;
+const __max_height_alias_pref = 0;
+const __min_height_alias_pref = 0;

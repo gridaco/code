@@ -5,6 +5,15 @@ export const flag_key__h3 = "h3";
 export const flag_key__heading3 = "heading3";
 export const flag_key__headline3 = "headline3";
 
+export const flag_key_alias__as_h3 = [
+  flag_key__as_h3,
+  flag_key__as_heading3,
+  flag_key__as_headline3,
+  flag_key__h3,
+  flag_key__heading3,
+  flag_key__headline3,
+];
+
 export interface AsHeading3Flag {
   flag:
     | typeof flag_key__as_h3

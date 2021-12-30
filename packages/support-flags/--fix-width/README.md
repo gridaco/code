@@ -2,6 +2,10 @@
 
 When applied, this will force dedicated layer's `width` to be ignore responsive width, use current width as fixed width instead.
 
+**Accepted keys**
+
+- `--fix-width`
+
 ## Syntax
 
 ```ts

@@ -7,13 +7,25 @@ import type { AsHeading5Flag } from "./--as-h5";
 import type { AsHeading6Flag } from "./--as-h6";
 import type { AsParagraphFlag } from "./--as-p";
 import type { AsTextSpanFlag } from "./--as-span";
+import type { WidthFlag } from "./--width";
+import type { MinWidthFlag } from "./--min-width";
+import type { MaxWidthFlag } from "./--max-width";
+import type { HeightFlag } from "./--height";
+import type { MinHeightFlag } from "./--min-height";
+import type { MaxHeightFlag } from "./--max-height";
 
-export type Flag = ArtworkFlag | HeadingFlag;
+export type Flag =
+  //
+  ArtworkFlag | TextElementPreferenceFlag | WHDeclarationFlag;
 
 export interface SimpleBooleanValueFlag {
   flag: string;
   value: boolean;
 }
+
+export type WHDeclarationFlag = WidthDeclarationFlag | HeightDeclarationFlag;
+export type WidthDeclarationFlag = WidthFlag | MinWidthFlag | MaxWidthFlag;
+export type HeightDeclarationFlag = HeightFlag | MinHeightFlag | MaxHeightFlag;
 
 /**
  * Type alias for a flag that can be used to set the element preference to render a text
@@ -51,7 +63,14 @@ export type HeadingFlag =
   | AsHeading5Flag
   | AsHeading6Flag;
 
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
 export type { ArtworkFlag };
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
 export type {
   AsHeading1Flag,
   AsHeading2Flag,
@@ -60,11 +79,18 @@ export type {
   AsHeading5Flag,
   AsHeading6Flag,
 };
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
 export type { AsParagraphFlag };
 export type { AsTextSpanFlag };
 
-// export type {  };
-// export type {  };
-// export type {  };
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+export type { WidthFlag, MinWidthFlag, MaxWidthFlag };
+export type { HeightFlag, MinHeightFlag, MaxHeightFlag };
+
 // export type {  };
 // export type {  };
