@@ -1,4 +1,7 @@
-import { parse as parseflags } from "@design-sdk/flags/parsing-strategy-dashdash";
+import {
+  parse as parseflags,
+  Option,
+} from "@design-sdk/flags/parsing-strategy-dashdash";
 
 import * as keys from "./keys";
 
@@ -25,14 +28,23 @@ export function parse(name: string) {
         type: "bool",
       },
       //#region
-      ...__h1_alias_pref,
-      ...__h2_alias_pref,
-      ...__h3_alias_pref,
-      ...__h4_alias_pref,
-      ...__h5_alias_pref,
-      ...__h6_alias_pref,
-      ...__p_alias_pref,
-      ...__textspan_alias_pref,
+      __h1_alias_pref,
+      __h2_alias_pref,
+      __h3_alias_pref,
+      __h4_alias_pref,
+      __h5_alias_pref,
+      __h6_alias_pref,
+      __p_alias_pref,
+      __textspan_alias_pref,
+      //#endregion
+
+      //#region
+      __width_alias_pref,
+      __max_width_alias_pref,
+      __min_width_alias_pref,
+      __height_alias_pref,
+      __max_height_alias_pref,
+      __min_height_alias_pref,
       //#endregion
       {
         name: flag_key__module,
@@ -50,6 +62,8 @@ export function parse(name: string) {
       _raw_parsed,
       keys.alias.as_span
     );
+
+    console.log("_raw_parsed", _raw_parsed);
 
     return {
       ..._raw_parsed,
@@ -70,10 +84,18 @@ export function parse(name: string) {
 
 const notempty = (obj) => Object.keys(obj ?? {}).length > 0;
 
-const _simple_boolean_value_flag_prefernce_mapper = (k) => ({
-  name: k,
-  type: "bool",
-});
+const _simple_boolean_value_flag_prefernce_mapper = (
+  k: string | Array<string>
+): Option =>
+  Array.isArray(k)
+    ? {
+        names: k,
+        type: "bool",
+      }
+    : {
+        name: k,
+        type: "bool",
+      };
 
 function handle_single_boolean_flag_alias<T extends SimpleBooleanValueFlag>(
   raw: { [key: string]: boolean },
@@ -139,50 +161,73 @@ function transform_heading_alias_from_raw(raw: { [key: string]: boolean }): {
   if (_h6_alias) return _h6_alias;
 }
 
-const __h1_alias_pref = keys.alias.as_h1.map(
-  _simple_boolean_value_flag_prefernce_mapper
+const __h1_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.as_h1
 );
 
-const __h2_alias_pref = keys.alias.as_h2.map(
-  _simple_boolean_value_flag_prefernce_mapper
+const __h2_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.as_h2
 );
 
-const __h3_alias_pref = keys.alias.as_h3.map(
-  _simple_boolean_value_flag_prefernce_mapper
+const __h3_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.as_h3
 );
 
-const __h4_alias_pref = keys.alias.as_h4.map(
-  _simple_boolean_value_flag_prefernce_mapper
+const __h4_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.as_h4
 );
 
-const __h5_alias_pref = keys.alias.as_h5.map(
-  _simple_boolean_value_flag_prefernce_mapper
+const __h5_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.as_h5
 );
 
-const __h6_alias_pref = keys.alias.as_h6.map(
-  _simple_boolean_value_flag_prefernce_mapper
-);
-
-// -----------------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-
-const __p_alias_pref = keys.alias.as_p.map(
-  _simple_boolean_value_flag_prefernce_mapper
-);
-
-const __textspan_alias_pref = keys.alias.as_span.map(
-  _simple_boolean_value_flag_prefernce_mapper
+const __h6_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.as_h6
 );
 
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const __width_alias_pref = 0;
-const __max_width_alias_pref = 0;
-const __min_width_alias_pref = 0;
+const __p_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.as_p
+);
 
-const __height_alias_pref = 0;
-const __max_height_alias_pref = 0;
-const __min_height_alias_pref = 0;
+const __textspan_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.as_span
+);
+
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+
+const _simple_custom_string_value_flag_prefernce_mapper = (
+  k: string | Array<string>
+): Option =>
+  Array.isArray(k)
+    ? {
+        names: k,
+        // e.g. 100, 100px, 100%, .
+        type: "string",
+      }
+    : {
+        name: k,
+        // e.g. 100, 100px, 100%, .
+        type: "string",
+      };
+
+const __width_alias_pref = _simple_custom_string_value_flag_prefernce_mapper(
+  keys.alias.width
+);
+const __max_width_alias_pref =
+  _simple_custom_string_value_flag_prefernce_mapper(keys.alias.max_width);
+const __min_width_alias_pref =
+  _simple_custom_string_value_flag_prefernce_mapper(keys.alias.min_width);
+
+const __height_alias_pref = _simple_custom_string_value_flag_prefernce_mapper(
+  keys.alias.height
+);
+const __max_height_alias_pref =
+  _simple_custom_string_value_flag_prefernce_mapper(keys.alias.max_height);
+const __min_height_alias_pref =
+  _simple_custom_string_value_flag_prefernce_mapper(keys.alias.min_height);
