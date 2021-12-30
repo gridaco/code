@@ -1,17 +1,18 @@
-import { JSXElementConfig, StylableJSXElementConfig, WidgetKey } from "../..";
-import {
-  TextDataWidget,
-  TextChildWidget,
-  StylableJsxWidget,
-} from "@web-builder/core";
+import { StylableJSXElementConfig, WidgetKey } from "../..";
+import { TextDataWidget, TextChildWidget } from "@web-builder/core";
 import * as core from "@reflect-ui/core";
-import { TextOverflow } from "@reflect-ui/core";
+import { TextOverflow, WebTextElement } from "@reflect-ui/core";
 import { CSSProperties } from "@coli.codes/css";
 import { JSX } from "coli";
 import { RGBA } from "@reflect-ui/core";
 import * as css from "@web-builder/styles";
 import { Dynamic } from "@reflect-ui/core/lib/_utility-types";
 
+/**
+ * Html Text Representative.
+ *
+ * You can select wich element to render with `elementPreference`. - choose between h1 ~ h6, p, span, etc.
+ */
 export class Text extends TextChildWidget {
   _type: "Text";
 
@@ -23,6 +24,9 @@ export class Text extends TextChildWidget {
   width?: number;
   height?: number;
 
+  // experimental
+  elementPreference?: WebTextElement;
+
   constructor(p: {
     key: WidgetKey;
     data: string;
@@ -31,6 +35,7 @@ export class Text extends TextChildWidget {
     textAlign: core.TextAlign;
     width?: number;
     height?: number;
+    elementPreference?: WebTextElement;
   }) {
     super(p);
 
@@ -41,6 +46,9 @@ export class Text extends TextChildWidget {
     this.textAlign = p.textAlign;
     this.width = p.width;
     this.height = p.height;
+
+    // experimental
+    this.elementPreference = p.elementPreference;
   }
 
   textData() {
@@ -54,7 +62,7 @@ export class Text extends TextChildWidget {
     let textStyle: any = {
       // text style
       // ------------------------------------------
-      color: css.color((this.textStyle.color as any) as RGBA),
+      color: css.color(this.textStyle.color as any as RGBA),
       "text-overflow": this.overflow,
       "font-size": css.px(this.textStyle.fontSize),
       "font-family": css.fontFamily(this.textStyle.fontFamily),
@@ -78,7 +86,16 @@ export class Text extends TextChildWidget {
   jsxConfig(): StylableJSXElementConfig {
     return <StylableJSXElementConfig>{
       type: "tag-and-attr",
-      tag: JSX.identifier("span"),
+      tag: JSX.identifier(__get_dedicated_element_tag(this.elementPreference)),
     };
   }
 }
+
+const __default_element_tag = "span";
+const __get_dedicated_element_tag = (t?: WebTextElement | undefined) => {
+  if (t) {
+    return t;
+  } else {
+    return __default_element_tag;
+  }
+};
