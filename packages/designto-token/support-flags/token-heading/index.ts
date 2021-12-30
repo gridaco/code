@@ -13,6 +13,7 @@ export function tokenize_flagged_heading(
   if (node.type !== "TEXT") return node;
 
   const level = get_level(flag);
+  if (level === undefined) return node; // this won't be happening
 
   const text = tokenizeText.fromText(node);
   text.element_preference_experimental = `h${level}`;
@@ -69,4 +70,6 @@ function get_level(flag: HeadingFlag): HeadingLevel {
     case "headline6":
       return 6;
   }
+
+  console.trace("level parsing from heading flag failed.");
 }
