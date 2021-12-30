@@ -1,6 +1,7 @@
 import {
   parse as parseflags,
   Option,
+  Results,
 } from "@design-sdk/flags/parsing-strategy-dashdash";
 
 import * as keys from "./keys";
@@ -16,7 +17,13 @@ import type {
   SimpleBooleanValueFlag,
 } from "./types";
 
-export function parse(name: string) {
+export type FlagsParseResult = Results & {
+  __meta: {
+    [key: string]: boolean;
+  };
+};
+
+export function parse(name: string): FlagsParseResult {
   try {
     const _raw_parsed = parseflags(name, [
       {
@@ -78,7 +85,7 @@ export function parse(name: string) {
     };
   } catch (_) {
     console.error("error while parsing flags", _);
-    return {};
+    return {} as any;
   }
 }
 
