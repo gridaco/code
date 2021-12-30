@@ -1,7 +1,9 @@
 import { DimensionLength } from "@reflect-ui/core";
 
+// primary
 export const flag_key__min_width = "min-width";
-export const flag_key__minwidth = "minwidth";
+// alias
+const flag_key__minwidth = "minwidth";
 
 export const flag_key_alias__min_width = [
   flag_key__min_width,

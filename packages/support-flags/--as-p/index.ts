@@ -1,6 +1,8 @@
+// priamry
 export const flag_key__as_p = "as-p";
-export const flag_key__as_paragraph = "as-paragraph";
-export const flag_key__paragraph = "paragraph";
+// alias
+const flag_key__as_paragraph = "as-paragraph";
+const flag_key__paragraph = "paragraph";
 
 export const flag_key_alias__as_p = [
   flag_key__as_p,

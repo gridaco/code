@@ -1,8 +1,10 @@
+// primary
 export const flag_key__as_span = "as-span";
-export const flag_key__as_text_span = "as-text-span";
-export const flag_key__as_textspan = "as-textspan";
-export const flag_key__text_span = "text-span";
-export const flag_key__textspan = "textspan";
+// alias
+const flag_key__as_text_span = "as-text-span";
+const flag_key__as_textspan = "as-textspan";
+const flag_key__text_span = "text-span";
+const flag_key__textspan = "textspan";
 
 export const flag_key_alias__as_span = [
   flag_key__as_span,

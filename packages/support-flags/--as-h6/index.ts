@@ -1,9 +1,11 @@
+// primary
 export const flag_key__as_h6 = "as-h6";
-export const flag_key__as_heading6 = "as-heading6";
-export const flag_key__as_headline6 = "as-headline6";
-export const flag_key__h6 = "h6";
-export const flag_key__heading6 = "heading6";
-export const flag_key__headline6 = "headline6";
+// alias
+const flag_key__as_heading6 = "as-heading6";
+const flag_key__as_headline6 = "as-headline6";
+const flag_key__h6 = "h6";
+const flag_key__heading6 = "heading6";
+const flag_key__headline6 = "headline6";
 
 export const flag_key_alias__as_h6 = [
   flag_key__as_h6,

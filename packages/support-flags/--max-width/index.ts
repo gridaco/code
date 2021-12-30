@@ -1,7 +1,9 @@
 import { DimensionLength } from "@reflect-ui/core";
 
+// primary
 export const flag_key__max_width = "max-width";
-export const flag_key__maxwidth = "maxwidth";
+// alias
+const flag_key__maxwidth = "maxwidth";
 
 export const flag_key_alias__max_width = [
   flag_key__max_width,

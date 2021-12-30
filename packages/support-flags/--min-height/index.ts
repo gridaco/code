@@ -1,7 +1,9 @@
 import { DimensionLength } from "@reflect-ui/core";
 
+// primary
 export const flag_key__min_height = "min-height";
-export const flag_key__minheight = "minheight";
+// alias
+const flag_key__minheight = "minheight";
 
 export const flag_key_alias__min_height = [
   flag_key__min_height,
