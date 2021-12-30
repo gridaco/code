@@ -2,6 +2,8 @@ import { parse, keys } from "@code-features/flags";
 import type { ReflectSceneNode } from "@design-sdk/figma";
 import { tokenize_flagged_artwork } from "./token-artwork";
 import { tokenize_flagged_heading } from "./token-heading";
+import { tokenize_flagged_paragraph } from "./token-p";
+import { tokenize_flagged_span } from "./token-span";
 import { tokenize_flagged_wrap } from "./token-wrap";
 
 export default function (node: ReflectSceneNode) {
@@ -79,5 +81,23 @@ function handle_with_flags(node, flags) {
     flags[keys.flag_key__as_headline6];
   if (heading_flag_alias) {
     return tokenize_flagged_heading(node, heading_flag_alias);
+  }
+
+  const span_flag_alias =
+    flags[keys.flag_key__as_span] ||
+    flags[keys.flag_key__as_text_span] ||
+    flags[keys.flag_key__as_textspan] ||
+    flags[keys.flag_key__text_span] ||
+    flags[keys.flag_key__textspan];
+  if (span_flag_alias) {
+    return tokenize_flagged_span(node, span_flag_alias);
+  }
+
+  const paragraph_flag_alias =
+    flags[keys.flag_key__as_p] ||
+    flags[keys.flag_key__paragraph] ||
+    flags[keys.flag_key__as_paragraph];
+  if (paragraph_flag_alias) {
+    return tokenize_flagged_paragraph(node, paragraph_flag_alias);
   }
 }

@@ -10,6 +10,10 @@ import { flag_key__as_h4, flag_key__as_heading4, flag_key__as_headline4, flag_ke
 import { flag_key__as_h5, flag_key__as_heading5, flag_key__as_headline5, flag_key__h5, flag_key__heading5, flag_key__headline5 } from "./--as-h5";
 // prettier-ignore
 import { flag_key__as_h6, flag_key__as_heading6, flag_key__as_headline6, flag_key__h6, flag_key__heading6, flag_key__headline6 } from "./--as-h6";
+// prettier-ignore
+import { flag_key__as_p, flag_key__as_paragraph, flag_key__paragraph } from "./--as-p";
+// prettier-ignore
+import { flag_key__as_span, flag_key__as_text_span, flag_key__as_textspan, flag_key__text_span, flag_key__textspan } from "./--as-span";
 
 export {
   flag_key__as_h1,
@@ -63,4 +67,19 @@ export {
   flag_key__h6,
   flag_key__heading6,
   flag_key__headline6,
+};
+
+export {
+  //
+  flag_key__as_p,
+  flag_key__as_paragraph,
+  flag_key__paragraph,
+};
+
+export {
+  flag_key__as_span,
+  flag_key__as_text_span,
+  flag_key__as_textspan,
+  flag_key__text_span,
+  flag_key__textspan,
 };
