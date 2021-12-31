@@ -1,0 +1,1 @@
+node ../docs-copy/flags-api-docs.js
