@@ -31,6 +31,10 @@ export abstract class WidgetWithStyle
 {
   width?: DimensionLength;
   height?: DimensionLength;
+  minWidth?: DimensionLength;
+  minHeight?: DimensionLength;
+  maxWidth?: DimensionLength;
+  maxHeight?: DimensionLength;
 
   constraint?: {
     left?: DimensionLength;
