@@ -16,6 +16,9 @@ import { flag_key_alias__height, flag_key__height } from "./--height";
 import { flag_key_alias__min_height, flag_key__min_height } from "./--min-height";
 // prettier-ignore
 import { flag_key_alias__max_height, flag_key__max_height } from "./--max-height";
+import { flag_key_alias__fix_width, flag_key__fix_width } from "./--fix-width";
+// prettier-ignore
+import { flag_key_alias__fix_height, flag_key__fix_height } from "./--fix-height";
 
 export {
   flag_key__as_h1,
@@ -28,12 +31,15 @@ export {
 export { flag_key__as_p };
 export { flag_key__as_span };
 
-export { flag_key__width };
-export { flag_key__min_width };
-export { flag_key__max_width };
-export { flag_key__height };
-export { flag_key__min_height };
-export { flag_key__max_height };
+export {
+  flag_key__width,
+  flag_key__min_width,
+  flag_key__max_width,
+  flag_key__height,
+  flag_key__min_height,
+  flag_key__max_height,
+};
+export { flag_key__fix_width, flag_key__fix_height };
 
 export const alias = {
   as_h1: flag_key_alias__as_h1,
@@ -50,4 +56,6 @@ export const alias = {
   height: flag_key_alias__height,
   min_height: flag_key_alias__min_height,
   max_height: flag_key_alias__max_height,
+  fix_width: flag_key_alias__fix_width,
+  fix_height: flag_key_alias__fix_height,
 };

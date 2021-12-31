@@ -13,19 +13,25 @@ import type { MaxWidthFlag } from "./--max-width";
 import type { HeightFlag } from "./--height";
 import type { MinHeightFlag } from "./--min-height";
 import type { MaxHeightFlag } from "./--max-height";
+import { FixWidthFlag } from "./--fix-width";
+import { FixHeightFlag } from "./--fix-height";
 
 export type Flag =
   //
-  ArtworkFlag | TextElementPreferenceFlag | WHDeclarationFlag;
+  ArtworkFlag | TextElementPreferenceFlag | WHDeclarationFlag | FixWHFlag;
 
 export interface SimpleBooleanValueFlag {
   flag: string;
   value: boolean;
+  _raw?: string;
 }
 
 export type WHDeclarationFlag = WidthDeclarationFlag | HeightDeclarationFlag;
+
 export type WidthDeclarationFlag = WidthFlag | MinWidthFlag | MaxWidthFlag;
 export type HeightDeclarationFlag = HeightFlag | MinHeightFlag | MaxHeightFlag;
+
+export type FixWHFlag = FixWidthFlag | FixHeightFlag;
 
 /**
  * Type alias for a flag that can be used to set the element preference to render a text
@@ -91,6 +97,4 @@ export type { AsTextSpanFlag };
 
 export type { WidthFlag, MinWidthFlag, MaxWidthFlag };
 export type { HeightFlag, MinHeightFlag, MaxHeightFlag };
-
-// export type {  };
-// export type {  };
+export type { FixWidthFlag, FixHeightFlag };

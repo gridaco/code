@@ -1,4 +1,10 @@
-import { parse, keys, FlagsParseResult } from "@code-features/flags";
+import {
+  parse,
+  keys,
+  FlagsParseResult,
+  WHDeclarationFlag,
+  FixWHFlag,
+} from "@code-features/flags";
 import type { ReflectSceneNode } from "@design-sdk/figma";
 import { tokenize_flagged_artwork } from "./token-artwork";
 import { tokenize_flagged_heading } from "./token-heading";
@@ -6,6 +12,7 @@ import { tokenize_flagged_paragraph } from "./token-p";
 import { tokenize_flagged_span } from "./token-span";
 import { tokenize_flagged_wrap } from "./token-wrap";
 import { tokenize_flagged_wh_declaration } from "./token-wh";
+import { tokenize_flagged_fix_wh } from "./token-wh-fix";
 
 export default function (node: ReflectSceneNode) {
   const flags = parse(node.name);
@@ -57,7 +64,7 @@ function handle_with_flags(node, flags: FlagsParseResult) {
     return tokenize_flagged_paragraph(node, paragraph_flag_alias);
   }
 
-  const wh_declaration_flags = [
+  const wh_declaration_flags: WHDeclarationFlag[] = [
     flags[keys.flag_key__width],
     flags[keys.flag_key__min_width],
     flags[keys.flag_key__max_width],
@@ -68,5 +75,13 @@ function handle_with_flags(node, flags: FlagsParseResult) {
 
   if (wh_declaration_flags.length) {
     return tokenize_flagged_wh_declaration(node, wh_declaration_flags);
+  }
+
+  const fix_wh_flags: FixWHFlag[] = [
+    flags[keys.flag_key__fix_width],
+    flags[keys.flag_key__fix_height],
+  ].filter(Boolean);
+  if (fix_wh_flags.length) {
+    return tokenize_flagged_fix_wh(node, fix_wh_flags);
   }
 }

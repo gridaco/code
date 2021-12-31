@@ -15,8 +15,9 @@ import type {
   AsParagraphFlag,
   AsTextSpanFlag,
   SimpleBooleanValueFlag,
+  FixWHFlag,
+  WHDeclarationFlag,
 } from "./types";
-import { WHDeclarationFlag } from ".";
 
 export type FlagsParseResult = Results & {
   __meta: {
@@ -54,6 +55,12 @@ export function parse(name: string): FlagsParseResult {
       __max_height_alias_pref,
       __min_height_alias_pref,
       //#endregion
+
+      //#region
+      __fix_width_alias_pref,
+      __fix_height_alias_pref,
+      //#endregion
+
       {
         name: flag_key__module,
         type: "bool", // TODO: support string also.
@@ -73,7 +80,10 @@ export function parse(name: string): FlagsParseResult {
 
     const wh_declaration_flag =
       transform_wh_declaration_alias_from_raw(_raw_parsed);
-
+    const fix_wh_flag = handle_single_boolean_flag_alias<FixWHFlag>(
+      _raw_parsed,
+      [...keys.alias.fix_width, ...keys.alias.fix_height]
+    );
     // console.log("_raw_parsed", _raw_parsed);
 
     return {
@@ -82,14 +92,17 @@ export function parse(name: string): FlagsParseResult {
       ...(as_paragraph_flag ?? {}),
       ...(as_span_flag ?? {}),
       ...(wh_declaration_flag ?? {}),
+      ...(fix_wh_flag ?? {}),
       __meta: {
         contains_heading_flag: notempty(as_heading_flag),
         contains_paragraph_flag: notempty(as_paragraph_flag),
         contains_span_flag: notempty(as_span_flag),
         contains_wh_declaration_flag: notempty(as_span_flag),
+        contains_fix_wh_flag: notempty(fix_wh_flag),
       },
     };
   } catch (_) {
+    // TODO: this can happen when unregistered flag is used. this will be fixed.
     console.error("error while parsing flags", _);
     return {} as any;
   }
@@ -125,7 +138,7 @@ function handle_single_boolean_flag_alias<T extends SimpleBooleanValueFlag>(
     if (raw[c.key]) {
       return {
         ...acc,
-        [c.key]: <T>{ flag: c.key, value: raw[c.key] },
+        [c.key]: <T>{ flag: c.key, value: raw[c.key], _raw: String(raw) },
       };
     }
     return acc;
@@ -279,3 +292,10 @@ function transform_wh_declaration_alias_from_raw(raw: { [key: string]: any }): {
     return acc;
   }, {});
 }
+
+const __fix_width_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.fix_width
+);
+const __fix_height_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.fix_height
+);
