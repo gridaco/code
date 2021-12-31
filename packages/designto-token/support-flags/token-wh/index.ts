@@ -11,9 +11,44 @@ import { unwrappedChild } from "../../wrappings";
 
 export function tokenize_flagged_wh_declaration(
   node: ReflectSceneNode,
-  flag: WHDeclarationFlag
+  flag: WHDeclarationFlag[]
 ): Widget {
-  if (!flag.value) return;
+  if (!flag.length) return;
+
+  const merged = flag
+    .map((f) => f)
+    .reduce<IWHStyleWidget>((a, b) => {
+      if (isPossibleDimensionLength(b.value)) {
+        let rec: IWHStyleWidget = {};
+        switch (b.flag) {
+          case "width":
+            rec["width"] = b.value as DimensionLength;
+            break;
+          case "min-width":
+            rec["minWidth"] = b.value;
+            break;
+          case "max-width":
+            rec["maxWidth"] = b.value;
+            break;
+          case "height":
+            rec["height"] = b.value as DimensionLength;
+            break;
+          case "min-height":
+            rec["minHeight"] = b.value;
+            break;
+          case "max-height":
+            rec["maxHeight"] = b.value;
+            break;
+        }
+        return {
+          ...a,
+          ...rec,
+        };
+      } else {
+        // TODO: support complex values
+      }
+      return a;
+    }, {});
 
   const widget = tokenize(node, {
     should_ignore_flag: (n) => {
@@ -23,60 +58,12 @@ export function tokenize_flagged_wh_declaration(
 
   const flag_target = unwrappedChild(widget) as IWHStyleWidget;
 
-  const inject_width = () => {
-    flag_target.width = flag.value as DimensionLength;
-  };
-
-  const inject_min_width = () => {
-    flag_target.minWidth = flag.value as DimensionLength;
-  };
-
-  const inject_max_width = () => {
-    flag_target.maxWidth = flag.value as DimensionLength;
-  };
-
-  const inject_height = () => {
-    flag_target.height = flag.value as DimensionLength;
-  };
-
-  const inject_min_height = () => {
-    flag_target.minHeight = flag.value as DimensionLength;
-  };
-
-  const inject_max_height = () => {
-    flag_target.maxHeight = flag.value as DimensionLength;
-  };
-
-  switch (flag.flag) {
-    case "width":
-      if (isPossibleDimensionLength(flag.value)) {
-        inject_width();
-      } else {
-        // TODO:
-      }
-      break;
-    case "min-width":
-      inject_min_width();
-      break;
-    case "max-width":
-      inject_max_width();
-      break;
-    case "height":
-      if (isPossibleDimensionLength(flag.value)) {
-        inject_height();
-      } else {
-        // TODO:
-      }
-      break;
-    case "min-height":
-      inject_min_height();
-      break;
-    case "max-height":
-      inject_max_height();
-      break;
-  }
-
-  console.log("whinjection", flag, flag.flag, widget, flag_target);
+  merged.width && (flag_target.width = merged.width);
+  merged.minWidth && (flag_target.minWidth = merged.minWidth);
+  merged.maxWidth && (flag_target.maxWidth = merged.maxWidth);
+  merged.height && (flag_target.height = merged.height);
+  merged.minHeight && (flag_target.minHeight = merged.minHeight);
+  merged.maxHeight && (flag_target.maxHeight = merged.maxHeight);
 
   return widget;
 }
