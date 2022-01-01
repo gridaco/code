@@ -197,6 +197,15 @@ function compose<T extends JsxWidget>(
     }
   }
 
+  // button
+  else if (widget instanceof core.ButtonWidget) {
+    console.log("button", widget);
+    thisWebWidget = new web.Button({
+      key: _key,
+      // ...widget,
+    });
+  }
+
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
   else if (widget instanceof core.Container) {
     const container = new web.Container({

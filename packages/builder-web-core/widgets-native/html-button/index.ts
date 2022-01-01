@@ -46,17 +46,33 @@ export class Button extends StylableJsxWidget {
   ];
 
   styleData() {
-    return {};
+    // wip
+    return {
+      color: "red",
+      border: "none",
+      outline: "none",
+      "min-height": "24px",
+      ":hover": _button_hover_style,
+      ":disabled": _button_disabled_style,
+      ":active": _button_active_style,
+      ":focus": _button_focus_style,
+    };
   }
 
   jsxConfig() {
     return <JSXElementConfig>{
       tag: JSX.identifier("button"),
       attributes: [
-        new JSXAttribute(
-          "onClick",
-          Snippet.fromStatic("() => { alert(`button click`) }")
-        ),
+        // wip
+        // TODO: this only works for React. (wont' work for vanilla html)
+        // new JSXAttribute(
+        //   "onClick",
+        //   JSX.exp(
+        //     // Snippet.fromStatic()
+        //     // TODO: type check
+        //     "() => { /* add onclick callback */ }" as any
+        //   )
+        // ),
       ],
     };
   }
