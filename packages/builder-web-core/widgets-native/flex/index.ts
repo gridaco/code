@@ -45,16 +45,24 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
 
   borderRadius?: BorderRadiusManifest;
   border?: Border;
+
+  minWidth?: DimensionLength;
+  maxWidth?: DimensionLength;
   minHeight?: DimensionLength;
+  maxHeight?: DimensionLength;
+
   flexWrap?: FlexWrap;
 
   constructor(
     p: IFlexManifest<StylableJsxWidget> & {
       // direction: "row" | "column";
       key: WidgetKey;
-      width?: number;
-      height?: number;
+      width?: DimensionLength;
+      height?: DimensionLength;
+      minWidth?: DimensionLength;
+      maxWidth?: DimensionLength;
       minHeight?: DimensionLength;
+      maxHeight?: DimensionLength;
       mainAxisAlignment?: MainAxisAlignment;
       mainAxisSize?: MainAxisSize;
       crossAxisAlignment?: CrossAxisAlignment;
@@ -73,6 +81,11 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
 
     this.width = p.width;
     this.height = p.height;
+
+    this.minWidth = p.minWidth;
+    this.maxWidth = p.maxWidth;
+    this.minHeight = p.minHeight;
+    this.maxHeight = p.maxHeight;
 
     // flex related
     this.direction = p.direction;
@@ -94,7 +107,6 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
 
     // css only
     this.overflow = p.overflow;
-    this.minHeight = p.minHeight;
     this.flexWrap = p.flexWrap;
   }
 
@@ -119,7 +131,12 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
       ...css.border(this.border),
       ...css.borderRadius(this.borderRadius),
       ...flexsizing({ ...this }),
-      "min-height": css.minHeight(this.minHeight),
+
+      "min-width": css.length(this.minWidth),
+      "max-width": css.length(this.maxWidth),
+      "min-height": css.length(this.minHeight),
+      "max-height": css.length(this.maxHeight),
+
       ...css.background(this.background),
       "box-sizing": (this.padding && "border-box") || undefined,
       ...css.padding(this.padding),
@@ -146,8 +163,8 @@ function flexsizing({
 }: {
   direction: Axis;
   mainAxisSize?: MainAxisSize;
-  width?: number;
-  height?: number;
+  width?: DimensionLength;
+  height?: DimensionLength;
   flex?: number;
 }): CSSProperties {
   switch (mainAxisSize) {
@@ -163,8 +180,8 @@ function flexsizing({
         case Axis.vertical:
           return {
             flex: "none",
-            width: width && css.px(width),
-            height: height && css.px(height),
+            width: width && css.length(width),
+            height: height && css.length(height),
           };
       }
     }

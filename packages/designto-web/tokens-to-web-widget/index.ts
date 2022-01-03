@@ -23,10 +23,6 @@ export function buildWebWidgetFromTokens(widget: core.Widget): JsxWidget {
     is_root: true,
   });
 
-  if (process.env.NODE_ENV === "development") {
-    console.info("dev::", "final web token composed", composed);
-  }
-
   return composed;
 }
 
@@ -145,10 +141,12 @@ function compose<T extends JsxWidget>(
   else if (widget instanceof core.RenderedText) {
     thisWebWidget = new web.Text({
       ...widget,
+      key: _key,
       textStyle:
         widget.style /** explicit assignment - field name is different */,
       data: widget.data,
-      key: _key,
+      // experimental element specification
+      elementPreference: widget.element_preference_experimental,
     });
   } else if (widget instanceof core.VectorWidget) {
     thisWebWidget = new web.SvgElement({
@@ -232,6 +230,10 @@ function compose<T extends JsxWidget>(
   // end of logic gate
   // -------------------------------------
   else {
+    if (thisWebWidget)
+      throw new Error(
+        "internal error. this final exception gate should not be entered since there is already a composed widget."
+      );
     // todo - handle case more specific
     thisWebWidget = new web.ErrorWidget({
       key: _key,
@@ -239,6 +241,7 @@ function compose<T extends JsxWidget>(
         widget.key.originName
       }" type of "${widget._type}" - ${JSON.stringify(widget.key)}`,
     });
+    console.warn("not handled", widget);
   }
   // -------------------------------------
   // -------------------------------------

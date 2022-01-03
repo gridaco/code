@@ -106,9 +106,9 @@ export class ReactStyledComponentsBuilder {
   partDeclarations() {
     return Array.from(this.styledConfigWidgetMap.keys())
       .map((k) => {
-        return (this.styledConfigWidgetMap.get(
-          k
-        ) as StyledComponentJSXElementConfig).styledComponent;
+        return (
+          this.styledConfigWidgetMap.get(k) as StyledComponentJSXElementConfig
+        ).styledComponent;
       })
       .filter((s) => s);
   }
@@ -170,23 +170,21 @@ export class ReactStyledComponentWidgetModuleExportable {
     });
     file.imports(...this.imports);
 
-    console.log("exporting", exporting);
+    // console.log("exporting", exporting);
     switch (exporting.type) {
       case "export-default-anonymous-functional-component": {
         // exporting.declaration_syntax_choice;
         // exporting.export_declaration_syntax_choice;
         // exporting.exporting_position;
 
-        const export_default_anaonymous_functional_component = new FunctionDeclaration(
-          undefined,
-          {
+        const export_default_anaonymous_functional_component =
+          new FunctionDeclaration(undefined, {
             body: this.body,
             modifiers: {
               default: SyntaxKind.DefaultKeyword,
               export: SyntaxKind.ExportKeyword,
             },
-          }
-        );
+          });
         file.declare(export_default_anaonymous_functional_component);
         file.declare(...this.declarations);
         break;
@@ -219,9 +217,10 @@ export class ReactStyledComponentWidgetModuleExportable {
             );
             break;
           case "with-declaration":
-            const _exported_named_function_declaration = add_export_keyword_modifier_to_declaration<FunctionDeclaration>(
-              named_function_declaration
-            );
+            const _exported_named_function_declaration =
+              add_export_keyword_modifier_to_declaration<FunctionDeclaration>(
+                named_function_declaration
+              );
             file.declare(_exported_named_function_declaration);
             file.declare(...this.declarations);
             break;

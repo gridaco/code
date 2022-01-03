@@ -1,6 +1,7 @@
 import type { ReflectSceneNode } from "@design-sdk/core";
 import { mapGrandchildren } from "@design-sdk/core/utils";
 import { NodeRepository } from "@design-sdk/figma";
+import type { ComponentNode } from "@design-sdk/figma";
 import { RawNodeResponse } from "@design-sdk/figma-remote";
 
 export interface IDesignInput {
@@ -35,18 +36,48 @@ export class DesignInput implements IDesignInput {
   }
 
   static fromDesign(design: ReflectSceneNode): DesignInput {
-    const _allnodes = mapGrandchildren(design, 0, {
-      includeThis: true,
-      ignoreGroup: false,
-    });
-
     const repository = new NodeRepository({
-      // TODO: components not supported for `fromdesign`
-      components: [],
-      nodes: [...(_allnodes as any)],
+      // components not supported for `fromdesign`
+      components: null,
+      nodes: this._flat_all(design),
     });
 
     return new DesignInput({ entry: design, repository: repository });
+  }
+
+  static fromDesignWithComponents({
+    design,
+    components,
+  }: {
+    design: ReflectSceneNode;
+    components: { [key: string]: ComponentNode } | ComponentNode[];
+  }) {
+    const repository = new NodeRepository({
+      components: Object.values(components),
+      nodes: this._flat_all(design),
+    });
+
+    return new DesignInput({ entry: design, repository: repository });
+  }
+
+  static forMasterComponent({
+    all,
+    master,
+    components,
+  }: {
+    /**
+     * usually pages. Document#pages
+     */
+    all: { id: string; name: string; children: ReflectSceneNode[] }[];
+    master: ReflectSceneNode;
+    components: { [key: string]: ComponentNode } | ComponentNode[];
+  }) {
+    const repository = new NodeRepository({
+      components: Object.values(components),
+      nodes: all.map((p) => p.children.map(this._flat_all).flat()).flat(),
+    });
+
+    return new DesignInput({ entry: master, repository: repository });
   }
 
   static fromApiResponse({
@@ -56,15 +87,17 @@ export class DesignInput implements IDesignInput {
     raw: RawNodeResponse;
     entry: ReflectSceneNode;
   }): DesignInput {
-    const _allnodes = mapGrandchildren(entry, 0, {
+    const repository = new NodeRepository({
+      components: [...(Object.values(raw.components) as any)],
+      nodes: this._flat_all(entry),
+    });
+    return new DesignInput({ entry: entry, repository: repository });
+  }
+
+  private static _flat_all(entry) {
+    return mapGrandchildren(entry, 0, {
       includeThis: true,
       ignoreGroup: false,
     });
-
-    const repository = new NodeRepository({
-      components: [...(Object.values(raw.components) as any)],
-      nodes: [...(_allnodes as any)],
-    });
-    return new DesignInput({ entry: entry, repository: repository });
   }
 }

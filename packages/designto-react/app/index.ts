@@ -33,7 +33,7 @@ export function buildReactApp(
 
 export function buildReactWidget(widget: Widget) {
   assert(
-    widget,
+    widget instanceof Widget,
     "A valid reflect widget manifest should be passed as an input. none was passed."
   );
 

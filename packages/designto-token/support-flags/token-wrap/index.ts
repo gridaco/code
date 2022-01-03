@@ -35,7 +35,9 @@ import { unwrappedChild } from "../../wrappings";
 export function tokenize_flagged_wrap(
   node: ReflectSceneNode,
   flag: AsWrapFlag
-) {
+): Wrap {
+  if (flag.value === false) return;
+
   const validated = validate_input(node as any);
   if (validated.error === false) {
     // console.log("validated as wrap", validated);
@@ -73,9 +75,7 @@ export function tokenize_flagged_wrap(
  * 2. the children should be columns or rows
  * @param input
  */
-function validate_input(
-  node: ReflectFrameNode
-):
+function validate_input(node: ReflectFrameNode):
   | {
       error: false;
       wrap_root: ReflectFrameNode;

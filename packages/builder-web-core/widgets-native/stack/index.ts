@@ -20,9 +20,13 @@ import { Background } from "@reflect-ui/core/lib/background";
 export class Stack extends MultiChildWidget implements CssMinHeightMixin {
   readonly _type = "stack";
 
-  width: number;
-  height: number;
+  width: DimensionLength;
+  height: DimensionLength;
+  minWidth?: DimensionLength;
+  maxWidth?: DimensionLength;
   minHeight?: DimensionLength;
+  maxHeight?: DimensionLength;
+
   borderRadius?: BorderRadiusManifest;
   border?: Border;
   clipBehavior?: Clip;
@@ -30,9 +34,14 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
   constructor(p: {
     key: WidgetKey;
     children: Array<StylableJsxWidget>;
-    width: number;
-    height: number;
+
+    width: DimensionLength;
+    height: DimensionLength;
+    minWidth?: DimensionLength;
+    maxWidth?: DimensionLength;
     minHeight?: DimensionLength;
+    maxHeight?: DimensionLength;
+
     boxShadow?: BoxShadowManifest[];
     borderRadius?: BorderRadiusManifest;
     border?: Border;
@@ -40,10 +49,13 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
     clipBehavior?: Clip;
   }) {
     super(p);
+
     this.width = p.width;
     this.height = p.height;
-
+    this.minWidth = p.minWidth;
+    this.maxWidth = p.maxWidth;
     this.minHeight = p.minHeight;
+    this.maxHeight = p.maxHeight;
 
     this.background = p.background;
     this.borderRadius = p.borderRadius;
@@ -63,10 +75,13 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
 
   styleData(): CSSProperties {
     return {
-      width: css.px(this.width),
-      height: css.px(this.height),
+      width: css.length(this.width),
+      height: css.length(this.height),
+      "min-width": css.length(this.minWidth),
+      "max-width": css.length(this.maxWidth),
+      "min-height": css.length(this.minHeight),
+      "max-height": css.length(this.maxHeight),
 
-      "min-height": css.minHeight(this.minHeight),
       overflow: clip(this.clipBehavior),
       ...css.background(this.background),
       ...css.border(this.border),
