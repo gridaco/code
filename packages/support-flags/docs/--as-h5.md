@@ -1,4 +1,7 @@
 ---
+title: As-H5 flag
+id: "--as-h5"
+locale: en
 stage:
   - production
   - staging

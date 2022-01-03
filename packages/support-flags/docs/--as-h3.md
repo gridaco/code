@@ -1,4 +1,7 @@
 ---
+title: As-H3 flag
+id: "--as-h3"
+locale: en
 stage:
   - production
   - staging
