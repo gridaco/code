@@ -1,8 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
-const origin = "./packages/support-flags";
-const target = "./docs/flags";
+const origin = path.join(__dirname, "../../packages/support-flags");
+const target = path.join(__dirname, "../../docs/flags");
 const github_base_url =
   "https://github.com/gridaco/designto-code/tree/main/packages/support-flags";
 /**

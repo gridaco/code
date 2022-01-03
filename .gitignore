@@ -103,5 +103,16 @@ dist
 # TernJS port file
 .tern-port
 
-# Mist
+# Misc
 .DS_Store
+
+
+# ------- docs related -------
+## Learn more at scripts/docs-copy/flags-api-docs.js
+# custom
+docs/flags/----ignore.md
+docs/flags/---custom.md
+
+# flags api docs
+docs/flags/--*.md
+# ----------------------------
