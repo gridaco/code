@@ -17,5 +17,8 @@
         "externals/reflect-core/packages/*",
         "externals/design-sdk/*",
         "externals/coli/packages/*"
-    ]
+    ],
+    "devDependencies": {
+        "fs-extra": "^10.0.0"
+    }
 }
