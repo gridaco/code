@@ -1,4 +1,14 @@
-## Artwork flag
+---
+title: Artwork flag
+id: "--artwork"
+locale: en
+stage:
+  - production
+  - staging
+  - experimental
+---
+
+# Artwork flag
 
 **Accepted keys**
 
