@@ -1,7 +1,4 @@
-# `--as=slider` - [Reflect UI](https://reflect-ui.com) Slider Widget Indication Flag
+# `--as-slider` Flag
 
-## Syntax
-
-- `--as-slider`
-- `--as-slider=true`
-- `--as=slider`
+- Visit the [design documentation](../docs/--as-slider.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--as-slider)

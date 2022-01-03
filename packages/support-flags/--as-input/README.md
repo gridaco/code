@@ -1,7 +1,4 @@
-# `--as=input` - [Reflect UI](https://reflect-ui.com) Input (TextField) Widget Indication Flag
+# `--as-input` Flag
 
-## Syntax
-
-- `--as-input`
-- `--as-input=true`
-- `--as=input`
+- Visit the [design documentation](../docs/--as-input.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--as-input)
