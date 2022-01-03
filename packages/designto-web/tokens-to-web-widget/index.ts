@@ -199,10 +199,11 @@ function compose<T extends JsxWidget>(
 
   // button
   else if (widget instanceof core.ButtonWidget) {
-    console.log("button", widget);
+    // widget.icon - not supported
+    // widget.variant - not supported
     thisWebWidget = new web.Button({
+      ...widget,
       key: _key,
-      // ...widget,
     });
   }
 

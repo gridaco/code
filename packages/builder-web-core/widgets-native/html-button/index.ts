@@ -1,7 +1,10 @@
+import { CSSProperties } from "@coli.codes/css";
+import { ITextStyle, TextManifest } from "@reflect-ui/core";
 import { JSXElementConfig, WidgetKey } from "@web-builder/core";
 import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
 import { JSX, JSXAttribute, Snippet } from "coli";
-
+import * as css from "@web-builder/styles";
+import { ButtonBaseManifest } from "@reflect-ui/core/lib/button.base";
 /**
  * Html5 Button Will have built in support for...
  *
@@ -37,25 +40,65 @@ export class Button extends StylableJsxWidget {
    */
   type: "submit" | "reset" | "button" = "button";
 
-  constructor({ key }: { key: WidgetKey }) {
+  text?: TextManifest;
+  base: ButtonBaseManifest;
+
+  constructor({
+    key,
+    name,
+    text,
+    disabled,
+    minWidth,
+    base,
+  }: {
+    key: WidgetKey;
+    //#region button properties
+    name?: string;
+    text?: TextManifest;
+    disabled?: boolean;
+    minWidth?: number;
+    base: ButtonBaseManifest;
+    //#endregion button properties
+  }) {
     super({ key });
+
+    // set button properties
+    this.name = name;
+    this.text = text;
+    this.disabled = disabled;
+    this.minWidth = minWidth;
   }
 
   children = [
-    //
+    <StylableJsxWidget>{
+      key: new WidgetKey(`${this.key.id}.text`, "text"),
+      styleData: () => null,
+      jsxConfig: () => {
+        // const _tag = JSX.identifier("path");
+        return <JSXElementConfig>{
+          // tag: _tag,
+          type: "static-tree",
+          tree: JSX.text(this.text.data as string),
+        };
+      },
+    },
   ];
 
-  styleData() {
+  styleData(): CSSProperties {
     // wip
     return {
-      color: "red",
+      color: css.color((this.text.style as ITextStyle)?.color),
+      // background: this.base.
       border: "none",
       outline: "none",
       "min-height": "24px",
-      ":hover": _button_hover_style,
-      ":disabled": _button_disabled_style,
-      ":active": _button_active_style,
-      ":focus": _button_focus_style,
+
+      //@ts-ignore
+      // Need proper pseudo-class handling (in css, the pseudo-class must be specified in separate block.)
+      // ":hover": _button_hover_style,
+      // ":disabled": _button_disabled_style,
+      // ":active": _button_active_style,
+      // ":focus": _button_focus_style,
     };
   }
 
@@ -78,16 +121,16 @@ export class Button extends StylableJsxWidget {
   }
 }
 
-const _button_hover_style = {
+const _button_hover_style: CSSProperties = {
   opacity: 0.8,
 };
 
-const _button_disabled_style = {
+const _button_disabled_style: CSSProperties = {
   opacity: 0.5,
 };
 
-const _button_active_style = {
+const _button_active_style: CSSProperties = {
   opacity: 1,
 };
 
-const _button_focus_style = {};
+const _button_focus_style: CSSProperties = {};
