@@ -47,4 +47,4 @@ When applied, this will force the node to be exported as an image.
 
 ## See Also
 
-- [`--export-as`](../--export-as)
+- [`--export-as`](./--export-as)

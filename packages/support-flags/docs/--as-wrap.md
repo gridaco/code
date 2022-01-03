@@ -1,7 +1,11 @@
 ---
 title: As Wrap flag
+description: Add Wrapping compatibility to your static design.
 id: "--as-wrap"
 locale: en
+locales:
+  - en
+  - ko
 stage:
   - production
   - staging

@@ -49,4 +49,4 @@ stage:
 
 ## 같이보기
 
-- [`--export-as`](../--export-as)
+- [`--export-as`](./--export-as)

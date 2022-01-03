@@ -61,10 +61,10 @@ We don't yet support text style matching with `--h5` flag.
 
 ## See Also
 
-- [`--as-h1`](../--as-h1)
-- [`--as-h2`](../--as-h2)
-- [`--as-h3`](../--as-h3)
-- [`--as-h4`](../--as-h4)
-- [`--as-h6`](../--as-h6)
-- [`--as-p`](../--as-p)
-- [`--as-br`](../--as-br)
+- [`--as-h1`](./--as-h1)
+- [`--as-h2`](./--as-h2)
+- [`--as-h3`](./--as-h3)
+- [`--as-h4`](./--as-h4)
+- [`--as-h6`](./--as-h6)
+- [`--as-p`](./--as-p)
+- [`--as-br`](./--as-br)

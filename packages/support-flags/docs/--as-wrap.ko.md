@@ -1,5 +1,6 @@
 ---
 title: As Wrap flag
+description: 정적인 디자인에 플래그를 이용한 Wraping 레이아웃 적용하기
 id: "--as-wrap"
 locale: ko
 stage:
