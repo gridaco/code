@@ -1,10 +1,4 @@
-# Camera display
+# `--camera-display` Flag
 
-## Platforms
-
-- web
-  - uses: webcam
-  - @reflect-ui/universal-camera-view
-- flutter
-  - uses: device cam[0]
-  - flutter-universal-camera-view by reflect-ui
+- Visit the [design documentation](../docs/--camera-display.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--camera-display)

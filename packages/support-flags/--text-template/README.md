@@ -1,7 +1,4 @@
-# Text Template
+# `--text-template` Flag
 
-```
-text-value: Hi, Universe. Welcome to Grida.
-template: "Hi, {{username}}. Welcome to Grida."
-extracted-data: { username: "Universe" }
-```
+- Visit the [design documentation](../docs/--text-template.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--text-template)

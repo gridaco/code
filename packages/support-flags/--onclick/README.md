@@ -1,7 +1,4 @@
-# OnClick
+# `--onclick` Flag
 
-## onclick alias (Also allowed)
-
-- ontap
-- ontouch
-- onclick
+- Visit the [design documentation](../docs/--onclick.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--onclick)

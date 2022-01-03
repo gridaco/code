@@ -1,3 +1,4 @@
-## `--content-id` Flag (Draft)
+# `--content-id` Flag
 
-> Familly of id specifiers.
+- Visit the [design documentation](../docs/--content-id.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--content-id)

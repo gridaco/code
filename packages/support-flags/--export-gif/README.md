@@ -1,5 +1,4 @@
-# Export as gif
+# `--export-gif` Flag
 
-## For non-gif-origin-content
-
-We'll create a 10 frame dummy gif based on the origin snapshot png, with a simple scale + shake animation
+- Visit the [design documentation](../docs/--export-gif.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--export-gif)
