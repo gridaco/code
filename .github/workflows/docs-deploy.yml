@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
       - name: Install fse
-        run: npm install -g fs-extra
+        run: npm install fs-extra
       - name: run pre-deploy (build docs and more)
         run: |
           chmod +x ./scripts/docs-deploy/pre-deploy.sh
