@@ -5,6 +5,7 @@ import {
   BorderRadiusManifest,
   BoxShadowManifest,
   DimensionLength,
+  EdgeInsets,
 } from "@reflect-ui/core";
 import { Background } from "@reflect-ui/core/lib/background";
 import * as css from "@web-builder/styles";
@@ -17,6 +18,7 @@ export class Container extends StylableJsxWidget {
   children?: StylableJsxWidget[];
   borderRadius?: BorderRadiusManifest;
   border?: Border;
+  margin?: EdgeInsets;
 
   constructor(p: {
     key: WidgetKey;
@@ -29,6 +31,8 @@ export class Container extends StylableJsxWidget {
     maxWidth?: DimensionLength;
     minHeight?: DimensionLength;
     maxHeight?: DimensionLength;
+
+    margin?: EdgeInsets;
 
     background?: Background;
     borderRadius?: BorderRadiusManifest;
@@ -43,6 +47,8 @@ export class Container extends StylableJsxWidget {
     this.maxWidth = p.maxWidth;
     this.minHeight = p.minHeight;
     this.maxHeight = p.maxHeight;
+
+    this.margin = p.margin;
 
     this.x = p.x;
     this.y = p.y;
@@ -60,7 +66,7 @@ export class Container extends StylableJsxWidget {
       "max-width": css.length(this.maxWidth),
       "min-height": css.length(this.minHeight),
       "max-height": css.length(this.maxHeight),
-
+      ...css.margin(this.margin),
       "box-shadow": css.boxshadow(...(this.boxShadow ?? [])),
       ...css.background(this.background),
       ...css.border(this.border),
