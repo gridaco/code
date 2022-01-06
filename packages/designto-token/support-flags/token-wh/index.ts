@@ -1,7 +1,9 @@
 import { WHDeclarationFlag } from "@code-features/flags";
 import { ReflectSceneNode } from "@design-sdk/figma-node";
 import {
+  Container,
   DimensionLength,
+  EdgeInsets,
   isPossibleDimensionLength,
   IWHStyleWidget,
   Widget,
@@ -58,12 +60,39 @@ export function tokenize_flagged_wh_declaration(
 
   const flag_target = unwrappedChild(widget) as IWHStyleWidget;
 
+  // set wh preference
   merged.width && (flag_target.width = merged.width);
   merged.minWidth && (flag_target.minWidth = merged.minWidth);
   merged.maxWidth && (flag_target.maxWidth = merged.maxWidth);
   merged.height && (flag_target.height = merged.height);
   merged.minHeight && (flag_target.minHeight = merged.minHeight);
   merged.maxHeight && (flag_target.maxHeight = merged.maxHeight);
+
+  // if the constraints are set to left & right or top & bottom, we have to add `margin-(?): auto;` to make align the item to center as it is on origin design.
+  // Learn more about this transformation - https://stackoverflow.com/questions/17993471/css-wont-center-div-with-max-width
+  // TODO: the margin's value to "auto" is not acceptable. this is a abberation, needs to fixed.
+  const container = widget as Container;
+  const _provide_initial_margin_if_none = () => {
+    if (!container.margin) {
+      container.margin = new EdgeInsets({
+        top: undefined,
+        right: undefined,
+        bottom: undefined,
+        left: undefined,
+      });
+    }
+  };
+  if (node.constraints.horizontal == "STRETCH") {
+    _provide_initial_margin_if_none();
+    container.margin.left = "auto" as any;
+    container.margin.right = "auto" as any;
+  }
+
+  if (node.constraints.vertical == "STRETCH") {
+    _provide_initial_margin_if_none();
+    container.margin.top = "auto" as any;
+    container.margin.bottom = "auto" as any;
+  }
 
   return widget;
 }
