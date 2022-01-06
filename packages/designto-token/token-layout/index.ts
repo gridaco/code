@@ -127,10 +127,31 @@ function flex_or_stack_from_frame(
   };
 
   if (frame.isAutoLayout) {
+    // TODO: inspect me. We're not 100% sure this is the correct behaviour.
     switch (frame.layoutMode) {
       case Axis.horizontal:
+        if (frame.primaryAxisSizingMode === "AUTO") {
+          // when horizontal, primaryAxisSizingMode is x axis
+          // don't specify width
+          initializer.width = undefined;
+        }
+        if (frame.counterAxisSizingMode === "AUTO") {
+          // when horizontal, counterAxisSizingMode is y axis
+          // don't specify height
+          initializer.height = undefined;
+        }
         return new Row(initializer);
       case Axis.vertical:
+        if (frame.counterAxisSizingMode === "AUTO") {
+          // when vertical, counterAxisSizingMode is x axis
+          // don't specify width
+          initializer.width = undefined;
+        }
+        if (frame.primaryAxisSizingMode === "AUTO") {
+          // when vertical, primaryAxisSizingMode is y axis
+          // don't specify height
+          initializer.height = undefined;
+        }
         return new Column(initializer);
       default:
         console.info(`Frame: "${frame.name}" fallback to flex`);
