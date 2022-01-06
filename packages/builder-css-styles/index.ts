@@ -11,6 +11,7 @@ export * from "./text-decoration";
 export * from "./text-shadow";
 export * from "./gradient";
 export * from "./padding";
+export * from "./margin";
 export * from "./position";
 export * from "./justify-content";
 export * from "./min-height";
