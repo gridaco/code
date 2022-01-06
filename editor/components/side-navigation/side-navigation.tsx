@@ -9,9 +9,12 @@ export function SideNavigation(props: {
 
 const Wrapper = styled.div`
   flex: 0;
-  min-width: 200px;
+  width: 200px;
+  /* max-width: 320px; */
   display: flex;
   align-items: stretch;
   flex-direction: column;
   min-height: 100%;
+  height: 100vh;
+  overflow-y: hidden;
 `;

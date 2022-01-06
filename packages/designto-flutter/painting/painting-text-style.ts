@@ -18,7 +18,7 @@ export function textStyle(style: ITextStyle): flutter.TextStyle {
     color: dartui.color(style.color),
     fontStyle: fontStyle(style.fontStyle),
     letterSpacing: length.letterSpacing(style.fontSize, letterSpacing),
-    height: length.multiple(style.fontSize, style.lineHeight),
+    height: rd(length.multiple(style.fontSize, style.lineHeight)),
     decoration: decoration,
     shadows: dartui.shadow(style.textShadow),
   });

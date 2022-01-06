@@ -8,18 +8,35 @@ import React from "react";
  */
 export function WorkspaceContentPanel({
   children,
-  disableBorder = false,
+  disableBorder = true,
+  flex = 1,
+  backgroundColor = "none",
 }: {
+  backgroundColor?: string;
   children: JSX.Element;
   disableBorder?: boolean;
+  flex?: number;
 }) {
-  return <Container disableBorder={disableBorder}>{children}</Container>;
+  return (
+    <WorkspaceCPanel
+      flex={flex}
+      backgroundColor={backgroundColor}
+      disableBorder={disableBorder}
+    >
+      {children}
+    </WorkspaceCPanel>
+  );
 }
 
-const Container = styled.div<{ disableBorder: boolean }>`
+const WorkspaceCPanel = styled.div<{
+  flex?: number;
+  backgroundColor: string;
+  disableBorder: boolean;
+}>`
   border: ${(p) => (p.disableBorder ? "none" : "solid #d2d2d2")};
+  background-color: ${(p) => p.backgroundColor};
   border-width: 1px;
   align-self: stretch;
-  flex: 1;
+  flex: ${(p) => p.flex};
   overflow: auto;
 `;

@@ -1,7 +1,4 @@
-# `--as=toggle` - [Reflect UI](https://reflect-ui.com) Toggle Widget Indication Flag
+# `--as-toggle` Flag
 
-## Syntax
-
-- `--as-toggle`
-- `--as-toggle=true`
-- `--as=toggle`
+- Visit the [design documentation](../docs/--as-toggle.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--as-toggle)

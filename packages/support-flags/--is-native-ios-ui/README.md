@@ -1,3 +1,4 @@
-# A iOS UI Mocking layers
+# `--is-native-ios-ui` Flag
 
-e.g. A Notification banner, time & battery UI.
+- Visit the [design documentation](../docs/--is-native-ios-ui.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--is-native-ios-ui)

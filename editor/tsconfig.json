@@ -16,7 +16,12 @@
     "baseUrl": ".",
     "paths": {
       "components/*": ["./components/*"],
+      "icons/*": ["./icons/*"],
       "layout/*": ["./layouts/*"],
+      "scaffolds/*": ["./scaffolds/*"],
+      "core/*": ["./core/*"],
+      "store/*": ["./store/*"],
+      "repository/*": ["./repository/*"],
       "utils/*": ["./utils/*"],
       "public/*": ["./public/*"],
       "hooks/*": ["./hooks/*"]

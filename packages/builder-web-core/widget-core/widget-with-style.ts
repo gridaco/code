@@ -27,9 +27,14 @@ export abstract class WidgetWithStyle
     IWHStyleWidget,
     IPositionedWidget,
     IBoxShadowWidget,
-    IEdgeInsetsWidget {
-  width?: number;
-  height?: number;
+    IEdgeInsetsWidget
+{
+  width?: DimensionLength;
+  height?: DimensionLength;
+  minWidth?: DimensionLength;
+  minHeight?: DimensionLength;
+  maxWidth?: DimensionLength;
+  maxHeight?: DimensionLength;
 
   constraint?: {
     left?: DimensionLength;
@@ -90,7 +95,8 @@ export abstract class WidgetWithStyle
  */
 export abstract class MultiChildWidgetWithStyle
   extends WidgetWithStyle
-  implements IWidgetWithStyle, IMultiChildJsxWidget {
+  implements IWidgetWithStyle, IMultiChildJsxWidget
+{
   readonly children: Array<JsxWidget> = [];
 
   constructor({ key }: { key: WidgetKey }) {

@@ -60,7 +60,12 @@ const withTM = require("next-transpile-modules")([
   // -----------------------------
 
   // reflect-ui ui framework
-  "@reflect-ui/editor-ui",
+  // @editor-ui ui components
+  "@editor-ui/editor",
+  "@editor-ui/hierarchy",
+  "@editor-ui/spacer",
+  "@editor-ui/utils",
+  "@editor-ui/button",
 
   // -----------------------------
   // region coli
@@ -87,6 +92,11 @@ const withTM = require("next-transpile-modules")([
 
 module.exports = withTM({
   webpack: (config) => {
+    config.module.rules.push({
+      type: "javascript/auto",
+      test: /\.mjs$/,
+      include: /node_modules/,
+    });
     return config;
   },
   async redirects() {
@@ -97,6 +107,12 @@ module.exports = withTM({
         destination: "/preferences",
         permanent: true,
       },
+      // {
+      //   // typo gaurd
+      //   source: "/",
+      //   destination: "https://grida.co",
+      //   permanent: false,
+      // },
     ];
   },
 });
