@@ -20,6 +20,8 @@ import { flag_key_alias__fix_width, flag_key__fix_width } from "./--fix-width";
 // prettier-ignore
 import { flag_key_alias__fix_height, flag_key__fix_height } from "./--fix-height";
 
+import { flag_key_alias__declare, flag_key__declare } from "./--declare";
+
 export {
   flag_key__as_h1,
   flag_key__as_h2,
@@ -41,6 +43,8 @@ export {
 };
 export { flag_key__fix_width, flag_key__fix_height };
 
+export { flag_key__declare };
+
 export const alias = {
   as_h1: flag_key_alias__as_h1,
   as_h2: flag_key_alias__as_h2,
@@ -58,4 +62,5 @@ export const alias = {
   max_height: flag_key_alias__max_height,
   fix_width: flag_key_alias__fix_width,
   fix_height: flag_key_alias__fix_height,
+  declare: flag_key_alias__declare,
 };
