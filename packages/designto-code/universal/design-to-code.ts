@@ -13,6 +13,7 @@ import { k } from "@web-builder/core";
 import { default_tokenizer_config } from "@designto/token/config";
 import { default_build_configuration } from "@designto/config";
 import { reusable } from "@code-features/component";
+import assert from "assert";
 
 interface AssetsConfig {
   asset_repository?: BaseImageRepositories<string>;
@@ -36,6 +37,7 @@ export async function designToCode({
   build_config?: config.BuildConfiguration;
   asset_config: AssetsConfig;
 }): Promise<Result> {
+  assert(input, "input is required");
   if (process.env.NODE_ENV === "development") {
     if (framework.framework == "vanilla") {
     } else {
