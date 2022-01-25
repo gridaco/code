@@ -17,6 +17,7 @@ import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overfl
 import { compose_instanciation } from "./compose-instanciation";
 import { IWHStyleWidget } from "@reflect-ui/core";
 import * as reusable from "@code-features/component/tokens";
+import assert from "assert";
 
 export function buildWebWidgetFromTokens(widget: core.Widget): JsxWidget {
   const composed = compose(widget, {
@@ -35,6 +36,7 @@ function compose<T extends JsxWidget>(
   widget: core.Widget,
   context: { is_root: boolean }
 ): T {
+  assert(widget, "input widget is required");
   const handleChildren = <T extends JsxWidget>(
     children: core.Widget[]
   ): T[] => {
