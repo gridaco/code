@@ -10,7 +10,10 @@ import {
 } from "@code-features/assets";
 import { BaseImageRepositories } from "@design-sdk/core/assets-repository";
 import { k } from "@web-builder/core";
-import { default_tokenizer_config } from "@designto/token/config";
+import {
+  default_tokenizer_config,
+  TokenizerConfig,
+} from "@designto/token/config";
 import { default_build_configuration } from "@designto/config";
 import { reusable } from "@code-features/component";
 import assert from "assert";
@@ -52,7 +55,10 @@ export async function designToCode({
   }
 
   // post token processing
-  let tokenizer_config = { ...default_tokenizer_config, id: input.id };
+  let tokenizer_config: TokenizerConfig = {
+    ...default_tokenizer_config,
+    id: input.id,
+  };
   if (build_config.force_root_widget_fixed_size_no_scroll) {
     tokenizer_config.custom_wrapping_provider = (w, n, d) => {
       if (n.id === input.entry.id) {
@@ -64,6 +70,15 @@ export async function designToCode({
       return false;
     };
   }
+
+  if (build_config.disable_detection) {
+    tokenizer_config.disable_detection = true;
+  }
+
+  if (build_config.disable_flags_support) {
+    tokenizer_config.disable_flags_support = true;
+  }
+
   const vanilla_token = tokenize(input.entry, tokenizer_config);
 
   // post token processing for componentization
@@ -236,7 +251,10 @@ export async function designToVanilla({
   vanilla_config: config.VanillaFrameworkConfig;
   asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
-  const vanillawidget = tovanilla.buildVanillaWidget(input.widget);
+  const vanillawidget = tovanilla.buildVanillaWidget(
+    input.widget,
+    vanilla_config
+  );
   const res = tovanilla.buildVanillaFile(vanillawidget);
 
   // ------------------------------------------------------------------------

@@ -28,7 +28,7 @@ export class ImageElement extends SelfClosingContainer {
     super({ key });
     assert(src !== undefined, "ImageElement requires src");
     this.src = src;
-    this.alt = alt || `image of ${key.name}`;
+    this.alt = alt;
     this.width = width;
     this.height = height;
   }
@@ -44,19 +44,19 @@ export class ImageElement extends SelfClosingContainer {
   }
 
   jsxConfig(): StylableJSXElementConfig {
+    const attributes = [
+      this.src &&
+        new JSXAttribute(
+          "src",
+          new StringLiteral(this.src || image_smallest_fallback_source_base_64)
+        ),
+      !!!this.alt && new JSXAttribute("alt", new StringLiteral(this.alt)),
+    ];
+
     return <StylableJSXElementConfig>{
       type: "tag-and-attr",
       tag: JSX.identifier("img"),
-      attributes: [
-        this.src &&
-          new JSXAttribute(
-            "src",
-            new StringLiteral(
-              this.src || image_smallest_fallback_source_base_64
-            )
-          ),
-        this.alt && new JSXAttribute("alt", new StringLiteral(this.alt)),
-      ],
+      attributes: attributes,
     };
   }
 }

@@ -24,10 +24,15 @@ export function buildVanillaFile(
   };
 }
 
-export function buildVanillaWidget(widget: Widget) {
+export function buildVanillaWidget(
+  widget: Widget,
+  config: config.VanillaFrameworkConfig
+) {
   if (!widget) {
     throw "A valid reflect widget manifest should be passed as an input. none was passed.";
   }
 
-  return buildWebWidgetFromTokens(widget);
+  return buildWebWidgetFromTokens(widget, {
+    img_no_alt: config.imgage_alt.no_alt,
+  });
 }

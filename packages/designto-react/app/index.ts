@@ -37,7 +37,7 @@ export function buildReactWidget(widget: Widget) {
     "A valid reflect widget manifest should be passed as an input. none was passed."
   );
 
-  return buildWebWidgetFromTokens(widget);
+  return buildWebWidgetFromTokens(widget, {});
 }
 
 export function buildReusableReactApp__Experimental({
