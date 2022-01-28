@@ -255,7 +255,7 @@ export async function designToVanilla({
     input.widget,
     vanilla_config
   );
-  const res = tovanilla.buildVanillaFile(vanillawidget);
+  const res = tovanilla.buildVanillaFile(vanillawidget, vanilla_config);
 
   // ------------------------------------------------------------------------
   // finilize temporary assets
