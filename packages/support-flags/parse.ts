@@ -16,6 +16,7 @@ import type {
   AsTextSpanFlag,
   SimpleBooleanValueFlag,
   FixWHFlag,
+  DeclareSpecificationFlag,
   WHDeclarationFlag,
 } from "./types";
 
@@ -61,6 +62,10 @@ export function parse(name: string): FlagsParseResult {
       __fix_height_alias_pref,
       //#endregion
 
+      //#region
+      __declare_alias_pref,
+      //#endregion
+
       {
         name: flag_key__module,
         type: "bool", // TODO: support string also.
@@ -84,7 +89,12 @@ export function parse(name: string): FlagsParseResult {
       _raw_parsed,
       [...keys.alias.fix_width, ...keys.alias.fix_height]
     );
-    // console.log("_raw_parsed", _raw_parsed);
+
+    const declare_flag =
+      handle_single_boolean_flag_alias<DeclareSpecificationFlag>(
+        _raw_parsed,
+        keys.alias.declare
+      );
 
     return {
       ..._raw_parsed,
@@ -93,12 +103,14 @@ export function parse(name: string): FlagsParseResult {
       ...(as_span_flag ?? {}),
       ...(wh_declaration_flag ?? {}),
       ...(fix_wh_flag ?? {}),
+      ...(declare_flag ?? {}),
       __meta: {
         contains_heading_flag: notempty(as_heading_flag),
         contains_paragraph_flag: notempty(as_paragraph_flag),
         contains_span_flag: notempty(as_span_flag),
         contains_wh_declaration_flag: notempty(as_span_flag),
         contains_fix_wh_flag: notempty(fix_wh_flag),
+        contains_declare_flag: notempty(declare_flag),
       },
     };
   } catch (_) {
@@ -298,4 +310,12 @@ const __fix_width_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
 );
 const __fix_height_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
   keys.alias.fix_height
+);
+
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+
+const __declare_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.declare
 );

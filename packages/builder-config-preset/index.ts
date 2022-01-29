@@ -58,6 +58,9 @@ export const vanilla_presets = {
   vanilla_default: <config.VanillaFrameworkConfig>{
     framework: Framework.vanilla,
     language: Language.html,
+    imgage_alt: {
+      no_alt: true,
+    },
   },
 };
 
