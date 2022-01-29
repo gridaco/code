@@ -50,7 +50,8 @@ export class ImageElement extends SelfClosingContainer {
           "src",
           new StringLiteral(this.src || image_smallest_fallback_source_base_64)
         ),
-      !!!this.alt && new JSXAttribute("alt", new StringLiteral(this.alt)),
+      typeof this.alt === "string" &&
+        new JSXAttribute("alt", new StringLiteral(this.alt)),
     ];
 
     return <StylableJSXElementConfig>{
