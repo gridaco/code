@@ -1,3 +1,5 @@
+import type { Stringish } from "../_";
+
 export type RNPressRetentionOffset = Readonly<{
   top: number;
   left: number;
@@ -51,3 +53,25 @@ export type RNAccessibilityState = {
   busy?: boolean;
   expanded?: boolean;
 } & object;
+
+export type RNAccessibilityValue = Readonly<{
+  /**
+   * The minimum value of this component's range. (should be an integer)
+   */
+  min?: number;
+
+  /**
+   * The maximum value of this component's range. (should be an integer)
+   */
+  max?: number;
+
+  /**
+   * The current value of this component's range. (should be an integer)
+   */
+  now?: number;
+
+  /**
+   * A textual description of this component's value. (will override minimum, current, and maximum if set)
+   */
+  text?: Stringish;
+}>;
