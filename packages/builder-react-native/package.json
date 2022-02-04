@@ -1,7 +1,7 @@
 {
     "name": "@web-builder/react-native",
     "description": "Grida's React Native code builder for development automation built uppon coli",
-    "version": "0.0.0",
+    "version": "0.67.0",
     "license": "Apache 2.0",
     "homepage": "https://coli.codes/react-native",
     "author": "Grida Authors",

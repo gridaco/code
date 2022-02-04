@@ -9,6 +9,6 @@
   "private": false,
   "dependencies": {
     "@web-builder/react": "0.0.0",
-    "@web-builder/react-native": "0.0.0"
+    "@web-builder/react-native": "0.67.0"
   }
 }
