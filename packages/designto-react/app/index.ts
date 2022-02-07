@@ -2,6 +2,7 @@ import { Widget } from "@reflect-ui/core";
 import { buildWebWidgetFromTokens } from "@designto/web/tokens-to-web-widget";
 import {
   finalizeReactWidget_StyledComponents,
+  finalizeReactWidget_InlineCss,
   finalizeReactReusable_StyledComponents__Experimental,
   JsxWidget,
 } from "@web-builder/react";
@@ -25,8 +26,16 @@ export function buildReactApp(
       };
     }
     case "inline-css": {
-      throw "not implemented";
-      // TODO:
+      const res = finalizeReactWidget_InlineCss(entry, {
+        styling: config.styling,
+        exporting: config.component_declaration_style.exporting_style,
+      });
+      return {
+        id: entry.key.id,
+        name: entry.key.name,
+        code: { raw: res.code },
+        scaffold: { raw: res.code },
+      };
       break;
     }
     case "css":

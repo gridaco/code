@@ -60,6 +60,14 @@ export function buildContainingJsx(
   }
 }
 
+/**
+ *
+ * A Utility-like general jsx builder globally used while building html tree.
+ *
+ * @param widget
+ * @param repository
+ * @returns
+ */
 export function buildJsx(
   widget: JsxWidget,
   repository: {

@@ -1,17 +1,10 @@
-import { stringfy } from "@coli.codes/export-string";
 import { ScopedVariableNamer } from "@coli.codes/naming";
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
 import {
   NoStyleJSXElementConfig,
   StyledComponentJSXElementConfig,
 } from "@web-builder/styled";
-import {
-  BlockStatement,
-  FunctionDeclaration,
-  Import,
-  ImportDeclaration,
-  Return,
-} from "coli";
+import { BlockStatement, Import, ImportDeclaration, Return } from "coli";
 import { react_imports } from "../react-import-specifications";
 import { JsxWidget } from "@web-builder/core";
 import {
@@ -19,28 +12,24 @@ import {
   getWidgetStylesConfigMap,
   WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
-import {
-  add_export_keyword_modifier_to_declaration,
-  wrap_with_export_assignment_react_component_identifier,
-} from "../react-component-exporting";
-import { react } from "@designto/config";
-import { ReactModuleFile } from "../react-module-file";
+import { react as react_config } from "@designto/config";
+import { makeReactModuleFile, ReactModuleFile } from "../react-module-file";
 import { StyledComponentDeclaration } from "@web-builder/styled/styled-component-declaration";
-import { SyntaxKind } from "@coli.codes/core-syntax-kind";
+import { ReactWidgetModuleExportable } from "../react-module";
 
 export class ReactStyledComponentsBuilder {
   private readonly entry: JsxWidget;
   private readonly widgetName: string;
   private readonly styledConfigWidgetMap: WidgetStyleConfigMap;
   private readonly namer: ScopedVariableNamer;
-  readonly config: react.ReactStyledComponentsConfig;
+  readonly config: react_config.ReactStyledComponentsConfig;
 
   constructor({
     entry,
     config,
   }: {
     entry: JsxWidget;
-    config: react.ReactStyledComponentsConfig;
+    config: react_config.ReactStyledComponentsConfig;
   }) {
     this.entry = entry;
     this.widgetName = entry.key.name;
@@ -123,11 +112,7 @@ export class ReactStyledComponentsBuilder {
   }
 }
 
-export class ReactStyledComponentWidgetModuleExportable {
-  readonly name: string;
-  readonly dependencies: string[];
-  readonly body: BlockStatement;
-  readonly imports: ImportDeclaration[];
+export class ReactStyledComponentWidgetModuleExportable extends ReactWidgetModuleExportable {
   readonly declarations: StyledComponentDeclaration[];
 
   constructor(
@@ -147,96 +132,29 @@ export class ReactStyledComponentWidgetModuleExportable {
       dependencies?: string[];
     }
   ) {
-    this.name = name;
-    this.body = body;
-    this.imports = imports;
+    super({
+      name,
+      body,
+      imports,
+    });
+
     this.declarations = declarations;
-
-    this.dependencies = dependencies;
   }
 
-  asFile({ exporting }: { exporting: react.ReactComponentExportingCofnig }) {
-    const file = new ReactModuleFile({
-      name: `${this.name}.tsx`,
-      path: "src/components",
-    });
-    file.imports(...this.imports);
-
-    // console.log("exporting", exporting);
-    switch (exporting.type) {
-      case "export-default-anonymous-functional-component": {
-        // exporting.declaration_syntax_choice;
-        // exporting.export_declaration_syntax_choice;
-        // exporting.exporting_position;
-
-        const export_default_anaonymous_functional_component =
-          new FunctionDeclaration(undefined, {
-            body: this.body,
-            modifiers: {
-              default: SyntaxKind.DefaultKeyword,
-              export: SyntaxKind.ExportKeyword,
-            },
-          });
-        file.declare(export_default_anaonymous_functional_component);
-        file.declare(...this.declarations);
-        break;
-      }
-      case "export-named-functional-component": {
-        // exporting.declaration_syntax_choice;
-        // exporting.export_declaration_syntax_choice;
-
-        const named_function_declaration = new FunctionDeclaration(this.name, {
-          body: this.body,
-        });
-
-        switch (exporting.exporting_position) {
-          case "after-declaration":
-            file.declare(named_function_declaration);
-            file.export(
-              wrap_with_export_assignment_react_component_identifier(
-                named_function_declaration.id
-              )
-            );
-            file.declare(...this.declarations);
-            break;
-          case "end-of-file":
-            file.declare(named_function_declaration);
-            file.declare(...this.declarations);
-            file.export(
-              wrap_with_export_assignment_react_component_identifier(
-                named_function_declaration.id
-              )
-            );
-            break;
-          case "with-declaration":
-            const _exported_named_function_declaration =
-              add_export_keyword_modifier_to_declaration<FunctionDeclaration>(
-                named_function_declaration
-              );
-            file.declare(_exported_named_function_declaration);
-            file.declare(...this.declarations);
-            break;
-        }
-        break;
-      }
-      case "export-named-class-component":
-        break;
-      case "export-anonymous-class-component":
-        throw new Error("Class component not supported");
-    }
-
-    return file;
-  }
-
-  finalize(config: react.ReactComponentExportingCofnig) {
-    const file = this.asFile({ exporting: config });
-    const final = stringfy(file.blocks, {
-      language: "tsx",
-    });
-    return {
-      code: final,
+  asFile({
+    exporting,
+  }: {
+    exporting: react_config.ReactComponentExportingCofnig;
+  }) {
+    return makeReactModuleFile({
       name: this.name,
-      dependencies: this.dependencies,
-    };
+      path: "src/components",
+      imports: this.imports,
+      declarations: this.declarations,
+      body: this.body,
+      config: {
+        exporting: exporting,
+      },
+    });
   }
 }
