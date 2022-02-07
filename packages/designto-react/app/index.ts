@@ -24,10 +24,16 @@ export function buildReactApp(
         scaffold: { raw: res.code },
       };
     }
+    case "inline-css": {
+      throw "not implemented";
+      // TODO:
+      break;
+    }
     case "css":
-    case "css-in-jsx":
+    default: {
       throw new Error(`${config.styling.type} not supported yet`);
       break;
+    }
   }
 }
 

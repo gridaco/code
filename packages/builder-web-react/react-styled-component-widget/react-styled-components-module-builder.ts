@@ -10,17 +10,10 @@ import {
   FunctionDeclaration,
   Import,
   ImportDeclaration,
-  JSXClosingElement,
-  JSXElement,
-  JSXOpeningElement,
   Return,
 } from "coli";
 import { react_imports } from "../react-import-specifications";
-import {
-  TextChildWidget,
-  StylableJsxWidget,
-  JsxWidget,
-} from "@web-builder/core";
+import { JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
   getWidgetStylesConfigMap,
@@ -34,7 +27,6 @@ import { react } from "@designto/config";
 import { ReactModuleFile } from "../react-module-file";
 import { StyledComponentDeclaration } from "@web-builder/styled/styled-component-declaration";
 import { SyntaxKind } from "@coli.codes/core-syntax-kind";
-import { handle } from "@coli.codes/builder";
 
 export class ReactStyledComponentsBuilder {
   private readonly entry: JsxWidget;
