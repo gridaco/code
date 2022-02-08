@@ -6104,6 +6104,11 @@
     "@types/connect" "*"
     "@types/node" "*"
 
+"@types/camelcase-css@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/camelcase-css/-/camelcase-css-2.0.0.tgz#9604ffb754861b348e1f361c40fbf4d94d43b890"
+  integrity sha512-HSD3U+7+1BneOuIcvn3SUJHmEhPZGM6h5wUBQ3L7LL8VAIx2THIlN8HMH2ylxF4yuxu93UAFTcmeb+MT2Dozkg==
+
 "@types/clone@2.1.1":
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@types/clone/-/clone-2.1.1.tgz#9b880d0ce9b1f209b5e0bd6d9caa38209db34024"
@@ -8174,7 +8179,7 @@ camel-case@^4.1.1:
     pascal-case "^3.1.2"
     tslib "^2.0.3"
 
-camelcase-css@2.0.1:
+camelcase-css@2.0.1, camelcase-css@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/camelcase-css/-/camelcase-css-2.0.1.tgz#ee978f6947914cc30c6b44741b6ed1df7f043fd5"
   integrity sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==

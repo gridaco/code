@@ -80,6 +80,7 @@ export function buildJsx(
      * required for id based styling strategy
      */
     idTransformer?: (jsx, id: string) => void;
+    preprocess?: (jsx: JSXElementConfig) => JSXElementConfig;
   },
   options: {
     self_closing_if_possible?: boolean;
@@ -87,10 +88,13 @@ export function buildJsx(
 ): JSXChildLike {
   const force_dont_self_close = options.self_closing_if_possible === false;
   const mapper = (widget: JsxWidget) => {
-    const _jsxcfg = widget.jsxConfig();
+    let _jsxcfg = widget.jsxConfig();
     if (_jsxcfg.type === "static-tree") {
       return _jsxcfg.tree;
     }
+
+    // preprocess
+    _jsxcfg = repository.preprocess?.(_jsxcfg) ?? _jsxcfg;
 
     const children = widget.children?.map(mapper);
 

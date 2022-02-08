@@ -1,6 +1,6 @@
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
 import { react as react_config } from "@designto/config";
-import type { JsxWidget } from "@web-builder/core";
+import type { JSXElementConfig, JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
   getWidgetStylesConfigMap,
@@ -10,15 +10,22 @@ import {
 } from "@web-builder/core/builders";
 import {
   BlockStatement,
+  Identifier,
   ImportDeclaration,
   JSXAttribute,
+  Literal,
+  ObjectLiteralExpression,
+  PropertyAssignment,
   Return,
   ScopedVariableNamer,
+  StringLiteral,
 } from "coli";
 import * as css from "@web-builder/styles";
 import { react_imports } from "../react-import-specifications";
 import { ReactWidgetModuleExportable } from "../react-module";
 import { makeReactModuleFile, ReactModuleFile } from "../react-module-file";
+import { cssToJson } from "@web-builder/styles/_utils";
+import { CSSProperties } from "@coli.codes/css";
 
 /**
  * CSS In JS Style builder for React Framework
@@ -66,17 +73,57 @@ export class ReactCssInJSBuilder {
   }
 
   private jsxBuilder(widget: JsxWidget) {
-    // TODO: add attributes transformer, inject style={{ ...}}
-
-    // const transformer = (style: string) => {
-    //   const styleobj = css.utils.cssToJson(style);
-    //   new JSXAttribute("style", styleobj);
-    // };
-
     return buildJsx(
       widget,
       {
-        styledConfig: (id) => this.styledConfig(id),
+        styledConfig: (id) => {
+          const cfg = this.styledConfig(id);
+          const _default_attr = cfg.attributes;
+
+          const existingstyleattr = _default_attr?.find(
+            // where style refers to react's jsx style attribute
+            (a) => a.name.name === "style"
+          );
+
+          let style: JSXAttribute;
+          if (existingstyleattr) {
+            // ignore this case. (element already with style attriibute may be svg element)
+            // this case is not supported. (should supported if the logic changes)
+          } else {
+            //
+            const styledata: CSSProperties =
+              (cfg as JSXWithStyleElementConfig).style ?? {};
+            const reactStyleData = cssToJson(styledata);
+            const properties: PropertyAssignment[] = Object.keys(
+              reactStyleData
+            ).map(
+              (key) =>
+                new PropertyAssignment({
+                  name: key as unknown as Identifier,
+                  initializer: new StringLiteral(reactStyleData[key]),
+                })
+            );
+
+            style = new JSXAttribute(
+              "style",
+              new BlockStatement(
+                new ObjectLiteralExpression({
+                  properties: properties,
+                })
+              )
+            );
+          }
+
+          const newattributes = [
+            ...(_default_attr ?? []),
+            //
+            style,
+          ];
+
+          cfg.attributes = newattributes;
+
+          return cfg;
+        },
       },
       {
         self_closing_if_possible: true,
