@@ -1,4 +1,4 @@
-import { standard_libraries } from "../../builder-web-nodejs";
+import { standard_libraries } from "@coli.codes/nodejs-builder";
 import { Import } from "coli";
 
 /**
