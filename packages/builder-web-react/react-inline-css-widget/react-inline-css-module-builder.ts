@@ -11,9 +11,11 @@ import {
 import {
   BlockStatement,
   ImportDeclaration,
+  JSXAttribute,
   Return,
   ScopedVariableNamer,
 } from "coli";
+import * as css from "@web-builder/styles";
 import { react_imports } from "../react-import-specifications";
 import { ReactWidgetModuleExportable } from "../react-module";
 import { makeReactModuleFile, ReactModuleFile } from "../react-module-file";
@@ -65,9 +67,21 @@ export class ReactCssInJSBuilder {
 
   private jsxBuilder(widget: JsxWidget) {
     // TODO: add attributes transformer, inject style={{ ...}}
-    return buildJsx(widget, {
-      styledConfig: (id) => this.styledConfig(id),
-    });
+
+    // const transformer = (style: string) => {
+    //   const styleobj = css.utils.cssToJson(style);
+    //   new JSXAttribute("style", styleobj);
+    // };
+
+    return buildJsx(
+      widget,
+      {
+        styledConfig: (id) => this.styledConfig(id),
+      },
+      {
+        self_closing_if_possible: true,
+      }
+    );
   }
 
   partImports() {

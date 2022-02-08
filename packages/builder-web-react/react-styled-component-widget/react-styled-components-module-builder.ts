@@ -51,9 +51,15 @@ export class ReactStyledComponentsBuilder {
   }
 
   private jsxBuilder(widget: JsxWidget) {
-    return buildJsx(widget, {
-      styledConfig: (id) => this.styledConfig(id),
-    });
+    return buildJsx(
+      widget,
+      {
+        styledConfig: (id) => this.styledConfig(id),
+      },
+      {
+        self_closing_if_possible: true,
+      }
+    );
   }
 
   partImports() {

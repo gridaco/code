@@ -11,11 +11,13 @@ import {
   StyledComponentJSXElementConfig,
 } from "@web-builder/styled";
 import {
+  JSXAttributes,
   JSXChildLike,
   JSXClosingElement,
   JSXElement,
   JSXIdentifier,
   JSXOpeningElement,
+  JSXSelfClosingElement,
 } from "coli";
 
 ////
@@ -78,8 +80,12 @@ export function buildJsx(
      * required for id based styling strategy
      */
     idTransformer?: (jsx, id: string) => void;
+  },
+  options: {
+    self_closing_if_possible?: boolean;
   }
 ): JSXChildLike {
+  const force_dont_self_close = options.self_closing_if_possible === false;
   const mapper = (widget: JsxWidget) => {
     const _jsxcfg = widget.jsxConfig();
     if (_jsxcfg.type === "static-tree") {
@@ -90,31 +96,39 @@ export function buildJsx(
 
     if (widget instanceof StylableJsxWidget) {
       const styledconfig = repository.styledConfig(widget.key.id);
+      // region build jsx
+      let jsx;
       if (widget instanceof TextChildWidget) {
-        const jsx = buildTextChildJsx(widget, styledconfig);
-        repository.idTransformer?.(jsx, styledconfig.id);
-        return jsx;
-      }
-      const jsx = new JSXElement({
-        openingElement: new JSXOpeningElement(styledconfig.tag, {
+        jsx = buildTextChildJsx(widget, styledconfig);
+      } else {
+        jsx = _jsx_element_with_self_closing_if_possible({
+          tag: styledconfig.tag,
           attributes: styledconfig.attributes,
-        }),
-        closingElement: new JSXClosingElement(styledconfig.tag),
-        children: children,
-      });
+          children: children,
+          options: {
+            force_dont_self_close: force_dont_self_close,
+          },
+        });
+      }
+      // endregion build jsx
+
+      // apply injected transformer (if present)
       repository.idTransformer?.(jsx, styledconfig.id);
+
       return jsx;
     } else {
       const config = widget.jsxConfig();
       if (config.type === "tag-and-attr") {
         const _tag = handle(config.tag);
-        const jsx = new JSXElement({
-          openingElement: new JSXOpeningElement(_tag, {
-            attributes: config.attributes,
-          }),
-          closingElement: new JSXClosingElement(_tag),
+        const jsx = _jsx_element_with_self_closing_if_possible({
+          tag: _tag,
+          attributes: config.attributes,
           children: children,
+          options: {
+            force_dont_self_close: force_dont_self_close,
+          },
         });
+
         return jsx;
       }
       return;
@@ -122,4 +136,34 @@ export function buildJsx(
   };
 
   return mapper(widget);
+}
+
+function _jsx_element_with_self_closing_if_possible({
+  children,
+  tag,
+  attributes,
+  options = {
+    force_dont_self_close: false,
+  },
+}: {
+  tag: JSXIdentifier;
+  children?: any;
+  attributes: JSXAttributes;
+  options?: {
+    force_dont_self_close?: boolean;
+  };
+}) {
+  if (!options?.force_dont_self_close && (!children || children.length == 0)) {
+    return new JSXSelfClosingElement(tag, {
+      attributes: attributes,
+    });
+  } else {
+    return new JSXElement({
+      openingElement: new JSXOpeningElement(tag, {
+        attributes: attributes,
+      }),
+      closingElement: new JSXClosingElement(tag),
+      children: children,
+    });
+  }
 }
