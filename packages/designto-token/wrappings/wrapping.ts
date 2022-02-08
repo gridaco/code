@@ -30,7 +30,7 @@ export type WrappingToken =
  * @returns
  */
 export function unwrappedChild(maybeWrapped: Widget): Widget {
-  const wrapped =
+  if (
     maybeWrapped instanceof SizedBox ||
     maybeWrapped instanceof Stretched ||
     maybeWrapped instanceof Positioned ||
@@ -38,8 +38,8 @@ export function unwrappedChild(maybeWrapped: Widget): Widget {
     maybeWrapped instanceof Rotation ||
     maybeWrapped instanceof Opacity ||
     maybeWrapped instanceof Blurred ||
-    maybeWrapped instanceof ClipRRect;
-  if (wrapped) {
+    maybeWrapped instanceof ClipRRect
+  ) {
     return unwrappedChild(maybeWrapped.child);
   }
   return maybeWrapped;
