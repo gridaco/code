@@ -19,6 +19,7 @@ import {
   Return,
   ScopedVariableNamer,
   StringLiteral,
+  TemplateLiteral,
 } from "coli";
 import * as css from "@web-builder/styles";
 import { react_imports } from "../react-import-specifications";
@@ -100,7 +101,7 @@ export class ReactCssInJSBuilder {
               (key) =>
                 new PropertyAssignment({
                   name: key as unknown as Identifier,
-                  initializer: new StringLiteral(reactStyleData[key]),
+                  initializer: new TemplateLiteral(reactStyleData[key]),
                 })
             );
 
