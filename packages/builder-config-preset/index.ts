@@ -38,11 +38,11 @@ export const react_presets = {
     },
     component_declaration_style: _react_component_declaration_style,
   },
-  react_with_css_in_jsx: <config.ReactFrameworkConfig>{
+  react_with_inline_css: <config.ReactFrameworkConfig>{
     framework: Framework.react,
     language: Language.tsx,
     styling: {
-      type: "css-in-jsx",
+      type: "inline-css",
     },
     component_declaration_style: _react_component_declaration_style,
   },
@@ -109,9 +109,9 @@ export const react_styles: {
       module: "styled-components",
     },
   ],
-  "css-in-jsx": [
+  "inline-css": [
     {
-      type: "css-in-jsx",
+      type: "inline-css",
     },
   ],
   css: [

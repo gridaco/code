@@ -1,6 +1,6 @@
 import { JsxWidget, StylableJsxWidget } from "@web-builder/core";
 import { ReactComponentExportResult } from "../export-result";
-import { react } from "@designto/config";
+import { react as react_config } from "@designto/config";
 import { ReactStyledComponentsBuilder } from "./react-styled-components-module-builder";
 
 /**
@@ -15,8 +15,8 @@ export function finalizeReactWidget_StyledComponents(
     styling,
     exporting,
   }: {
-    styling: react.ReactStyledComponentsConfig;
-    exporting: react.ReactComponentExportingCofnig;
+    styling: react_config.ReactStyledComponentsConfig;
+    exporting: react_config.ReactComponentExportingCofnig;
   }
 ): ReactComponentExportResult {
   const builder = new ReactStyledComponentsBuilder({ entry, config: styling });
