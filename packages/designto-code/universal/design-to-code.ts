@@ -31,7 +31,7 @@ export type Result = output.ICodeOutput & { widget: Widget };
 
 export async function designToCode({
   input,
-  framework,
+  framework: framework_config,
   asset_config,
   build_config = config.default_build_configuration,
 }: {
@@ -42,12 +42,12 @@ export async function designToCode({
 }): Promise<Result> {
   assert(input, "input is required");
   if (process.env.NODE_ENV === "development") {
-    if (framework.framework == "vanilla") {
+    if (framework_config.framework == "vanilla") {
     } else {
       console.info(
         "dev: starting designtocode with user input",
         input,
-        framework,
+        framework_config,
         build_config,
         asset_config
       );
@@ -89,7 +89,6 @@ export async function designToCode({
         entry: vanilla_token,
         repository: input.repository,
       });
-      console.log("reusable_widget_tree", reusable_widget_tree);
       // TODO: WIP
     } catch (_) {
       console.error("error while building reusable widget tree.", _);
@@ -101,13 +100,13 @@ export async function designToCode({
     reusable_widget_tree: reusable_widget_tree,
   };
 
-  switch (framework.framework) {
+  switch (framework_config.framework) {
     case "vanilla":
       return {
         ...(await designToVanilla({
           input: _tokenized_widget_input,
           build_config: build_config,
-          vanilla_config: framework,
+          vanilla_config: framework_config,
           asset_config: asset_config,
         })),
         ..._tokenized_widget_input,
@@ -117,7 +116,7 @@ export async function designToCode({
         ...(await designToReact({
           input: _tokenized_widget_input,
           build_config: build_config,
-          react_config: framework,
+          react_config: framework_config,
           asset_config: asset_config,
         })),
         ..._tokenized_widget_input,
@@ -127,13 +126,13 @@ export async function designToCode({
         ...(await designToFlutter({
           input: _tokenized_widget_input,
           build_config: build_config,
-          flutter_config: framework,
+          flutter_config: framework_config,
           asset_config: asset_config,
         })),
         ..._tokenized_widget_input,
       };
   }
-  throw `The framework "${framework}" is not supported at this point.`;
+  throw `The framework "${framework_config}" is not supported at this point.`;
   return;
 }
 
