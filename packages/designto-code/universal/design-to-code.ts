@@ -121,6 +121,16 @@ export async function designToCode({
         })),
         ..._tokenized_widget_input,
       };
+    case "react-native":
+      return {
+        ...(await designToReactNative({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          reactnative_config: framework_config,
+          asset_config: asset_config,
+        })),
+        ..._tokenized_widget_input,
+      };
     case "flutter":
       return {
         ...(await designToFlutter({
@@ -132,12 +142,17 @@ export async function designToCode({
         ..._tokenized_widget_input,
       };
   }
-  throw `The framework "${framework_config}" is not supported at this point.`;
+
+  throw `The framework "${
+    // @ts-ignore
+    framework_config.framework
+  }" is not supported at this point.`;
   return;
 }
 
 export const designTo = {
   react: designToReact,
+  reactnative: designToReactNative,
   vue: designToVue,
   flutter: designToFlutter,
 };
@@ -192,6 +207,29 @@ export async function designToReact({
       input.reusable_widget_tree
     ) as any;
   }
+}
+
+export async function designToReactNative({
+  input,
+  reactnative_config,
+  build_config,
+  asset_config,
+}: {
+  input: { widget: Widget; reusable_widget_tree? };
+  reactnative_config: config.ReactNativeFrameworkConfig;
+  /**
+   * TODO: pass this to tokenizer +@
+   */
+  build_config: config.BuildConfiguration;
+  asset_config?: AssetsConfig;
+}): Promise<output.ICodeOutput> {
+  console.error("designToReactNative is not implemented yet.");
+  return {
+    code: { raw: "// react-native is not yet supported" },
+    scaffold: { raw: "// react-native is not yet supported" },
+    name: "rn app",
+    id: input.widget.key.id,
+  };
 }
 
 export async function designToFlutter({

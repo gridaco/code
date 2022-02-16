@@ -10,6 +10,7 @@ export type FrameworkConfig =
   | VanillaFrameworkConfig;
 
 export type { ReactFrameworkConfig };
+export type { ReactNativeFrameworkConfig };
 export type { VanillaFrameworkConfig };
 
 export interface FlutterFrameworkConfig {

@@ -55,6 +55,9 @@ export function buildReactWidget(widget: Widget) {
   return buildWebWidgetFromTokens(widget, {});
 }
 
+/**
+ * Experimental components support for react
+ */
 export function buildReusableReactApp__Experimental({
   tree,
   components,

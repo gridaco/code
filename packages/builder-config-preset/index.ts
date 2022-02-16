@@ -54,6 +54,20 @@ export const react_presets = {
   component_declaration_style: _react_component_declaration_style,
 };
 
+export const reactnative_presets = {
+  reactnative_default: <config.ReactNativeFrameworkConfig>{
+    framework: Framework.reactnative,
+    language: Language.tsx,
+    svg: null, // TODO:
+    gradient: null, // TODO:
+    styling: {
+      type: "react-native-stylesheet",
+      module: "react-native",
+    },
+    component_declaration_style: _react_component_declaration_style,
+  },
+};
+
 export const vanilla_presets = {
   vanilla_default: <config.VanillaFrameworkConfig>{
     framework: Framework.vanilla,
