@@ -6,6 +6,6 @@
     "homepage": "https://coli.codes/react-native",
     "author": "Grida Authors",
     "dependencies": {
-        "@web-builder/styled": "0.0.0"
+        "@web-builder/react-core": "17.0.2"
     }
 }
