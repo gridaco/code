@@ -14,10 +14,7 @@ import type {
   RNAccessibilityState,
   RNAccessibilityValue,
 } from "../rn-view";
-import type {
-  RNEdgeInsetsOrSizeProp,
-  RNViewStyleProp,
-} from "../rn-style-sheet";
+import type { ViewStyle, Insets } from "react-native";
 
 type RNBubblingEventProps = Readonly<{
   onBlur?: (event: RNBlurEvent) => mixed;
@@ -377,7 +374,7 @@ export interface RNViewProps
     RNAndroidViewProps,
     RNIOSViewProps {
   children?: RNReactNode;
-  style?: RNViewStyleProp;
+  style?: ViewStyle;
 
   /**
    * When `true`, indicates that the view is an accessibility element.
@@ -472,7 +469,7 @@ export interface RNViewProps
    *
    * See https://reactnative.dev/docs/view#hitslop
    */
-  hitSlop?: RNEdgeInsetsOrSizeProp;
+  hitSlop?: Insets;
 
   /**
    * Controls whether the `View` can be the target of touch events.
