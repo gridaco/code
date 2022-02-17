@@ -1,5 +1,7 @@
+import type { JsxWidget } from "@web-builder/core";
+
 // nodes
-export type RNReactNode = any;
+export type RNReactNode = JsxWidget[];
 export type RNAnimatedNode = any;
 
 // events

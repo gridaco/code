@@ -90,7 +90,7 @@ export function declareStyledComponentVariable(
   }
   ///
 
-  const style_data = widgetConfig.style;
+  const style_data = widgetConfig.finalStyle;
   /**
    * if the style is null, it means don't make element as a styled component at all. if style is a empty object, it means to make a empty styled component.
    */

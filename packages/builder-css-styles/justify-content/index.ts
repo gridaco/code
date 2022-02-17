@@ -11,7 +11,13 @@ export function justifyContent(
 
 export function mainAxisAlignmentToJustifyContent(
   mainAxisAlignment: MainAxisAlignment
-): CSSProperty.JustifyContent {
+):
+  | "flex-start"
+  | "flex-end"
+  | "center"
+  | "space-between"
+  | "space-around"
+  | "space-evenly" {
   switch (mainAxisAlignment) {
     case "start":
       return "flex-start";

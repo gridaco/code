@@ -7,6 +7,7 @@ import type {
 import type { ReactNativeSvgConfig } from "./reactnative-config-svg";
 import type { ReactNativeGradientConfig } from "./reactnative-config-gradient";
 import type { ReactNativeTextGradientConfig } from "./reactnative-config-gradient-text";
+import type { ReactNativeShadowConfig } from "./reactnative-config-shadow";
 
 export interface ReactNativeFrameworkConfig {
   framework: "react-native";
@@ -14,6 +15,7 @@ export interface ReactNativeFrameworkConfig {
   styling: ReactNativeStylingStrategy;
   gradient: ReactNativeGradientConfig;
   gradient_text: ReactNativeTextGradientConfig;
+  shadow: ReactNativeShadowConfig;
   svg: ReactNativeSvgConfig;
   component_declaration_style: {
     exporting_style: ReactComponentExportingCofnig;

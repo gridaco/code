@@ -1,27 +1,41 @@
-import { CSSProperties } from "@coli.codes/css";
-import { StylableJSXElementConfig, WidgetKey } from "../..";
 import {
+  StylableJsxWidget,
+  StylableJSXElementConfig,
+  WidgetKey,
+  JsxWidget,
+} from "@web-builder/core";
+import {
+  Background,
   Border,
   BorderRadiusManifest,
   BoxShadowManifest,
   DimensionLength,
   EdgeInsets,
-  Background,
 } from "@reflect-ui/core";
-import * as css from "@web-builder/styles";
 import { JSX } from "coli";
-import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
+import { RNViewProps } from "../../rn-native-widgets";
+import type { ViewStyle } from "react-native";
+import * as css from "@web-builder/styles";
+import * as styles from "../../rn-styles";
 
-export class Container extends StylableJsxWidget {
-  _type = "Container";
+export class Container
+  extends StylableJsxWidget<ViewStyle>
+  implements RNViewProps
+{
+  children?: JsxWidget[];
+  readonly style?: ViewStyle;
 
-  children?: StylableJsxWidget[];
   borderRadius?: BorderRadiusManifest;
   border?: Border;
   margin?: EdgeInsets;
 
-  constructor(p: {
+  constructor({
+    key,
+    ...p
+  }: {
     key: WidgetKey;
+    children?: Array<JsxWidget>;
+  } & {
     x?: number;
     y?: number;
 
@@ -39,7 +53,7 @@ export class Container extends StylableJsxWidget {
     boxShadow?: BoxShadowManifest[];
     border?: Border;
   }) {
-    super(p);
+    super({ key });
 
     this.width = p.width;
     this.height = p.height;
@@ -56,27 +70,33 @@ export class Container extends StylableJsxWidget {
     this.borderRadius = p.borderRadius;
     this.boxShadow = p.boxShadow;
     this.border = p.border;
+
+    this.children = p.children;
   }
 
-  styleData(): CSSProperties {
+  styleData(): ViewStyle {
     return {
       width: css.length(this.width),
       height: css.length(this.height),
-      "min-width": css.length(this.minWidth),
-      "max-width": css.length(this.maxWidth),
-      "min-height": css.length(this.minHeight),
-      "max-height": css.length(this.maxHeight),
-      ...css.margin(this.margin),
-      "box-shadow": css.boxshadow(...(this.boxShadow ?? [])),
-      ...css.background(this.background),
-      ...css.border(this.border),
-      ...css.borderRadius(this.borderRadius),
+      minWidth: css.length(this.minWidth),
+      maxWidth: css.length(this.maxWidth),
+      minHeight: css.length(this.minHeight),
+      maxHeight: css.length(this.maxHeight),
+
+      // originally, - "box-shadow": css.boxshadow(...(this.boxShadow ?? [])),
+      ...(this.boxShadow?.length ? styles.shadow(this.boxShadow[0]) : {}),
+      ...styles.background(this.background),
+      ...styles.margin(this.margin),
+      ...styles.padding(this.padding),
+      ...styles.border(this.border, this.borderRadius),
     };
   }
+
   jsxConfig(): StylableJSXElementConfig {
+    // TODO: add dependency loading
     return {
       type: "tag-and-attr",
-      tag: JSX.identifier("div"),
+      tag: JSX.identifier("View"),
     };
   }
 }

@@ -1,10 +1,17 @@
-import { CSSProperties } from "@coli.codes/css";
 import assert from "assert";
-import { JSX, JSXAttribute, StringLiteral } from "coli";
-import { StylableJSXElementConfig, WidgetKey, k } from "../..";
-import { SelfClosingContainer } from "../container";
+import {
+  Identifier,
+  JSX,
+  JSXAttribute,
+  PropertyAssignment,
+  StringLiteral,
+} from "coli";
+import { StylableJSXElementConfig, WidgetKey, k } from "@web-builder/core";
 import * as css from "@web-builder/styles";
-export class ImageElement extends SelfClosingContainer {
+import { SelfClosingContainer } from "../rn-container";
+import type { ViewStyle } from "react-native";
+
+export class Image extends SelfClosingContainer {
   _type = "img";
   readonly src: string;
   readonly alt: string;
@@ -32,13 +39,15 @@ export class ImageElement extends SelfClosingContainer {
     this.height = height;
   }
 
-  styleData() {
-    return <CSSProperties>{
+  styleData(): ViewStyle {
+    return {
       ...super.styleData(),
-      "object-fit": "cover",
       width: css.px(this.width),
       height: css.px(this.height),
       // "max-width": "100%",
+
+      // TODO: object-fit eq for RN
+      // "object-fit": "cover",
     };
   }
 
@@ -47,17 +56,21 @@ export class ImageElement extends SelfClosingContainer {
       this.src &&
         new JSXAttribute(
           "src",
-          new StringLiteral(
-            this.src || k.image_smallest_fallback_source_base_64
-          )
+          new PropertyAssignment({
+            name: new Identifier("uri"),
+            initializer: new StringLiteral(
+              this.src || k.image_smallest_fallback_source_base_64
+            ),
+          })
         ),
-      typeof this.alt === "string" &&
-        new JSXAttribute("alt", new StringLiteral(this.alt)),
+      // there is no "alt" attribute in the react-native "Image" tag
+      // typeof this.alt === "string" &&
+      //   new JSXAttribute("alt", new StringLiteral(this.alt)),
     ];
 
     return <StylableJSXElementConfig>{
       type: "tag-and-attr",
-      tag: JSX.identifier("img"),
+      tag: JSX.identifier("Image"),
       attributes: attributes,
     };
   }

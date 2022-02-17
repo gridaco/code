@@ -1,5 +1,4 @@
-import { CSSProperties, CSSProperty } from "@coli.codes/css";
-import { StylableJSXElementConfig, WidgetKey } from "../..";
+import { JSX } from "coli";
 import {
   Axis,
   Border,
@@ -9,22 +8,28 @@ import {
   DimensionLength,
   EdgeInsets,
   MainAxisAlignment,
+  MainAxisSize,
   VerticalDirection,
   IFlexManifest,
+  Background,
 } from "@reflect-ui/core";
-import { MainAxisSize } from "@reflect-ui/core/lib/main-axis-size";
-import { JSX } from "coli";
 import {
   MultiChildWidget,
   StylableJsxWidget,
-} from "@web-builder/core/widget-tree/widget";
-import { Background } from "@reflect-ui/core/lib/background";
+  StylableJSXElementConfig,
+  WidgetKey,
+} from "@web-builder/core";
+import type { ViewStyle, FlexAlignType } from "react-native";
 import * as css from "@web-builder/styles";
 import { tricks } from "@web-builder/styles";
-import { CssMinHeightMixin } from "../../widgets";
+import * as styles from "../../rn-styles";
 
 type FlexWrap = "nowrap" | "wrap" | "wrap-reverse";
-export class Flex extends MultiChildWidget implements CssMinHeightMixin {
+
+/**
+ * A Flex type conpat for react-native View
+ */
+export class Flex extends MultiChildWidget<ViewStyle> {
   readonly _type: "row" | "column";
 
   mainAxisAlignment?: MainAxisAlignment;
@@ -33,15 +38,13 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
   verticalDirection?: VerticalDirection;
   margin?: EdgeInsets;
   padding?: EdgeInsets;
-  background?: Background;
-  // indicates the spacing between items
   itemSpacing?: number;
   flex?: number;
 
   readonly direction: Axis;
 
   // css only properties
-  readonly overflow?: CSSProperty.Overflow;
+  readonly overflow?: ViewStyle["overflow"];
 
   borderRadius?: BorderRadiusManifest;
   border?: Border;
@@ -71,7 +74,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
       boxShadow?: BoxShadowManifest[];
       padding?: EdgeInsets;
       background?: Background;
-      overflow?: CSSProperty.Overflow;
+      overflow?: ViewStyle["overflow"];
       borderRadius?: BorderRadiusManifest;
       border?: Border;
       flexWrap?: FlexWrap;
@@ -113,38 +116,84 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
   jsxConfig(): StylableJSXElementConfig {
     return {
       type: "tag-and-attr",
-      tag: JSX.identifier("div"),
+      tag: JSX.identifier("View"),
     };
   }
 
-  styleData(): CSSProperties {
+  styleData(): ViewStyle {
     return {
       display: "flex",
-      ...css.justifyContent(this.mainAxisAlignment),
-      "flex-direction": direction(this.direction),
-      "align-items": this.crossAxisAlignment,
-      overflow: this.overflow,
+      justifyContent: css.mainAxisAlignmentToJustifyContent(
+        this.mainAxisAlignment
+      ),
+      flexDirection: direction(this.direction),
+      alignItems: alignitems(this.crossAxisAlignment),
       flex: this.flex,
-      "flex-wrap": this.flexWrap,
-      gap: this.itemSpacing && css.px(this.itemSpacing),
-      "box-shadow": css.boxshadow(...(this.boxShadow ?? [])),
-      ...css.border(this.border),
-      ...css.borderRadius(this.borderRadius),
-      ...tricks.flexsizing({ ...this }),
+      flexWrap: this.flexWrap,
+      overflow: this.overflow,
 
-      "min-width": css.length(this.minWidth),
-      "max-width": css.length(this.maxWidth),
-      "min-height": css.length(this.minHeight),
-      "max-height": css.length(this.maxHeight),
+      // TODO: add item spacing support ( follow the flutter way )
+      // gap: this.itemSpacing && css.px(this.itemSpacing),
 
-      ...css.background(this.background),
-      "box-sizing": (this.padding && "border-box") || undefined,
-      ...css.padding(this.padding),
+      // originally, - "box-shadow": css.boxshadow(...(this.boxShadow ?? [])),
+      ...(this.boxShadow?.length ? styles.shadow(this.boxShadow[0]) : {}),
+      ...styles.border(this.border, this.borderRadius),
+
+      ...flexsizing({ ...this }),
+      minWidth: css.length(this.minWidth),
+      maxWidth: css.length(this.maxWidth),
+      minHeight: css.length(this.minHeight),
+      maxHeight: css.length(this.maxHeight),
+      ...styles.background(this.background),
+      ...styles.padding(this.padding),
+
+      // do we need this on react-native?
+      // "box-sizing": (this.padding && "border-box") || undefined,
     };
   }
 }
 
-function direction(axis: Axis): CSSProperty.FlexDirection {
+function flexsizing(p: {
+  direction: Axis;
+  mainAxisSize?: MainAxisSize;
+  width?: DimensionLength;
+  height?: DimensionLength;
+  flex?: number;
+}): {
+  flex?: ViewStyle["flex"];
+  alignSelf?: ViewStyle["alignSelf"];
+  width?: ViewStyle["width"];
+  height?: ViewStyle["height"];
+} {
+  const sizing = tricks.flexsizing(p);
+  return {
+    flex: typeof sizing.flex == "number" ? sizing.flex : undefined,
+    alignSelf: sizing["align-self"],
+    width: sizing.width,
+    height: sizing.height,
+  };
+}
+
+function alignitems(al: CrossAxisAlignment): FlexAlignType {
+  switch (al) {
+    case CrossAxisAlignment.start:
+      return "flex-start";
+    case CrossAxisAlignment.end:
+      return "flex-end";
+    case CrossAxisAlignment.center:
+      return "center";
+    case CrossAxisAlignment.stretch:
+      return "stretch";
+    case CrossAxisAlignment.baseline:
+      return "baseline";
+    default:
+      return "flex-start";
+  }
+}
+
+function direction(
+  axis: Axis
+): "row" | "column" | "row-reverse" | "column-reverse" {
   switch (axis) {
     case Axis.horizontal:
       return "row";

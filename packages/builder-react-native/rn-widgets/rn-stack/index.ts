@@ -3,9 +3,8 @@ import {
   MultiChildWidget,
   StylableJSXElementConfig,
   StylableJsxWidget,
+  WidgetKey,
 } from "@web-builder/core";
-import { WidgetKey } from "../..";
-import { CSSProperties, CSSProperty } from "@coli.codes/css";
 import * as css from "@web-builder/styles";
 import {
   Background,
@@ -15,9 +14,10 @@ import {
   Clip,
   DimensionLength,
 } from "@reflect-ui/core";
-import { CssMinHeightMixin } from "../../widgets";
+import type { ViewStyle } from "react-native";
+import * as styles from "../../rn-styles";
 
-export class Stack extends MultiChildWidget implements CssMinHeightMixin {
+export class Stack extends MultiChildWidget<ViewStyle> {
   readonly _type = "stack";
 
   width: DimensionLength;
@@ -69,32 +69,34 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
   jsxConfig(): StylableJSXElementConfig {
     return <StylableJSXElementConfig>{
       type: "tag-and-attr",
-      tag: JSX.identifier("div"),
+      tag: JSX.identifier("View"),
     };
   }
 
-  styleData(): CSSProperties {
+  styleData(): ViewStyle {
     return {
-      width: css.length(this.width),
-      height: css.length(this.height),
-      "min-width": css.length(this.minWidth),
-      "max-width": css.length(this.maxWidth),
-      "min-height": css.length(this.minHeight),
-      "max-height": css.length(this.maxHeight),
-
-      overflow: clip(this.clipBehavior),
-      ...css.background(this.background),
-      ...css.border(this.border),
-      ...css.borderRadius(this.borderRadius),
       // for stacking elements under parent, parent's position shall be relative, children shall be absolute with anchor (e.g. bottom: 0)
       // can it be always relative?
       position: "relative",
-      "box-shadow": css.boxshadow(...(this.boxShadow ?? [])),
+
+      width: css.length(this.width),
+      height: css.length(this.height),
+      minWidth: css.length(this.minWidth),
+      maxWidth: css.length(this.maxWidth),
+      minHeight: css.length(this.minHeight),
+      maxHeight: css.length(this.maxHeight),
+
+      overflow: clip(this.clipBehavior),
+      ...styles.background(this.background),
+      ...styles.border(this.border, this.borderRadius),
+
+      // originally, - "box-shadow": css.boxshadow(...(this.boxShadow ?? [])),
+      ...(this.boxShadow?.length ? styles.shadow(this.boxShadow[0]) : {}),
     };
   }
 }
 
-function clip(clip: Clip): CSSProperty.Overflow {
+function clip(clip: Clip): ViewStyle["overflow"] {
   switch (clip) {
     case Clip.antiAlias:
     case Clip.antiAliasWithSaveLayer:
