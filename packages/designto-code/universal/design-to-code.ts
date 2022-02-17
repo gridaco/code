@@ -1,9 +1,10 @@
 import { input, output, config, build } from "../proc";
 import { tokenize, wrap } from "@designto/token";
 import { Widget } from "@reflect-ui/core";
-import * as toreact from "@designto/react";
-import * as tovanilla from "@designto/vanilla";
-import * as toflutter from "@designto/flutter";
+import * as toReact from "@designto/react";
+import * as toReactNative from "@designto/react-native";
+import * as toVanilla from "@designto/vanilla";
+import * as toFlutter from "@designto/flutter";
 import {
   fetch_all_assets,
   finalize_temporary_assets_with_prefixed_static_string_keys__dangerously,
@@ -176,7 +177,7 @@ export async function designToReact({
     // automatically fallbacks if no valid data was passed
     !input.reusable_widget_tree
   ) {
-    const reactwidget = toreact.buildReactWidget(input.widget);
+    const reactwidget = toReact.buildReactWidget(input.widget);
     if (process.env.NODE_ENV === "development") {
       console.info("dev::", "final web token composed", {
         input: input.widget,
@@ -184,7 +185,7 @@ export async function designToReact({
       });
     }
 
-    const res = toreact.buildReactApp(reactwidget, react_config);
+    const res = toReact.buildReactApp(reactwidget, react_config);
     // ------------------------------------------------------------------------
     // finilize temporary assets
     // this should be placed somewhere else
@@ -203,7 +204,7 @@ export async function designToReact({
 
     return res;
   } else {
-    return toreact.buildReusableReactApp__Experimental(
+    return toReact.buildReusableReactApp__Experimental(
       input.reusable_widget_tree
     ) as any;
   }
@@ -223,6 +224,7 @@ export async function designToReactNative({
   build_config: config.BuildConfiguration;
   asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
+  // toReactNative.buildReactNativeWidget(input.widget);
   console.error("designToReactNative is not implemented yet.");
   return {
     code: { raw: "// react-native is not yet supported" },
@@ -248,8 +250,8 @@ export async function designToFlutter({
 }): Promise<output.ICodeOutput> {
   await Promise.resolve();
 
-  const flutterwidget = toflutter.buildFlutterWidget(input.widget);
-  const flutterapp = toflutter.buildFlutterApp(flutterwidget, {
+  const flutterwidget = toFlutter.buildFlutterWidget(input.widget);
+  const flutterapp = toFlutter.buildFlutterApp(flutterwidget, {
     id: input.widget.key.id,
   });
 
@@ -290,11 +292,11 @@ export async function designToVanilla({
   vanilla_config: config.VanillaFrameworkConfig;
   asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
-  const vanillawidget = tovanilla.buildVanillaWidget(
+  const vanillawidget = toVanilla.buildVanillaWidget(
     input.widget,
     vanilla_config
   );
-  const res = tovanilla.buildVanillaFile(vanillawidget, vanilla_config);
+  const res = toVanilla.buildVanillaFile(vanillawidget, vanilla_config);
 
   // ------------------------------------------------------------------------
   // finilize temporary assets
