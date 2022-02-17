@@ -1,6 +1,17 @@
+import { ScopedVariableNamer } from "@coli.codes/naming";
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
-import { react as react_config } from "@designto/config";
-import type { JsxWidget } from "@web-builder/core";
+import {
+  BlockStatement,
+  Identifier,
+  Import,
+  ImportDeclaration,
+  JSXAttribute,
+  PropertyAccessExpression,
+  PropertySignature,
+  Return,
+} from "coli";
+import { react_imports } from "../react-import-specifications";
+import { JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
   getWidgetStylesConfigMap,
@@ -8,69 +19,53 @@ import {
   JSXWithStyleElementConfig,
   WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
-import {
-  BlockStatement,
-  Identifier,
-  ImportDeclaration,
-  JSXAttribute,
-  ObjectLiteralExpression,
-  PropertyAssignment,
-  Return,
-  ScopedVariableNamer,
-  TemplateLiteral,
-} from "coli";
-import { react_imports } from "../react-import-specifications";
-import { ReactWidgetModuleExportable } from "../react-module";
+import { react as react_config } from "@designto/config";
 import { makeReactModuleFile } from "../react-module-file";
-import { cssToJson } from "@web-builder/styles/_utils";
-import { CSSProperties } from "@coli.codes/css";
+import { ReactWidgetModuleExportable } from "../react-module";
 
 /**
- * CSS In JS Style builder for React Framework
+ * CSS Module Builder for React Framework
  *
  *
- * css in js is a pattern that allows you to use css as a object in jsx, to property `style`.
- *
- * ```tsx
- * // output be like...
- * <div style={{ color: "red" }}/>
- * ```
- *
+ * - @todo: css file not built
  */
-export class ReactCssInJSBuilder {
+export class ReactCssModuleBuilder {
   private readonly entry: JsxWidget;
   private readonly widgetName: string;
-  readonly config: react_config.ReactInlineCssConfig;
+  private readonly styledConfigWidgetMap: WidgetStyleConfigMap;
   private readonly namer: ScopedVariableNamer;
-  private readonly stylesConfigWidgetMap: WidgetStyleConfigMap;
+  readonly config: react_config.ReactCssModuleConfig;
 
   constructor({
     entry,
     config,
   }: {
     entry: JsxWidget;
-    config: react_config.ReactInlineCssConfig;
+    config: react_config.ReactCssModuleConfig;
   }) {
     this.entry = entry;
     this.widgetName = entry.key.name;
-    this.config = config;
     this.namer = new ScopedVariableNamer(
       entry.key.id,
       ReservedKeywordPlatformPresets.react
     );
-    this.stylesConfigWidgetMap = getWidgetStylesConfigMap(entry, {
+    this.styledConfigWidgetMap = getWidgetStylesConfigMap(entry, {
       namer: this.namer,
-      rename_tag: false,
+      rename_tag: false /** css-module tag shoule not be renamed */,
     });
+    this.config = config;
   }
 
   private stylesConfig(
     id: string
   ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
-    return this.stylesConfigWidgetMap.get(id);
+    return this.styledConfigWidgetMap.get(id);
   }
 
   private jsxBuilder(widget: JsxWidget) {
+    // e.g. import styles from "./?.module.css"
+    const importedCssIdentifier = new Identifier(this.config.importDefault);
+
     return buildJsx(
       widget,
       {
@@ -78,36 +73,28 @@ export class ReactCssInJSBuilder {
           const cfg = this.stylesConfig(id);
           const _default_attr = cfg.attributes;
 
-          const existingstyleattr = _default_attr?.find(
+          const existing_classname_attr = _default_attr?.find(
             // where style refers to react's jsx style attribute
-            (a) => a.name.name === "style"
+            (a) => a.name.name === "className"
           );
 
-          let style: JSXAttribute;
-          if (existingstyleattr) {
+          let className: JSXAttribute;
+          if (existing_classname_attr) {
             // ignore this case. (element already with style attriibute may be svg element)
             // this case is not supported. (should supported if the logic changes)
           } else {
-            //
-            const styledata: CSSProperties =
-              (cfg as JSXWithStyleElementConfig).style ?? {};
-            const reactStyleData = cssToJson(styledata);
-            const properties: PropertyAssignment[] = Object.keys(
-              reactStyleData
-            ).map(
-              (key) =>
-                new PropertyAssignment({
-                  name: key as unknown as Identifier,
-                  initializer: new TemplateLiteral(reactStyleData[key]),
-                })
-            );
-
-            style = new JSXAttribute(
-              "style",
+            className = new JSXAttribute(
+              "className",
               new BlockStatement(
-                new ObjectLiteralExpression({
-                  properties: properties,
-                })
+                new PropertyAccessExpression(
+                  new PropertySignature({
+                    name: importedCssIdentifier,
+                  }),
+                  // TODO: this currently generates styles.ClassName, but it also should be compatible with
+                  // - styles.className
+                  // - styles.["class-name"]
+                  cfg.id
+                )
               )
             );
           }
@@ -115,7 +102,7 @@ export class ReactCssInJSBuilder {
           const newattributes = [
             ...(_default_attr ?? []),
             //
-            style,
+            className,
           ];
 
           cfg.attributes = newattributes;
@@ -129,8 +116,22 @@ export class ReactCssInJSBuilder {
     );
   }
 
-  partImports() {
-    return [react_imports.import_react_from_react];
+  partImports(): Array<ImportDeclaration> {
+    return [this.partImportReact(), this.partImportModuleCss()];
+  }
+
+  partImportReact(): ImportDeclaration {
+    return react_imports.import_react_from_react;
+  }
+
+  partImportModuleCss(): ImportDeclaration {
+    return (
+      new Import()
+        .importDefault(this.config.importDefault)
+        // e.g. "./component.module.css"
+        .from(`./${this.widgetName}.module.${this.config.lang}`)
+        .make()
+    );
   }
 
   partBody(): BlockStatement {
@@ -141,14 +142,14 @@ export class ReactCssInJSBuilder {
   asExportableModule() {
     const body = this.partBody();
     const imports = this.partImports();
-    return new ReactInlineCssWidgetModuleExportable(this.widgetName, {
+    return new ReactCssModuleWidgetModuleExportable(this.widgetName, {
       body,
       imports,
     });
   }
 }
 
-export class ReactInlineCssWidgetModuleExportable extends ReactWidgetModuleExportable {
+export class ReactCssModuleWidgetModuleExportable extends ReactWidgetModuleExportable {
   constructor(
     name,
     {

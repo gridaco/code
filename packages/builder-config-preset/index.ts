@@ -46,6 +46,17 @@ export const react_presets = {
     },
     component_declaration_style: _react_component_declaration_style,
   },
+  react_with_css_module: <config.ReactFrameworkConfig>{
+    framework: Framework.react,
+    language: Language.tsx,
+    styling: {
+      type: "css-module",
+      lang: "css",
+      importDefault: "styles",
+      loader: "css-loader",
+    },
+    component_declaration_style: _react_component_declaration_style,
+  },
   react_with_css: <config.ReactFrameworkConfig>{
     framework: Framework.react,
     language: Language.tsx,
@@ -126,6 +137,20 @@ export const react_styles: {
   "inline-css": [
     {
       type: "inline-css",
+    },
+  ],
+  "css-module": [
+    {
+      type: "css-module",
+      importDefault: "styles",
+      loader: "css-loader",
+      lang: "css",
+    },
+    {
+      type: "css-module",
+      importDefault: "styles",
+      loader: "css-loader",
+      lang: "scss",
     },
   ],
   css: [

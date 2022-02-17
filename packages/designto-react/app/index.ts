@@ -3,6 +3,7 @@ import { buildWebWidgetFromTokens } from "@designto/web/tokens-to-web-widget";
 import {
   finalizeReactWidget_StyledComponents,
   finalizeReactWidget_InlineCss,
+  finalizeReactWidget_CssModule,
   finalizeReactReusable_StyledComponents__Experimental,
   JsxWidget,
 } from "@web-builder/react";
@@ -36,7 +37,18 @@ export function buildReactApp(
         code: { raw: res.code },
         scaffold: { raw: res.code },
       };
-      break;
+    }
+    case "css-module": {
+      const res = finalizeReactWidget_CssModule(entry, {
+        styling: config.styling,
+        exporting: config.component_declaration_style.exporting_style,
+      });
+      return {
+        id: entry.key.id,
+        name: entry.key.name,
+        code: { raw: res.code },
+        scaffold: { raw: res.code },
+      };
     }
     case "css":
     default: {
