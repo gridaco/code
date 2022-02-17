@@ -16,8 +16,8 @@ import type {
   RNAccessibilityActionInfo,
   RNAccessibilityRole,
   RNAccessibilityState,
-} from "../view";
-import type { RNTextStyleProp } from "../style-sheet";
+} from "../rn-view";
+import type { RNTextStyleProp } from "../rn-style-sheet";
 
 type RNTextBreakStrategy = "balanced" | "highQuality" | "simple";
 type RNDataDetectorType = "phoneNumber" | "link" | "email" | "none" | "all";

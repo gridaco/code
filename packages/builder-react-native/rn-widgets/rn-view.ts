@@ -13,8 +13,11 @@ import type {
   RNAccessibilityRole,
   RNAccessibilityState,
   RNAccessibilityValue,
-} from "../view";
-import type { RNEdgeInsetsOrSizeProp, RNViewStyleProp } from "../style-sheet";
+} from "../rn-view";
+import type {
+  RNEdgeInsetsOrSizeProp,
+  RNViewStyleProp,
+} from "../rn-style-sheet";
 
 type RNBubblingEventProps = Readonly<{
   onBlur?: (event: RNBlurEvent) => mixed;

@@ -8,6 +8,8 @@ import {
   react_imports,
   makeReactModuleFile,
   ReactWidgetModuleExportable,
+  emotion_styled_imports,
+  styled_components_imports,
 } from "@web-builder/react-core";
 import { BlockStatement, Import, ImportDeclaration, Return } from "coli";
 import { JsxWidget } from "@web-builder/core";
@@ -71,15 +73,9 @@ export class ReactStyledComponentsBuilder {
   partImportStyled() {
     switch (this.config.module) {
       case "@emotion/styled":
-        return new Import()
-          .importDefault("styled")
-          .from("@emotion/styled")
-          .make();
+        return emotion_styled_imports.import_styled_from_emotion_styled;
       case "styled-components":
-        return new Import()
-          .importDefault("styled")
-          .from("styled-components")
-          .make();
+        return styled_components_imports.import_styled_from_styled_components;
     }
   }
 
