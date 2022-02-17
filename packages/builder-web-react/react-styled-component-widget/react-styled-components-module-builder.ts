@@ -4,8 +4,12 @@ import {
   NoStyleJSXElementConfig,
   StyledComponentJSXElementConfig,
 } from "@web-builder/styled";
+import {
+  react_imports,
+  makeReactModuleFile,
+  ReactWidgetModuleExportable,
+} from "@web-builder/react-core";
 import { BlockStatement, Import, ImportDeclaration, Return } from "coli";
-import { react_imports } from "../react-import-specifications";
 import { JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
@@ -13,9 +17,7 @@ import {
   WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
 import { react as react_config } from "@designto/config";
-import { makeReactModuleFile, ReactModuleFile } from "../react-module-file";
 import { StyledComponentDeclaration } from "@web-builder/styled/styled-component-declaration";
-import { ReactWidgetModuleExportable } from "../react-module";
 
 export class ReactStyledComponentsBuilder {
   private readonly entry: JsxWidget;

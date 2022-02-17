@@ -10,7 +10,11 @@ import {
   PropertySignature,
   Return,
 } from "coli";
-import { react_imports } from "../react-import-specifications";
+import {
+  react_imports,
+  makeReactModuleFile,
+  ReactWidgetModuleExportable,
+} from "@web-builder/react-core";
 import { JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
@@ -20,8 +24,6 @@ import {
   WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
 import { react as react_config } from "@designto/config";
-import { makeReactModuleFile } from "../react-module-file";
-import { ReactWidgetModuleExportable } from "../react-module";
 
 /**
  * CSS Module Builder for React Framework

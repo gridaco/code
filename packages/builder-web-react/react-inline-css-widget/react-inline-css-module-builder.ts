@@ -2,6 +2,11 @@ import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
 import { react as react_config } from "@designto/config";
 import type { JsxWidget } from "@web-builder/core";
 import {
+  react_imports,
+  ReactWidgetModuleExportable,
+  makeReactModuleFile,
+} from "@web-builder/react-core";
+import {
   buildJsx,
   getWidgetStylesConfigMap,
   JSXWithoutStyleElementConfig,
@@ -19,9 +24,6 @@ import {
   ScopedVariableNamer,
   TemplateLiteral,
 } from "coli";
-import { react_imports } from "../react-import-specifications";
-import { ReactWidgetModuleExportable } from "../react-module";
-import { makeReactModuleFile } from "../react-module-file";
 import { cssToJson } from "@web-builder/styles/_utils";
 import { CSSProperties } from "@coli.codes/css";
 
