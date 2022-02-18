@@ -5,7 +5,7 @@ export type ReactNativeStylingStrategy =
 /**
  * The default react-native styling strategy
  */
-interface ReactNativeStyleSheetConfig {
+export interface ReactNativeStyleSheetConfig {
   type: "react-native-stylesheet";
   /**
    * import { StyleSheet } from "react-native";

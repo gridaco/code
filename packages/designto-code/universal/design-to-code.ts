@@ -224,14 +224,17 @@ export async function designToReactNative({
   build_config: config.BuildConfiguration;
   asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
-  // toReactNative.buildReactNativeWidget(input.widget);
-  console.error("designToReactNative is not implemented yet.");
-  return {
-    code: { raw: "// react-native is not yet supported" },
-    scaffold: { raw: "// react-native is not yet supported" },
-    name: "rn app",
-    id: input.widget.key.id,
-  };
+  const rnWidget = toReactNative.buildReactNativeWidget(input.widget);
+  const res = toReactNative.buildReactNativeApp(rnWidget, reactnative_config);
+  return res;
+
+  // console.error("designToReactNative is not implemented yet.");
+  // return {
+  //   code: { raw: "// react-native is not yet supported" },
+  //   scaffold: { raw: "// react-native is not yet supported" },
+  //   name: "rn app",
+  //   id: input.widget.key.id,
+  // };
 }
 
 export async function designToFlutter({

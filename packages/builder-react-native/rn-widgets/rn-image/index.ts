@@ -11,7 +11,7 @@ import * as css from "@web-builder/styles";
 import { SelfClosingContainer } from "../rn-container";
 import type { ViewStyle } from "react-native";
 
-export class Image extends SelfClosingContainer {
+export class ImageElement extends SelfClosingContainer {
   _type = "img";
   readonly src: string;
   readonly alt: string;

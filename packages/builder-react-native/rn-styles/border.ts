@@ -2,33 +2,30 @@ import type { Border, BorderRadius } from "@reflect-ui/core";
 import type { ViewStyle } from "react-native";
 import * as css from "@web-builder/styles";
 export function border(p: Border, rad: BorderRadius): ViewStyle {
-  p.bottom;
-  p.left;
-  p.right;
-  p.top;
+  if (!p) return {};
 
   let o: ViewStyle = <ViewStyle>{
-    borderBottomColor: p.bottom.color,
-    borderBottomEndRadius: rad.br,
-    borderBottomLeftRadius: rad.bl,
-    borderBottomRightRadius: rad.br,
-    borderBottomStartRadius: rad.bl,
-    borderBottomWidth: p.bottom.width,
+    borderBottomColor: p?.bottom?.color,
+    borderBottomEndRadius: rad?.br,
+    borderBottomLeftRadius: rad?.bl,
+    borderBottomRightRadius: rad?.br,
+    borderBottomStartRadius: rad?.bl,
+    borderBottomWidth: p?.bottom?.width,
     // borderColor,
     // borderEndColor,
-    borderLeftColor: p.left.color,
-    borderLeftWidth: p.left.width,
+    borderLeftColor: p?.left?.color,
+    borderLeftWidth: p?.left?.width,
     // borderRadius,
-    borderRightColor: p.right.color,
-    borderRightWidth: p.right.width,
+    borderRightColor: p?.right?.color,
+    borderRightWidth: p?.right?.width,
     // borderStartColor,
     // borderStyle, // TODO: add border style support
-    borderTopColor: p.top.color,
-    borderTopEndRadius: rad.tr,
-    borderTopLeftRadius: rad.tl,
-    borderTopRightRadius: rad.tr,
-    borderTopStartRadius: rad.tl,
-    borderTopWidth: p.top.width,
+    borderTopColor: p?.top?.color,
+    borderTopEndRadius: rad?.tr,
+    borderTopLeftRadius: rad?.tl,
+    borderTopRightRadius: rad?.tr,
+    borderTopStartRadius: rad?.tl,
+    borderTopWidth: p?.top?.width,
     // borderWidth,
   };
 

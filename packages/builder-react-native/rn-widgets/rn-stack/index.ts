@@ -18,7 +18,7 @@ import type { ViewStyle } from "react-native";
 import * as styles from "../../rn-styles";
 
 export class Stack extends MultiChildWidget<ViewStyle> {
-  readonly _type = "stack";
+  readonly _type = "rn-stack";
 
   width: DimensionLength;
   height: DimensionLength;

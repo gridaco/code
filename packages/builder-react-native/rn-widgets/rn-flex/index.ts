@@ -166,12 +166,14 @@ function flexsizing(p: {
   height?: ViewStyle["height"];
 } {
   const sizing = tricks.flexsizing(p);
-  return {
-    flex: typeof sizing.flex == "number" ? sizing.flex : undefined,
-    alignSelf: sizing["align-self"],
-    width: sizing.width,
-    height: sizing.height,
-  };
+  if (sizing) {
+    return {
+      flex: typeof sizing.flex == "number" ? sizing.flex : undefined,
+      alignSelf: sizing["align-self"],
+      width: sizing.width,
+      height: sizing.height,
+    };
+  }
 }
 
 function alignitems(al: CrossAxisAlignment): FlexAlignType {

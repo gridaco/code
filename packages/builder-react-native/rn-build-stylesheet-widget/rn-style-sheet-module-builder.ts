@@ -3,7 +3,6 @@ import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
 import {
   BlockStatement,
   Identifier,
-  Import,
   ImportDeclaration,
   JSXAttribute,
   PropertyAccessExpression,
@@ -23,27 +22,25 @@ import {
   JSXWithStyleElementConfig,
   WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
-import { react as react_config } from "@designto/config";
+import {
+  react as react_config,
+  reactnative as rn_config,
+} from "@designto/config";
+import { reactnative_imports } from "../rn-import-specifications";
 
-/**
- * CSS Module Builder for React Framework
- *
- *
- * - @todo: css file not built
- */
-export class ReactCssModuleBuilder {
+export class ReactNativeStyleSheetModuleBuilder {
   private readonly entry: JsxWidget;
   private readonly widgetName: string;
   private readonly stylesConfigWidgetMap: WidgetStyleConfigMap;
   private readonly namer: ScopedVariableNamer;
-  readonly config: react_config.ReactCssModuleConfig;
+  readonly config: rn_config.ReactNativeStyleSheetConfig;
 
   constructor({
     entry,
     config,
   }: {
     entry: JsxWidget;
-    config: react_config.ReactCssModuleConfig;
+    config: rn_config.ReactNativeStyleSheetConfig;
   }) {
     this.entry = entry;
     this.widgetName = entry.key.name;
@@ -53,7 +50,7 @@ export class ReactCssModuleBuilder {
     );
     this.stylesConfigWidgetMap = getWidgetStylesConfigMap(entry, {
       namer: this.namer,
-      rename_tag: false /** css-module tag shoule not be renamed */,
+      rename_tag: false /** rn StyleSheet tag shoule not be renamed */,
     });
     this.config = config;
   }
@@ -65,8 +62,9 @@ export class ReactCssModuleBuilder {
   }
 
   private jsxBuilder(widget: JsxWidget) {
-    // e.g. import styles from "./?.module.css"
-    const importedCssIdentifier = new Identifier(this.config.importDefault);
+    // e.g. const styles = StyleSheet.create({...});
+    const stylesheetDeclarationIdentifier = new Identifier("styles");
+    const style_attr_name = "style";
 
     return buildJsx(
       widget,
@@ -77,20 +75,20 @@ export class ReactCssModuleBuilder {
 
           const existing_classname_attr = _default_attr?.find(
             // where style refers to react's jsx style attribute
-            (a) => a.name.name === "className"
+            (a) => a.name.name === style_attr_name
           );
 
-          let className: JSXAttribute;
+          let styleAttr: JSXAttribute;
           if (existing_classname_attr) {
             // ignore this case. (element already with style attriibute may be svg element)
             // this case is not supported. (should supported if the logic changes)
           } else {
-            className = new JSXAttribute(
-              "className",
+            styleAttr = new JSXAttribute(
+              style_attr_name,
               new BlockStatement(
                 new PropertyAccessExpression(
                   new PropertySignature({
-                    name: importedCssIdentifier,
+                    name: stylesheetDeclarationIdentifier,
                   }),
                   // TODO: this currently generates styles.ClassName, but it also should be compatible with
                   // - styles.className
@@ -104,7 +102,7 @@ export class ReactCssModuleBuilder {
           const newattributes = [
             ...(_default_attr ?? []),
             //
-            className,
+            styleAttr,
           ];
 
           cfg.attributes = newattributes;
@@ -119,21 +117,15 @@ export class ReactCssModuleBuilder {
   }
 
   partImports(): Array<ImportDeclaration> {
-    return [this.partImportReact(), this.partImportModuleCss()];
+    return [this.partImportReact(), this.partImportReactNative()];
   }
 
   partImportReact(): ImportDeclaration {
     return react_imports.import_react_from_react;
   }
 
-  partImportModuleCss(): ImportDeclaration {
-    return (
-      new Import()
-        .importDefault(this.config.importDefault)
-        // e.g. "./component.module.css"
-        .from(`./${this.widgetName}.module.${this.config.lang}`)
-        .make()
-    );
+  partImportReactNative(): ImportDeclaration {
+    return reactnative_imports.import_react_prepacked;
   }
 
   partBody(): BlockStatement {
@@ -144,14 +136,14 @@ export class ReactCssModuleBuilder {
   asExportableModule() {
     const body = this.partBody();
     const imports = this.partImports();
-    return new ReactCssModuleWidgetModuleExportable(this.widgetName, {
+    return new ReactStyleSheeteWidgetModuleExportable(this.widgetName, {
       body,
       imports,
     });
   }
 }
 
-export class ReactCssModuleWidgetModuleExportable extends ReactWidgetModuleExportable {
+export class ReactStyleSheeteWidgetModuleExportable extends ReactWidgetModuleExportable {
   constructor(
     name,
     {
