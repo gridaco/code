@@ -6,7 +6,10 @@
     "private": true,
     "scripts": {
         "checkout:all": "git submodule update --init --recursive",
-        "editor": "yarn workspace editor dev"
+        "editor": "yarn workspace editor dev",
+        "typescript": "lerna run typescript",
+        "prepublish": "lerna run prepublish",
+        "publish-stable": "lerna version --force-publish"
     },
     "workspaces": [
         "editor",
@@ -17,5 +20,8 @@
         "externals/reflect-core/packages/*",
         "externals/design-sdk/*",
         "externals/coli/packages/*"
-    ]
+    ],
+    "devDependencies": {
+        "lerna": "^4.0.0"
+    }
 }

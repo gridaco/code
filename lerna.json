@@ -1,0 +1,21 @@
+{
+  "lerna": "4.0.0",
+  "npmClient": "yarn",
+  "packages": [
+    "packages/*"
+  ],
+  "command": {
+    "version": {
+      "exact": true
+    },
+    "publish": {
+      "npmClient": "npm",
+      "allowBranch": [
+        "lerna-mono-repo",
+        "canary"
+      ],
+      "registry": "https://registry.npmjs.org/"
+    }
+  },
+  "version": "0.1.0"
+}

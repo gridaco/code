@@ -1,28 +1,16 @@
 {
-  "name": "coli-web-builder",
+  "name": "@web-builder/web",
   "version": "0.0.1",
-  "description": "jsx syntex tree builder for web applications. react, vue, svelte, etc..",
-  "workspaces": [
-    "core",
-    "nodejs",
-    "web-builder",
-    "css",
-    "html",
-    "jsx",
-    "preact",
-    "react",
-    "styled",
-    "styles",
-    "svelte",
-    "vanilla",
-    "vue"
-  ],
+  "description": "jsx syntex tree builder for web applications. react, react-native vue, svelte, etc..",
   "main": "index.js",
-  "repository": "https://github.com/bridgedxyz/web-builder.git",
-  "author": "bridged.xyz, softmarshmallow <woojoo@softmarshmallow.com>",
+  "repository": "https://github.com/gridaco/designto-code.git",
+  "authors": [
+    "grida.co",
+    "softmarshmallow <universe@grida.co>"
+  ],
   "license": "MIT",
   "dependencies": {
     "typescript": "^4.0.5"
   },
-  "private": true
+  "private": false
 }
