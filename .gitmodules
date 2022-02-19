@@ -1,6 +1,3 @@
-[submodule "packages/reflect-detection"]
-	path = packages/reflect-detection
-	url = https://github.com/bridgedxyz/reflect-detection
 [submodule "ui/editor-ui"]
 	path = ui/editor-ui
 	url = https://github.com/bridgedxyz/reflect-editor-ui
