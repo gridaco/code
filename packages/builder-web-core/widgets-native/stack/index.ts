@@ -4,18 +4,18 @@ import {
   StylableJSXElementConfig,
   StylableJsxWidget,
 } from "@web-builder/core";
-import { JSXElementConfig, WidgetKey } from "../..";
+import { WidgetKey } from "../..";
 import { CSSProperties, CSSProperty } from "@coli.codes/css";
-import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
 import * as css from "@web-builder/styles";
 import {
+  Background,
+  BoxShadowManifest,
   Border,
   BorderRadiusManifest,
   Clip,
   DimensionLength,
 } from "@reflect-ui/core";
 import { CssMinHeightMixin } from "../../widgets";
-import { Background } from "@reflect-ui/core/lib/background";
 
 export class Stack extends MultiChildWidget implements CssMinHeightMixin {
   readonly _type = "stack";

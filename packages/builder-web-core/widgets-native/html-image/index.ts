@@ -1,8 +1,7 @@
 import { CSSProperties } from "@coli.codes/css";
 import assert from "assert";
 import { JSX, JSXAttribute, StringLiteral } from "coli";
-import { JSXElementConfig, StylableJSXElementConfig, WidgetKey } from "../..";
-import { image_smallest_fallback_source_base_64 } from "../../k";
+import { StylableJSXElementConfig, WidgetKey, k } from "../..";
 import { SelfClosingContainer } from "../container";
 import * as css from "@web-builder/styles";
 export class ImageElement extends SelfClosingContainer {
@@ -48,7 +47,9 @@ export class ImageElement extends SelfClosingContainer {
       this.src &&
         new JSXAttribute(
           "src",
-          new StringLiteral(this.src || image_smallest_fallback_source_base_64)
+          new StringLiteral(
+            this.src || k.image_smallest_fallback_source_base_64
+          )
         ),
       typeof this.alt === "string" &&
         new JSXAttribute("alt", new StringLiteral(this.alt)),

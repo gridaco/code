@@ -1,5 +1,5 @@
 {
-    "name": "@coli.codes/nodejs-builder",
+    "name": "@web-builder/nodejs",
     "version": "0.0.0",
     "dependencies": {
         "assert": "^2.0.0",
