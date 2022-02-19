@@ -1,6 +1,7 @@
 import * as core from "@reflect-ui/core";
 import { Composer } from ".";
 import { Stretched } from "@designto/token/tokens";
+import type { ViewStyle } from "react-native";
 
 export function compose_wrapped_with_clip_stretched(
   widget: Stretched,
@@ -17,8 +18,8 @@ export function compose_wrapped_with_clip_stretched(
   }
 
   const child = child_composer(widget.child);
-  child.extendStyle({
-    "align-self": "stretch",
+  child.extendStyle<ViewStyle>({
+    alignSelf: "stretch",
     [remove_size]: undefined,
   });
   return child;
