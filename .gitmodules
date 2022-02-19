@@ -13,3 +13,6 @@
 [submodule "externals/reflect-core"]
 	path = externals/reflect-core
 	url = https://github.com/reflect-ui/reflect-core-ts
+[submodule "externals/reflect-detection"]
+	path = externals/reflect-detection
+	url = https://github.com/reflect-ui/reflect-ui-detection
