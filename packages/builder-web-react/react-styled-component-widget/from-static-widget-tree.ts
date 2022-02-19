@@ -1,5 +1,5 @@
 import { JsxWidget, StylableJsxWidget } from "@web-builder/core";
-import { ReactComponentExportResult } from "../export-result";
+import { ReactComponentExportResult } from "@web-builder/react-core";
 import { react as react_config } from "@designto/config";
 import { ReactStyledComponentsBuilder } from "./react-styled-components-module-builder";
 

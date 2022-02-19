@@ -4,8 +4,14 @@ import {
   NoStyleJSXElementConfig,
   StyledComponentJSXElementConfig,
 } from "@web-builder/styled";
+import {
+  react_imports,
+  makeReactModuleFile,
+  ReactWidgetModuleExportable,
+  emotion_styled_imports,
+  styled_components_imports,
+} from "@web-builder/react-core";
 import { BlockStatement, Import, ImportDeclaration, Return } from "coli";
-import { react_imports } from "../react-import-specifications";
 import { JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
@@ -13,9 +19,7 @@ import {
   WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
 import { react as react_config } from "@designto/config";
-import { makeReactModuleFile, ReactModuleFile } from "../react-module-file";
 import { StyledComponentDeclaration } from "@web-builder/styled/styled-component-declaration";
-import { ReactWidgetModuleExportable } from "../react-module";
 
 export class ReactStyledComponentsBuilder {
   private readonly entry: JsxWidget;
@@ -69,15 +73,9 @@ export class ReactStyledComponentsBuilder {
   partImportStyled() {
     switch (this.config.module) {
       case "@emotion/styled":
-        return new Import()
-          .importDefault("styled")
-          .from("@emotion/styled")
-          .make();
+        return emotion_styled_imports.import_styled_from_emotion_styled;
       case "styled-components":
-        return new Import()
-          .importDefault("styled")
-          .from("styled-components")
-          .make();
+        return styled_components_imports.import_styled_from_styled_components;
     }
   }
 

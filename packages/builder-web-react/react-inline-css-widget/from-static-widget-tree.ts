@@ -1,6 +1,6 @@
 import { JsxWidget } from "@web-builder/core";
 import { react as react_config } from "@designto/config";
-import { ReactCssInJSBuilder } from "./react-inline-css-module-builder";
+import { ReactInlineCssBuilder } from "./react-inline-css-module-builder";
 
 export function finalizeReactWidget_InlineCss(
   entry: JsxWidget,
@@ -12,7 +12,7 @@ export function finalizeReactWidget_InlineCss(
     exporting: react_config.ReactComponentExportingCofnig;
   }
 ) {
-  const builder = new ReactCssInJSBuilder({
+  const builder = new ReactInlineCssBuilder({
     entry,
     config: styling,
   });

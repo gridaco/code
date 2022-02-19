@@ -1,5 +1,5 @@
 import { JsxWidget } from "@web-builder/core";
-import { standard_libraries } from "@coli.codes/nodejs-builder";
+import { standard_libraries } from "@web-builder/nodejs";
 import * as templates from "../templates";
 /**
  * builds create-react-app wrapped react app.

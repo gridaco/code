@@ -6,8 +6,8 @@ import {
   BoxShadowManifest,
   DimensionLength,
   EdgeInsets,
+  Background,
 } from "@reflect-ui/core";
-import { Background } from "@reflect-ui/core/lib/background";
 import * as css from "@web-builder/styles";
 import { JSX } from "coli";
 import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";

@@ -1,6 +1,11 @@
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
 import { react as react_config } from "@designto/config";
-import type { JSXElementConfig, JsxWidget } from "@web-builder/core";
+import type { JsxWidget } from "@web-builder/core";
+import {
+  react_imports,
+  ReactWidgetModuleExportable,
+  makeReactModuleFile,
+} from "@web-builder/react-core";
 import {
   buildJsx,
   getWidgetStylesConfigMap,
@@ -13,23 +18,17 @@ import {
   Identifier,
   ImportDeclaration,
   JSXAttribute,
-  Literal,
   ObjectLiteralExpression,
   PropertyAssignment,
   Return,
   ScopedVariableNamer,
-  StringLiteral,
   TemplateLiteral,
 } from "coli";
-import * as css from "@web-builder/styles";
-import { react_imports } from "../react-import-specifications";
-import { ReactWidgetModuleExportable } from "../react-module";
-import { makeReactModuleFile, ReactModuleFile } from "../react-module-file";
 import { cssToJson } from "@web-builder/styles/_utils";
 import { CSSProperties } from "@coli.codes/css";
 
 /**
- * CSS In JS Style builder for React Framework
+ * InlineCss Style builder for React Framework
  *
  *
  * css in js is a pattern that allows you to use css as a object in jsx, to property `style`.
@@ -40,12 +39,12 @@ import { CSSProperties } from "@coli.codes/css";
  * ```
  *
  */
-export class ReactCssInJSBuilder {
+export class ReactInlineCssBuilder {
   private readonly entry: JsxWidget;
   private readonly widgetName: string;
   readonly config: react_config.ReactInlineCssConfig;
   private readonly namer: ScopedVariableNamer;
-  private readonly styledConfigWidgetMap: WidgetStyleConfigMap;
+  private readonly stylesConfigWidgetMap: WidgetStyleConfigMap;
 
   constructor({
     entry,
@@ -61,16 +60,16 @@ export class ReactCssInJSBuilder {
       entry.key.id,
       ReservedKeywordPlatformPresets.react
     );
-    this.styledConfigWidgetMap = getWidgetStylesConfigMap(entry, {
+    this.stylesConfigWidgetMap = getWidgetStylesConfigMap(entry, {
       namer: this.namer,
       rename_tag: false,
     });
   }
 
-  private styledConfig(
+  private stylesConfig(
     id: string
   ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
-    return this.styledConfigWidgetMap.get(id);
+    return this.stylesConfigWidgetMap.get(id);
   }
 
   private jsxBuilder(widget: JsxWidget) {
@@ -78,7 +77,7 @@ export class ReactCssInJSBuilder {
       widget,
       {
         styledConfig: (id) => {
-          const cfg = this.styledConfig(id);
+          const cfg = this.stylesConfig(id);
           const _default_attr = cfg.attributes;
 
           const existingstyleattr = _default_attr?.find(

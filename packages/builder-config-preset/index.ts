@@ -46,12 +46,69 @@ export const react_presets = {
     },
     component_declaration_style: _react_component_declaration_style,
   },
+  react_with_css_module: <config.ReactFrameworkConfig>{
+    framework: Framework.react,
+    language: Language.tsx,
+    styling: {
+      type: "css-module",
+      lang: "css",
+      importDefault: "styles",
+      loader: "css-loader",
+    },
+    component_declaration_style: _react_component_declaration_style,
+  },
   react_with_css: <config.ReactFrameworkConfig>{
     framework: Framework.react,
     language: Language.tsx,
     styling: { type: "css" },
   },
   component_declaration_style: _react_component_declaration_style,
+};
+
+export const reactnative_presets = {
+  reactnative_default: <config.ReactNativeFrameworkConfig>{
+    framework: Framework.reactnative,
+    language: Language.tsx,
+    svg: null, // TODO:
+    gradient: null, // TODO:
+    styling: {
+      type: "react-native-stylesheet",
+      module: "react-native",
+    },
+    component_declaration_style: _react_component_declaration_style,
+  },
+  reactnative_with_style_sheet: <config.ReactNativeFrameworkConfig>{
+    framework: Framework.reactnative,
+    language: Language.tsx,
+    svg: null, // TODO:
+    gradient: null, // TODO:
+    styling: {
+      type: "react-native-stylesheet",
+      module: "react-native",
+    },
+    component_declaration_style: _react_component_declaration_style,
+  },
+  reactnative_with_styled_components: <config.ReactNativeFrameworkConfig>{
+    framework: Framework.reactnative,
+    language: Language.tsx,
+    svg: null, // TODO:
+    gradient: null, // TODO:
+    styling: {
+      type: "styled-components",
+      module: "styled-components/native",
+    },
+    component_declaration_style: _react_component_declaration_style,
+  },
+  reactnative_with_inline_style: <config.ReactNativeFrameworkConfig>{
+    framework: Framework.reactnative,
+    language: Language.tsx,
+    svg: null, // TODO:
+    gradient: null, // TODO:
+    styling: {
+      type: "inline-style",
+    },
+    component_declaration_style: _react_component_declaration_style,
+  },
 };
 
 export const vanilla_presets = {
@@ -112,6 +169,20 @@ export const react_styles: {
   "inline-css": [
     {
       type: "inline-css",
+    },
+  ],
+  "css-module": [
+    {
+      type: "css-module",
+      importDefault: "styles",
+      loader: "css-loader",
+      lang: "css",
+    },
+    {
+      type: "css-module",
+      importDefault: "styles",
+      loader: "css-loader",
+      lang: "scss",
     },
   ],
   css: [
