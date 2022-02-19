@@ -17,6 +17,7 @@
         "editor-packages/base-sdk/_firstparty/*",
         "packages/*",
         "ui/editor-ui/packages/*",
+        "externals/*",
         "externals/reflect-core/packages/*",
         "externals/design-sdk/*",
         "externals/coli/packages/*"
