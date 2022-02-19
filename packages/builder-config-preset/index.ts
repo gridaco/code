@@ -99,6 +99,16 @@ export const reactnative_presets = {
     },
     component_declaration_style: _react_component_declaration_style,
   },
+  reactnative_with_inline_style: <config.ReactNativeFrameworkConfig>{
+    framework: Framework.reactnative,
+    language: Language.tsx,
+    svg: null, // TODO:
+    gradient: null, // TODO:
+    styling: {
+      type: "inline-style",
+    },
+    component_declaration_style: _react_component_declaration_style,
+  },
 };
 
 export const vanilla_presets = {

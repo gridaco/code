@@ -1,4 +1,5 @@
 export type ReactNativeStylingStrategy =
+  | ReactNativeInlineStyleConfig
   | ReactNativeStyleSheetConfig
   | ReactNativeStyledComponentsConfig;
 
@@ -11,6 +12,19 @@ export interface ReactNativeStyleSheetConfig {
    * import { StyleSheet } from "react-native";
    */
   module: "react-native";
+}
+
+/**
+ * Inline css styling for react-native without using StyleSheet
+ *
+ * ```tsx
+ * // examples
+ * <View style={{backgroundColor: "black", width: 50, height: 50}}/>
+ * <View style={box_style}/>
+ * ```
+ */
+export interface ReactNativeInlineStyleConfig {
+  type: "inline-style";
 }
 
 export type ReactNativeStyledComponentsConfig =

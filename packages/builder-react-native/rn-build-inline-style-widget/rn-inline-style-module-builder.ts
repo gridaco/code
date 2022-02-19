@@ -1,5 +1,8 @@
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
-import { react as react_config } from "@designto/config";
+import {
+  react as react_config,
+  reactnative as reactnative_config,
+} from "@designto/config";
 import type { JsxWidget } from "@web-builder/core";
 import {
   react_imports,
@@ -26,9 +29,10 @@ import {
 } from "coli";
 import { cssToJson } from "@web-builder/styles/_utils";
 import { CSSProperties } from "@coli.codes/css";
+import { reactnative_imports } from "..";
 
 /**
- * InlineCss Style builder for React Framework
+ * CSS In JS Style builder for React Framework
  *
  *
  * css in js is a pattern that allows you to use css as a object in jsx, to property `style`.
@@ -39,10 +43,10 @@ import { CSSProperties } from "@coli.codes/css";
  * ```
  *
  */
-export class ReactInlineCssBuilder {
+export class ReactNativeInlineStyleBuilder {
   private readonly entry: JsxWidget;
   private readonly widgetName: string;
-  readonly config: react_config.ReactInlineCssConfig;
+  readonly config: reactnative_config.ReactNativeInlineStyleConfig;
   private readonly namer: ScopedVariableNamer;
   private readonly stylesConfigWidgetMap: WidgetStyleConfigMap;
 
@@ -51,7 +55,7 @@ export class ReactInlineCssBuilder {
     config,
   }: {
     entry: JsxWidget;
-    config: react_config.ReactInlineCssConfig;
+    config: reactnative_config.ReactNativeInlineStyleConfig;
   }) {
     this.entry = entry;
     this.widgetName = entry.key.name;
@@ -81,7 +85,7 @@ export class ReactInlineCssBuilder {
           const _default_attr = cfg.attributes;
 
           const existingstyleattr = _default_attr?.find(
-            // where style refers to react's jsx style attribute
+            // where style refers to react-native's jsx style attribute
             (a) => a.name.name === "style"
           );
 
@@ -132,7 +136,10 @@ export class ReactInlineCssBuilder {
   }
 
   partImports() {
-    return [react_imports.import_react_from_react];
+    return [
+      react_imports.import_react_from_react,
+      reactnative_imports.import_react_prepacked,
+    ];
   }
 
   partBody(): BlockStatement {
@@ -143,14 +150,14 @@ export class ReactInlineCssBuilder {
   asExportableModule() {
     const body = this.partBody();
     const imports = this.partImports();
-    return new ReactInlineCssWidgetModuleExportable(this.widgetName, {
+    return new ReactNativeInlineStyleWidgetModuleExportable(this.widgetName, {
       body,
       imports,
     });
   }
 }
 
-export class ReactInlineCssWidgetModuleExportable extends ReactWidgetModuleExportable {
+export class ReactNativeInlineStyleWidgetModuleExportable extends ReactWidgetModuleExportable {
   constructor(
     name,
     {

@@ -5,6 +5,7 @@ import assert from "assert";
 import {
   finalizeReactNativeWidget_StyleSheet,
   finalizeReactNativeWidget_StyledComponents,
+  finalizeReactNativeWidget_InlineStyle,
 } from "@web-builder/react-native";
 import { buildRNWidgetFromTokens } from "../tokens-to-rn-widget";
 
@@ -40,8 +41,25 @@ export function buildReactNativeApp(
         scaffold: { raw: res.code },
       };
     }
+    case "inline-style": {
+      const res = finalizeReactNativeWidget_InlineStyle(entry, {
+        styling: config.styling,
+        exporting: config.component_declaration_style.exporting_style,
+      });
+      return {
+        id: entry.key.id,
+        name: entry.key.name,
+        code: { raw: res.code },
+        scaffold: { raw: res.code },
+      };
+    }
   }
-  return;
+  throw new Error(
+    `RN: Unsupported styling type: ${
+      // @ts-ignore
+      config.styling.type
+    }`
+  );
 }
 
 export function buildReactNativeWidget(widget: Widget) {
