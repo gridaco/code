@@ -82,3 +82,5 @@ export function buildStyledComponentConfig(
     };
   }
 }
+
+export * from "./styled-component-declaration";

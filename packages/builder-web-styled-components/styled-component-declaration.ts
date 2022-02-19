@@ -43,15 +43,14 @@ export class StyledComponentDeclaration extends VariableDeclaration {
     style: CSSProperties,
     html5tag: Html5IdentifierNames
   ): TaggedTemplateExpression {
-    const stylestring = buildCssStandard(style);
-    const formatedStyleStringWithTab = formatStyledTempplateString(stylestring);
+    const content = formatStyledTempplateString(buildCssStandard(style));
     return new TaggedTemplateExpression(
       new PropertyAccessExpression(
         StyledComponentDeclaration.styledIdentifier,
         html5tag
       ),
       {
-        template: new TemplateLiteral(formatedStyleStringWithTab),
+        template: new TemplateLiteral(content),
       }
     );
   }
