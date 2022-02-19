@@ -3,6 +3,8 @@ import type { TextStyle } from "react-native";
 import * as css from "@web-builder/styles";
 
 export function textShadow(s: TextShadow): TextStyle {
+  if (!s) return {};
+
   return {
     textShadowColor: css.color(s.color),
     textShadowOffset: {

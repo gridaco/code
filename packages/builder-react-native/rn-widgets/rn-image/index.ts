@@ -3,6 +3,8 @@ import {
   Identifier,
   JSX,
   JSXAttribute,
+  JSXExpression,
+  ObjectLiteralExpression,
   PropertyAssignment,
   StringLiteral,
 } from "coli";
@@ -56,12 +58,18 @@ export class ImageElement extends SelfClosingContainer {
       this.src &&
         new JSXAttribute(
           "src",
-          new PropertyAssignment({
-            name: new Identifier("uri"),
-            initializer: new StringLiteral(
-              this.src || k.image_smallest_fallback_source_base_64
-            ),
-          })
+          new JSXExpression(
+            new ObjectLiteralExpression({
+              properties: [
+                new PropertyAssignment({
+                  name: new Identifier("uri"),
+                  initializer: new StringLiteral(
+                    this.src || k.image_smallest_fallback_source_base_64
+                  ),
+                }),
+              ],
+            })
+          )
         ),
       // there is no "alt" attribute in the react-native "Image" tag
       // typeof this.alt === "string" &&
