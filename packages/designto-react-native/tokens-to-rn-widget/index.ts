@@ -139,15 +139,16 @@ function compose<T extends JsxWidget>(
   else if (widget instanceof core.ClipRRect) {
     thisRnWidget = compose_wrapped_with_clip_rrect(widget, handleChild);
   } else if (widget instanceof core.ClipPath) {
-    const child = handleChild<StylableJsxWidget>(widget.child);
-    child.extendStyle({
-      ...css.clipPath(widget),
-      top: undefined,
-      left: undefined,
-      right: undefined,
-      bottom: undefined,
-    });
-    thisRnWidget = child;
+    // FIXME: add clip-path support for react-native
+    // const child = handleChild<StylableJsxWidget>(widget.child);
+    // child.extendStyle({
+    //   ...css.clipPath(widget),
+    //   top: undefined,
+    //   left: undefined,
+    //   right: undefined,
+    //   bottom: undefined,
+    // });
+    // thisRnWidget = child;
   }
   // ----- endregion clip path ------
   else if (widget instanceof core.RenderedText) {

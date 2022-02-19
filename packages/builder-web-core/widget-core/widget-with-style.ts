@@ -82,7 +82,7 @@ export abstract class WidgetWithStyle<OUTSTYLE = CSSProperties>
   abstract jsxConfig(): JSXElementConfig;
 
   private extendedStyle: CSSProperties = {};
-  extendStyle(style: CSSProperties) {
+  extendStyle<T = CSSProperties>(style: T) {
     this.extendedStyle = {
       ...this.extendedStyle,
       ...style,
