@@ -2,6 +2,7 @@ import { ScopedVariableNamer } from "@coli.codes/naming";
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
 import {
   BlockStatement,
+  Declaration,
   Identifier,
   ImportDeclaration,
   JSXAttribute,
@@ -27,6 +28,7 @@ import {
   reactnative as rn_config,
 } from "@designto/config";
 import { reactnative_imports } from "../rn-import-specifications";
+import { StyleSheetDeclaration } from "../rn-style-sheet";
 
 export class ReactNativeStyleSheetModuleBuilder {
   private readonly entry: JsxWidget;
@@ -133,25 +135,47 @@ export class ReactNativeStyleSheetModuleBuilder {
     return new BlockStatement(new Return(jsxTree));
   }
 
+  partStyleSheetDeclaration(): StyleSheetDeclaration<any> {
+    const styles = Array.from(this.stylesConfigWidgetMap.keys()).reduce(
+      (p, c) => {
+        const cfg = this.stylesConfig(c);
+        return {
+          ...p,
+          [cfg.id]: "style" in cfg && cfg.style,
+        };
+      },
+      {}
+    );
+
+    return new StyleSheetDeclaration("styles", {
+      styles: styles,
+    });
+  }
+
   asExportableModule() {
     const body = this.partBody();
     const imports = this.partImports();
+    const declarations = this.partStyleSheetDeclaration();
     return new ReactStyleSheeteWidgetModuleExportable(this.widgetName, {
       body,
       imports,
+      stylesheetDeclaraion: declarations,
     });
   }
 }
 
 export class ReactStyleSheeteWidgetModuleExportable extends ReactWidgetModuleExportable {
+  readonly declarations: Declaration[];
   constructor(
     name,
     {
       body,
       imports,
+      stylesheetDeclaraion,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
+      stylesheetDeclaraion: StyleSheetDeclaration<any>;
     }
   ) {
     super({
@@ -159,6 +183,8 @@ export class ReactStyleSheeteWidgetModuleExportable extends ReactWidgetModuleExp
       body,
       imports,
     });
+
+    this.declarations = [stylesheetDeclaraion];
   }
 
   asFile({
@@ -170,7 +196,7 @@ export class ReactStyleSheeteWidgetModuleExportable extends ReactWidgetModuleExp
       name: this.name,
       path: "src/components",
       imports: this.imports,
-      declarations: [],
+      declarations: this.declarations,
       body: this.body,
       config: {
         exporting: exporting,

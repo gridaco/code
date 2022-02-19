@@ -1,8 +1,2 @@
-/**
- * StlesSheet reflection builder with CoLI
- */
-export class StyleSheet {
-  static create(styles: object): object {
-    return;
-  }
-}
+export { StyleSheet } from "./style-sheet-builder";
+export * from "./style-sheet-declaration";
