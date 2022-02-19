@@ -8,4 +8,5 @@ export type ReactNativeSvgConfig = RNSvgModuleConfig;
  */
 interface RNSvgModuleConfig {
   module: "react-native-svg";
+  prefer_mode: "svg-xml" | "svg-with-path";
 }

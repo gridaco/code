@@ -3,6 +3,7 @@ import {
   StylableJSXElementConfig,
   WidgetKey,
   JsxWidget,
+  UnstylableJSXElementConfig,
 } from "@web-builder/core";
 import {
   Background,
@@ -92,9 +93,9 @@ export class Container
     };
   }
 
-  jsxConfig(): StylableJSXElementConfig {
+  jsxConfig(): StylableJSXElementConfig | UnstylableJSXElementConfig {
     // TODO: add dependency loading
-    return {
+    return <StylableJSXElementConfig>{
       type: "tag-and-attr",
       tag: JSX.identifier("View"),
     };

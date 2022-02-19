@@ -161,13 +161,21 @@ function compose<T extends JsxWidget>(
       elementPreference: widget.element_preference_experimental,
     });
   } else if (widget instanceof core.VectorWidget) {
-    // FIXME: add svg support
-    // thisRnWidget = new rn.SvgElement({
-    //   ...widget,
-    //   data: widget.data,
-    //   fill: widget.fill,
-    //   key: _key,
-    // });
+    thisRnWidget = rn.SvgElement(
+      {
+        width: widget.width,
+        height: widget.height,
+        data: widget.data,
+        fill: widget.fill,
+        key: _key,
+      },
+      {
+        config: {
+          module: "react-native-svg",
+          prefer_mode: "svg-with-path",
+        },
+      }
+    );
   } else if (widget instanceof core.ImageWidget) {
     thisRnWidget = new rn.ImageElement({
       ...widget,
