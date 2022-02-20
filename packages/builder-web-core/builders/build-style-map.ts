@@ -1,7 +1,7 @@
 import { CSSProperties } from "@coli.codes/css";
 import { WidgetKeyId, StylableJsxWidget, JsxWidget } from "@web-builder/core";
 import { JSXAttributes, JSXIdentifier, ScopedVariableNamer } from "coli";
-import { buildStyledComponentConfig } from "../../builder-web-styled-components";
+import { buildStyledComponentConfig } from "@web-builder/styled";
 
 export interface JSXWithStyleElementConfig {
   id: string;
