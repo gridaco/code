@@ -15,7 +15,7 @@ import {
   default_tokenizer_config,
   TokenizerConfig,
 } from "@designto/token/config";
-import { default_build_configuration } from "@designto/config";
+import { default_build_configuration, FrameworkConfig } from "@designto/config";
 import { reusable } from "@code-features/component";
 import assert from "assert";
 
@@ -28,7 +28,9 @@ interface AssetsConfig {
   custom_asset_replacement?: { type: "static"; resource: string };
 }
 
-export type Result = output.ICodeOutput & { widget: Widget };
+export type Result = output.ICodeOutput & { widget: Widget } & {
+  framework: FrameworkConfig;
+};
 
 export async function designToCode({
   input,
@@ -101,6 +103,11 @@ export async function designToCode({
     reusable_widget_tree: reusable_widget_tree,
   };
 
+  const _extend_result = {
+    ..._tokenized_widget_input,
+    framework: framework_config,
+  };
+
   switch (framework_config.framework) {
     case "vanilla":
       return {
@@ -110,7 +117,7 @@ export async function designToCode({
           vanilla_config: framework_config,
           asset_config: asset_config,
         })),
-        ..._tokenized_widget_input,
+        ..._extend_result,
       };
     case "react":
       return {
@@ -120,7 +127,7 @@ export async function designToCode({
           react_config: framework_config,
           asset_config: asset_config,
         })),
-        ..._tokenized_widget_input,
+        ..._extend_result,
       };
     case "react-native":
       return {
@@ -130,7 +137,7 @@ export async function designToCode({
           reactnative_config: framework_config,
           asset_config: asset_config,
         })),
-        ..._tokenized_widget_input,
+        ..._extend_result,
       };
     case "flutter":
       return {
@@ -140,7 +147,7 @@ export async function designToCode({
           flutter_config: framework_config,
           asset_config: asset_config,
         })),
-        ..._tokenized_widget_input,
+        ..._extend_result,
       };
   }
 

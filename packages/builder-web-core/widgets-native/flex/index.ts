@@ -95,6 +95,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
     this.mainAxisSize = p.mainAxisSize;
     this.crossAxisAlignment = p.crossAxisAlignment;
     this.verticalDirection = p.verticalDirection;
+    this.flexWrap = p.flexWrap; // cssonly
     //
 
     //
@@ -107,7 +108,6 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
 
     // css only
     this.overflow = p.overflow;
-    this.flexWrap = p.flexWrap;
   }
 
   jsxConfig(): StylableJSXElementConfig {
@@ -120,10 +120,10 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
   styleData(): CSSProperties {
     return {
       display: "flex",
+      overflow: this.overflow,
       ...css.justifyContent(this.mainAxisAlignment),
       "flex-direction": direction(this.direction),
       "align-items": this.crossAxisAlignment,
-      overflow: this.overflow,
       flex: this.flex,
       "flex-wrap": this.flexWrap,
       gap: this.itemSpacing && css.px(this.itemSpacing),

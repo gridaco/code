@@ -54,7 +54,6 @@ export function borderRadius(r: BorderRadiusManifest): CSSProperties {
   if (!r) {
     return;
   }
-
   if (r.all) {
     if (isCircularRadius(r.all)) {
       return {
@@ -62,6 +61,9 @@ export function borderRadius(r: BorderRadiusManifest): CSSProperties {
       };
     } else {
       console.warn("elliptical border radius not supported");
+      return {
+        "border-radius": px(r.all.x),
+      };
     }
   } else {
     return {

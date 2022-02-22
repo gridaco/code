@@ -30,7 +30,10 @@ export function border(p: Border, rad: BorderRadius): ViewStyle {
   };
 
   // if colors are all same
-  if (equals(p.top?.color, p.right?.color, p.bottom?.color, p.left?.color)) {
+  if (
+    p.top?.color && // not undefined
+    equals(p.top?.color, p.right?.color, p.bottom?.color, p.left?.color)
+  ) {
     o = {
       ...o,
       borderColor: css.color(p.top.color),
