@@ -73,10 +73,16 @@ export function export_inlined_css_html_file(
   }
 
   function buildBodyHtml(widget: JsxWidget) {
-    return buildJsx(widget, {
-      styledConfig: (id) => getStyleConfigById(id),
-      idTransformer: (jsx, id) => injectIdToJsx(jsx, id),
-    });
+    return buildJsx(
+      widget,
+      {
+        styledConfig: (id) => getStyleConfigById(id),
+        idTransformer: (jsx, id) => injectIdToJsx(jsx, id),
+      },
+      {
+        self_closing_if_possible: false,
+      }
+    );
   }
 
   const css_declarations = Array.from(styles_map.keys())

@@ -34,3 +34,6 @@ export * from "./ellipse";
 // export * from "./polygon"; // WIP
 export * from "./path";
 // --------------------------------------------------------------------------------
+
+// utils
+export * as utils from "./_utils";

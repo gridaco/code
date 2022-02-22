@@ -25,7 +25,7 @@ function fromVector(vector: ReflectVectorNode) {
     // we are not sure when specifically this happens, but as reported, curvy lines does not contain a vector paths.
     // so we just return a image bake of it.
     process.env.NODE_ENV === "development" &&
-      console.warn(
+      console.info(
         `tried to get path data from vector, but none was provided. baking as a bitmap instead.`,
         vector
       );

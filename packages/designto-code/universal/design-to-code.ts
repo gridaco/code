@@ -1,9 +1,10 @@
 import { input, output, config, build } from "../proc";
 import { tokenize, wrap } from "@designto/token";
 import { Widget } from "@reflect-ui/core";
-import * as toreact from "@designto/react";
-import * as tovanilla from "@designto/vanilla";
-import * as toflutter from "@designto/flutter";
+import * as toReact from "@designto/react";
+import * as toReactNative from "@designto/react-native";
+import * as toVanilla from "@designto/vanilla";
+import * as toFlutter from "@designto/flutter";
 import {
   fetch_all_assets,
   finalize_temporary_assets_with_prefixed_static_string_keys__dangerously,
@@ -14,7 +15,7 @@ import {
   default_tokenizer_config,
   TokenizerConfig,
 } from "@designto/token/config";
-import { default_build_configuration } from "@designto/config";
+import { default_build_configuration, FrameworkConfig } from "@designto/config";
 import { reusable } from "@code-features/component";
 import assert from "assert";
 
@@ -27,11 +28,13 @@ interface AssetsConfig {
   custom_asset_replacement?: { type: "static"; resource: string };
 }
 
-export type Result = output.ICodeOutput & { widget: Widget };
+export type Result = output.ICodeOutput & { widget: Widget } & {
+  framework: FrameworkConfig;
+};
 
 export async function designToCode({
   input,
-  framework,
+  framework: framework_config,
   asset_config,
   build_config = config.default_build_configuration,
 }: {
@@ -42,12 +45,12 @@ export async function designToCode({
 }): Promise<Result> {
   assert(input, "input is required");
   if (process.env.NODE_ENV === "development") {
-    if (framework.framework == "vanilla") {
+    if (framework_config.framework == "vanilla") {
     } else {
       console.info(
         "dev: starting designtocode with user input",
         input,
-        framework,
+        framework_config,
         build_config,
         asset_config
       );
@@ -89,7 +92,6 @@ export async function designToCode({
         entry: vanilla_token,
         repository: input.repository,
       });
-      console.log("reusable_widget_tree", reusable_widget_tree);
       // TODO: WIP
     } catch (_) {
       console.error("error while building reusable widget tree.", _);
@@ -101,44 +103,64 @@ export async function designToCode({
     reusable_widget_tree: reusable_widget_tree,
   };
 
-  switch (framework.framework) {
+  const _extend_result = {
+    ..._tokenized_widget_input,
+    framework: framework_config,
+  };
+
+  switch (framework_config.framework) {
     case "vanilla":
       return {
         ...(await designToVanilla({
           input: _tokenized_widget_input,
           build_config: build_config,
-          vanilla_config: framework,
+          vanilla_config: framework_config,
           asset_config: asset_config,
         })),
-        ..._tokenized_widget_input,
+        ..._extend_result,
       };
     case "react":
       return {
         ...(await designToReact({
           input: _tokenized_widget_input,
           build_config: build_config,
-          react_config: framework,
+          react_config: framework_config,
           asset_config: asset_config,
         })),
-        ..._tokenized_widget_input,
+        ..._extend_result,
+      };
+    case "react-native":
+      return {
+        ...(await designToReactNative({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          reactnative_config: framework_config,
+          asset_config: asset_config,
+        })),
+        ..._extend_result,
       };
     case "flutter":
       return {
         ...(await designToFlutter({
           input: _tokenized_widget_input,
           build_config: build_config,
-          flutter_config: framework,
+          flutter_config: framework_config,
           asset_config: asset_config,
         })),
-        ..._tokenized_widget_input,
+        ..._extend_result,
       };
   }
-  throw `The framework "${framework}" is not supported at this point.`;
+
+  throw `The framework "${
+    // @ts-ignore
+    framework_config.framework
+  }" is not supported at this point.`;
   return;
 }
 
 export const designTo = {
   react: designToReact,
+  reactnative: designToReactNative,
   vue: designToVue,
   flutter: designToFlutter,
 };
@@ -162,7 +184,7 @@ export async function designToReact({
     // automatically fallbacks if no valid data was passed
     !input.reusable_widget_tree
   ) {
-    const reactwidget = toreact.buildReactWidget(input.widget);
+    const reactwidget = toReact.buildReactWidget(input.widget);
     if (process.env.NODE_ENV === "development") {
       console.info("dev::", "final web token composed", {
         input: input.widget,
@@ -170,7 +192,7 @@ export async function designToReact({
       });
     }
 
-    const res = toreact.buildReactApp(reactwidget, react_config);
+    const res = toReact.buildReactApp(reactwidget, react_config);
     // ------------------------------------------------------------------------
     // finilize temporary assets
     // this should be placed somewhere else
@@ -189,10 +211,37 @@ export async function designToReact({
 
     return res;
   } else {
-    return toreact.buildReusableReactApp__Experimental(
+    return toReact.buildReusableReactApp__Experimental(
       input.reusable_widget_tree
     ) as any;
   }
+}
+
+export async function designToReactNative({
+  input,
+  reactnative_config,
+  build_config,
+  asset_config,
+}: {
+  input: { widget: Widget; reusable_widget_tree? };
+  reactnative_config: config.ReactNativeFrameworkConfig;
+  /**
+   * TODO: pass this to tokenizer +@
+   */
+  build_config: config.BuildConfiguration;
+  asset_config?: AssetsConfig;
+}): Promise<output.ICodeOutput> {
+  const rnWidget = toReactNative.buildReactNativeWidget(input.widget);
+  const res = toReactNative.buildReactNativeApp(rnWidget, reactnative_config);
+  return res;
+
+  // console.error("designToReactNative is not implemented yet.");
+  // return {
+  //   code: { raw: "// react-native is not yet supported" },
+  //   scaffold: { raw: "// react-native is not yet supported" },
+  //   name: "rn app",
+  //   id: input.widget.key.id,
+  // };
 }
 
 export async function designToFlutter({
@@ -211,8 +260,8 @@ export async function designToFlutter({
 }): Promise<output.ICodeOutput> {
   await Promise.resolve();
 
-  const flutterwidget = toflutter.buildFlutterWidget(input.widget);
-  const flutterapp = toflutter.buildFlutterApp(flutterwidget, {
+  const flutterwidget = toFlutter.buildFlutterWidget(input.widget);
+  const flutterapp = toFlutter.buildFlutterApp(flutterwidget, {
     id: input.widget.key.id,
   });
 
@@ -253,11 +302,11 @@ export async function designToVanilla({
   vanilla_config: config.VanillaFrameworkConfig;
   asset_config?: AssetsConfig;
 }): Promise<output.ICodeOutput> {
-  const vanillawidget = tovanilla.buildVanillaWidget(
+  const vanillawidget = toVanilla.buildVanillaWidget(
     input.widget,
     vanilla_config
   );
-  const res = tovanilla.buildVanillaFile(vanillawidget, vanilla_config);
+  const res = toVanilla.buildVanillaFile(vanillawidget, vanilla_config);
 
   // ------------------------------------------------------------------------
   // finilize temporary assets

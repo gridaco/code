@@ -2,6 +2,8 @@ import { Widget } from "@reflect-ui/core";
 import { buildWebWidgetFromTokens } from "@designto/web/tokens-to-web-widget";
 import {
   finalizeReactWidget_StyledComponents,
+  finalizeReactWidget_InlineCss,
+  finalizeReactWidget_CssModule,
   finalizeReactReusable_StyledComponents__Experimental,
   JsxWidget,
 } from "@web-builder/react";
@@ -24,10 +26,35 @@ export function buildReactApp(
         scaffold: { raw: res.code },
       };
     }
+    case "inline-css": {
+      const res = finalizeReactWidget_InlineCss(entry, {
+        styling: config.styling,
+        exporting: config.component_declaration_style.exporting_style,
+      });
+      return {
+        id: entry.key.id,
+        name: entry.key.name,
+        code: { raw: res.code },
+        scaffold: { raw: res.code },
+      };
+    }
+    case "css-module": {
+      const res = finalizeReactWidget_CssModule(entry, {
+        styling: config.styling,
+        exporting: config.component_declaration_style.exporting_style,
+      });
+      return {
+        id: entry.key.id,
+        name: entry.key.name,
+        code: { raw: res.code },
+        scaffold: { raw: res.code },
+      };
+    }
     case "css":
-    case "css-in-jsx":
+    default: {
       throw new Error(`${config.styling.type} not supported yet`);
       break;
+    }
   }
 }
 
@@ -40,6 +67,9 @@ export function buildReactWidget(widget: Widget) {
   return buildWebWidgetFromTokens(widget, {});
 }
 
+/**
+ * Experimental components support for react
+ */
 export function buildReusableReactApp__Experimental({
   tree,
   components,

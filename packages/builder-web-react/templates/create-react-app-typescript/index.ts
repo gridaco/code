@@ -1,4 +1,4 @@
-import { PackageManifest } from "@coli.codes/nodejs-builder";
+import { PackageManifest } from "@web-builder/nodejs";
 
 /**
  * ```

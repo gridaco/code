@@ -14,12 +14,12 @@ import { tokenize_flagged_wrap } from "./token-wrap";
 import { tokenize_flagged_wh_declaration } from "./token-wh";
 import { tokenize_flagged_fix_wh } from "./token-wh-fix";
 
-export default function (node: ReflectSceneNode) {
+export default function handleWithFlags(node: ReflectSceneNode) {
   const flags = parse(node.name);
-  return handle_with_flags(node, flags);
+  return _handle_with_flags(node, flags);
 }
 
-function handle_with_flags(node, flags: FlagsParseResult) {
+function _handle_with_flags(node, flags: FlagsParseResult) {
   // artwork
   const artwork_flag_alias =
     flags["artwork"] ||
