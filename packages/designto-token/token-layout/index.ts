@@ -127,6 +127,17 @@ function flex_or_stack_from_frame(
   };
 
   if (frame.isAutoLayout) {
+    // const __is_this_autolayout_frame_under_autolayout_parent =
+    //   frame.parent instanceof nodes.ReflectFrameNode &&
+    //   frame.parent.isAutoLayout;
+
+    /// > From the docs: https://www.figma.com/plugin-docs/api/properties/nodes-layoutalign
+    /// Changing this property will cause the x, y, size, and relativeTransform properties on this node to change, if applicable (inside an auto-layout frame).
+    /// - Setting "STRETCH" will make the node "stretch" to fill the width of the parent vertical auto - layout frame, or the height of the parent horizontal auto - layout frame excluding the frame's padding.
+    /// - If the current node is an auto layout frame(e.g.an auto layout frame inside a parent auto layout frame) if you set layoutAlign to “STRETCH” you should set the corresponding axis – either primaryAxisSizingMode or counterAxisSizingMode – to be“FIXED”. This is because an auto - layout frame cannot simultaneously stretch to fill its parent and shrink to hug its children.
+    /// - Setting "INHERIT" does not "stretch" the node.
+    ///
+
     // TODO: inspect me. We're not 100% sure this is the correct behaviour.
     switch (frame.layoutMode) {
       case Axis.horizontal:

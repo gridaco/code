@@ -30,7 +30,6 @@ export function flexsizing({
     case MainAxisSize.max: {
       return {
         "align-self": "stretch",
-        flex: 1, // This is a temporary solution, since stretch can be used on non-space-between parent, but still the item should stretch, we use flex 1 to do this.
       };
     }
     case MainAxisSize.min: {
