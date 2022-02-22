@@ -2,7 +2,7 @@ import * as core from "@reflect-ui/core";
 import { Composer } from ".";
 import { Stretched } from "@designto/token/tokens";
 
-export function compose_wrapped_with_clip_stretched(
+export function compose_wrapped_with_stretched(
   widget: Stretched,
   child_composer: Composer
 ) {
@@ -19,6 +19,8 @@ export function compose_wrapped_with_clip_stretched(
   const child = child_composer(widget.child);
   child.extendStyle({
     "align-self": "stretch",
+    // TODO:
+    // flex: 1,
     [remove_size]: undefined,
   });
   return child;

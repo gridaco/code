@@ -11,7 +11,7 @@ import { compose_wrapped_with_rotation } from "./compose-wrapped-with-rotation";
 import { compose_wrapped_with_blurred } from "./compose-wrapped-with-blurred";
 import { compose_wrapped_with_opacity } from "./compose-wrapped-with-opacity";
 import { compose_wrapped_with_positioned } from "./compose-wrapped-with-positioned";
-import { compose_wrapped_with_clip_stretched } from "./compose-wrapped-with-stretched";
+import { compose_wrapped_with_stretched } from "./compose-wrapped-with-stretched";
 import { compose_wrapped_with_sized_box } from "./compose-wrapped-with-sized-box";
 import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overflow-box";
 import { compose_instanciation } from "./compose-instanciation";
@@ -235,7 +235,7 @@ function compose<T extends JsxWidget>(
   // special tokens
   // -------------------------------------
   else if (widget instanceof special.Stretched) {
-    thisWebWidget = compose_wrapped_with_clip_stretched(widget, handleChild);
+    thisWebWidget = compose_wrapped_with_stretched(widget, handleChild);
   }
   // -------------------------------------
   // -------------------------------------
