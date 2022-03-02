@@ -11,6 +11,7 @@ export * from "./text-decoration";
 export * from "./text-shadow";
 export * from "./gradient";
 export * from "./padding";
+export * from "./margin";
 export * from "./position";
 export * from "./justify-content";
 export * from "./min-height";
@@ -33,3 +34,6 @@ export * from "./ellipse";
 // export * from "./polygon"; // WIP
 export * from "./path";
 // --------------------------------------------------------------------------------
+
+// utils
+export * as utils from "./_utils";

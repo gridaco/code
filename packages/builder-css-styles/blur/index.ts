@@ -1,3 +1,8 @@
+import { roundNumber } from "@reflect-ui/uiutils";
+
 export function blur(o?: number): string {
-  return `blur(${o}px)`;
+  if (o === undefined) {
+    return;
+  }
+  return `blur(${roundNumber(o)}px)`;
 }

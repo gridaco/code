@@ -1,11 +1,4 @@
-# `--as=mdi` - [Reflect UI](https://reflect-ui.com) Material Design Icon Widget Indication Flag
+# `--as-mdi` Flag
 
-## Syntax
-
-- `--as-mdi`
-- `--as-mdi=true`
-- `--as=mdi`
-
-## Fallback
-
-- `--as-icon`
+- Visit the [design documentation](../docs/--as-mdi.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--as-mdi)

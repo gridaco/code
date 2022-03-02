@@ -4,7 +4,7 @@ import { tokenize } from "@designto/token";
 import {
   JsonTree,
   WidgetTree,
-} from "components/visualization/json-visualization/json-tree";
+} from "@code-editor/debugger/components/visualization/json-visualization/json-tree";
 import { DefaultEditorWorkspaceLayout } from "layouts/default-editor-workspace-layout";
 import { LayerHierarchy } from "components/editor-hierarchy";
 import { WorkspaceContentPanelGridLayout } from "layouts/panel/workspace-content-panel-grid-layout";
@@ -56,7 +56,7 @@ export default function FigmaToReflectWidgetTokenPage() {
       >
         <WorkspaceContentPanelGridLayout>
           <WorkspaceContentPanel>
-            <canvas.FigmaEmbedCanvas
+            <canvas.AsisPreviewFigmaEmbed
               src={{ url: design.url }}
               width="100%"
               height="100%"

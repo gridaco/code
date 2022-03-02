@@ -1,7 +1,4 @@
-# Custom css class indication (extends)
+# `--class` Flag
 
-```
-origainally: class="container"
-input: class=custom-big-box
-outpug: class="container custom-big-box"
-```
+- Visit the [design documentation](../docs/--class.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--class)

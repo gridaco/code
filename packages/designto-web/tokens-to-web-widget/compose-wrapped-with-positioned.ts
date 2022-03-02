@@ -10,8 +10,8 @@ export function compose_wrapped_with_positioned(
   // -------------------------------------
   // override w & h with position provided w/h
   child.extendStyle({
-    width: css.px(widget.width),
-    height: css.px(widget.height),
+    width: css.length(widget.width),
+    height: css.length(widget.height),
   });
   // -------------------------------------
   child.constraint = {

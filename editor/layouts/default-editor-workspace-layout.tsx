@@ -5,14 +5,14 @@ import { AppMenu } from "./app-menu";
 export function DefaultEditorWorkspaceLayout(props: {
   leftbar?: JSX.Element;
   rightbar?: JSX.Element;
+  appbar?: JSX.Element;
   children: JSX.Element | Array<JSX.Element>;
+  backgroundColor?: string;
 }) {
   return (
-    <WorkspaceRoot>
+    <WorkspaceRoot backgroundColor={props.backgroundColor}>
       <AppBarMenuAndBelowContentWrap>
-        <AppBarWrap>
-          <AppMenu />
-        </AppBarWrap>
+        {props.appbar && <AppBarWrap>{props.appbar}</AppBarWrap>}
         <NonMenuContentZoneWrap>
           {props.leftbar && (
             <PanelLeftSideWrap>{props.leftbar}</PanelLeftSideWrap>
@@ -27,9 +27,10 @@ export function DefaultEditorWorkspaceLayout(props: {
   );
 }
 
-const WorkspaceRoot = styled.div`
+const WorkspaceRoot = styled.div<{ backgroundColor: string }>`
   width: 100vw;
   height: 100vh;
+  background-color: ${(p) => p.backgroundColor ?? "transparent"};
 `;
 
 const AppBarMenuAndBelowContentWrap = styled.div`
@@ -52,16 +53,19 @@ const NonMenuContentZoneWrap = styled.div`
 `;
 
 const PanelLeftSideWrap = styled.div`
+  z-index: 1;
   flex-grow: 0;
   min-height: 100%;
   max-height: 100%;
   max-width: 400px;
-  overflow: auto;
 `;
 
 const PanelRightSideWrap = styled.div`
+  z-index: 1;
   flex-grow: 0;
   min-height: 100%;
+  max-height: 100%;
+  max-width: 400px;
 `;
 
 const ChildrenContainerRoot = styled.div`

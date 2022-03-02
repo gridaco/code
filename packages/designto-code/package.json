@@ -7,6 +7,7 @@
     "@designto/token": "0.0.0",
     "@designto/flutter": "0.0.1",
     "@designto/react": "0.0.0",
+    "@designto/react-native": "0.0.0",
     "@designto/web": "0.0.0",
     "@design-sdk/universal": "0.0.0",
     "@reflect-ui/detection": "0.1.1",

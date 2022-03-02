@@ -12,12 +12,17 @@ export interface TokenizerConfig {
    */
   id?: string;
 
-  sanitizer_ignore_masking_node: boolean;
+  sanitizer_ignore_masking_node?: boolean;
 
   /**
    * @default false - flags support enabled by default.
    */
   disable_flags_support?: boolean;
+
+  /**
+   * @default false - detection support enabled by default.
+   */
+  disable_detection?: boolean;
 
   /**
    * stops the tokenizer when max depth is reached relative to starter (root) node.

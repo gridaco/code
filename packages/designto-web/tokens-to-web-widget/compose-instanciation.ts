@@ -1,18 +1,24 @@
 import { Composer } from ".";
 import * as reusable from "@code-features/component/tokens";
 import * as web from "@web-builder/core";
+import { nameit, NameCases } from "coli";
 
 export function compose_instanciation(
   widget: reusable.InstanceWidget,
-  child_composer: Composer
+  child_composer: Composer // not used
 ) {
   const masterkey = widget.meta.master.key;
+
+  const identifier = nameit(widget.meta.master.key.originName, {
+    case: NameCases.pascal,
+  }).name;
+
   return new web.InstanciationElement({
     key: {
-      name: "foo",
-      id: masterkey.id,
+      name: "ExampleUsageOf_" + identifier, // FIXME: should not use identifier as name
+      id: widget.key.id,
     },
-    // TODO: fix this
-    identifier: "foo",
+    identifier: identifier,
+    arguments: widget.meta.arguments,
   });
 }

@@ -150,24 +150,29 @@ function handleNode(
   // --------------------------- Detected tokens -----------------------------
   // -------------------------------------------------------------------------
 
-  // - image -
+  // - image - // image detection is always enabled exceptionally.
+  // TODO: separate image detection with static logic based and the smart one.
   const _detect_if_image = detectIf.image(node);
   if (_detect_if_image.result) {
     return tokenizeGraphics.fromImage(node, _detect_if_image.data);
   }
 
-  // - icon -
-  const _detect_if_icon = detectIf.icon(node);
-  if (_detect_if_icon.result) {
-    return tokenizeGraphics.fromIcon(node, _detect_if_icon.data);
-  }
+  if (config.disable_detection) {
+    // skip detection
+  } else {
+    // - icon -
+    const _detect_if_icon = detectIf.icon(node);
+    if (_detect_if_icon.result) {
+      return tokenizeGraphics.fromIcon(node, _detect_if_icon.data);
+    }
 
-  // - button -
-  const _detect_if_button = detectIf.button(node);
-  if (_detect_if_button.result) {
-    return tokenizeButton.fromManifest(node, _detect_if_button.data);
+    // - button -
+    // TODO: temporarily disabled - remove comment after button widget is ready
+    // const _detect_if_button = detectIf.button(node);
+    // if (_detect_if_button.result) {
+    //   return tokenizeButton.fromManifest(node, _detect_if_button.data);
+    // }
   }
-
   // -------------------------------------------------------------------------
   // --------------------------- Detected tokens -----------------------------
   // -------------------------------------------------------------------------

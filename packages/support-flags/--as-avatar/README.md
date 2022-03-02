@@ -1,6 +1,4 @@
-# `--as=avatar` - [Reflect UI](https://reflect-ui.com) Avatar Widget Indication Flag
+# `--as-avatar` Flag
 
-## Syntax
-
-- `--as-avatar`
-- `--as=avatar`
+- Visit the [design documentation](../docs/--as-avatar.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--as-avatar)

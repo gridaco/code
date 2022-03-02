@@ -1,3 +1,4 @@
-# `--x-code-static` - eXtended Code Static
+# `--x-code-static` Flag
 
-User provided static code
+- Visit the [design documentation](../docs/--x-code-static.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--x-code-static)

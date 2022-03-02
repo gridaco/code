@@ -23,7 +23,9 @@ import {
   Blurred,
   Rotation,
   IWHStyleWidget,
+  Operation,
 } from "@reflect-ui/core";
+
 import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { TokenizerConfig } from "../config";
@@ -125,10 +127,42 @@ function flex_or_stack_from_frame(
   };
 
   if (frame.isAutoLayout) {
+    // const __is_this_autolayout_frame_under_autolayout_parent =
+    //   frame.parent instanceof nodes.ReflectFrameNode &&
+    //   frame.parent.isAutoLayout;
+
+    /// > From the docs: https://www.figma.com/plugin-docs/api/properties/nodes-layoutalign
+    /// Changing this property will cause the x, y, size, and relativeTransform properties on this node to change, if applicable (inside an auto-layout frame).
+    /// - Setting "STRETCH" will make the node "stretch" to fill the width of the parent vertical auto - layout frame, or the height of the parent horizontal auto - layout frame excluding the frame's padding.
+    /// - If the current node is an auto layout frame(e.g.an auto layout frame inside a parent auto layout frame) if you set layoutAlign to “STRETCH” you should set the corresponding axis – either primaryAxisSizingMode or counterAxisSizingMode – to be“FIXED”. This is because an auto - layout frame cannot simultaneously stretch to fill its parent and shrink to hug its children.
+    /// - Setting "INHERIT" does not "stretch" the node.
+    ///
+
+    // TODO: inspect me. We're not 100% sure this is the correct behaviour.
     switch (frame.layoutMode) {
       case Axis.horizontal:
+        if (frame.primaryAxisSizingMode === "AUTO") {
+          // when horizontal, primaryAxisSizingMode is x axis
+          // don't specify width
+          initializer.width = undefined;
+        }
+        if (frame.counterAxisSizingMode === "AUTO") {
+          // when horizontal, counterAxisSizingMode is y axis
+          // don't specify height
+          initializer.height = undefined;
+        }
         return new Row(initializer);
       case Axis.vertical:
+        if (frame.counterAxisSizingMode === "AUTO") {
+          // when vertical, counterAxisSizingMode is x axis
+          // don't specify width
+          initializer.width = undefined;
+        }
+        if (frame.primaryAxisSizingMode === "AUTO") {
+          // when vertical, primaryAxisSizingMode is y axis
+          // don't specify height
+          initializer.height = undefined;
+        }
         return new Column(initializer);
       default:
         console.info(`Frame: "${frame.name}" fallback to flex`);
@@ -309,10 +343,16 @@ function stackChild({
           container.width / 2;
         constraint.left = <Calculation>{
           type: "calc",
-          operations: {
+          operations: <Operation>{
+            type: "op",
             left: {
               type: "calc",
-              operations: { left: "50%", op: "+", right: centerdiff },
+              operations: <Operation>{
+                type: "op",
+                left: "50%",
+                op: "+",
+                right: centerdiff,
+              },
             },
             op: "-", // this part is different
             right: half_w,
@@ -358,10 +398,12 @@ function stackChild({
 
         constraint.top = <Calculation>{
           type: "calc",
-          operations: {
+          operations: <Operation>{
+            type: "op",
             left: {
               type: "calc",
-              operations: {
+              operations: <Operation>{
+                type: "op",
                 left: "50%",
                 op: "+",
                 right: centerdiff,

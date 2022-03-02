@@ -1,4 +1,10 @@
 {
     "name": "@web-builder/styles",
-    "version": "0.0.0"
+    "version": "0.0.0",
+    "dependencies": {
+        "camelcase-css": "^2.0.1"
+    },
+    "devDependencies": {
+        "@types/camelcase-css": "^2.0.0"
+    }
 }
