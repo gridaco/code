@@ -17,24 +17,42 @@ import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overfl
 import { compose_instanciation } from "./compose-instanciation";
 import { IWHStyleWidget } from "@reflect-ui/core";
 import * as reusable from "@code-features/component/tokens";
+import assert from "assert";
 
-export function buildWebWidgetFromTokens(widget: core.Widget): JsxWidget {
-  const composed = compose(widget, {
-    is_root: true,
-  });
+interface WebWidgetComposerConfig {
+  /**
+   * set alt to "" so when image is broken the broken image symbol won't show.
+   */
+  img_no_alt?: boolean;
+}
+
+export function buildWebWidgetFromTokens(
+  widget: core.Widget,
+  config: WebWidgetComposerConfig
+): JsxWidget {
+  const composed = compose(
+    widget,
+    {
+      is_root: true,
+    },
+    config
+  );
 
   return composed;
 }
 
 export type Composer = (
   widget: core.Widget,
-  context?: { is_root: boolean }
+  context?: { is_root: boolean },
+  config?: WebWidgetComposerConfig
 ) => StylableJsxWidget;
 
 function compose<T extends JsxWidget>(
   widget: core.Widget,
-  context: { is_root: boolean }
+  context: { is_root: boolean },
+  config: WebWidgetComposerConfig
 ): T {
+  assert(widget, "input widget is required");
   const handleChildren = <T extends JsxWidget>(
     children: core.Widget[]
   ): T[] => {
@@ -44,7 +62,7 @@ function compose<T extends JsxWidget>(
   };
 
   const handleChild = <T extends JsxWidget>(child: core.Widget): T => {
-    return compose(child, { ...context, is_root: false });
+    return compose(child, { ...context, is_root: false }, config);
   };
 
   const _remove_width_height_if_root_wh = {
@@ -158,6 +176,7 @@ function compose<T extends JsxWidget>(
   } else if (widget instanceof core.ImageWidget) {
     thisWebWidget = new web.ImageElement({
       ...widget,
+      alt: config.img_no_alt ? "" : `image of ${_key.name}`,
       src: widget.src,
       key: _key,
     });

@@ -1,8 +1,7 @@
 import { CSSProperties } from "@coli.codes/css";
 import assert from "assert";
 import { JSX, JSXAttribute, StringLiteral } from "coli";
-import { JSXElementConfig, StylableJSXElementConfig, WidgetKey } from "../..";
-import { image_smallest_fallback_source_base_64 } from "../../k";
+import { StylableJSXElementConfig, WidgetKey, k } from "../..";
 import { SelfClosingContainer } from "../container";
 import * as css from "@web-builder/styles";
 export class ImageElement extends SelfClosingContainer {
@@ -28,7 +27,7 @@ export class ImageElement extends SelfClosingContainer {
     super({ key });
     assert(src !== undefined, "ImageElement requires src");
     this.src = src;
-    this.alt = alt || `image of ${key.name}`;
+    this.alt = alt;
     this.width = width;
     this.height = height;
   }
@@ -44,19 +43,22 @@ export class ImageElement extends SelfClosingContainer {
   }
 
   jsxConfig(): StylableJSXElementConfig {
+    const attributes = [
+      this.src &&
+        new JSXAttribute(
+          "src",
+          new StringLiteral(
+            this.src || k.image_smallest_fallback_source_base_64
+          )
+        ),
+      typeof this.alt === "string" &&
+        new JSXAttribute("alt", new StringLiteral(this.alt)),
+    ];
+
     return <StylableJSXElementConfig>{
       type: "tag-and-attr",
       tag: JSX.identifier("img"),
-      attributes: [
-        this.src &&
-          new JSXAttribute(
-            "src",
-            new StringLiteral(
-              this.src || image_smallest_fallback_source_base_64
-            )
-          ),
-        this.alt && new JSXAttribute("alt", new StringLiteral(this.alt)),
-      ],
+      attributes: attributes,
     };
   }
 }

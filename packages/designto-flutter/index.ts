@@ -6,7 +6,8 @@ import { composeAppWithHome } from "@flutter-builder/flutter";
 import { makeApp } from "./make/make-flutter-material-app";
 
 export function buildFlutterApp(
-  widget: flutter.Widget
+  widget: flutter.Widget,
+  p: { id: string }
 ): config.FlutterComponentOutput {
   const app =
     widget &&
@@ -19,7 +20,7 @@ export function buildFlutterApp(
   const rootAppCode = composeAppWithHome(app);
 
   return {
-    id: "flutterapp",
+    id: p.id,
     name: "flutterapp",
     code: { raw: widgetCode },
     scaffold: { raw: rootAppCode },

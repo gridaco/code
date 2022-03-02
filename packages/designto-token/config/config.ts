@@ -20,6 +20,11 @@ export interface TokenizerConfig {
   disable_flags_support?: boolean;
 
   /**
+   * @default false - detection support enabled by default.
+   */
+  disable_detection?: boolean;
+
+  /**
    * stops the tokenizer when max depth is reached relative to starter (root) node.
    * @default "infinite"
    */
