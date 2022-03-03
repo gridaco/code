@@ -1,9 +1,10 @@
-import * as flutter from "@bridged.xyz/flutter-builder";
-import * as core from "@reflect-ui/core";
-import { nodes } from "@design-sdk/core";
-import { makeColor } from ".";
+import * as flutter from "@flutter-builder/flutter";
+// import * as core from "@reflect-ui/core";
+// import { nodes } from "@design-sdk/core";
+// import { makeColor } from ".";
 import { TextStyleRepository } from "@design-sdk/figma";
-import { roundDouble } from "../convert";
+// import { roundDouble } from "../convert";
+// import { fontStyle, mapTextDecoration } from "../core-type-mappers";
 
 /**
  * get the code of Text#style (text-style) via the name of the defined textstyle.
@@ -17,27 +18,8 @@ function getThemedTextStyleByName(textStyleName: string): flutter.TextStyle {
   return flutter.Theme.of().textTheme[styleDef] as flutter.TextStyle;
 }
 
-export function makeTextStyleFromDesign(
-  style: core.ITextStyle
-): flutter.TextStyle {
-  let decoration: flutter.TextDecoration = makeTextDecoration(style.decoration);
-  const fontFamily: string = style.fontFamily;
-  const fontWeight: flutter.FontWeight = flutter.FontWeight[style.fontWeight];
-  // percentage is not supported
-  const letterSpacing = style.letterSpacing;
-  const fontStyle = makeFontStyle(style.fontStyle);
-
-  return new flutter.TextStyle({
-    fontSize: style.fontSize,
-    fontWeight: fontWeight,
-    fontFamily: fontFamily,
-    fontStyle: fontStyle,
-    letterSpacing: letterSpacing,
-    decoration: decoration,
-  });
-}
-
 // TODO lineSpacing
+/* - use tokenized text manifest instead.
 export function makeTextStyle(node: nodes.ReflectTextNode): flutter.TextStyle {
   const fontColor: flutter.Color = makeColor(node.fills);
 
@@ -46,10 +28,10 @@ export function makeTextStyle(node: nodes.ReflectTextNode): flutter.TextStyle {
     fontSize = node.fontSize;
   }
 
-  const decoration: flutter.TextDecoration = makeTextDecoration(
+  const decoration: flutter.TextDecoration = mapTextDecoration(
     node.textStyle.decoration
   );
-  let fontStyle: flutter.FontStyle = makeFontStyle(node.textStyle.fontStyle);
+  let fontStyle: flutter.FontStyle = mapFontStyle(node.textStyle.fontStyle);
 
   let fontFamily: string;
   if (node.textStyle) {
@@ -88,25 +70,4 @@ export function makeTextStyle(node: nodes.ReflectTextNode): flutter.TextStyle {
     decoration: decoration,
   });
 }
-
-export function makeFontStyle(style: core.FontStyle): flutter.FontStyle {
-  switch (style) {
-    case core.FontStyle.italic:
-      return flutter.FontStyle.italic as flutter.Snippet;
-    case core.FontStyle.normal:
-      return; // not returning any value, since normal is a default value.
-  }
-}
-
-export function makeTextDecoration(
-  textDecoration: core.TextDecoration
-): flutter.TextDecoration {
-  if (!textDecoration) {
-    return;
-  }
-  let decoration: flutter.TextDecoration;
-  if (textDecoration === core.TextDecoration.underline) {
-    decoration = flutter.TextDecoration.underline as flutter.Snippet;
-  }
-  return decoration;
-}
+ */

@@ -1,4 +1,4 @@
-import { MaterialApp, Widget } from "@bridged.xyz/flutter-builder";
+import { MaterialApp, Widget } from "@flutter-builder/flutter";
 import { makeScreen } from "./make-flutter-scaffold";
 import { makeTheme } from "./make-flutter-theme-data";
 
@@ -7,7 +7,7 @@ export function makeApp(home: {
   scrollable: boolean;
 }): MaterialApp {
   return new MaterialApp({
-    title: "app built with bridged.xyz",
+    title: "app built with grida.co",
     debugShowCheckedModeBanner: false,
     home: Widget.prebuilt(
       wrapWithBuilder(

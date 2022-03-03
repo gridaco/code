@@ -39,7 +39,7 @@ export function buildStyledComponentConfig(
     };
   }
 ): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
-  const config = widget.jsxConfig();
+  const config = widget.jsxConfig() as StyledComponentJSXElementConfig;
 
   const namePref: NamePreference = {
     namer: preferences.namer,
@@ -71,7 +71,7 @@ export function buildStyledComponentConfig(
       id: styledVar.id.name,
       tag: handle(config.tag),
       attributes: config.attributes,
-      style: widget.style,
+      style: widget.finalStyle,
       styledComponent: styledVar,
     };
   } else {
@@ -82,3 +82,5 @@ export function buildStyledComponentConfig(
     };
   }
 }
+
+export * from "./styled-component-declaration";

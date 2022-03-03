@@ -1,0 +1,14 @@
+{
+  "name": "@designto/react-native",
+  "version": "0.0.0",
+  "description": "design to react-native",
+  "main": "dist/index.js",
+  "repository": "https://github.com/gridaco/designto-code",
+  "author": "Grida authors",
+  "license": "Apache 2.0",
+  "private": false,
+  "dependencies": {
+    "@web-builder/react": "17.0.2",
+    "@web-builder/react-native": "0.67.0"
+  }
+}

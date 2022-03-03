@@ -1,10 +1,9 @@
 import { nodes } from "@design-sdk/core";
 import * as core from "@reflect-ui/core";
-import * as flutter from "@bridged.xyz/flutter-builder";
-import {
-  makeColor,
-  makeFlutterColorFromReflectColor,
-} from "./make-flutter-color";
+import * as flutter from "@flutter-builder/flutter";
+import { makeColor } from "./make-flutter-color";
+import * as dartui from "../dart-ui";
+import { rd } from "../_utils";
 
 /**
  *
@@ -20,7 +19,7 @@ export function makeFlutterDivider(
   // Case 3 has no stroke, height > 0 && has fill
   return new flutter.Divider({
     height: divider.height,
-    color: makeFlutterColorFromReflectColor(divider.color),
+    color: dartui.color(divider.color),
     thickness: divider.thickness,
     indent: divider.indent,
     endIndent: divider.endIndent,
@@ -35,7 +34,7 @@ export function makeFlutterDivider(
  */
 export function makeVerticalDivider(node: nodes.ReflectDefaultShapeMixin) {
   return new flutter.VerticalDivider({
-    width: node.width,
+    width: rd(node.width),
     color: makeColor(node.fills),
     thickness: node.strokeWeight,
   });

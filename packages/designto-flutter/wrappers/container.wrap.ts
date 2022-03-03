@@ -1,10 +1,10 @@
-import { convertToSize } from "../convert";
+import { convertToSize } from "../_utils";
 import { nodes } from "@design-sdk/core";
-import { makeEdgeInsets } from "../make";
 import { array } from "@reflect-ui/uiutils";
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import { makeBoxDecoration } from "../make/make-flutter-box-decoration";
-import { roundDouble } from "../convert/double.convert";
+import { rd } from "../_utils";
+import * as painting from "../painting";
 
 export function wrapWithContainer(
   node:
@@ -38,14 +38,14 @@ export function wrapWithContainer(
 
   let _padding: flutter.EdgeInsetsGeometry;
   if (node instanceof nodes.ReflectFrameNode) {
-    _padding = makeEdgeInsets(node);
+    _padding = painting.edgeinsets(node.padding);
   }
 
   // Container is a container if [_size] or [_boxDecoration] are set.
   if (_size || _boxDecoration) {
     return new flutter.Container({
-      width: roundDouble(_size.width),
-      height: roundDouble(_size.height),
+      width: rd(_size.width),
+      height: rd(_size.height),
       child: child,
       padding: _padding,
       // region : decoration or color

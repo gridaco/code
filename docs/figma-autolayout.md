@@ -1,3 +1,9 @@
+---
+title: "Figma Auto layout"
+version: 0.1.0
+revision: 1
+---
+
 # Figma Auto layout
 
 > These are the figma frame's property effecting to auto layouyt (flexbox) behaiviour
@@ -133,7 +139,7 @@ _References_
 
 ### Universal token - Stretched
 
-We use Stretched Token for specifing specific widget to be stretched. Learn more at [@designto/token/tokens](../packages/designto-token/tokens/stretched/README.md)
+We use Stretched Token for specifing specific widget to be stretched. Learn more at [@designto/token/tokens](https://github.com/gridaco/designto-code/blob/main/packages/designto-token/tokens/stretched/README.md)
 
 ## Hug contents item (Not having any intrinsic size)
 

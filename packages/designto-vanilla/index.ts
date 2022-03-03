@@ -2,16 +2,21 @@ import { buildWebWidgetFromTokens } from "@designto/web/tokens-to-web-widget";
 import { vanilla as config } from "@designto/config";
 import { Widget } from "@reflect-ui/core";
 import { export_inlined_css_html_file } from "@web-builder/vanilla";
-import { WidgetTree } from "@web-builder/core";
+import { JsxWidget } from "@web-builder/core";
 
 export function buildVanillaFile(
-  widget: WidgetTree
+  widget: JsxWidget,
+  config: config.VanillaFrameworkConfig
 ): config.VanillaComponentOutput {
   if (!widget) {
     throw "A valid reflect widget manifest should be passed as an input. none was passed.";
   }
 
-  const html = export_inlined_css_html_file(widget);
+  const html = export_inlined_css_html_file(widget, {
+    additional_css_declarations:
+      config.additional_css_declaration?.declarations,
+  });
+
   return {
     id: widget.key.id,
     name: widget.key.name,
@@ -24,10 +29,15 @@ export function buildVanillaFile(
   };
 }
 
-export function buildVanillaWidget(widget: Widget) {
+export function buildVanillaWidget(
+  widget: Widget,
+  config: config.VanillaFrameworkConfig
+) {
   if (!widget) {
     throw "A valid reflect widget manifest should be passed as an input. none was passed.";
   }
 
-  return buildWebWidgetFromTokens(widget, { is_root: true });
+  return buildWebWidgetFromTokens(widget, {
+    img_no_alt: config.imgage_alt.no_alt,
+  });
 }

@@ -3,9 +3,8 @@ import {
   Gradient,
   BoxDecoration,
   Color,
-} from "@bridged.xyz/flutter-builder";
+} from "@flutter-builder/flutter";
 import { makeColorFromRGBO } from "../make";
-import { interpretGradient } from "../interpreter/gradient.interpret";
 import { interpretBorderRadius } from "./border-radius.interpret";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { ReflectRectangleNode } from "@design-sdk/core";
@@ -15,6 +14,8 @@ import {
   Paint,
   SolidPaint,
 } from "@design-sdk/figma";
+import * as painting from "../painting";
+import { tokenize_gradient } from "../../designto-token";
 
 export function interpretRect(rect: ReflectRectangleNode): Container {
   const fills = rect.fills as Array<Paint>;
@@ -46,7 +47,8 @@ export function interpretRect(rect: ReflectRectangleNode): Container {
           break;
         case BackgroundType.gradient:
           const gradientFill = singleFill as GradientPaint;
-          gradient = interpretGradient(gradientFill);
+          const g = tokenize_gradient(gradientFill);
+          gradient = painting.linearGradient(g);
           break;
         case BackgroundType.image:
           const imageFill = singleFill as ImagePaint;
@@ -65,7 +67,8 @@ export function interpretRect(rect: ReflectRectangleNode): Container {
           break;
         case BackgroundType.gradient:
           const gradientFill = primaryFill as GradientPaint;
-          gradient = interpretGradient(gradientFill);
+          const g = tokenize_gradient(gradientFill);
+          gradient = painting.linearGradient(g);
           break;
         case BackgroundType.image:
           const imageFill = primaryFill as ImagePaint;

@@ -1,8 +1,14 @@
+import { handle } from "@coli.codes/builder";
 import { buildCssStandard, CSSProperties } from "@coli.codes/css";
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
-import { TextChildWidget, WidgetTree } from "@web-builder/core";
 import {
-  buildTextChildJsx,
+  k,
+  TextChildWidget,
+  StylableJsxWidget,
+  JsxWidget,
+} from "@web-builder/core";
+import {
+  buildJsx,
   getWidgetStylesConfigMap,
   JSXWithoutStyleElementConfig,
   JSXWithStyleElementConfig,
@@ -10,20 +16,14 @@ import {
 } from "@web-builder/core/builders";
 import {
   JSXAttribute,
-  JSXAttributes,
   JSXClosingElement,
   JSXElement,
   JSXElementLike,
-  JSXIdentifier,
   JSXOpeningElement,
   ScopedVariableNamer,
   stringfy,
   StringLiteral,
 } from "coli";
-
-const user_agent_stylesheet_override = <CSSProperties>{
-  margin: "0px",
-};
 
 const html_render = ({ css, body }: { css: string; body: string }) => {
   const indenter = (s: string, tabs: number = 0) =>
@@ -41,7 +41,20 @@ ${indenter(body, 2)}
 </html>`;
 };
 
-export function export_inlined_css_html_file(widget: WidgetTree) {
+interface CssDeclaration {
+  key: {
+    name: string;
+    selector: "tag" | "id" | "class";
+  };
+  style: CSSProperties;
+}
+
+export function export_inlined_css_html_file(
+  widget: JsxWidget,
+  config: {
+    additional_css_declarations?: CssDeclaration[];
+  }
+) {
   const componentName = widget.key.name;
   const styledComponentNamer = new ScopedVariableNamer(
     widget.key.id,
@@ -59,43 +72,17 @@ export function export_inlined_css_html_file(widget: WidgetTree) {
     return styles_map.get(id);
   }
 
-  function buildBodyHtml(widget: WidgetTree) {
-    const children = widget.children?.map((comp) => {
-      const config = getStyleConfigById(comp.key.id);
-      if (comp instanceof TextChildWidget) {
-        const jsx = buildTextChildJsx(comp, config);
-        injectIdToJsx(jsx, config.id);
-        return jsx;
+  function buildBodyHtml(widget: JsxWidget) {
+    return buildJsx(
+      widget,
+      {
+        styledConfig: (id) => getStyleConfigById(id),
+        idTransformer: (jsx, id) => injectIdToJsx(jsx, id),
+      },
+      {
+        self_closing_if_possible: false,
       }
-
-      const childrenJSX = comp.children?.map((cc) => buildBodyHtml(cc));
-      const jsx = new JSXElement({
-        openingElement: new JSXOpeningElement(config.tag, {
-          attributes: config.attributes,
-        }),
-        closingElement: new JSXClosingElement(config.tag),
-        children: childrenJSX,
-      });
-      injectIdToJsx(jsx, config.id);
-      return jsx;
-    });
-
-    const config = getStyleConfigById(widget.key.id);
-    if (widget instanceof TextChildWidget) {
-      const jsx = buildTextChildJsx(widget, config);
-      injectIdToJsx(jsx, config.id);
-      return jsx;
-    }
-
-    const jsx = new JSXElement({
-      openingElement: new JSXOpeningElement(config.tag, {
-        attributes: config.attributes,
-      }),
-      closingElement: new JSXClosingElement(config.tag),
-      children: children,
-    });
-    injectIdToJsx(jsx, config.id);
-    return jsx;
+    );
   }
 
   const css_declarations = Array.from(styles_map.keys())
@@ -110,12 +97,19 @@ export function export_inlined_css_html_file(widget: WidgetTree) {
       };
     })
     .filter((s) => s);
+
+  // global vanilla default injected style
   css_declarations.push({
     key: {
       name: "*",
       selector: "tag",
     },
-    style: user_agent_stylesheet_override,
+    style: k.user_agent_stylesheet_override_default,
+  });
+
+  // declare additional styles requested by user
+  config.additional_css_declarations?.forEach((d) => {
+    css_declarations.push(d);
   });
 
   const strfied_css = css_declarations

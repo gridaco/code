@@ -1,13 +1,12 @@
 import { nodes } from "@design-sdk/core";
 import { Figma } from "@design-sdk/figma";
 import { retrieveFill } from "@design-sdk/core/utils";
-import * as flutter from "@bridged.xyz/flutter-builder";
-import { interpretGradient } from "../interpreter/gradient.interpret";
+import * as flutter from "@flutter-builder/flutter";
 import { interpretImageFill } from "../interpreter/image.interpret";
-import { makeBorderRadius } from "./make-flutter-border-radius";
-import { makeBorder } from "./make-flutter-border";
-import { makeBoxShadow } from "./make-flutter-box-shadow";
+import * as painting from "../painting";
 import { makeColorFromRGBO } from "./make-flutter-color";
+import { tokenizeBorder, tokenize_gradient } from "@designto/token";
+import { LinearGradient, RadialGradient } from "@reflect-ui/core";
 
 type DecorationBackgroundLike =
   | flutter.Color
@@ -20,9 +19,10 @@ export function makeBoxDecoration(
     | nodes.ReflectEllipseNode
     | nodes.ReflectFrameNode
 ): flutter.BoxDecoration | flutter.Color {
-  const decorationBorder = makeBorder(node);
-  const decorationBoxShadow = makeBoxShadow(node);
-  const decorationBorderRadius = makeBorderRadius(node);
+  const _border = tokenizeBorder.fromNode(node);
+  const decorationBorder = painting.border(_border);
+  const decorationBoxShadow = painting.boxShadow(node.shadows);
+  const decorationBorderRadius = painting.borderRadius(node.cornerRadius);
 
   ///
   /// ----------------------------------------------------------------
@@ -107,15 +107,17 @@ export function makeBoxDecorationColorBg(
   switch (fill.type) {
     case "GRADIENT_ANGULAR":
     case "GRADIENT_DIAMOND":
-    case "GRADIENT_RADIAL":
       // TODO: handle above gradient types (only linear is handled)
-      console.log(
-        "not handled: `GRADIENT_RADIAL` | `GRADIENT_DIAMOND` | `GRADIENT_ANGULAR`"
-      );
+      console.log("not handled: `GRADIENT_DIAMOND` | `GRADIENT_ANGULAR`");
       return undefined;
     case "GRADIENT_LINEAR":
-      return interpretGradient(fill);
+      const lg = tokenize_gradient(fill as Figma.GradientPaint);
+      return painting.linearGradient(lg as LinearGradient);
+    case "GRADIENT_RADIAL":
+      const rg = tokenize_gradient(fill as Figma.GradientPaint);
+      return painting.radialGradient(rg as RadialGradient);
     case "SOLID":
+      console.log("solid color");
       return makeColorFromRGBO(fill.color, opacity);
     default:
       throw `making colored box decoraton with fill type "${fill?.type}" is not allowed."`;

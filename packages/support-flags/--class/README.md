@@ -1,0 +1,4 @@
+# `--class` Flag
+
+- Visit the [design documentation](../docs/--class.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--class)

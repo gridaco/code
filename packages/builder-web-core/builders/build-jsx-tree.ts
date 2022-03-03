@@ -1,63 +1,173 @@
 import { handle } from "@coli.codes/builder";
 import {
   JSXElementConfig,
+  StylableJSXElementConfig,
   TextChildWidget,
-  WidgetTree,
+  JsxWidget,
+  StylableJsxWidget,
 } from "@web-builder/core";
 import {
+  NoStyleJSXElementConfig,
+  StyledComponentJSXElementConfig,
+} from "@web-builder/styled";
+import {
+  JSXAttributes,
+  JSXChildLike,
   JSXClosingElement,
   JSXElement,
-  JSXElementLike,
   JSXIdentifier,
   JSXOpeningElement,
-  JSXText,
+  JSXSelfClosingElement,
 } from "coli";
 
 ////
 //// region jsx tree builder
 ////
-
 export function buildTextChildJsx(
   textchildwidget: TextChildWidget,
-  config: JSXElementConfig
+  config: StylableJSXElementConfig
 ) {
-  const text = textchildwidget.text;
+  const text = textchildwidget.textData().jsxConfig();
   const tag = handle<JSXIdentifier>(config.tag);
 
-  const jsxtext = new JSXText(text);
   return new JSXElement({
     openingElement: new JSXOpeningElement(tag, {
       attributes: config.attributes,
     }),
-    children: jsxtext,
+    children: text.tree,
     closingElement: new JSXClosingElement(tag),
   });
 }
 
 export function buildContainingJsx(
   container: JSXElementConfig,
-  children: Array<JSXElementLike>
-): JSXElementLike {
-  const tag = handle<JSXIdentifier>(container.tag);
-  return new JSXElement({
-    openingElement: new JSXOpeningElement(tag, {
-      attributes: container.attributes,
-    }),
-    closingElement: new JSXClosingElement(tag),
-    children: children,
-  });
+  children: Array<JSXChildLike>
+): JSXChildLike {
+  switch (container.type) {
+    case "static-tree": {
+      return handle<JSXChildLike>(container.tree);
+    }
+    case "tag-and-attr": {
+      const tag = handle<JSXIdentifier>(container.tag);
+      return new JSXElement({
+        openingElement: new JSXOpeningElement(tag, {
+          attributes: container.attributes,
+        }),
+        closingElement: new JSXClosingElement(tag),
+        children: children,
+      });
+    }
+    default:
+      throw new Error("error while building jsx");
+  }
 }
 
-export function buildJsx(widget: WidgetTree): JSXElementLike {
-  const children = buildChildrenJsx(widget.children);
-  const container = buildContainingJsx(widget.jsxConfig(), children);
-  return container;
+/**
+ *
+ * A Utility-like general jsx builder globally used while building html tree.
+ *
+ * @param widget
+ * @param repository
+ * @returns
+ */
+export function buildJsx(
+  widget: JsxWidget,
+  repository: {
+    styledConfig: (
+      key: string
+    ) => StyledComponentJSXElementConfig | NoStyleJSXElementConfig;
+    /**
+     * required for id based styling strategy
+     */
+    idTransformer?: (jsx, id: string) => void;
+    preprocess?: (jsx: JSXElementConfig) => JSXElementConfig;
+  },
+  options: {
+    self_closing_if_possible?: boolean;
+  }
+): JSXChildLike {
+  const force_dont_self_close = options.self_closing_if_possible === false;
+  const mapper = (widget: JsxWidget) => {
+    let _jsxcfg = widget.jsxConfig();
+    if (_jsxcfg.type === "static-tree") {
+      return _jsxcfg.tree;
+    }
+
+    // preprocess
+    _jsxcfg = repository.preprocess?.(_jsxcfg) ?? _jsxcfg;
+
+    const children = widget.children?.map(mapper);
+
+    if (widget instanceof StylableJsxWidget) {
+      const styledconfig = repository.styledConfig(widget.key.id);
+      // region build jsx
+      let jsx;
+      if (widget instanceof TextChildWidget) {
+        jsx = buildTextChildJsx(widget, styledconfig);
+      } else {
+        jsx = _jsx_element_with_self_closing_if_possible({
+          tag: styledconfig.tag,
+          attributes: styledconfig.attributes,
+          children: children,
+          options: {
+            force_dont_self_close: force_dont_self_close,
+          },
+        });
+      }
+      // endregion build jsx
+
+      // apply injected transformer (if present)
+      repository.idTransformer?.(jsx, styledconfig.id);
+
+      return jsx;
+    } else {
+      const config = widget.jsxConfig();
+      if (config.type === "tag-and-attr") {
+        const _tag = handle(config.tag);
+        const jsx = _jsx_element_with_self_closing_if_possible({
+          tag: _tag,
+          attributes: config.attributes,
+          children: children,
+          options: {
+            force_dont_self_close: force_dont_self_close,
+          },
+        });
+
+        return jsx;
+      }
+      return;
+    }
+  };
+
+  return mapper(widget);
 }
 
-export function buildChildrenJsx(
-  children: Array<WidgetTree>
-): Array<JSXElementLike> {
-  return children?.map((c) => {
-    return buildJsx(c);
-  });
+function _jsx_element_with_self_closing_if_possible({
+  children,
+  tag,
+  attributes,
+  options = {
+    force_dont_self_close: false,
+  },
+}: {
+  tag: JSXIdentifier;
+  children?: any;
+  attributes: JSXAttributes;
+  options?: {
+    force_dont_self_close?: boolean;
+  };
+}) {
+  if (!options?.force_dont_self_close && (!children || children.length == 0)) {
+    return new JSXSelfClosingElement(tag, {
+      attributes: attributes,
+    });
+  } else {
+    return new JSXElement({
+      openingElement: new JSXOpeningElement(tag, {
+        attributes: attributes,
+      }),
+      closingElement: new JSXClosingElement(tag),
+      children: children,
+    });
+  }
 }

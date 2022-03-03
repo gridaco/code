@@ -1,7 +1,8 @@
 import { CSSProperties, CSSProperty } from "@coli.codes/css";
-import { WidgetKey } from "../..";
+import { StylableJSXElementConfig, WidgetKey } from "../..";
 import {
   Axis,
+  Border,
   BorderRadiusManifest,
   BoxShadowManifest,
   CrossAxisAlignment,
@@ -9,18 +10,20 @@ import {
   EdgeInsets,
   MainAxisAlignment,
   VerticalDirection,
+  IFlexManifest,
 } from "@reflect-ui/core";
 import { MainAxisSize } from "@reflect-ui/core/lib/main-axis-size";
 import { JSX } from "coli";
 import {
   MultiChildWidget,
-  WidgetTree,
+  StylableJsxWidget,
 } from "@web-builder/core/widget-tree/widget";
-import { BackgroundPaintLike } from "@reflect-ui/core/lib/background";
-import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
+import { Background } from "@reflect-ui/core/lib/background";
 import * as css from "@web-builder/styles";
-import { CssMinHeightMixin } from "../_utility";
+import { tricks } from "@web-builder/styles";
+import { CssMinHeightMixin } from "../../widgets";
 
+type FlexWrap = "nowrap" | "wrap" | "wrap-reverse";
 export class Flex extends MultiChildWidget implements CssMinHeightMixin {
   readonly _type: "row" | "column";
 
@@ -30,7 +33,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
   verticalDirection?: VerticalDirection;
   margin?: EdgeInsets;
   padding?: EdgeInsets;
-  background?: BackgroundPaintLike[];
+  background?: Background;
   // indicates the spacing between items
   itemSpacing?: number;
   flex?: number;
@@ -41,31 +44,48 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
   readonly overflow?: CSSProperty.Overflow;
 
   borderRadius?: BorderRadiusManifest;
+  border?: Border;
+
+  minWidth?: DimensionLength;
+  maxWidth?: DimensionLength;
   minHeight?: DimensionLength;
+  maxHeight?: DimensionLength;
+
+  flexWrap?: FlexWrap;
 
   constructor(
-    p: IFlexManifest<WidgetTree> & {
+    p: IFlexManifest<StylableJsxWidget> & {
       // direction: "row" | "column";
       key: WidgetKey;
-      width?: number;
-      height?: number;
+      width?: DimensionLength;
+      height?: DimensionLength;
+      minWidth?: DimensionLength;
+      maxWidth?: DimensionLength;
       minHeight?: DimensionLength;
+      maxHeight?: DimensionLength;
       mainAxisAlignment?: MainAxisAlignment;
       mainAxisSize?: MainAxisSize;
       crossAxisAlignment?: CrossAxisAlignment;
       verticalDirection?: VerticalDirection;
       margin?: EdgeInsets;
-      boxShadow?: BoxShadowManifest;
+      boxShadow?: BoxShadowManifest[];
       padding?: EdgeInsets;
-      background?: BackgroundPaintLike[];
+      background?: Background;
       overflow?: CSSProperty.Overflow;
       borderRadius?: BorderRadiusManifest;
+      border?: Border;
+      flexWrap?: FlexWrap;
     }
   ) {
     super(p);
 
     this.width = p.width;
     this.height = p.height;
+
+    this.minWidth = p.minWidth;
+    this.maxWidth = p.maxWidth;
+    this.minHeight = p.minHeight;
+    this.maxHeight = p.maxHeight;
 
     // flex related
     this.direction = p.direction;
@@ -75,6 +95,7 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
     this.mainAxisSize = p.mainAxisSize;
     this.crossAxisAlignment = p.crossAxisAlignment;
     this.verticalDirection = p.verticalDirection;
+    this.flexWrap = p.flexWrap; // cssonly
     //
 
     //
@@ -82,15 +103,16 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
     this.padding = p.padding;
     this.background = p.background;
     this.borderRadius = p.borderRadius;
+    this.border = p.border;
     this.boxShadow = p.boxShadow;
 
     // css only
     this.overflow = p.overflow;
-    this.minHeight = p.minHeight;
   }
 
-  jsxConfig() {
+  jsxConfig(): StylableJSXElementConfig {
     return {
+      type: "tag-and-attr",
       tag: JSX.identifier("div"),
     };
   }
@@ -98,17 +120,28 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
   styleData(): CSSProperties {
     return {
       display: "flex",
+      overflow: this.overflow,
       ...css.justifyContent(this.mainAxisAlignment),
       "flex-direction": direction(this.direction),
-      "align-items": this.crossAxisAlignment,
-      overflow: this.overflow,
+      "align-items": flex_align_items(this.crossAxisAlignment),
       flex: this.flex,
-      gap: this.itemSpacing && css.px(this.itemSpacing),
-      "box-shadow": css.boxshadow(this.boxShadow),
+      "flex-wrap": this.flexWrap,
+      gap:
+        // if justify-content is set to space-between, do not set the gap.
+        this.mainAxisAlignment == MainAxisAlignment.spaceBetween
+          ? undefined
+          : this.itemSpacing && css.px(this.itemSpacing),
+      "box-shadow": css.boxshadow(...(this.boxShadow ?? [])),
+      ...css.border(this.border),
       ...css.borderRadius(this.borderRadius),
-      ...flexsizing({ ...this }),
-      "min-height": css.minHeight(this.minHeight),
-      ...css.background(...this.background),
+      ...tricks.flexsizing({ ...this }),
+
+      "min-width": css.length(this.minWidth),
+      "max-width": css.length(this.maxWidth),
+      "min-height": css.length(this.minHeight),
+      "max-height": css.length(this.maxHeight),
+
+      ...css.background(this.background),
       "box-sizing": (this.padding && "border-box") || undefined,
       ...css.padding(this.padding),
     };
@@ -125,39 +158,23 @@ function direction(axis: Axis): CSSProperty.FlexDirection {
   throw `axis value of "${axis}" is not a valid reflect Axis value.`;
 }
 
-function flexsizing({
-  mainAxisSize,
-  width,
-  height,
-  flex,
-  direction,
-}: {
-  direction: Axis;
-  mainAxisSize?: MainAxisSize;
-  width?: number;
-  height?: number;
-  flex?: number;
-}): CSSProperties {
-  switch (mainAxisSize) {
-    case MainAxisSize.max: {
-      return <CSSProperties>{
-        "align-self": "stretch",
-        flex: "1", // This is a temporary solution, since stretch can be used on non-space-between parent, but still the item should stretch, we use flex 1 to do this.
-      };
-    }
-    case MainAxisSize.min: {
-      switch (direction) {
-        case Axis.horizontal:
-        case Axis.vertical:
-          return {
-            flex: "none",
-            width: width && css.px(width),
-            height: height && css.px(height),
-          };
-      }
-    }
+/**
+ * explicit css value with `flex-` prefix for start, end
+ * why? - "start" and "end" also attributes to the box itself -> to be more flex-specific.
+ * @param alignment
+ * @returns
+ */
+function flex_align_items(alignment: CrossAxisAlignment) {
+  switch (alignment) {
+    case CrossAxisAlignment.start:
+      return "flex-start";
+    case CrossAxisAlignment.end:
+      return "flex-end";
+    case CrossAxisAlignment.center:
+      return "center";
+    case CrossAxisAlignment.stretch:
+      return "stretch";
+    case CrossAxisAlignment.baseline:
+      return "baseline";
   }
-
-  // TODO:
-  // 1. add widht / height handling
 }

@@ -1,0 +1,26 @@
+name: docsdeploy
+on:
+  push:
+    branches: [main]
+jobs:
+  copy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: run pre-deploy (build docs and more)
+        run: |
+          chmod +x ./scripts/docs-deploy/pre-deploy.sh
+          ./scripts/docs-deploy/pre-deploy.sh
+        shell: bash
+      - name: copy docs to gridaco/grida.co
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: "docs"
+          destination-github-username: "gridaco"
+          destination-repository-name: "grida.co"
+          user-email: github@grida.co
+          target-branch: docs
+          target-directory: "docs/@designto-code"

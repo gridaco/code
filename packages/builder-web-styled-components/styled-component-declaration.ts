@@ -6,7 +6,7 @@ import {
   TemplateLiteral,
   VariableDeclaration,
 } from "coli";
-import { WidgetWithStyle } from "@web-builder/core";
+import { StylableJSXElementConfig, WidgetWithStyle } from "@web-builder/core";
 import { SyntaxKind } from "@coli.codes/core-syntax-kind";
 import {
   nameVariable,
@@ -15,7 +15,7 @@ import {
 } from "@coli.codes/naming";
 import { CSSProperties, buildCssStandard } from "@coli.codes/css";
 import { handle } from "@coli.codes/builder";
-import { formatStyledTempplateString } from "./formatter";
+import { formatStyledTempplateString } from "./styled-variable-formatter";
 
 export class StyledComponentDeclaration extends VariableDeclaration {
   static styledIdentifier = new Identifier("styled");
@@ -43,15 +43,14 @@ export class StyledComponentDeclaration extends VariableDeclaration {
     style: CSSProperties,
     html5tag: Html5IdentifierNames
   ): TaggedTemplateExpression {
-    const stylestring = buildCssStandard(style);
-    const formatedStyleStringWithTab = formatStyledTempplateString(stylestring);
+    const content = formatStyledTempplateString(buildCssStandard(style));
     return new TaggedTemplateExpression(
       new PropertyAccessExpression(
         StyledComponentDeclaration.styledIdentifier,
         html5tag
       ),
       {
-        template: new TemplateLiteral(formatedStyleStringWithTab),
+        template: new TemplateLiteral(content),
       }
     );
   }
@@ -72,7 +71,7 @@ export function declareStyledComponentVariable(
     name?: NamePreference;
   }
 ): StyledComponentDeclaration {
-  const jsxconfg = widgetConfig.jsxConfig();
+  const jsxconfg = widgetConfig.jsxConfig() as StylableJSXElementConfig;
 
   /// region name
   let varname: string;
@@ -90,7 +89,7 @@ export function declareStyledComponentVariable(
   }
   ///
 
-  const style_data = widgetConfig.style;
+  const style_data = widgetConfig.finalStyle;
   /**
    * if the style is null, it means don't make element as a styled component at all. if style is a empty object, it means to make a empty styled component.
    */

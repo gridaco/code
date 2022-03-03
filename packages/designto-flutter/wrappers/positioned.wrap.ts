@@ -1,7 +1,7 @@
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import { utils, nodes } from "@design-sdk/core";
 import { roundNumber } from "@reflect-ui/uiutils";
-import { makeSaflyAsSingle } from "../utils/make-as-safe-single";
+import { makeSaflyAsSingle } from "../_utils";
 export function wrapWithPositioned(
   node: nodes.ReflectSceneNode,
   child: flutter.Widget,

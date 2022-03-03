@@ -1,3 +1,9 @@
+---
+title: "How item order works & sanitizing options"
+version: 0.1.0
+revision: 1
+---
+
 # How item order works & sanitizing options
 
 **The order in editor's hierarchy (on design tools)**
@@ -62,7 +68,7 @@ As shown above, the lastly created item places on the last of the array index, a
 **Sorting strategy**
 
 When sorting strategy not applied and code gen with raw input, below result may come.
-![](./worng-sorting-example-when-not-sanitized.png)
+![](./assets/worng-sorting-example-when-not-sanitized.png)
 
 **Exceptional cases**
 

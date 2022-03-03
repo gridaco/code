@@ -1,10 +1,12 @@
 import { manifests } from "@reflect-ui/detection";
-import * as flutter from "@bridged.xyz/flutter-builder";
+import * as flutter from "@flutter-builder/flutter";
 import { makeColor } from "./make-flutter-color";
-import { makeBorderRadius } from "./make-flutter-border-radius";
-import { makeBorderSide } from "./make-flutter-border-side";
+import { borderRadius } from "../painting/painting-border-radius";
+import { borderside } from "../painting/painting-border-side";
 import { makeDetectedIcon } from "./make-flutter-icon";
 import { onPressed } from "../static-snippets";
+import { retrievePrimaryColor } from "@design-sdk/core/utils";
+import { rd } from "../_utils";
 
 export function makeFlatButton(manifest: manifests.DetectedButtonManifest) {
   const text = new flutter.Text(manifest.text?.text);
@@ -13,8 +15,11 @@ export function makeFlatButton(manifest: manifests.DetectedButtonManifest) {
   const minWidth = manifest.base.width;
   const height = manifest.base.height;
   const shape = new flutter.RoundedRectangleBorder({
-    borderRadius: makeBorderRadius(manifest.base),
-    side: makeBorderSide(manifest.base),
+    borderRadius: borderRadius(manifest.base.cornerRadius),
+    side: borderside({
+      color: retrievePrimaryColor(manifest.base.strokes),
+      width: manifest.base.strokeWeight,
+    }),
   });
 
   if (manifest.icon) {
@@ -25,8 +30,8 @@ export function makeFlatButton(manifest: manifests.DetectedButtonManifest) {
       icon: icon,
       color: color,
       textColor: textColor,
-      minWidth: minWidth,
-      height: height,
+      minWidth: rd(minWidth),
+      height: rd(height),
       shape: shape,
     });
   }
@@ -36,8 +41,8 @@ export function makeFlatButton(manifest: manifests.DetectedButtonManifest) {
     child: text,
     color: color,
     textColor: textColor,
-    minWidth: minWidth,
-    height: height,
+    minWidth: rd(minWidth),
+    height: rd(height),
     shape: shape,
   });
 }

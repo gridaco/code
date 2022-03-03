@@ -1,7 +1,7 @@
-import * as flutter from "@bridged.xyz/flutter-builder";
-import { nodes } from "@design-sdk/core";
-import { makeBorderRadius } from "./make-flutter-border-radius";
+import * as flutter from "@flutter-builder/flutter";
+import * as painting from "../painting";
 import { makeColor } from "./make-flutter-color";
+import { nodes } from "@design-sdk/core";
 
 /**
  * [Flutter#ShapeBorder](https://api.flutter.dev/flutter/painting/ShapeBorder-class.html)
@@ -16,7 +16,7 @@ export function makeShape(
     | nodes.ReflectFrameNode
 ): flutter.ShapeBorder {
   const strokeColor = makeColor(node.strokes);
-  const side: flutter.Border =
+  const side: flutter.BorderSide =
     strokeColor && node.strokeWeight > 0
       ? new flutter.BorderSide({
           width: node.strokeWeight,
@@ -32,6 +32,6 @@ export function makeShape(
 
   return new flutter.RoundedRectangleBorder({
     side: side,
-    borderRadius: makeBorderRadius(node),
+    borderRadius: painting.borderRadius(node.cornerRadius),
   });
 }

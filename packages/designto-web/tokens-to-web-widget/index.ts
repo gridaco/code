@@ -1,31 +1,73 @@
 import * as core from "@reflect-ui/core";
 import { tokens as special } from "@designto/token";
 import * as web from "@web-builder/core";
-import { WidgetTree } from "@web-builder/core";
+import { JsxWidget, StylableJsxWidget } from "@web-builder/core";
 import { keyFromWidget } from "@web-builder/core";
 import { MainImageRepository } from "@design-sdk/core/assets-repository";
 import * as css from "@web-builder/styles";
-import { Axis, Stack } from "@reflect-ui/core";
+import { compose_wrap } from "./compose-wrap";
+import { compose_wrapped_with_clip_rrect } from "./compose-wrapped-with-clip-rrect";
+import { compose_wrapped_with_rotation } from "./compose-wrapped-with-rotation";
+import { compose_wrapped_with_blurred } from "./compose-wrapped-with-blurred";
+import { compose_wrapped_with_opacity } from "./compose-wrapped-with-opacity";
+import { compose_wrapped_with_positioned } from "./compose-wrapped-with-positioned";
+import { compose_wrapped_with_clip_stretched } from "./compose-wrapped-with-stretched";
+import { compose_wrapped_with_sized_box } from "./compose-wrapped-with-sized-box";
+import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overflow-box";
+import { compose_instanciation } from "./compose-instanciation";
+import { IWHStyleWidget } from "@reflect-ui/core";
+import * as reusable from "@code-features/component/tokens";
+import assert from "assert";
+
+interface WebWidgetComposerConfig {
+  /**
+   * set alt to "" so when image is broken the broken image symbol won't show.
+   */
+  img_no_alt?: boolean;
+}
 
 export function buildWebWidgetFromTokens(
   widget: core.Widget,
-  context: {
-    is_root: boolean;
-  }
-): WidgetTree {
-  const handleChildren = (children: core.Widget[]): WidgetTree[] => {
+  config: WebWidgetComposerConfig
+): JsxWidget {
+  const composed = compose(
+    widget,
+    {
+      is_root: true,
+    },
+    config
+  );
+
+  return composed;
+}
+
+export type Composer = (
+  widget: core.Widget,
+  context?: { is_root: boolean },
+  config?: WebWidgetComposerConfig
+) => StylableJsxWidget;
+
+function compose<T extends JsxWidget>(
+  widget: core.Widget,
+  context: { is_root: boolean },
+  config: WebWidgetComposerConfig
+): T {
+  assert(widget, "input widget is required");
+  const handleChildren = <T extends JsxWidget>(
+    children: core.Widget[]
+  ): T[] => {
     return children?.map((c) => {
       return handleChild(c);
     });
   };
 
-  const handleChild = (child: core.Widget): WidgetTree => {
-    return buildWebWidgetFromTokens(child, { ...context, is_root: false });
+  const handleChild = <T extends JsxWidget>(child: core.Widget): T => {
+    return compose(child, { ...context, is_root: false }, config);
   };
 
   const _remove_width_height_if_root_wh = {
-    width: context.is_root ? undefined : widget.width,
-    height: context.is_root ? undefined : widget.height,
+    width: context.is_root ? undefined : (widget as IWHStyleWidget).width,
+    height: context.is_root ? undefined : (widget as IWHStyleWidget).height,
   };
 
   const default_props_for_layout = {
@@ -35,7 +77,10 @@ export function buildWebWidgetFromTokens(
 
   const _key = keyFromWidget(widget);
 
-  let thisWebWidget: WidgetTree;
+  let thisWebWidget: JsxWidget;
+  // ------------------------------------
+  // region layouts
+  // ------------------------------------
   if (widget instanceof core.Column) {
     thisWebWidget = new web.Column({
       ...default_props_for_layout,
@@ -48,6 +93,8 @@ export function buildWebWidgetFromTokens(
       children: handleChildren(widget.children),
       key: _key,
     });
+  } else if (widget instanceof core.Wrap) {
+    thisWebWidget = compose_wrap(widget, handleChildren(widget.children));
   } else if (widget instanceof core.Flex) {
     thisWebWidget = new web.Flex({
       ...widget,
@@ -59,7 +106,7 @@ export function buildWebWidgetFromTokens(
     const _remove_overflow_if_root_overflow = {
       clipBehavior: context.is_root
         ? undefined
-        : (widget as Stack).clipBehavior,
+        : (widget as core.Stack).clipBehavior,
     };
 
     thisWebWidget = new web.Stack({
@@ -80,27 +127,44 @@ export function buildWebWidgetFromTokens(
     });
     //
   } else if (widget instanceof core.Positioned) {
-    thisWebWidget = handleChild(widget.child);
-    // -------------------------------------
-    // override w & h with position provided w/h
-    thisWebWidget.extendStyle({
-      width: css.px(widget.width),
-      height: css.px(widget.height),
+    thisWebWidget = compose_wrapped_with_positioned(widget, handleChild);
+  } else if (widget instanceof core.SizedBox) {
+    thisWebWidget = compose_wrapped_with_sized_box(widget, handleChild);
+  } else if (widget instanceof core.OverflowBox) {
+    thisWebWidget = compose_wrapped_with_overflow_box(widget, handleChild);
+  }
+  // ENGREGION layouts ------------------------------------------------------------------------
+  else if (widget instanceof core.Opacity) {
+    thisWebWidget = compose_wrapped_with_opacity(widget, handleChild);
+  } else if (widget instanceof core.Blurred) {
+    thisWebWidget = compose_wrapped_with_blurred(widget, handleChild);
+  } else if (widget instanceof core.Rotation) {
+    thisWebWidget = compose_wrapped_with_rotation(widget, handleChild);
+  }
+  // ----- region clip path ------
+  else if (widget instanceof core.ClipRRect) {
+    thisWebWidget = compose_wrapped_with_clip_rrect(widget, handleChild);
+  } else if (widget instanceof core.ClipPath) {
+    const child = handleChild<StylableJsxWidget>(widget.child);
+    child.extendStyle({
+      ...css.clipPath(widget),
+      top: undefined,
+      left: undefined,
+      right: undefined,
+      bottom: undefined,
     });
-    // -------------------------------------
-    thisWebWidget.constraint = {
-      left: widget.left,
-      top: widget.top,
-      right: widget.right,
-      bottom: widget.bottom,
-    };
-  } else if (widget instanceof core.Text) {
+    thisWebWidget = child;
+  }
+  // ----- endregion clip path ------
+  else if (widget instanceof core.RenderedText) {
     thisWebWidget = new web.Text({
       ...widget,
+      key: _key,
       textStyle:
         widget.style /** explicit assignment - field name is different */,
       data: widget.data,
-      key: _key,
+      // experimental element specification
+      elementPreference: widget.element_preference_experimental,
     });
   } else if (widget instanceof core.VectorWidget) {
     thisWebWidget = new web.SvgElement({
@@ -112,6 +176,7 @@ export function buildWebWidgetFromTokens(
   } else if (widget instanceof core.ImageWidget) {
     thisWebWidget = new web.ImageElement({
       ...widget,
+      alt: config.img_no_alt ? "" : `image of ${_key.name}`,
       src: widget.src,
       key: _key,
     });
@@ -128,6 +193,8 @@ export function buildWebWidgetFromTokens(
 
         thisWebWidget = new web.ImageElement({
           ...widget,
+          width: widget.size,
+          height: widget.size,
           src:
             _tmp_icon_as_img.url ||
             /*fallback*/ "https://bridged-service-static.s3.us-west-1.amazonaws.com/branding/logo/32.png", // TODO: change this
@@ -138,6 +205,8 @@ export function buildWebWidgetFromTokens(
       case "remote-uri": {
         thisWebWidget = new web.ImageElement({
           ...widget,
+          width: widget.size,
+          height: widget.size,
           src: widget.icon.uri,
           key: _key,
           alt: "icon",
@@ -149,45 +218,41 @@ export function buildWebWidgetFromTokens(
 
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
   else if (widget instanceof core.Container) {
-    thisWebWidget = new web.Container({
+    const container = new web.Container({
       ...widget,
       key: _key,
       borderRadius: widget.borderRadius,
+      width: widget.width,
+      height: widget.height,
     });
-    thisWebWidget.color = widget.color;
-    thisWebWidget.x = widget.x;
-    thisWebWidget.y = widget.y;
-    thisWebWidget.width = widget.width;
-    thisWebWidget.height = widget.height;
-    thisWebWidget.background = widget.background;
+    container.x = widget.x;
+    container.y = widget.y;
+    container.background = widget.background;
+    thisWebWidget = container;
   }
 
   // -------------------------------------
   // special tokens
   // -------------------------------------
   else if (widget instanceof special.Stretched) {
-    let remove_size;
-    switch (widget.axis) {
-      case Axis.horizontal:
-        remove_size = "height";
-        break;
-      case Axis.vertical:
-        remove_size = "width";
-        break;
-    }
-
-    thisWebWidget = handleChild(widget.child);
-    thisWebWidget.extendStyle({
-      "align-self": "stretch",
-      [remove_size]: undefined,
-    });
+    thisWebWidget = compose_wrapped_with_clip_stretched(widget, handleChild);
   }
   // -------------------------------------
-
+  // -------------------------------------
+  // support component / instance
+  else if (widget instanceof reusable.InstanceWidget) {
+    thisWebWidget = compose_instanciation(widget, handleChild);
+  }
+  //
+  // -------------------------------------
   // -------------------------------------
   // end of logic gate
   // -------------------------------------
   else {
+    if (thisWebWidget)
+      throw new Error(
+        "internal error. this final exception gate should not be entered since there is already a composed widget."
+      );
     // todo - handle case more specific
     thisWebWidget = new web.ErrorWidget({
       key: _key,
@@ -195,17 +260,18 @@ export function buildWebWidgetFromTokens(
         widget.key.originName
       }" type of "${widget._type}" - ${JSON.stringify(widget.key)}`,
     });
+    console.warn("not handled", widget);
   }
   // -------------------------------------
   // -------------------------------------
 
   // post extending - do not abuse this
   if (context.is_root) {
-    thisWebWidget.extendStyle({
-      // TODO: add overflow x hide handling by case.
-      // "overflow-x": "hidden",
-    });
+    // thisWebWidget.extendStyle({
+    //   // TODO: add overflow x hide handling by case.
+    //   // "overflow-x": "hidden",
+    // });
   }
 
-  return thisWebWidget;
+  return thisWebWidget as T;
 }

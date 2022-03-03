@@ -6,7 +6,7 @@ import {
   Color,
   EdgeInsets,
 } from "@reflect-ui/core";
-import { WidgetTree } from "@web-builder/core/widget-tree/widget";
+import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
 import { Flex } from "../flex";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 
@@ -14,11 +14,11 @@ export class Column extends Flex {
   readonly _type = "column";
 
   constructor(
-    p: Omit<IFlexManifest<WidgetTree>, "direction"> & {
+    p: Omit<IFlexManifest<StylableJsxWidget>, "direction"> & {
       key: WidgetKey;
       margin?: EdgeInsets;
       padding?: EdgeInsets;
-      boxShadow?: BoxShadowManifest;
+      boxShadow?: BoxShadowManifest[];
       color?: Color;
       borderRadius?: BorderRadiusManifest;
     }
