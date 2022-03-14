@@ -314,11 +314,9 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.line:
-      // FIXME: this is a temporary fallback. line should be handled with unique handler. (using rect's handler instead.)
-      tokenizedTarget = tokenizeContainer.fromRectangle(node as any);
+      tokenizedTarget = tokenizeContainer.fromLine(node as any);
+      // tokenizedTarget = tokenizeDivider.fromLine(_line);
       break;
-    // const _line = node as nodes.ReflectLineNode;
-    // tokenizedTarget = tokenizeDivider.fromLine(_line);
 
     default:
       console.error(`${node["type"]} is not yet handled by "@designto/token"`);

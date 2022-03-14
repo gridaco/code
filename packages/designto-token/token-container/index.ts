@@ -23,6 +23,20 @@ function fromRectangle(rect: nodes.ReflectRectangleNode): core.Container {
   return container;
 }
 
+function fromLine(line: nodes.ReflectLineNode): core.Container {
+  const container = new core.Container({
+    key: keyFromNode(line),
+    width: line.width,
+    height: 0,
+    boxShadow: line.shadows as BoxShadowManifest[],
+    border: tokenizeBorder.fromLineNode(line),
+  });
+
+  container.x = line.x;
+  container.y = line.y;
+  return container;
+}
+
 function fromEllipse(ellipse: nodes.ReflectEllipseNode): core.Container {
   const container = new core.Container({
     key: keyFromNode(ellipse),
@@ -45,4 +59,5 @@ function fromEllipse(ellipse: nodes.ReflectEllipseNode): core.Container {
 export const tokenizeContainer = {
   fromRectangle: fromRectangle,
   fromEllipse: fromEllipse,
+  fromLine: fromLine,
 };
