@@ -60,10 +60,11 @@ export function borderRadius(r: BorderRadiusManifest): CSSProperties {
         "border-radius": px(r.all),
       };
     } else {
-      console.warn("elliptical border radius not supported");
+      // example - https://codepen.io/Mahe76/pen/ExZbdro
       return {
-        "border-radius": px(r.all.x),
+        "border-radius": `${px(r.all.x)} / ${px(r.all.y)}`,
       };
+      // TODO: support short handed version - `50%`
     }
   } else {
     return {
