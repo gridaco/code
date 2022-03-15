@@ -270,6 +270,16 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.text:
+      // FIXME: aberation handling (remove me if required) --------------------------------
+      // FIXME: this is for giving extra space for text so it won't break line accidently.
+      // FIXME: consider applying this only to a preview build
+      if (node.data.length <= 6 && node.data.length > 2) {
+        node.width = node.width + 1;
+      } else if (node.data.length < 30) {
+        node.width = node.width + 2;
+      }
+      // FIXME: ---------------------------------------------------------------------------------
+
       tokenizedTarget = tokenizeText.fromText(node as nodes.ReflectTextNode);
       break;
 
