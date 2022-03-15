@@ -18,6 +18,7 @@ export function compose_wrapped_with_rotation(
     // rotation data needs to be inverted
     transform: css.rotation(-widget.rotation),
     // this is where the figma's rotation data is originated from.
+    // see docs/figma-rotation.md
     "transform-origin": "top left",
   });
   return child;
