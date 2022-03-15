@@ -306,7 +306,13 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.ellipse:
-      tokenizedTarget = tokenizeContainer.fromEllipse(node);
+      if (node.arcData.startingAngle === 0 && node.arcData.innerRadius === 0) {
+        // a standard ellipse
+        tokenizedTarget = tokenizeContainer.fromEllipse(node);
+      } else {
+        // a customized ellipse, most likely to be part of a graphical element.
+        tokenizedTarget = tokenizeGraphics.fromAnyNode(node);
+      }
       break;
 
     case nodes.ReflectSceneNodeType.boolean_operation:
