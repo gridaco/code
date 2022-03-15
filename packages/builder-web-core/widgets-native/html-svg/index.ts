@@ -200,6 +200,17 @@ export class SvgElement extends StylableJsxWidget {
     };
   }
 
+  // @override
+  get finalStyle() {
+    return {
+      ...super.finalStyle,
+      // TODO: this is a hot fix of svg & path's constraint handling
+      // width & height for the svg must be preserved. (it wont' follow the constraints anyway.)
+      width: css.length(this.width),
+      height: css.length(this.height),
+    };
+  }
+
   jsxConfig(): StylableJSXElementConfig | UnstylableJSXElementConfig {
     return <StylableJSXElementConfig>{
       type: "tag-and-attr",
