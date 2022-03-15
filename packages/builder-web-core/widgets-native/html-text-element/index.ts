@@ -73,6 +73,7 @@ export class Text extends TextChildWidget {
       "text-align": this.textAlign,
       "text-decoration": css.textDecoration(this.textStyle.decoration),
       "text-shadow": css.textShadow(this.textStyle.textShadow),
+      "text-transform": this.textStyle.textTransform,
       // ------------------------------------------
       ...textWH({ width: this.width, height: this.height }),
     };
