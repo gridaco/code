@@ -115,8 +115,8 @@ const __get_dedicated_element_tag = (t?: WebTextElement | undefined) => {
 
 function textWH({ width, height }: { width: number; height: number }) {
   return {
-    // TODO: do not specify width when parent is a flex container.
-    // Also flex: 1 is required to make the text wrap.
+    // TODO: do not specify width when parent is a flex container. (set as 100%)
+    // Also flex-grow: 1 is required to make the text wrap.
     width: css.px(width),
     "min-height": css.px(height),
   };
