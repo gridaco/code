@@ -14,7 +14,7 @@ import { Dynamic } from "@reflect-ui/core/lib/_utility-types";
  * You can select wich element to render with `elementPreference`. - choose between h1 ~ h6, p, span, etc.
  */
 export class Text extends TextChildWidget {
-  _type: "Text";
+  _type: "Text" = "Text";
 
   // text properties
   data: Dynamic<string>;
@@ -73,14 +73,27 @@ export class Text extends TextChildWidget {
       "text-align": this.textAlign,
       "text-decoration": css.textDecoration(this.textStyle.decoration),
       "text-shadow": css.textShadow(this.textStyle.textShadow),
+      "text-transform": this.textStyle.textTransform,
       // ------------------------------------------
-      "min-height": css.px(this.height),
-      // TODO: do not specify width when parent is a flex container.
-      // Also flex: 1 is required to make the text wrap.
-      width: css.px(this.width),
+      ...textWH({ width: this.width, height: this.height }),
     };
 
     return <CSSProperties>textStyle;
+  }
+
+  get finalStyle() {
+    const superFinalStyle = super.finalStyle;
+    // TODO: this is a dirty fix ------------------------------------------------
+    // the text's width should not be overriden by the constraint's preference.
+    if (this.width === undefined) {
+      delete superFinalStyle["width"];
+    }
+    if (this.height === undefined) {
+      delete superFinalStyle["height"];
+    }
+    // --------------------------------------------------------------------------
+
+    return { ...superFinalStyle };
   }
 
   jsxConfig(): StylableJSXElementConfig {
@@ -99,3 +112,12 @@ const __get_dedicated_element_tag = (t?: WebTextElement | undefined) => {
     return __default_element_tag;
   }
 };
+
+function textWH({ width, height }: { width: number; height: number }) {
+  return {
+    // TODO: do not specify width when parent is a flex container. (set as 100%)
+    // Also flex-grow: 1 is required to make the text wrap.
+    width: css.px(width),
+    "min-height": css.px(height),
+  };
+}
