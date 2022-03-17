@@ -270,6 +270,21 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.text:
+      // FIXME: aberation handling (remove me if required) --------------------------------
+      // FIXME: this is for giving extra space for text so it won't break line accidently.
+      // FIXME: consider applying this only to a preview build
+      // TODO: change logic to word count.
+      const wordcount = node.data.split(" ").length;
+      const txtlen = node.data.length;
+      if (wordcount <= 1) {
+        /* skip, since there is no word break */
+      } else if (txtlen <= 6 && wordcount <= 2) {
+        node.width = node.width + 1;
+      } else if (txtlen < 30) {
+        node.width = node.width + 2;
+      }
+      // FIXME: ---------------------------------------------------------------------------------
+
       tokenizedTarget = tokenizeText.fromText(node as nodes.ReflectTextNode);
       break;
 
@@ -306,7 +321,13 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.ellipse:
-      tokenizedTarget = tokenizeContainer.fromEllipse(node);
+      if (node.arcData.startingAngle === 0 && node.arcData.innerRadius === 0) {
+        // a standard ellipse
+        tokenizedTarget = tokenizeContainer.fromEllipse(node);
+      } else {
+        // a customized ellipse, most likely to be part of a graphical element.
+        tokenizedTarget = tokenizeGraphics.fromAnyNode(node);
+      }
       break;
 
     case nodes.ReflectSceneNodeType.boolean_operation:
@@ -314,11 +335,9 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.line:
-      // FIXME: this is a temporary fallback. line should be handled with unique handler. (using rect's handler instead.)
-      tokenizedTarget = tokenizeContainer.fromRectangle(node as any);
+      tokenizedTarget = tokenizeContainer.fromLine(node as any);
+      // tokenizedTarget = tokenizeDivider.fromLine(_line);
       break;
-    // const _line = node as nodes.ReflectLineNode;
-    // tokenizedTarget = tokenizeDivider.fromLine(_line);
 
     default:
       console.error(`${node["type"]} is not yet handled by "@designto/token"`);
