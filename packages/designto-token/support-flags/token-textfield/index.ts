@@ -2,9 +2,8 @@ import {
   TextFieldDecoration,
   TextField,
   InputBorder,
-  BorderSide,
   OutlineInputBorder,
-  Flex,
+  Container,
 } from "@reflect-ui/core";
 import type { TextStyle } from "@reflect-ui/core";
 import type { AsInputFlag } from "@code-features/flags/types";
@@ -43,7 +42,7 @@ import { unwrappedChild } from "../../wrappings";
 export function tokenize_flagged_textfield(
   node: ReflectSceneNode,
   flag: AsInputFlag
-): TextField {
+): TextField | Container {
   if (flag.value === false) return;
 
   const validated = validate_input(node);
@@ -66,27 +65,33 @@ export function tokenize_flagged_textfield(
             { is_root: false },
             {}
           )
-        ) as Flex;
+        ) as Container;
 
-        return new TextField({
-          key: _key,
-          style: style || placeholderStyle,
-          decoration: new TextFieldDecoration({
-            border: new OutlineInputBorder({
-              borderSide: container.border.bottom,
-              borderRadius: container.borderRadius,
+        // @ts-ignore FIXME: no tsignore
+        return new Container({
+          ...container,
+          child: new TextField({
+            key: _key,
+            ...container,
+            style: style || placeholderStyle,
+            decoration: new TextFieldDecoration({
+              border: new OutlineInputBorder({
+                borderSide: container.border.bottom,
+                borderRadius: container.borderRadius,
+              }),
+              contentPadding: input_root.padding,
+              fillColor:
+                input_root.primaryFill.type === "SOLID"
+                  ? paintToColor(input_root.primaryFill)
+                  : null,
+              placeholderText: placeholder?.data,
+              placeholderStyle: placeholderStyle,
+              //
             }),
-            contentPadding: input_root.padding,
-            fillColor:
-              input_root.primaryFill.type === "SOLID"
-                ? paintToColor(input_root.primaryFill)
-                : null,
-            placeholderText: placeholder?.data,
-            placeholderStyle: placeholderStyle,
-            //
           }),
         });
       }
+
       case "text-as-input": {
         const { style } = tokenizeText.fromText(validated.input_root);
         return new TextField({
