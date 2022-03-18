@@ -216,6 +216,17 @@ function compose<T extends JsxWidget>(
     }
   }
 
+  // #region component widgets
+  else if (widget instanceof core.TextField) {
+    // TODO: not ready
+    thisWebWidget = new web.TextInput({
+      ...widget,
+      key: _key,
+    });
+  }
+
+  // #endregion
+
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
   else if (widget instanceof core.Container) {
     const container = new web.Container({
