@@ -1,4 +1,11 @@
-import { TextField } from "@reflect-ui/core";
+import {
+  TextFieldDecoration,
+  TextField,
+  InputBorder,
+  BorderSide,
+  OutlineInputBorder,
+  Flex,
+} from "@reflect-ui/core";
 import type { TextStyle } from "@reflect-ui/core";
 import type { AsInputFlag } from "@code-features/flags/types";
 import type {
@@ -11,6 +18,10 @@ import { tokenize } from "../..";
 import { handleChildren } from "../../main";
 import assert from "assert";
 import { tokenizeText } from "../../token-text";
+import { detectIf } from "@reflect-ui/detection";
+import { paintToColor } from "@design-sdk/core/utils/colors";
+import { tokenizeLayout } from "../../token-layout";
+import { unwrappedChild } from "../../wrappings";
 
 /**
  *
@@ -41,22 +52,51 @@ export function tokenize_flagged_textfield(
 
     switch (validated.__type) {
       case "frame-as-input": {
-        const { style } = tokenizeText.fromText(validated.value);
+        const { input_root, value, placeholder } = validated;
+
+        const style =
+          value && (tokenizeText.fromText(value).style as TextStyle);
+        const placeholderStyle =
+          placeholder &&
+          (tokenizeText.fromText(placeholder).style as TextStyle);
+        const container = unwrappedChild(
+          tokenizeLayout.fromFrame(
+            input_root,
+            input_root.children,
+            { is_root: false },
+            {}
+          )
+        ) as Flex;
+
         return new TextField({
           key: _key,
-          style: style as TextStyle,
-          // TODO: support decoration
-          decoration: null,
+          style: style || placeholderStyle,
+          decoration: new TextFieldDecoration({
+            border: new OutlineInputBorder({
+              borderSide: container.border.bottom,
+              borderRadius: container.borderRadius,
+            }),
+            contentPadding: input_root.padding,
+            fillColor:
+              input_root.primaryFill.type === "SOLID"
+                ? paintToColor(input_root.primaryFill)
+                : null,
+            placeholderText: placeholder?.data,
+            placeholderStyle: placeholderStyle,
+            //
+          }),
         });
       }
       case "text-as-input": {
         const { style } = tokenizeText.fromText(validated.input_root);
-
         return new TextField({
           key: _key,
           style: style as TextStyle,
           // TODO: support decoration
-          decoration: null,
+          initialValue: validated.input_root.data,
+          decoration: new TextFieldDecoration({
+            border: InputBorder.none,
+          }),
         });
       }
     }
@@ -103,12 +143,18 @@ function validate_input(node: ReflectSceneNode):
         "input target frame must be a autolayout frame"
       );
 
+      const firstTextNode = node.children.find(
+        valid_text_node
+      ) as ReflectTextNode;
+
+      // this is not accurate
+      const placeholder = detectIf.textfieldPlaceholder(node, firstTextNode);
+
       return {
         __type: "frame-as-input",
         input_root: node,
-        // FIXME: no explicit placeholder checking here.
-        placeholder: node.children.find(valid_text_node) as ReflectTextNode,
-        value: node.children.find(valid_text_node) as ReflectTextNode,
+        placeholder: placeholder.result ? placeholder.data : undefined,
+        value: placeholder.result ? undefined : firstTextNode,
         error: false,
       };
     }
