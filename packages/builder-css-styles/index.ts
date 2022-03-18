@@ -9,6 +9,7 @@ export * from "./font-weight";
 export * from "./font-family";
 export * from "./text-decoration";
 export * from "./text-shadow";
+export * from "./text-transform";
 export * from "./gradient";
 export * from "./padding";
 export * from "./margin";

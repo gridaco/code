@@ -151,7 +151,7 @@ export class HtmlInputText extends Container implements ITextFieldManifest {
       "text-align": this.textAlign,
       "text-decoration": css.textDecoration(this.style.decoration),
       "text-shadow": css.textShadow(this.style.textShadow),
-      "text-transform": this.style.textTransform,
+      "text-transform": css.textTransform(this.style.textTransform),
       // text styles --------------------------------------------
     };
   }
