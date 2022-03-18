@@ -1,14 +1,13 @@
-import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
 import { CSSProperties } from "@coli.codes/css";
 import { StylableJSXElementConfig, WidgetKey } from "../..";
 import * as css from "@web-builder/styles";
 import { JSX, JSXAttribute, StringLiteral } from "coli";
-import { UnstylableJSXElementConfig } from "..";
-import { JsxWidget } from "../../widget-core";
+import { Container, UnstylableJSXElementConfig } from "..";
 import {
   Color,
   EdgeInsets,
   ITextFieldManifest,
+  IWHStyleWidget,
   TextAlign,
   TextAlignVertical,
   TextFieldDecoration,
@@ -20,14 +19,10 @@ import { TextInputType } from "@reflect-ui/core/lib/text-input-type";
 /**
  * A Html input element dedicated to text related inputs.
  */
-export class HtmlInputText
-  extends StylableJsxWidget
-  implements ITextFieldManifest
-{
+export class HtmlInputText extends Container implements ITextFieldManifest {
   _type = "input/text";
 
   // the input element can not contain children
-  readonly children?: JsxWidget[] = null;
 
   decoration?: TextFieldDecoration;
   autocorrect?: boolean;
@@ -83,8 +78,10 @@ export class HtmlInputText
     textAlign,
     textAlignVertical,
     initialValue,
-  }: { key: WidgetKey } & ITextFieldManifest) {
-    super({ key });
+
+    ...rest
+  }: { key: WidgetKey } & ITextFieldManifest & IWHStyleWidget) {
+    super({ key, ...rest });
 
     this.decoration = decoration;
     this.autocorrect = autocorrect;
@@ -119,22 +116,17 @@ export class HtmlInputText
   styleData(): CSSProperties {
     // TODO:
     // - support placeholder text color styling
+    const containerstyle = super.styleData();
 
     return {
       // general layouts, continer ---------------------
-      width: css.length(this.width),
-      height: css.length(this.height),
-      "min-width": css.length(this.minWidth),
-      "max-width": css.length(this.maxWidth),
-      "min-height": css.length(this.minHeight),
-      "max-height": css.length(this.maxHeight),
-      ...css.margin(this.margin),
-      "box-shadow": css.boxshadow(...(this.boxShadow ?? [])),
-      "box-sizing": (this.padding && "border-box") || undefined,
+      ...containerstyle,
       // -------------------------------------------------
 
       // padding
       ...css.padding(this.decoration.contentPadding),
+      "box-sizing": (this.padding && "border-box") || undefined,
+
       // border
       border:
         this.decoration.border.borderSide &&
@@ -164,6 +156,7 @@ export class HtmlInputText
     };
   }
 
+  // @ts-ignore
   jsxConfig(): StylableJSXElementConfig | UnstylableJSXElementConfig {
     const attrs = [
       new JSXAttribute(
