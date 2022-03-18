@@ -1,3 +1,4 @@
-# Indiacting that the layer is for containing an external webview
+# `--webview-src` Flag
 
-## iframe for web platform, webview for ios/android/flutter
+- Visit the [design documentation](../docs/--webview-src.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--webview-src)

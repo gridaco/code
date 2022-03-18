@@ -21,7 +21,7 @@ export interface IWidgetWithStyle {
 /**
  * Since html based framework's widget can be represented withou any style definition, this WidgetWithStyle class indicates, that the sub instance of this class will contain style data within it.
  */
-export abstract class WidgetWithStyle
+export abstract class WidgetWithStyle<OUTSTYLE = CSSProperties>
   extends JsxWidget
   implements
     IWHStyleWidget,
@@ -61,8 +61,8 @@ export abstract class WidgetWithStyle
    * if the style is null, it means don't make element as a styled component at all. if style is a empty object, it means to make a empty styled component.
    * @internal - use .style for accessing the full style data.
    */
-  abstract styleData(): CSSProperties | null;
-  get style() {
+  abstract styleData(): OUTSTYLE | null;
+  get finalStyle() {
     return {
       ...this.styleData(),
       /**
@@ -82,7 +82,7 @@ export abstract class WidgetWithStyle
   abstract jsxConfig(): JSXElementConfig;
 
   private extendedStyle: CSSProperties = {};
-  extendStyle(style: CSSProperties) {
+  extendStyle<T = CSSProperties>(style: T) {
     this.extendedStyle = {
       ...this.extendedStyle,
       ...style,

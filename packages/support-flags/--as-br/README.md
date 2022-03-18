@@ -1,17 +1,4 @@
----
-stage:
-  - proposal
-  - draft
----
+# `--as-br` Flag
 
-<!-- Insider's note. -->
-<!-- We haven't find the correct scenario that this flag is required. -->
-<!-- Leaving this feature as proposal -->
-
-# (Draft) `--as-br` As Break
-
-## Interprets the flagged element as break (`<br/>`).
-
-## When to use
-
-While designing a text layout, or a paragraph, we tend to use autolayout (a flex layout) to contain multiple text to be visually displayed as single text.
+- Visit the [design documentation](../docs/--as-br.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--as-br)

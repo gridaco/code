@@ -1,0 +1,7 @@
+{
+  "name": "scripts",
+  "private": true,
+  "dependencies": {
+    "fs-extra": "^10.0.0"
+  }
+}

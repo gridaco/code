@@ -5,6 +5,7 @@ import type { AsHeading3Flag } from "./--as-h3";
 import type { AsHeading4Flag } from "./--as-h4";
 import type { AsHeading5Flag } from "./--as-h5";
 import type { AsHeading6Flag } from "./--as-h6";
+import type { AsInputFlag } from "./--as-input";
 import type { AsParagraphFlag } from "./--as-p";
 import type { AsTextSpanFlag } from "./--as-span";
 import type { WidthFlag } from "./--width";
@@ -13,12 +14,19 @@ import type { MaxWidthFlag } from "./--max-width";
 import type { HeightFlag } from "./--height";
 import type { MinHeightFlag } from "./--min-height";
 import type { MaxHeightFlag } from "./--max-height";
-import { FixWidthFlag } from "./--fix-width";
-import { FixHeightFlag } from "./--fix-height";
+import type { FixWidthFlag } from "./--fix-width";
+import type { FixHeightFlag } from "./--fix-height";
+import type { DeclareSpecificationFlag } from "./--declare";
 
 export type Flag =
   //
-  ArtworkFlag | TextElementPreferenceFlag | WHDeclarationFlag | FixWHFlag;
+  | ArtworkFlag
+  | TextElementPreferenceFlag
+  //
+  | WHDeclarationFlag
+  | FixWHFlag
+  //
+  | DeclareSpecificationFlag;
 
 export interface SimpleBooleanValueFlag {
   flag: string;
@@ -95,6 +103,16 @@ export type { AsTextSpanFlag };
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
+export type { AsInputFlag };
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
 export type { WidthFlag, MinWidthFlag, MaxWidthFlag };
 export type { HeightFlag, MinHeightFlag, MaxHeightFlag };
 export type { FixWidthFlag, FixHeightFlag };
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+export type { DeclareSpecificationFlag };

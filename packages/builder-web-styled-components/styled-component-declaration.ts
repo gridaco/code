@@ -43,15 +43,14 @@ export class StyledComponentDeclaration extends VariableDeclaration {
     style: CSSProperties,
     html5tag: Html5IdentifierNames
   ): TaggedTemplateExpression {
-    const stylestring = buildCssStandard(style);
-    const formatedStyleStringWithTab = formatStyledTempplateString(stylestring);
+    const content = formatStyledTempplateString(buildCssStandard(style));
     return new TaggedTemplateExpression(
       new PropertyAccessExpression(
         StyledComponentDeclaration.styledIdentifier,
         html5tag
       ),
       {
-        template: new TemplateLiteral(formatedStyleStringWithTab),
+        template: new TemplateLiteral(content),
       }
     );
   }
@@ -90,7 +89,7 @@ export function declareStyledComponentVariable(
   }
   ///
 
-  const style_data = widgetConfig.style;
+  const style_data = widgetConfig.finalStyle;
   /**
    * if the style is null, it means don't make element as a styled component at all. if style is a empty object, it means to make a empty styled component.
    */

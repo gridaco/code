@@ -8,17 +8,21 @@ import {
   StylableJSXElementConfig,
 } from "@web-builder/core";
 import { JSXExpression, JSXText, StringLiteral } from "coli";
+import type { CSSProperties } from "@coli.codes/css";
 
 /**
  * Widget that requires no additional custom import rather than react
  */
-export abstract class StylableJsxWidget extends WidgetWithStyle {
+export abstract class StylableJsxWidget<
+  S = CSSProperties
+> extends WidgetWithStyle<S> {
   abstract readonly children?: JsxWidget[];
 }
 
 export abstract class SelfClosingWidget
   extends StylableJsxWidget
-  implements Omit<StylableJsxWidget, "children"> {
+  implements Omit<StylableJsxWidget, "children">
+{
   readonly children?: undefined;
   abstract jsxConfig(): StylableJSXElementConfig;
 }
@@ -26,9 +30,10 @@ export abstract class SelfClosingWidget
 /**
  * widget that contains multiple children in the same depth 1 hierarchy
  */
-export abstract class MultiChildWidget
-  extends StylableJsxWidget
-  implements MultiChildWidgetWithStyle {
+export abstract class MultiChildWidget<S = CSSProperties>
+  extends StylableJsxWidget<S>
+  implements MultiChildWidgetWithStyle
+{
   readonly children: JsxWidget[] = [];
   tag: string;
   constructor(p: { key: WidgetKey; children: Array<JsxWidget> }) {
@@ -44,7 +49,7 @@ export abstract class MultiChildWidget
  * which is present for representing connection between prebuilt widget that accepts single child,
  * or for creating constraints for simple layouts such as margin wrap.
  */
-export abstract class SingleChildWidget extends StylableJsxWidget {
+export abstract class SingleChildWidget<S> extends StylableJsxWidget<S> {
   readonly child?: JsxWidget;
   constructor(parameters: { key: WidgetKey; child?: JsxWidget }) {
     super({
@@ -69,7 +74,9 @@ export abstract class IndependantWidget extends StylableJsxWidget {
  * widget containing only text values.
  * e.g. <div>I'm Text</div>, <Typography>I'm Text</Typography>, <h1>I'm Text</h1>
  */
-export abstract class TextChildWidget extends SingleChildWidget {
+export abstract class TextChildWidget<
+  S = CSSProperties
+> extends SingleChildWidget<S> {
   readonly child: StylableJsxWidget;
   children?: StylableJsxWidget[];
   constructor(p: { key: WidgetKey }) {

@@ -150,25 +150,29 @@ function handleNode(
   // --------------------------- Detected tokens -----------------------------
   // -------------------------------------------------------------------------
 
-  // - image -
+  // - image - // image detection is always enabled exceptionally.
+  // TODO: separate image detection with static logic based and the smart one.
   const _detect_if_image = detectIf.image(node);
   if (_detect_if_image.result) {
     return tokenizeGraphics.fromImage(node, _detect_if_image.data);
   }
 
-  // - icon -
-  const _detect_if_icon = detectIf.icon(node);
-  if (_detect_if_icon.result) {
-    return tokenizeGraphics.fromIcon(node, _detect_if_icon.data);
+  if (config.disable_detection) {
+    // skip detection
+  } else {
+    // - icon -
+    const _detect_if_icon = detectIf.icon(node);
+    if (_detect_if_icon.result) {
+      return tokenizeGraphics.fromIcon(node, _detect_if_icon.data);
+    }
+
+    // - button -
+    // TODO: temporarily disabled - remove comment after button widget is ready
+    // const _detect_if_button = detectIf.button(node);
+    // if (_detect_if_button.result) {
+    //   return tokenizeButton.fromManifest(node, _detect_if_button.data);
+    // }
   }
-
-  // - button -
-  // TODO: temporarily disabled - remove comment after button widget is ready
-  // const _detect_if_button = detectIf.button(node);
-  // if (_detect_if_button.result) {
-  //   return tokenizeButton.fromManifest(node, _detect_if_button.data);
-  // }
-
   // -------------------------------------------------------------------------
   // --------------------------- Detected tokens -----------------------------
   // -------------------------------------------------------------------------
@@ -197,7 +201,11 @@ function handleNode(
       !config.disable_flags_support &&
       config.should_ignore_flag?.(node) !== true
     ) {
-      tokenizedTarget = flags_handling_gate(node);
+      try {
+        tokenizedTarget = flags_handling_gate(node);
+      } catch (e) {
+        console.error("error while interpreting flags.. skipping", e);
+      }
     }
   }
   //
@@ -266,6 +274,21 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.text:
+      // FIXME: aberation handling (remove me if required) --------------------------------
+      // FIXME: this is for giving extra space for text so it won't break line accidently.
+      // FIXME: consider applying this only to a preview build
+      // TODO: change logic to word count.
+      const wordcount = node.data.split(" ").length;
+      const txtlen = node.data.length;
+      if (wordcount <= 1) {
+        /* skip, since there is no word break */
+      } else if (txtlen <= 6 && wordcount <= 2) {
+        node.width = node.width + 1;
+      } else if (txtlen < 30) {
+        node.width = node.width + 2;
+      }
+      // FIXME: ---------------------------------------------------------------------------------
+
       tokenizedTarget = tokenizeText.fromText(node as nodes.ReflectTextNode);
       break;
 
@@ -302,7 +325,13 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.ellipse:
-      tokenizedTarget = tokenizeContainer.fromEllipse(node);
+      if (node.arcData.startingAngle === 0 && node.arcData.innerRadius === 0) {
+        // a standard ellipse
+        tokenizedTarget = tokenizeContainer.fromEllipse(node);
+      } else {
+        // a customized ellipse, most likely to be part of a graphical element.
+        tokenizedTarget = tokenizeGraphics.fromAnyNode(node);
+      }
       break;
 
     case nodes.ReflectSceneNodeType.boolean_operation:
@@ -310,11 +339,9 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.line:
-      // FIXME: this is a temporary fallback. line should be handled with unique handler. (using rect's handler instead.)
-      tokenizedTarget = tokenizeContainer.fromRectangle(node as any);
+      tokenizedTarget = tokenizeContainer.fromLine(node as any);
+      // tokenizedTarget = tokenizeDivider.fromLine(_line);
       break;
-    // const _line = node as nodes.ReflectLineNode;
-    // tokenizedTarget = tokenizeDivider.fromLine(_line);
 
     default:
       console.error(`${node["type"]} is not yet handled by "@designto/token"`);
