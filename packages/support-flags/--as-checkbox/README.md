@@ -1,7 +1,4 @@
-# `--as=checkbox` - [Reflect UI](https://reflect-ui.com) Checkbox Widget Indication Flag
+# `--as-checkbox` Flag
 
-## Syntax
-
-- `--as-checkbox`
-- `--as-checkbox=true`
-- `--as=checkbox`
+- Visit the [design documentation](../docs/--as-checkbox.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--as-checkbox)

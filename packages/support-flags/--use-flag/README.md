@@ -1,3 +1,4 @@
-# `--use-flag` Flag (Draft)
+# `--use-flag` Flag
 
-Defaults to `true` (even while non specified), turns off flag feature for children when `false`.
+- Visit the [design documentation](../docs/--use-flag.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--use-flag)

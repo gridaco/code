@@ -1,3 +1,4 @@
-## See also
+# `--scroll` Flag
 
-[`--overflow`](../--overflow/README.md)
+- Visit the [design documentation](../docs/--scroll.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--scroll)

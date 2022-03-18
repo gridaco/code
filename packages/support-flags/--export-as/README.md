@@ -1,6 +1,4 @@
-# Export As
+# `--export-as` Flag
 
-**Accepted keys**
-
-- `--export-as`
-- `--export`
+- Visit the [design documentation](../docs/--export-as.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--export-as)

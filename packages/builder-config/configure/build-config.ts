@@ -15,6 +15,18 @@ export interface BuildConfiguration {
    * @default false
    */
   disable_components?: boolean;
+
+  /**
+   * if disabled(true), we won't use detection for buttons, icons, and other widgets.
+   * @default false
+   */
+  disable_detection?: boolean;
+
+  /**
+   * if disabled(true), we won't read flags annotations.
+   * @default false
+   */
+  disable_flags_support?: boolean;
 }
 
 export const default_build_configuration: BuildConfiguration = {

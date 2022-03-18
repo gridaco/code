@@ -14,13 +14,23 @@ import type {
   TextElementPreferenceFlag,
   AsParagraphFlag,
   AsTextSpanFlag,
+  AsInputFlag,
   SimpleBooleanValueFlag,
   FixWHFlag,
+  DeclareSpecificationFlag,
   WHDeclarationFlag,
 } from "./types";
 
 export type FlagsParseResult = Results & {
   __meta: {
+    contains_heading_flag: boolean;
+    contains_paragraph_flag: boolean;
+    contains_span_flag: boolean;
+    contains_input_flag: boolean;
+    contains_wh_declaration_flag: boolean;
+    contains_fix_wh_flag: boolean;
+    contains_declare_flag: boolean;
+    // ...
     [key: string]: boolean;
   };
 };
@@ -47,6 +57,9 @@ export function parse(name: string): FlagsParseResult {
       __textspan_alias_pref,
       //#endregion
 
+      // input
+      __input_alias_pref,
+
       //#region
       __width_alias_pref,
       __max_width_alias_pref,
@@ -59,6 +72,10 @@ export function parse(name: string): FlagsParseResult {
       //#region
       __fix_width_alias_pref,
       __fix_height_alias_pref,
+      //#endregion
+
+      //#region
+      __declare_alias_pref,
       //#endregion
 
       {
@@ -78,27 +95,41 @@ export function parse(name: string): FlagsParseResult {
       keys.alias.as_span
     );
 
+    const as_input_flag = handle_single_boolean_flag_alias<AsInputFlag>(
+      _raw_parsed,
+      keys.alias.as_input
+    );
+
     const wh_declaration_flag =
       transform_wh_declaration_alias_from_raw(_raw_parsed);
     const fix_wh_flag = handle_single_boolean_flag_alias<FixWHFlag>(
       _raw_parsed,
       [...keys.alias.fix_width, ...keys.alias.fix_height]
     );
-    // console.log("_raw_parsed", _raw_parsed);
+
+    const declare_flag =
+      handle_single_boolean_flag_alias<DeclareSpecificationFlag>(
+        _raw_parsed,
+        keys.alias.declare
+      );
 
     return {
       ..._raw_parsed,
       ...as_heading_flag,
       ...(as_paragraph_flag ?? {}),
       ...(as_span_flag ?? {}),
+      ...(as_input_flag ?? {}),
       ...(wh_declaration_flag ?? {}),
       ...(fix_wh_flag ?? {}),
+      ...(declare_flag ?? {}),
       __meta: {
         contains_heading_flag: notempty(as_heading_flag),
         contains_paragraph_flag: notempty(as_paragraph_flag),
         contains_span_flag: notempty(as_span_flag),
+        contains_input_flag: notempty(as_input_flag),
         contains_wh_declaration_flag: notempty(as_span_flag),
         contains_fix_wh_flag: notempty(fix_wh_flag),
+        contains_declare_flag: notempty(declare_flag),
       },
     };
   } catch (_) {
@@ -223,6 +254,10 @@ const __textspan_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
   keys.alias.as_span
 );
 
+const __input_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.as_input
+);
+
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
@@ -298,4 +333,12 @@ const __fix_width_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
 );
 const __fix_height_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
   keys.alias.fix_height
+);
+
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+
+const __declare_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.declare
 );

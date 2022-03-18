@@ -1,6 +1,4 @@
-# `--as=button` - [Reflect UI](https://reflect-ui.com) Button Widget Indication Flag
+# `--as-button` Flag
 
-## Syntax
-
-- `--as-button`
-- `--as=button`
+- Visit the [design documentation](../docs/--as-button.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--as-button)

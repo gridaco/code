@@ -1,7 +1,4 @@
-## Learn more at scripts/docs-copy/flags-api-docs.js
-# custom
-----ignore.md
----custom.md
-
-# flags api docs
---*.md
+# This .gitignore file will be included in copy ci execution.
+# Only add targets that shouuld not be included in final docs deployment.
+__**__.md
+README.md

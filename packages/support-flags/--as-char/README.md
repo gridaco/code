@@ -1,18 +1,4 @@
-# As Character
+# `--as-char` Flag
 
-## See also
-
-- `--as-space`
-- `--as-text-group`
-
-## When to use
-
-Some characters can't be displayed in design tool with only using pure text.
-
-Special characters, custom emoji, custom image, etc.
-
-## Example
-
-```
---as-char="🤔"
-```
+- Visit the [design documentation](../docs/--as-char.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--as-char)

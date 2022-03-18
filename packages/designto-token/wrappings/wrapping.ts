@@ -7,6 +7,7 @@ import {
   Rotation,
   Widget,
   OverflowBox,
+  SingleChildScrollView,
 } from "@reflect-ui/core";
 import { Stretched } from "../tokens";
 
@@ -16,6 +17,8 @@ export type WrappingToken =
   | Stretched
   | Positioned
   | OverflowBox
+  // scroll
+  | SingleChildScrollView
   // transform wrappers
   | Rotation
   | Opacity
@@ -30,16 +33,17 @@ export type WrappingToken =
  * @returns
  */
 export function unwrappedChild(maybeWrapped: Widget): Widget {
-  const wrapped =
+  if (
     maybeWrapped instanceof SizedBox ||
     maybeWrapped instanceof Stretched ||
     maybeWrapped instanceof Positioned ||
     maybeWrapped instanceof OverflowBox ||
+    maybeWrapped instanceof SingleChildScrollView ||
     maybeWrapped instanceof Rotation ||
     maybeWrapped instanceof Opacity ||
     maybeWrapped instanceof Blurred ||
-    maybeWrapped instanceof ClipRRect;
-  if (wrapped) {
+    maybeWrapped instanceof ClipRRect
+  ) {
     return unwrappedChild(maybeWrapped.child);
   }
   return maybeWrapped;

@@ -1,7 +1,4 @@
-# `--as=divider` - [Reflect UI](https://reflect-ui.com) Divider Widget Indication Flag
+# `--as-divider` Flag
 
-## Syntax
-
-- `--as-divider`
-- `--as-divider=true`
-- `--as=divider`
+- Visit the [design documentation](../docs/--as-divider.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--as-divider)

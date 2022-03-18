@@ -91,6 +91,25 @@ const REACT_SCRIPTS: StandardLibraryManifest = {
 ///
 
 ///
+/// region react-native
+///
+
+/**
+ * last-update: Feb 2022
+ * https://www.npmjs.com/package/react-native
+ */
+const REACT_NATIVE: StandardLibraryManifest = {
+  id: "react-native",
+  name: "react-native",
+  version: "0.67.2",
+  website: "https://reactnative.dev/",
+};
+
+///
+/// endregion react-native
+///
+
+///
 /// region emotion
 ///
 
@@ -136,6 +155,13 @@ const EMOTION_STYLED: StandardLibraryManifest = {
   name: "@emotion/styled",
   version: "11.3.0",
   website: "https://emotion.sh",
+};
+
+const EMOTION_NATIVE: StandardLibraryManifest = {
+  id: "@emotion/native",
+  name: "@emotion/native",
+  version: "11.0.0",
+  website: "https://emotion.sh/docs/@emotion/native",
 };
 
 ///
@@ -222,10 +248,14 @@ export const standard_libraries = {
   types_react_dom: T_REACT_DOM,
   react_scripts: REACT_SCRIPTS,
 
+  // react-native
+  react_native: REACT_NATIVE,
+
   // emotion
   emotion_css: EMOTION_CSS,
   emotion_core: EMOTION_CORE,
   emotion_styled: EMOTION_STYLED,
+  emotion_native: EMOTION_NATIVE,
   emotion_react: EMOTION_REACT,
 
   // styled-components

@@ -1,3 +1,4 @@
-## (Draft) Text group
+# `--as-text-group` Flag
 
-While creating a multilined, complex text, for example, inserting a custom emoji, or a custom image, we need to use a text group. This is usually done by using a autolayout or col-row oriented multiple autolayouts.
+- Visit the [design documentation](../docs/--as-text-group.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--as-text-group)

@@ -9,7 +9,7 @@
 	url = https://github.com/gridaco/base-sdk
 [submodule "externals/coli"]
 	path = externals/coli
-	url = https://github.com/bridgedxyz/coli
+	url = https://github.com/gridaco/coli
 [submodule "externals/design-sdk"]
 	path = externals/design-sdk
 	url = https://github.com/gridaco/design-sdk
