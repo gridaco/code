@@ -111,6 +111,9 @@ export class HtmlInputText
     this.textAlign = textAlign;
     this.textAlignVertical = textAlignVertical;
     this.initialValue = initialValue;
+
+    // overrides
+    this.padding = this.decoration.contentPadding;
   }
 
   styleData(): CSSProperties {
@@ -118,6 +121,18 @@ export class HtmlInputText
     // - support placeholder text color styling
 
     return {
+      // general layouts, continer ---------------------
+      width: css.length(this.width),
+      height: css.length(this.height),
+      "min-width": css.length(this.minWidth),
+      "max-width": css.length(this.maxWidth),
+      "min-height": css.length(this.minHeight),
+      "max-height": css.length(this.maxHeight),
+      ...css.margin(this.margin),
+      "box-shadow": css.boxshadow(...(this.boxShadow ?? [])),
+      "box-sizing": (this.padding && "border-box") || undefined,
+      // -------------------------------------------------
+
       // padding
       ...css.padding(this.decoration.contentPadding),
       // border
