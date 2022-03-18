@@ -7,6 +7,8 @@ import { flag_key_alias__as_h6, flag_key__as_h6 } from "./--as-h6";
 import { flag_key_alias__as_p, flag_key__as_p } from "./--as-p";
 import { flag_key_alias__as_span, flag_key__as_span } from "./--as-span";
 
+import { flag_key__as_input, flag_key_alias_as_input } from "./--as-input";
+
 import { flag_key_alias__width, flag_key__width } from "./--width";
 import { flag_key_alias__min_width, flag_key__min_width } from "./--min-width";
 import { flag_key_alias__max_width, flag_key__max_width } from "./--max-width";
@@ -30,8 +32,11 @@ export {
   flag_key__as_h5,
   flag_key__as_h6,
 };
+
 export { flag_key__as_p };
 export { flag_key__as_span };
+
+export { flag_key__as_input };
 
 export {
   flag_key__width,
@@ -54,6 +59,7 @@ export const alias = {
   as_h6: flag_key_alias__as_h6,
   as_p: flag_key_alias__as_p,
   as_span: flag_key_alias__as_span,
+  as_input: flag_key_alias_as_input,
   width: flag_key_alias__width,
   min_width: flag_key_alias__min_width,
   max_width: flag_key_alias__max_width,

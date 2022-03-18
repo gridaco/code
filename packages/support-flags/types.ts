@@ -5,6 +5,7 @@ import type { AsHeading3Flag } from "./--as-h3";
 import type { AsHeading4Flag } from "./--as-h4";
 import type { AsHeading5Flag } from "./--as-h5";
 import type { AsHeading6Flag } from "./--as-h6";
+import type { AsInputFlag } from "./--as-input";
 import type { AsParagraphFlag } from "./--as-p";
 import type { AsTextSpanFlag } from "./--as-span";
 import type { WidthFlag } from "./--width";
@@ -98,6 +99,11 @@ export type {
 
 export type { AsParagraphFlag };
 export type { AsTextSpanFlag };
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+export type { AsInputFlag };
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------

@@ -10,6 +10,7 @@ import { tokenize_flagged_artwork } from "./token-artwork";
 import { tokenize_flagged_heading } from "./token-heading";
 import { tokenize_flagged_paragraph } from "./token-p";
 import { tokenize_flagged_span } from "./token-span";
+import { tokenize_flagged_textfield } from "./token-textfield";
 import { tokenize_flagged_wrap } from "./token-wrap";
 import { tokenize_flagged_wh_declaration } from "./token-wh";
 import { tokenize_flagged_fix_wh } from "./token-wh-fix";
@@ -83,5 +84,9 @@ function _handle_with_flags(node, flags: FlagsParseResult) {
   ].filter(Boolean);
   if (fix_wh_flags.length) {
     return tokenize_flagged_fix_wh(node, fix_wh_flags);
+  }
+
+  if (flags.__meta.contains_input_flag) {
+    return tokenize_flagged_textfield(node, flags[keys.flag_key__as_input]);
   }
 }

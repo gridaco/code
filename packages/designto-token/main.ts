@@ -201,7 +201,11 @@ function handleNode(
       !config.disable_flags_support &&
       config.should_ignore_flag?.(node) !== true
     ) {
-      tokenizedTarget = flags_handling_gate(node);
+      try {
+        tokenizedTarget = flags_handling_gate(node);
+      } catch (e) {
+        console.error("error while interpreting flags.. skipping", e);
+      }
     }
   }
   //

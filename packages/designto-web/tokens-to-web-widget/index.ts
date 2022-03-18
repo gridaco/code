@@ -14,6 +14,7 @@ import { compose_wrapped_with_positioned } from "./compose-wrapped-with-position
 import { compose_wrapped_with_clip_stretched } from "./compose-wrapped-with-stretched";
 import { compose_wrapped_with_sized_box } from "./compose-wrapped-with-sized-box";
 import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overflow-box";
+import { compose_unwrapped_text_input } from "./compose-unwrapped-text-field";
 import { compose_instanciation } from "./compose-instanciation";
 import { IWHStyleWidget } from "@reflect-ui/core";
 import * as reusable from "@code-features/component/tokens";
@@ -216,6 +217,13 @@ function compose<T extends JsxWidget>(
     }
   }
 
+  // #region component widgets
+  else if (widget instanceof core.TextField) {
+    thisWebWidget = compose_unwrapped_text_input(_key, widget);
+  }
+
+  // #endregion
+
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
   else if (widget instanceof core.Container) {
     const container = new web.Container({
@@ -224,11 +232,17 @@ function compose<T extends JsxWidget>(
       borderRadius: widget.borderRadius,
       width: widget.width,
       height: widget.height,
+      // TODO: add child: (currently no widget is being nested under Container, exept below custom filters)
     });
     container.x = widget.x;
     container.y = widget.y;
     container.background = widget.background;
     thisWebWidget = container;
+
+    // mergable widgets for web
+    if (widget.child instanceof core.TextField) {
+      thisWebWidget = compose_unwrapped_text_input(_key, widget.child, widget);
+    }
   }
 
   // -------------------------------------
