@@ -186,6 +186,28 @@ export class HtmlInputText extends Container implements ITextFieldManifest {
       attributes: attrs,
     };
   }
+
+  get finalStyle() {
+    const superstyl = super.finalStyle;
+
+    // width override. ------------------------------------------------------------------------------------------
+    // input element's width needs to be specified if the position is absolute and the left & right is specified.
+    let width = superstyl.width;
+    if (
+      width === undefined &&
+      superstyl.position === "absolute" &&
+      superstyl.left !== undefined &&
+      superstyl.right !== undefined
+    ) {
+      width = "calc(100% - " + superstyl.left + " - " + superstyl.right + ")";
+    }
+    // ----------------------------------------------------------------------------------------------------------
+
+    return {
+      ...superstyl,
+      width,
+    };
+  }
 }
 
 /**
