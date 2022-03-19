@@ -13,8 +13,6 @@ import type {
   ReflectTextNode,
 } from "@design-sdk/figma-node";
 import { keyFromNode } from "../../key";
-import { tokenize } from "../..";
-import { handleChildren } from "../../main";
 import assert from "assert";
 import { tokenizeText } from "../../token-text";
 import { detectIf } from "@reflect-ui/detection";
