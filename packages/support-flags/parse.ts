@@ -59,6 +59,9 @@ export function parse(name: string): FlagsParseResult {
       __textspan_alias_pref,
       //#endregion
 
+      // button
+      __button_alias_pref,
+
       // input
       __input_alias_pref,
 
@@ -261,6 +264,10 @@ const __p_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
 
 const __textspan_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
   keys.alias.as_span
+);
+
+const __button_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.as_button
 );
 
 const __input_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
