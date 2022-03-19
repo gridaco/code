@@ -1,4 +1,4 @@
-import { CSSProperties } from "@coli.codes/css";
+import { CSSProperties, ElementCssStyleData } from "@coli.codes/css";
 import { ITextStyle, TextManifest } from "@reflect-ui/core";
 import { JSXElementConfig, WidgetKey } from "@web-builder/core";
 import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
@@ -84,7 +84,7 @@ export class Button extends StylableJsxWidget {
     },
   ];
 
-  styleData(): CSSProperties {
+  styleData(): ElementCssStyleData {
     // wip
     return {
       color: css.color((this.text.style as ITextStyle)?.color),
@@ -95,12 +95,10 @@ export class Button extends StylableJsxWidget {
 
       cursor: "pointer",
 
-      //@ts-ignore
-      // Need proper pseudo-class handling (in css, the pseudo-class must be specified in separate block.)
-      // ":hover": _button_hover_style,
-      // ":disabled": _button_disabled_style,
-      // ":active": _button_active_style,
-      // ":focus": _button_focus_style,
+      ":hover": _button_hover_style,
+      ":disabled": _button_disabled_style,
+      ":active": _button_active_style,
+      ":focus": _button_focus_style,
     };
   }
 

@@ -13,7 +13,7 @@ import {
   NameCases,
   ScopedVariableNamer,
 } from "@coli.codes/naming";
-import { CSSProperties, buildCssStandard } from "@coli.codes/css";
+import { CSSProperties, buildCSSBody } from "@coli.codes/css";
 import { handle } from "@coli.codes/builder";
 import { formatStyledTempplateString } from "./styled-variable-formatter";
 
@@ -43,7 +43,7 @@ export class StyledComponentDeclaration extends VariableDeclaration {
     style: CSSProperties,
     html5tag: Html5IdentifierNames
   ): TaggedTemplateExpression {
-    const content = formatStyledTempplateString(buildCssStandard(style));
+    const content = formatStyledTempplateString(buildCSSBody(style));
     return new TaggedTemplateExpression(
       new PropertyAccessExpression(
         StyledComponentDeclaration.styledIdentifier,
