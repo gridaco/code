@@ -93,6 +93,8 @@ export class Button extends StylableJsxWidget {
       outline: "none",
       "min-height": "24px",
 
+      cursor: "pointer",
+
       //@ts-ignore
       // Need proper pseudo-class handling (in css, the pseudo-class must be specified in separate block.)
       // ":hover": _button_hover_style,
