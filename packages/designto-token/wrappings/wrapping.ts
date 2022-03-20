@@ -32,7 +32,7 @@ export type WrappingToken =
  * @param maybeWrapped
  * @returns
  */
-export function unwrappedChild(maybeWrapped: Widget): Widget {
+export function unwrappedChild<T extends Widget>(maybeWrapped: Widget): T {
   if (
     maybeWrapped instanceof SizedBox ||
     maybeWrapped instanceof Stretched ||
@@ -46,5 +46,5 @@ export function unwrappedChild(maybeWrapped: Widget): Widget {
   ) {
     return unwrappedChild(maybeWrapped.child);
   }
-  return maybeWrapped;
+  return maybeWrapped as T;
 }
