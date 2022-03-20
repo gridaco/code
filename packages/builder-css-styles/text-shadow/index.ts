@@ -3,7 +3,7 @@ import { color } from "../color";
 import { px } from "../dimensions";
 
 export function textShadow(ts: TextShadowManifest[]): string {
-  if (ts.length === 0) {
+  if (!ts || ts.length === 0) {
     return;
   }
 
