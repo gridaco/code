@@ -8,8 +8,8 @@ import { flag_key_alias__as_p, flag_key__as_p } from "./--as-p";
 import { flag_key_alias__as_span, flag_key__as_span } from "./--as-span";
 
 import { flag_key__as_button, flag_key_alias__as_button } from "./--as-button";
-
 import { flag_key__as_input, flag_key_alias_as_input } from "./--as-input";
+import { flag_key__as_slider, flag_key_alias__as_slider } from "./--as-slider";
 
 import { flag_key_alias__width, flag_key__width } from "./--width";
 import { flag_key_alias__min_width, flag_key__min_width } from "./--min-width";
@@ -42,6 +42,8 @@ export { flag_key__as_button };
 
 export { flag_key__as_input };
 
+export { flag_key__as_slider };
+
 export {
   flag_key__width,
   flag_key__min_width,
@@ -65,6 +67,7 @@ export const alias = {
   as_span: flag_key_alias__as_span,
   as_button: flag_key_alias__as_button,
   as_input: flag_key_alias_as_input,
+  as_slider: flag_key_alias__as_slider,
   width: flag_key_alias__width,
   min_width: flag_key_alias__min_width,
   max_width: flag_key_alias__max_width,
