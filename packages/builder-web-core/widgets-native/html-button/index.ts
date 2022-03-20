@@ -1,10 +1,19 @@
-import { CSSProperties, ElementCssStyleData } from "@coli.codes/css";
-import { ITextStyle, TextManifest } from "@reflect-ui/core";
-import { JSXElementConfig, WidgetKey } from "@web-builder/core";
-import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
-import { JSX, JSXAttribute, Snippet } from "coli";
+import type { CSSProperties, ElementCssStyleData } from "@coli.codes/css";
+import type { JSXElementConfig, StylableJsxWidget } from "@web-builder/core";
+import type {
+  IButtonStyleButton,
+  IButtonStyleButtonProps,
+  ITextStyle,
+  ButtonStyle,
+  IWHStyleWidget,
+  Widget,
+} from "@reflect-ui/core";
+import { Text } from "@reflect-ui/core";
+import { Container } from "..";
+import { WidgetKey } from "../../widget-key";
+import { JSX } from "coli";
 import * as css from "@web-builder/styles";
-import { ButtonBaseManifest } from "@reflect-ui/core/lib/button.base";
+
 /**
  * Html5 Button Will have built in support for...
  *
@@ -21,11 +30,8 @@ import { ButtonBaseManifest } from "@reflect-ui/core/lib/button.base";
  * - [html spec](https://html.spec.whatwg.org/multipage/form-elements.html#the-button-element)
  *
  */
-export class Button extends StylableJsxWidget {
-  /**
-   * This Boolean attribute prevents the user from interacting with the button: it cannot be pressed or focused.
-   */
-  disabled?: boolean;
+export class HtmlButton extends Container implements IButtonStyleButton {
+  _type = "button";
 
   /**
    * The name of the button, submitted as a pair with the button’s value as part of the form data, when that button is used to submit the form.
@@ -40,59 +46,112 @@ export class Button extends StylableJsxWidget {
    */
   type: "submit" | "reset" | "button" = "button";
 
-  text?: TextManifest;
-  base: ButtonBaseManifest;
+  // #region @ButtonStyleButton
+  autofocus?: boolean;
+  style: ButtonStyle;
+  /**
+   * This Boolean attribute prevents the user from interacting with the button: it cannot be pressed or focused.
+   */
+  disabled?: boolean;
+  // TextManifest
+  child: Widget;
+  // #endregion @ButtonStyleButton
 
   constructor({
     key,
     name,
-    text,
+    autofocus,
     disabled,
-    minWidth,
-    base,
-  }: {
-    key: WidgetKey;
-    //#region button properties
+    style,
+    child,
+    ...rest
+  }: { key: WidgetKey } & {
     name?: string;
-    text?: TextManifest;
-    disabled?: boolean;
-    minWidth?: number;
-    base: ButtonBaseManifest;
-    //#endregion button properties
-  }) {
-    super({ key });
+  } & IButtonStyleButtonProps &
+    IWHStyleWidget) {
+    super({ key, ...rest });
 
     // set button properties
     this.name = name;
-    this.text = text;
+
+    this.autofocus = autofocus;
     this.disabled = disabled;
-    this.minWidth = minWidth;
+    this.style = style;
+    this.child = child;
+
+    //
+    this.children = this.makechildren();
   }
 
-  children = [
-    <StylableJsxWidget>{
-      key: new WidgetKey(`${this.key.id}.text`, "text"),
-      styleData: () => null,
-      jsxConfig: () => {
-        // const _tag = JSX.identifier("path");
-        return <JSXElementConfig>{
-          // tag: _tag,
-          type: "static-tree",
-          tree: JSX.text(this.text.data as string),
-        };
-      },
-    },
-  ];
+  makechildren() {
+    if (this.child instanceof Text) {
+      return [
+        <StylableJsxWidget>{
+          key: new WidgetKey(`${this.key.id}.text`, "text"),
+          styleData: () => null,
+          jsxConfig: () => {
+            return <JSXElementConfig>{
+              type: "static-tree",
+              tree: JSX.text((this.child as Text).data as string),
+            };
+          },
+        },
+      ];
+    }
+
+    return [];
+  }
 
   styleData(): ElementCssStyleData {
+    const containerstyle = super.styleData();
+
     // wip
     return {
-      color: css.color((this.text.style as ITextStyle)?.color),
-      // background: this.base.
-      border: "none",
-      outline: "none",
-      "min-height": "24px",
+      // general layouts, continer ---------------------
+      ...containerstyle,
+      // -----------------------------------------------
 
+      // padding
+      ...css.padding(this.style.padding?.default),
+      "box-sizing": (this.padding && "border-box") || undefined,
+
+      // background
+      "background-color": this.style.backgroundColor
+        ? css.color(this.style.backgroundColor.default)
+        : undefined,
+
+      // text styles --------------------------------------------
+      color: css.color((this.style.textStyle.default as ITextStyle)?.color),
+      // "text-overflow": this.overflow,
+      "font-size": css.px(this.style.textStyle.default.fontSize),
+      "font-family": css.fontFamily(this.style.textStyle.default.fontFamily),
+      "font-weight": css.convertToCssFontWeight(
+        this.style.textStyle.default.fontWeight
+      ),
+      // "word-spacing": this.style.wordSpacing,
+      "letter-spacing": css.letterSpacing(
+        this.style.textStyle.default.letterSpacing
+      ),
+      "line-height": css.length(this.style.textStyle.default.lineHeight),
+      // "text-align": this.textAlign,
+      "text-decoration": css.textDecoration(
+        this.style.textStyle.default.decoration
+      ),
+      "text-shadow": css.textShadow(this.style.textStyle.default.textShadow),
+      "text-transform": css.textTransform(
+        this.style.textStyle.default.textTransform
+      ),
+      // text styles --------------------------------------------
+
+      //
+      width: undefined, // clear fixed width
+      "min-width": css.length(this.minWidth),
+      "min-height": css.length(this.minHeight),
+
+      border: containerstyle["border"] ?? "none",
+      outline: containerstyle["outline"] ?? "none",
+
+      // button cursor
       cursor: "pointer",
 
       ":hover": _button_hover_style,
@@ -102,6 +161,7 @@ export class Button extends StylableJsxWidget {
     };
   }
 
+  // @ts-ignore
   jsxConfig() {
     return <JSXElementConfig>{
       tag: JSX.identifier("button"),
@@ -118,6 +178,17 @@ export class Button extends StylableJsxWidget {
         // ),
       ],
     };
+  }
+
+  get finalStyle() {
+    const superstyl = super.finalStyle;
+
+    // width override. ------------------------------------------------------------------------------------------
+    return {
+      ...superstyl,
+      width: undefined,
+    };
+    // ----------------------------------------------------------------------------------------------------------
   }
 }
 

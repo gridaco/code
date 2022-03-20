@@ -1,18 +1,17 @@
-import { ButtonWidget, ButtonVariant } from "@reflect-ui/core";
+import { ButtonStyleButton, ButtonVariant, Container } from "@reflect-ui/core";
 import type { AsButtonFlag } from "@code-features/flags/types";
 import type {
   ReflectFrameNode,
   ReflectSceneNode,
   ReflectTextNode,
 } from "@design-sdk/figma-node";
-import { detectIf } from "@reflect-ui/detection";
 import assert from "assert";
 import { tokenizeButton } from "../../token-widgets";
 
 export function tokenize_flagged_button(
   node: ReflectSceneNode,
   flag: AsButtonFlag
-): ButtonWidget {
+): ButtonStyleButton | Container<ButtonStyleButton> {
   if (flag.value === false) return;
 
   const validated = validate_button(node);
@@ -24,7 +23,7 @@ export function tokenize_flagged_button(
         const button = tokenizeButton.fromManifest(button_base, {
           base: button_base,
           text: button_text,
-          variant: ButtonVariant.flatText,
+          variant: ButtonVariant.custom,
         });
 
         return button;
@@ -33,8 +32,7 @@ export function tokenize_flagged_button(
         const { text } = validated;
 
         const button = tokenizeButton.fromManifest(text, {
-          // @ts-ignore
-          base: text,
+          base: null,
           text: text,
           variant: ButtonVariant.flatText,
         });
@@ -105,13 +103,10 @@ function validate_button(node: ReflectSceneNode):
         valid_text_node
       ) as ReflectTextNode;
 
-      // this is not accurate
-      const placeholder = detectIf.textfieldPlaceholder(node, firstTextNode);
-
       return {
         __type: "frame-as-button",
         button_base: node,
-        button_text: placeholder.result ? placeholder.data : undefined,
+        button_text: firstTextNode,
         error: false,
       };
     }
