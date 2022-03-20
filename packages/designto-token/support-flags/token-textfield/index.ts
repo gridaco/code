@@ -13,8 +13,6 @@ import type {
   ReflectTextNode,
 } from "@design-sdk/figma-node";
 import { keyFromNode } from "../../key";
-import { tokenize } from "../..";
-import { handleChildren } from "../../main";
 import assert from "assert";
 import { tokenizeText } from "../../token-text";
 import { detectIf } from "@reflect-ui/detection";
@@ -114,8 +112,8 @@ export function tokenize_flagged_textfield(
  * validate if layer casted as input can be actually tokenized to input.
  *
  * - when applyed to frame,
- *    1. the root should be a column or row
- *    2. the children should be columns or rows
+ *    1. the root should be a flex
+ *    2. the children should be a valid text node
  *
  * - when applyed to text,
  *    1. the text should be visible

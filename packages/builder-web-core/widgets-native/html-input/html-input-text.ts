@@ -1,4 +1,4 @@
-import { CSSProperties } from "@coli.codes/css";
+import { CSSProperties, ElementCssStyleData } from "@coli.codes/css";
 import { StylableJSXElementConfig, WidgetKey } from "../..";
 import * as css from "@web-builder/styles";
 import { JSX, JSXAttribute, StringLiteral } from "coli";
@@ -113,7 +113,7 @@ export class HtmlInputText extends Container implements ITextFieldManifest {
     this.padding = this.decoration.contentPadding;
   }
 
-  styleData(): CSSProperties {
+  styleData(): ElementCssStyleData {
     // TODO:
     // - support placeholder text color styling
     const containerstyle = super.styleData();
@@ -153,6 +153,19 @@ export class HtmlInputText extends Container implements ITextFieldManifest {
       "text-shadow": css.textShadow(this.style.textShadow),
       "text-transform": css.textTransform(this.style.textTransform),
       // text styles --------------------------------------------
+
+      ...(this.decoration?.placeholderStyle
+        ? {
+            "::placeholder": {
+              // TODO: optmiize - assign only diffferent properties values
+              // TODO: not all properties are assigned
+              color: css.color(this.decoration.placeholderStyle.color),
+              "font-size": css.px(this.style.fontSize),
+              "font-family": css.fontFamily(this.style.fontFamily),
+              "font-weight": css.convertToCssFontWeight(this.style.fontWeight),
+            },
+          }
+        : {}),
     };
   }
 

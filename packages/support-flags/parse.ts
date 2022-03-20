@@ -14,6 +14,7 @@ import type {
   TextElementPreferenceFlag,
   AsParagraphFlag,
   AsTextSpanFlag,
+  AsButtonFlag,
   AsInputFlag,
   SimpleBooleanValueFlag,
   FixWHFlag,
@@ -26,6 +27,7 @@ export type FlagsParseResult = Results & {
     contains_heading_flag: boolean;
     contains_paragraph_flag: boolean;
     contains_span_flag: boolean;
+    contains_button_flag: boolean;
     contains_input_flag: boolean;
     contains_wh_declaration_flag: boolean;
     contains_fix_wh_flag: boolean;
@@ -56,6 +58,9 @@ export function parse(name: string): FlagsParseResult {
       __p_alias_pref,
       __textspan_alias_pref,
       //#endregion
+
+      // button
+      __button_alias_pref,
 
       // input
       __input_alias_pref,
@@ -95,6 +100,11 @@ export function parse(name: string): FlagsParseResult {
       keys.alias.as_span
     );
 
+    const as_button_flag = handle_single_boolean_flag_alias<AsButtonFlag>(
+      _raw_parsed,
+      keys.alias.as_button
+    );
+
     const as_input_flag = handle_single_boolean_flag_alias<AsInputFlag>(
       _raw_parsed,
       keys.alias.as_input
@@ -118,6 +128,7 @@ export function parse(name: string): FlagsParseResult {
       ...as_heading_flag,
       ...(as_paragraph_flag ?? {}),
       ...(as_span_flag ?? {}),
+      ...(as_button_flag ?? {}),
       ...(as_input_flag ?? {}),
       ...(wh_declaration_flag ?? {}),
       ...(fix_wh_flag ?? {}),
@@ -126,6 +137,7 @@ export function parse(name: string): FlagsParseResult {
         contains_heading_flag: notempty(as_heading_flag),
         contains_paragraph_flag: notempty(as_paragraph_flag),
         contains_span_flag: notempty(as_span_flag),
+        contains_button_flag: notempty(as_button_flag),
         contains_input_flag: notempty(as_input_flag),
         contains_wh_declaration_flag: notempty(as_span_flag),
         contains_fix_wh_flag: notempty(fix_wh_flag),
@@ -252,6 +264,10 @@ const __p_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
 
 const __textspan_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
   keys.alias.as_span
+);
+
+const __button_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.as_button
 );
 
 const __input_alias_pref = _simple_boolean_value_flag_prefernce_mapper(

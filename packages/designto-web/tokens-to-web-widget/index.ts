@@ -15,6 +15,7 @@ import { compose_wrapped_with_clip_stretched } from "./compose-wrapped-with-stre
 import { compose_wrapped_with_sized_box } from "./compose-wrapped-with-sized-box";
 import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overflow-box";
 import { compose_unwrapped_text_input } from "./compose-unwrapped-text-field";
+import { compose_unwrapped_button } from "./compose-unwrapped-button";
 import { compose_instanciation } from "./compose-instanciation";
 import { IWHStyleWidget } from "@reflect-ui/core";
 import * as reusable from "@code-features/component/tokens";
@@ -218,10 +219,15 @@ function compose<T extends JsxWidget>(
   }
 
   // #region component widgets
+  // button
+  else if (widget instanceof core.ButtonStyleButton) {
+    // TODO: widget.icon - not supported
+    thisWebWidget = compose_unwrapped_button(_key, widget);
+  }
+  // textfield
   else if (widget instanceof core.TextField) {
     thisWebWidget = compose_unwrapped_text_input(_key, widget);
   }
-
   // #endregion
 
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
@@ -242,6 +248,8 @@ function compose<T extends JsxWidget>(
     // mergable widgets for web
     if (widget.child instanceof core.TextField) {
       thisWebWidget = compose_unwrapped_text_input(_key, widget.child, widget);
+    } else if (widget.child instanceof core.ButtonStyleButton) {
+      thisWebWidget = compose_unwrapped_button(_key, widget.child, widget);
     }
   }
 
