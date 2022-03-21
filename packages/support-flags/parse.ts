@@ -20,6 +20,7 @@ import type {
   FixWHFlag,
   DeclareSpecificationFlag,
   WHDeclarationFlag,
+  AsSliderFlag,
 } from "./types";
 
 export type FlagsParseResult = Results & {
@@ -29,6 +30,7 @@ export type FlagsParseResult = Results & {
     contains_span_flag: boolean;
     contains_button_flag: boolean;
     contains_input_flag: boolean;
+    contains_slider_flag: boolean;
     contains_wh_declaration_flag: boolean;
     contains_fix_wh_flag: boolean;
     contains_declare_flag: boolean;
@@ -64,6 +66,9 @@ export function parse(name: string): FlagsParseResult {
 
       // input
       __input_alias_pref,
+
+      // slider
+      __slider_alias_pref,
 
       //#region
       __width_alias_pref,
@@ -110,6 +115,11 @@ export function parse(name: string): FlagsParseResult {
       keys.alias.as_input
     );
 
+    const as_slider_flag = handle_single_boolean_flag_alias<AsSliderFlag>(
+      _raw_parsed,
+      keys.alias.as_slider
+    );
+
     const wh_declaration_flag =
       transform_wh_declaration_alias_from_raw(_raw_parsed);
     const fix_wh_flag = handle_single_boolean_flag_alias<FixWHFlag>(
@@ -139,6 +149,7 @@ export function parse(name: string): FlagsParseResult {
         contains_span_flag: notempty(as_span_flag),
         contains_button_flag: notempty(as_button_flag),
         contains_input_flag: notempty(as_input_flag),
+        contains_slider_flag: notempty(as_slider_flag),
         contains_wh_declaration_flag: notempty(as_span_flag),
         contains_fix_wh_flag: notempty(fix_wh_flag),
         contains_declare_flag: notempty(declare_flag),
@@ -272,6 +283,10 @@ const __button_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
 
 const __input_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
   keys.alias.as_input
+);
+
+const __slider_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.as_slider
 );
 
 // -----------------------------------------------------------------------------
