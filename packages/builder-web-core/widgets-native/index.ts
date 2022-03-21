@@ -6,6 +6,7 @@ export * from "./stack";
 export * from "./html-text-element";
 export * from "./html-svg";
 export * from "./html-image";
+export * from "./html-button";
 export * from "./html-input";
 export * from "./error-widget";
 

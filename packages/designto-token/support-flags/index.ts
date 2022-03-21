@@ -14,6 +14,8 @@ import { tokenize_flagged_textfield } from "./token-textfield";
 import { tokenize_flagged_wrap } from "./token-wrap";
 import { tokenize_flagged_wh_declaration } from "./token-wh";
 import { tokenize_flagged_fix_wh } from "./token-wh-fix";
+import { tokenize_flagged_button } from "./token-button";
+import { tokenize_flagged_slider } from "./token-slider";
 
 export default function handleWithFlags(node: ReflectSceneNode) {
   const flags = parse(node.name);
@@ -86,7 +88,15 @@ function _handle_with_flags(node, flags: FlagsParseResult) {
     return tokenize_flagged_fix_wh(node, fix_wh_flags);
   }
 
-  if (flags.__meta.contains_input_flag) {
+  if (flags.__meta?.contains_button_flag) {
+    return tokenize_flagged_button(node, flags[keys.flag_key__as_button]);
+  }
+
+  if (flags.__meta?.contains_input_flag) {
     return tokenize_flagged_textfield(node, flags[keys.flag_key__as_input]);
+  }
+
+  if (flags.__meta?.contains_slider_flag) {
+    return tokenize_flagged_slider(node, flags[keys.flag_key__as_slider]);
   }
 }

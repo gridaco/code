@@ -1,5 +1,5 @@
 import { JsxWidget, IMultiChildJsxWidget, JSXElementConfig } from ".";
-import { CSSProperties } from "@coli.codes/css";
+import { ElementCssProperties, ElementCssStyleData } from "@coli.codes/css";
 import {
   Color,
   DimensionLength,
@@ -15,13 +15,13 @@ import { WidgetKey } from "../widget-key";
 import { positionAbsolute } from "@web-builder/styles";
 
 export interface IWidgetWithStyle {
-  styleData(): CSSProperties;
+  styleData(): ElementCssStyleData;
 }
 
 /**
  * Since html based framework's widget can be represented withou any style definition, this WidgetWithStyle class indicates, that the sub instance of this class will contain style data within it.
  */
-export abstract class WidgetWithStyle<OUTSTYLE = CSSProperties>
+export abstract class WidgetWithStyle<OUTSTYLE = ElementCssStyleData>
   extends JsxWidget
   implements
     IWHStyleWidget,
@@ -81,8 +81,8 @@ export abstract class WidgetWithStyle<OUTSTYLE = CSSProperties>
 
   abstract jsxConfig(): JSXElementConfig;
 
-  private extendedStyle: CSSProperties = {};
-  extendStyle<T = CSSProperties>(style: T) {
+  private extendedStyle: ElementCssProperties = {};
+  extendStyle<T = ElementCssProperties>(style: T) {
     this.extendedStyle = {
       ...this.extendedStyle,
       ...style,
@@ -102,7 +102,7 @@ export abstract class MultiChildWidgetWithStyle
   constructor({ key }: { key: WidgetKey }) {
     super({ key: key });
   }
-  abstract styleData(): CSSProperties;
+  abstract styleData(): ElementCssStyleData;
 
   abstract jsxConfig(): JSXElementConfig;
 }

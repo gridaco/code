@@ -6,6 +6,5 @@ export function compose_unwrapped_text_input(
   widget: core.TextField,
   container?: core.Container
 ): web.TextInput {
-  // @ts-ignore FIXME: no tsignore
-  return new web.TextInput({ ...widget, ...(container ?? {}), key });
+  return new web.TextInput({ ...(container ?? {}), ...widget, key });
 }
