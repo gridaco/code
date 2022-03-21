@@ -114,9 +114,10 @@ export class HtmlInputText extends Container implements ITextFieldManifest {
   }
 
   styleData(): ElementCssStyleData {
+    const containerstyle = super.styleData();
+
     // TODO:
     // - support placeholder text color styling
-    const containerstyle = super.styleData();
 
     return {
       // general layouts, continer ---------------------
