@@ -329,7 +329,7 @@ function handle_by_types(
         tokenizedTarget = tokenizeContainer.fromEllipse(node);
       } else {
         // a customized ellipse, most likely to be part of a graphical element.
-        tokenizedTarget = tokenizeGraphics.fromAnyNode(node);
+        tokenizedTarget = tokenizeGraphics.fromIrregularEllipse(node);
       }
       break;
 

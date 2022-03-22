@@ -179,9 +179,11 @@ function compose<T extends JsxWidget>(
   } else if (widget instanceof core.ImageWidget) {
     thisWebWidget = new web.ImageElement({
       ...widget,
-      alt: config.img_no_alt ? "" : `image of ${_key.name}`,
-      src: widget.src,
       key: _key,
+      src: widget.src,
+      alt: config.img_no_alt
+        ? ""
+        : widget.semanticLabel ?? `image of ${_key.name}`,
     });
   } else if (widget instanceof core.IconWidget) {
     // TODO: not ready - svg & named icon not supported
