@@ -16,6 +16,7 @@ import { compose_wrapped_with_sized_box } from "./compose-wrapped-with-sized-box
 import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overflow-box";
 import { compose_unwrapped_text_input } from "./compose-unwrapped-text-field";
 import { compose_unwrapped_button } from "./compose-unwrapped-button";
+import { compose_unwrapped_slider } from "./compose-unwrapped-slider";
 import { compose_instanciation } from "./compose-instanciation";
 import { IWHStyleWidget } from "@reflect-ui/core";
 import * as reusable from "@code-features/component/tokens";
@@ -229,6 +230,8 @@ function compose<T extends JsxWidget>(
   // textfield
   else if (widget instanceof core.TextField) {
     thisWebWidget = compose_unwrapped_text_input(_key, widget);
+  } else if (widget instanceof core.Slider) {
+    thisWebWidget = compose_unwrapped_slider(_key, widget);
   }
   // #endregion
 
@@ -247,12 +250,16 @@ function compose<T extends JsxWidget>(
     container.background = widget.background;
     thisWebWidget = container;
 
+    // #region
     // mergable widgets for web
     if (widget.child instanceof core.TextField) {
       thisWebWidget = compose_unwrapped_text_input(_key, widget.child, widget);
     } else if (widget.child instanceof core.ButtonStyleButton) {
       thisWebWidget = compose_unwrapped_button(_key, widget.child, widget);
+    } else if (widget.child instanceof core.Slider) {
+      thisWebWidget = compose_unwrapped_slider(_key, widget.child, widget);
     }
+    // #endregion
   }
 
   // -------------------------------------
