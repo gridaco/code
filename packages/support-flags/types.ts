@@ -1,3 +1,4 @@
+import type { AutofocusFlag } from "./--autofocus";
 import type { ArtworkFlag } from "./--artwork";
 import type { AsHeading1Flag } from "./--as-h1";
 import type { AsHeading2Flag } from "./--as-h2";
@@ -21,14 +22,13 @@ import type { FixHeightFlag } from "./--fix-height";
 import type { DeclareSpecificationFlag } from "./--declare";
 
 export type Flag =
-  //
+  | AutofocusFlag
   | ArtworkFlag
   | TextElementPreferenceFlag
-  //
   | WHDeclarationFlag
   | FixWHFlag
-  //
-  | DeclareSpecificationFlag;
+  | DeclareSpecificationFlag
+  | ComponentCastingFlag;
 
 export interface SimpleBooleanValueFlag {
   flag: string;
@@ -78,6 +78,16 @@ export type HeadingFlag =
   | AsHeading4Flag
   | AsHeading5Flag
   | AsHeading6Flag;
+
+/**
+ * Type alias for a flag taht can be used to specify the element casting
+ */
+export type ComponentCastingFlag = AsButtonFlag | AsInputFlag | AsSliderFlag;
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+export type { AutofocusFlag };
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------

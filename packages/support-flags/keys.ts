@@ -1,3 +1,5 @@
+import { flag_key_alias__autofocus, flag_key__autofocus } from "./--autofocus";
+
 import { flag_key_alias__as_h1, flag_key__as_h1 } from "./--as-h1";
 import { flag_key_alias__as_h2, flag_key__as_h2 } from "./--as-h2";
 import { flag_key_alias__as_h3, flag_key__as_h3 } from "./--as-h3";
@@ -25,6 +27,12 @@ import { flag_key_alias__fix_width, flag_key__fix_width } from "./--fix-width";
 import { flag_key_alias__fix_height, flag_key__fix_height } from "./--fix-height";
 
 import { flag_key_alias__declare, flag_key__declare } from "./--declare";
+
+//
+export {
+  //
+  flag_key__autofocus,
+};
 
 export {
   flag_key__as_h1,
@@ -57,6 +65,7 @@ export { flag_key__fix_width, flag_key__fix_height };
 export { flag_key__declare };
 
 export const alias = {
+  autofocus: flag_key_alias__autofocus,
   as_h1: flag_key_alias__as_h1,
   as_h2: flag_key_alias__as_h2,
   as_h3: flag_key_alias__as_h3,

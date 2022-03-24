@@ -56,6 +56,17 @@ export function tokenize_flagged_textfield(
         const placeholderStyle =
           placeholder &&
           (tokenizeText.fromText(placeholder).style as TextStyle);
+
+        // if value only contains '●' or '·' - e.g. ● ● ● ● ● ● it is safe to be casted as a password input.
+        const obscureText = /^[·\|●\s]+$/.test(
+          (value.data || placeholder.data) ?? ""
+        );
+
+        const fillcolor =
+          input_root.primaryFill.type === "SOLID"
+            ? paintToColor(input_root.primaryFill)
+            : null;
+
         const container = unwrappedChild(
           tokenizeLayout.fromFrame(
             input_root,
@@ -71,17 +82,17 @@ export function tokenize_flagged_textfield(
           child: new TextField({
             key: _key,
             ...container,
+            obscureText: obscureText,
+            initialValue: value.data,
             style: style || placeholderStyle,
             decoration: new TextFieldDecoration({
               border: new OutlineInputBorder({
-                borderSide: container.border.bottom,
+                borderSide: container.border?.bottom,
                 borderRadius: container.borderRadius,
               }),
               contentPadding: input_root.padding,
-              fillColor:
-                input_root.primaryFill.type === "SOLID"
-                  ? paintToColor(input_root.primaryFill)
-                  : null,
+              filled: fillcolor ? true : false,
+              fillColor: fillcolor,
               placeholderText: placeholder?.data,
               placeholderStyle: placeholderStyle,
               //
