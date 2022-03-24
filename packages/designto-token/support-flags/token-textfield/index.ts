@@ -19,6 +19,7 @@ import { detectIf } from "@reflect-ui/detection";
 import { paintToColor } from "@design-sdk/core/utils/colors";
 import { tokenizeLayout } from "../../token-layout";
 import { unwrappedChild } from "../../wrappings";
+import { WrappingContainer } from "../../tokens";
 
 /**
  *
@@ -40,7 +41,7 @@ import { unwrappedChild } from "../../wrappings";
 export function tokenize_flagged_textfield(
   node: ReflectSceneNode,
   flag: AsInputFlag
-): TextField | Container {
+): TextField | WrappingContainer {
   if (flag.value === false) return;
 
   const validated = validate_input(node);
@@ -76,9 +77,9 @@ export function tokenize_flagged_textfield(
           )
         ) as Container;
 
-        // @ts-ignore FIXME: no tsignore
-        return new Container({
+        return new WrappingContainer({
           ...container,
+          key: keyFromNode(node),
           child: new TextField({
             key: _key,
             ...container,
