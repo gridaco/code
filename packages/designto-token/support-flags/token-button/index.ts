@@ -7,11 +7,12 @@ import type {
 } from "@design-sdk/figma-node";
 import assert from "assert";
 import { tokenizeButton } from "../../token-widgets";
+import { WrappingContainer } from "../../tokens";
 
 export function tokenize_flagged_button(
   node: ReflectSceneNode,
   flag: AsButtonFlag
-): ButtonStyleButton | Container<ButtonStyleButton> {
+): ButtonStyleButton | WrappingContainer<ButtonStyleButton> {
   if (flag.value === false) return;
 
   const validated = validate_button(node);

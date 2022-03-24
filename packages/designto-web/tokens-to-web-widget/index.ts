@@ -21,6 +21,7 @@ import { compose_instanciation } from "./compose-instanciation";
 import { IWHStyleWidget } from "@reflect-ui/core";
 import * as reusable from "@code-features/component/tokens";
 import assert from "assert";
+import { WrappingContainer } from "@designto/token/tokens";
 
 interface WebWidgetComposerConfig {
   /**
@@ -233,6 +234,23 @@ function compose<T extends JsxWidget>(
   } else if (widget instanceof core.Slider) {
     thisWebWidget = compose_unwrapped_slider(_key, widget);
   }
+  // wrapping container
+  else if (widget instanceof WrappingContainer) {
+    // #region
+    // mergable widgets for web
+    if (widget.child instanceof core.TextField) {
+      thisWebWidget = compose_unwrapped_text_input(_key, widget.child, widget);
+    } else if (widget.child instanceof core.ButtonStyleButton) {
+      thisWebWidget = compose_unwrapped_button(_key, widget.child, widget);
+    } else if (widget.child instanceof core.Slider) {
+      thisWebWidget = compose_unwrapped_slider(_key, widget.child, widget);
+    } else {
+      throw new Error(
+        `Unsupported widget type: ${widget.child.constructor.name}`
+      );
+    }
+    // #endregion
+  }
   // #endregion
 
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
@@ -249,17 +267,6 @@ function compose<T extends JsxWidget>(
     container.y = widget.y;
     container.background = widget.background;
     thisWebWidget = container;
-
-    // #region
-    // mergable widgets for web
-    if (widget.child instanceof core.TextField) {
-      thisWebWidget = compose_unwrapped_text_input(_key, widget.child, widget);
-    } else if (widget.child instanceof core.ButtonStyleButton) {
-      thisWebWidget = compose_unwrapped_button(_key, widget.child, widget);
-    } else if (widget.child instanceof core.Slider) {
-      thisWebWidget = compose_unwrapped_slider(_key, widget.child, widget);
-    }
-    // #endregion
   }
 
   // -------------------------------------

@@ -7,6 +7,7 @@ import { Colors, Container, EdgeInsets, WidgetKey } from "@reflect-ui/core";
 import assert from "assert";
 import { unwrappedChild } from "../wrappings";
 import { tokenizeLayout } from "../token-layout";
+import { WrappingContainer } from "../tokens";
 
 /**
  * Note - this universal button is used temporarily. the button tokens will be splited into more specific usecase following material button classification.
@@ -18,7 +19,7 @@ import { tokenizeLayout } from "../token-layout";
 function button(
   node: ReflectSceneNode,
   manifest: manifests.DetectedButtonManifest
-): core.ButtonStyleButton | core.Container<core.ButtonStyleButton> {
+): core.ButtonStyleButton | WrappingContainer<core.ButtonStyleButton> {
   assert(manifest.text, "text is required for button composing at this point");
 
   // TODO:
@@ -67,14 +68,14 @@ function button(
       )
     );
 
-    // @ts-ignore FIXME: no tsignore
-    return new Container({
+    return new WrappingContainer({
       ...container,
+      key: keyFromNode(node),
       child: button,
     });
   }
 
-  return new core.Container({
+  return new WrappingContainer({
     key: WidgetKey.copyWith(_key, { id: _key.id + ".sizedbox" }),
     width: sizing.width,
     height: sizing.height,

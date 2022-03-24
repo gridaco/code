@@ -9,7 +9,7 @@ import {
   OverflowBox,
   SingleChildScrollView,
 } from "@reflect-ui/core";
-import { Stretched } from "../tokens";
+import { Stretched, WrappingContainer } from "../tokens";
 
 export type WrappingToken =
   // layout / positioning / sizing wrappers
@@ -25,7 +25,9 @@ export type WrappingToken =
   // effect wrappers
   | Blurred
   // clip wrappers
-  | ClipRRect;
+  | ClipRRect
+  // wrapping container
+  | WrappingContainer;
 
 /**
  * CAUTION - this is not related to `Wrap` Widget. this unwrapps a (nested) token that is wrapped with typeof `WrappingToken`
@@ -33,7 +35,7 @@ export type WrappingToken =
  * @returns
  */
 export function unwrappedChild<T extends Widget>(maybeWrapped: Widget): T {
-  if (
+  const isWrappingWidget =
     maybeWrapped instanceof SizedBox ||
     maybeWrapped instanceof Stretched ||
     maybeWrapped instanceof Positioned ||
@@ -42,8 +44,10 @@ export function unwrappedChild<T extends Widget>(maybeWrapped: Widget): T {
     maybeWrapped instanceof Rotation ||
     maybeWrapped instanceof Opacity ||
     maybeWrapped instanceof Blurred ||
-    maybeWrapped instanceof ClipRRect
-  ) {
+    maybeWrapped instanceof ClipRRect ||
+    maybeWrapped instanceof WrappingContainer;
+
+  if (isWrappingWidget) {
     return unwrappedChild(maybeWrapped.child);
   }
   return maybeWrapped as T;
