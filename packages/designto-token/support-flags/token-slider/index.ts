@@ -5,12 +5,10 @@ import type {
   ReflectFrameNode,
   ReflectRectangleNode,
   ReflectSceneNode,
-  ReflectTextNode,
 } from "@design-sdk/figma-node";
 import { keyFromNode } from "../../key";
 import assert from "assert";
 import { tokenizeLayout } from "../../token-layout";
-import { paintToColor } from "@design-sdk/core/utils/colors";
 import { unwrappedChild } from "../../wrappings";
 import { RoundSliderThumbShape } from "@reflect-ui/core/lib/slider.thumb";
 
@@ -45,6 +43,9 @@ export function tokenize_flagged_slider(
       case "frame-as-slider": {
         const { slider_root, thumb, value } = validated;
 
+        // TODO: use theme color as default if non available
+        const fallbackcolor = Colors.blue;
+
         // initial value -----------------------------
         const p_w = slider_root.width;
         const v_w = value?.width ?? 0;
@@ -53,17 +54,16 @@ export function tokenize_flagged_slider(
           Math.round((v_w / p_w + Number.EPSILON) * 100) / 100;
         // -------------------------------------------
 
-        // active color ------------------------------
-        // TODO: use theme color as default if non available
-        const _activecolor = value?.primaryColor ?? Colors.blue;
-        // -------------------------------------------
-
         // thumb style -------------------------------
-        const _thumbcolor = thumb?.primaryColor ?? Colors.blue;
+        const _thumbcolor = thumb.primaryColor ?? fallbackcolor;
         // currently only round thumb is supported
         const _thumbsize =
           Math.max(thumb?.height ?? 0, thumb?.width ?? 0) ?? undefined;
-        const _thumbelevation = thumb?.primaryShadow?.blurRadius ?? undefined;
+        const _thumbelevation = thumb.primaryShadow?.blurRadius ?? undefined;
+        // -------------------------------------------
+
+        // active color ------------------------------
+        const _activecolor = value?.primaryColor ?? fallbackcolor;
         // -------------------------------------------
 
         const container = unwrappedChild(
@@ -147,6 +147,8 @@ function validate_slider(node: ReflectSceneNode):
         const _3 = n.width === n.height;
         return _0 && _1 && _2 && _3;
       });
+
+      assert(thumb, "thumb node is required. no qualified node found.");
 
       const value = node.grandchildren
         .filter((n) => n.id !== thumb?.id)

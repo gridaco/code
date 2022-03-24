@@ -59,7 +59,7 @@ export function tokenize_flagged_textfield(
 
         // if value only contains '●' or '·' - e.g. ● ● ● ● ● ● it is safe to be casted as a password input.
         const obscureText = /^[·\|●\s]+$/.test(
-          (value.data || placeholder.data) ?? ""
+          (value?.data || placeholder?.data) ?? ""
         );
 
         const fillcolor =
@@ -83,7 +83,7 @@ export function tokenize_flagged_textfield(
             key: _key,
             ...container,
             obscureText: obscureText,
-            initialValue: value.data,
+            initialValue: value?.data,
             style: style || placeholderStyle,
             decoration: new TextFieldDecoration({
               border: new OutlineInputBorder({
@@ -190,4 +190,4 @@ function validate_input(node: ReflectSceneNode):
 }
 
 const valid_text_node = (node: ReflectSceneNode) =>
-  node.type === "TEXT" && node.visible && node.data.length >= 0;
+  node && node.type === "TEXT" && node.visible && node.data.length >= 0;

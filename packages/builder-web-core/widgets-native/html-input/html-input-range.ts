@@ -100,14 +100,14 @@ export class HtmlInputRange extends Container implements ISliderManifest {
       "::-webkit-slider-thumb": this.thumbShape
         ? thumbstyle({
             ...this.thumbShape,
-            activeColor: this.activeColor,
+            color: this.thumbColor,
             platform: "webkit",
           })
         : undefined,
       "::-moz-range-thumb": this.thumbShape
         ? thumbstyle({
             ...this.thumbShape,
-            activeColor: this.activeColor,
+            color: this.thumbColor,
             platform: "moz",
           })
         : undefined,
@@ -179,18 +179,18 @@ export class HtmlSlider extends HtmlInputRange {}
 
 function thumbstyle({
   enabledThumbRadius,
-  activeColor,
+  color,
   platform,
 }: RoundSliderThumbShape & {
   platform: "moz" | "webkit";
 } & {
-  activeColor: Color;
+  color: Color;
 }): CSSProperties {
   const base: CSSProperties = <CSSProperties>{
     width: css.px(enabledThumbRadius),
     height: css.px(enabledThumbRadius),
     "border-radius": "50%",
-    "background-color": css.color(activeColor),
+    "background-color": css.color(color),
     // ..._aberation_support_progress_fill_dirty({ color: activeColor }),
     cursor: "pointer" /* Cursor on hover */,
   };
