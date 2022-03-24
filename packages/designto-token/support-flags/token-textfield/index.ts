@@ -62,6 +62,11 @@ export function tokenize_flagged_textfield(
           (value.data || placeholder.data) ?? ""
         );
 
+        const fillcolor =
+          input_root.primaryFill.type === "SOLID"
+            ? paintToColor(input_root.primaryFill)
+            : null;
+
         const container = unwrappedChild(
           tokenizeLayout.fromFrame(
             input_root,
@@ -78,17 +83,16 @@ export function tokenize_flagged_textfield(
             key: _key,
             ...container,
             obscureText: obscureText,
+            initialValue: value.data,
             style: style || placeholderStyle,
             decoration: new TextFieldDecoration({
               border: new OutlineInputBorder({
-                borderSide: container.border.bottom,
+                borderSide: container.border?.bottom,
                 borderRadius: container.borderRadius,
               }),
               contentPadding: input_root.padding,
-              fillColor:
-                input_root.primaryFill.type === "SOLID"
-                  ? paintToColor(input_root.primaryFill)
-                  : null,
+              filled: fillcolor ? true : false,
+              fillColor: fillcolor,
               placeholderText: placeholder?.data,
               placeholderStyle: placeholderStyle,
               //
