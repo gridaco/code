@@ -1,5 +1,7 @@
 import { nodes } from "@design-sdk/core";
 import { Widget } from "@reflect-ui/core";
+import type { Blurred, Opacity, Rotation } from "@reflect-ui/core";
+import type { Stretched } from "./tokens";
 import { tokenizeText } from "./token-text";
 import { tokenizeLayout } from "./token-layout";
 import { tokenizeContainer } from "./token-container";
@@ -167,10 +169,11 @@ function handleNode(
     }
 
     // - button -
-    const _detect_if_button = detectIf.button(node);
-    if (_detect_if_button.result) {
-      return tokenizeButton.fromManifest(node, _detect_if_button.data);
-    }
+    // TODO: this causes confliction with flags
+    // const _detect_if_button = detectIf.button(node);
+    // if (_detect_if_button.result) {
+    //   return tokenizeButton.fromManifest(node, _detect_if_button.data);
+    // }
   }
   // -------------------------------------------------------------------------
   // --------------------------- Detected tokens -----------------------------
@@ -233,33 +236,37 @@ function handleNode(
   return tokenizedTarget;
 }
 
-function post_wrap(node: nodes.ReflectSceneNode, tokenizedTarget: Widget) {
-  if (tokenizedTarget) {
+export function post_wrap(
+  node: nodes.ReflectSceneNode,
+  tokenizedTarget: Widget
+): Widget | Stretched | Opacity | Blurred | Rotation {
+  let wrapped = tokenizedTarget;
+  if (wrapped) {
     if (hasStretching(node)) {
-      tokenizedTarget = wrap_with_stretched(node, tokenizedTarget);
+      wrapped = wrap_with_stretched(node, wrapped);
     }
   }
 
   if (hasDimmedOpacity(node)) {
-    tokenizedTarget = wrap_with_opacity(node, tokenizedTarget);
+    wrapped = wrap_with_opacity(node, wrapped);
   }
 
   node.effects.map((d) => {
     const blurEffect = hasBlurType(d);
     if (blurEffect) {
       if (hasLayerBlurType(blurEffect)) {
-        tokenizedTarget = wrap_with_layer_blur(node, tokenizedTarget);
+        wrapped = wrap_with_layer_blur(node, wrapped);
       } else if (hasBackgroundBlurType(blurEffect)) {
-        tokenizedTarget = wrap_with_background_blur(node, tokenizedTarget);
+        wrapped = wrap_with_background_blur(node, wrapped);
       }
     }
   });
 
   if (hasRotation(node)) {
-    tokenizedTarget = wrap_with_rotation(node, tokenizedTarget);
+    wrapped = wrap_with_rotation(node, wrapped);
   }
 
-  return tokenizedTarget;
+  return wrapped;
 }
 
 function handle_by_types(
