@@ -30,6 +30,8 @@ export function flexsizing({
     case MainAxisSize.max: {
       return {
         "align-self": "stretch",
+        width: width && length(width),
+        height: height && length(height),
       };
     }
     case MainAxisSize.min: {
