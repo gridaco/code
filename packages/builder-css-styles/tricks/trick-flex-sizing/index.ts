@@ -37,7 +37,7 @@ export function flexsizing({
         case Axis.horizontal:
         case Axis.vertical:
           return {
-            flex: "none",
+            flex: flex > 0 ? flex : "none", // 1+
             width: width && length(width),
             height: height && length(height),
           };

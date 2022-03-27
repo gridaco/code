@@ -1,5 +1,5 @@
 import { nodes } from "@design-sdk/core";
-import { Widget } from "@reflect-ui/core";
+import { Expanded, Widget } from "@reflect-ui/core";
 import type { Blurred, Opacity, Rotation } from "@reflect-ui/core";
 import type { Stretched } from "./tokens";
 import { tokenizeText } from "./token-text";
@@ -21,6 +21,7 @@ import {
   hasLayerBlurType,
   hasRotation,
   hasStretching,
+  hasFlexible,
 } from "./detection";
 import { MaskingItemContainingNode, tokenizeMasking } from "./token-masking";
 import { wrap_with_opacity } from "./token-opacity";
@@ -28,6 +29,7 @@ import { wrap_with_stretched } from "./token-stretch";
 import { wrap_with_layer_blur } from "./token-effect/layer-blur";
 import { wrap_with_background_blur } from "./token-effect/background-blur";
 import { wrap_with_rotation } from "./token-rotation";
+import { wrap_with_expanded } from "./token-expanded";
 import flags_handling_gate from "./support-flags";
 
 export type { Widget };
@@ -239,12 +241,15 @@ function handleNode(
 export function post_wrap(
   node: nodes.ReflectSceneNode,
   tokenizedTarget: Widget
-): Widget | Stretched | Opacity | Blurred | Rotation {
+): Widget | Stretched | Opacity | Blurred | Rotation | Expanded {
   let wrapped = tokenizedTarget;
-  if (wrapped) {
-    if (hasStretching(node)) {
-      wrapped = wrap_with_stretched(node, wrapped);
-    }
+
+  if (hasStretching(node)) {
+    wrapped = wrap_with_stretched(node, wrapped);
+  }
+
+  if (hasFlexible(node)) {
+    wrapped = wrap_with_expanded(node, wrapped);
   }
 
   if (hasDimmedOpacity(node)) {
