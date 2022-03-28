@@ -8,7 +8,7 @@ import type {
 import type { StylableJSXElementConfig } from "../../widget-core";
 import { WidgetKey } from "../../widget-key";
 import { Container } from "../container";
-import { JSX, JSXAttribute, NumericLiteral, StringLiteral } from "coli";
+import { JSX, JSXAttribute, StringLiteral } from "coli";
 import * as css from "@web-builder/styles";
 import { RoundSliderThumbShape } from "@reflect-ui/core/lib/slider.thumb";
 

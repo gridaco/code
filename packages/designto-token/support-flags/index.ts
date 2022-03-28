@@ -16,6 +16,7 @@ import { tokenize_flagged_wh_declaration } from "./token-wh";
 import { tokenize_flagged_fix_wh } from "./token-wh-fix";
 import { tokenize_flagged_button } from "./token-button";
 import { tokenize_flagged_slider } from "./token-slider";
+import { tokenize_flagged_progress } from "./token-progress";
 
 export default function handleWithFlags(node: ReflectSceneNode) {
   const flags = parse(node.name);
@@ -55,6 +56,10 @@ function _handle_with_flags(node, flags: FlagsParseResult) {
 
   if (flags.__meta?.contains_slider_flag) {
     return tokenize_flagged_slider(node, flags[keys.flag_key__as_slider]);
+  }
+
+  if (flags.__meta?.contains_progress_flag) {
+    return tokenize_flagged_progress(node, flags[keys.flag_key__as_progress]);
   }
   // #endregion
 

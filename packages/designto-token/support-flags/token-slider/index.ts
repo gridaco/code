@@ -15,20 +15,6 @@ import { WrappingContainer } from "../../tokens";
 
 /**
  *
- * from
- * ```
- * row|col[
- *  enabled text,
- *  other elements,
- * ]
- * ```
- *
- * to
- * ```
- * input {
- *  enabled text
- * }
- * ```
  */
 export function tokenize_flagged_slider(
   node: ReflectSceneNode,
@@ -111,16 +97,13 @@ type ThumbAcceptableNode =
 type ValueIndicatorAcceptableNode = ReflectFrameNode | ReflectRectangleNode;
 
 /**
- * validate if layer casted as input can be actually tokenized to input.
+ * validate if layer casted as slider can be actually tokenized to slider.
  *
  * - when applyed to frame,
- *    1. the root should be a flex
- *    2. the children should be a valid text node
+ *    1. the root should be a long rect 1:1 < n
+ *    2. the height of the value should be n >= (height of the root)
+ *    3. the knob should be 1:1 size w:h
  *
- * - when applyed to text,
- *    1. the text should be visible
- *    2. the text should be not empty
- * @param input
  */
 function validate_slider(node: ReflectSceneNode):
   | {
@@ -170,6 +153,6 @@ function validate_slider(node: ReflectSceneNode):
       };
     }
     default:
-      return { error: "input target is not a valid frame or a text node" };
+      return { error: "slider target is not a valid frame or a text node" };
   }
 }
