@@ -7,7 +7,7 @@ import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
 import { k, JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
-  getWidgetStylesConfigMap,
+  StylesConfigMapBuilder,
   JSXWithoutStyleElementConfig,
   JSXWithStyleElementConfig,
   WidgetStyleConfigMap,
@@ -58,10 +58,12 @@ export function export_inlined_css_html_file(
     ReservedKeywordPlatformPresets.html
   );
 
-  const styles_map: WidgetStyleConfigMap = getWidgetStylesConfigMap(widget, {
+  const mapper = new StylesConfigMapBuilder(widget, {
     namer: styledComponentNamer,
     rename_tag: false, // vanilla html tag will be preserved.
   });
+
+  const styles_map: WidgetStyleConfigMap = mapper.map;
 
   function getStyleConfigById(
     id: string

@@ -1,5 +1,7 @@
 import { nodes } from "@design-sdk/core";
-import { Widget } from "@reflect-ui/core";
+import { Expanded, Widget } from "@reflect-ui/core";
+import type { Blurred, Opacity, Rotation } from "@reflect-ui/core";
+import type { Stretched } from "./tokens";
 import { tokenizeText } from "./token-text";
 import { tokenizeLayout } from "./token-layout";
 import { tokenizeContainer } from "./token-container";
@@ -19,6 +21,7 @@ import {
   hasLayerBlurType,
   hasRotation,
   hasStretching,
+  hasFlexible,
 } from "./detection";
 import { MaskingItemContainingNode, tokenizeMasking } from "./token-masking";
 import { wrap_with_opacity } from "./token-opacity";
@@ -26,6 +29,7 @@ import { wrap_with_stretched } from "./token-stretch";
 import { wrap_with_layer_blur } from "./token-effect/layer-blur";
 import { wrap_with_background_blur } from "./token-effect/background-blur";
 import { wrap_with_rotation } from "./token-rotation";
+import { wrap_with_expanded } from "./token-expanded";
 import flags_handling_gate from "./support-flags";
 
 export type { Widget };
@@ -167,10 +171,11 @@ function handleNode(
     }
 
     // - button -
-    const _detect_if_button = detectIf.button(node);
-    if (_detect_if_button.result) {
-      return tokenizeButton.fromManifest(node, _detect_if_button.data);
-    }
+    // TODO: this causes confliction with flags
+    // const _detect_if_button = detectIf.button(node);
+    // if (_detect_if_button.result) {
+    //   return tokenizeButton.fromManifest(node, _detect_if_button.data);
+    // }
   }
   // -------------------------------------------------------------------------
   // --------------------------- Detected tokens -----------------------------
@@ -233,33 +238,40 @@ function handleNode(
   return tokenizedTarget;
 }
 
-function post_wrap(node: nodes.ReflectSceneNode, tokenizedTarget: Widget) {
-  if (tokenizedTarget) {
-    if (hasStretching(node)) {
-      tokenizedTarget = wrap_with_stretched(node, tokenizedTarget);
-    }
+export function post_wrap(
+  node: nodes.ReflectSceneNode,
+  tokenizedTarget: Widget
+): Widget | Stretched | Opacity | Blurred | Rotation | Expanded {
+  let wrapped = tokenizedTarget;
+
+  if (hasStretching(node)) {
+    wrapped = wrap_with_stretched(node, wrapped);
+  }
+
+  if (hasFlexible(node)) {
+    wrapped = wrap_with_expanded(node, wrapped);
   }
 
   if (hasDimmedOpacity(node)) {
-    tokenizedTarget = wrap_with_opacity(node, tokenizedTarget);
+    wrapped = wrap_with_opacity(node, wrapped);
   }
 
   node.effects.map((d) => {
     const blurEffect = hasBlurType(d);
     if (blurEffect) {
       if (hasLayerBlurType(blurEffect)) {
-        tokenizedTarget = wrap_with_layer_blur(node, tokenizedTarget);
+        wrapped = wrap_with_layer_blur(node, wrapped);
       } else if (hasBackgroundBlurType(blurEffect)) {
-        tokenizedTarget = wrap_with_background_blur(node, tokenizedTarget);
+        wrapped = wrap_with_background_blur(node, wrapped);
       }
     }
   });
 
   if (hasRotation(node)) {
-    tokenizedTarget = wrap_with_rotation(node, tokenizedTarget);
+    wrapped = wrap_with_rotation(node, wrapped);
   }
 
-  return tokenizedTarget;
+  return wrapped;
 }
 
 function handle_by_types(

@@ -8,7 +8,6 @@ import {
   Stack,
   Flex,
   Row,
-  Opacity,
   Positioned,
   Widget,
   VerticalDirection,
@@ -20,9 +19,6 @@ import {
   Calculation,
   Clip,
   Border,
-  ClipRRect,
-  Blurred,
-  Rotation,
   IWHStyleWidget,
   Operation,
 } from "@reflect-ui/core";
@@ -462,6 +458,7 @@ function handlePositioning({
       constraint.top = pos.t;
       break;
     case "MAX":
+      // TODO: add this custom logic - if fixed to bottom 0 , it should be fixed rather than absolute. (as a footer)
       constraint.bottom = pos.b;
       break;
     case "SCALE": /** scale fallbacks to stretch */

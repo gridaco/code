@@ -14,6 +14,7 @@ import { compose_wrapped_with_positioned } from "./compose-wrapped-with-position
 import { compose_wrapped_with_clip_stretched } from "./compose-wrapped-with-stretched";
 import { compose_wrapped_with_sized_box } from "./compose-wrapped-with-sized-box";
 import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overflow-box";
+import { compose_wrapped_with_expanded } from "./compose-wrapped-with-expanded";
 import { compose_unwrapped_text_input } from "./compose-unwrapped-text-field";
 import { compose_unwrapped_button } from "./compose-unwrapped-button";
 import { compose_unwrapped_slider } from "./compose-unwrapped-slider";
@@ -144,6 +145,8 @@ function compose<T extends JsxWidget>(
     thisWebWidget = compose_wrapped_with_blurred(widget, handleChild);
   } else if (widget instanceof core.Rotation) {
     thisWebWidget = compose_wrapped_with_rotation(widget, handleChild);
+  } else if (widget instanceof core.Expanded) {
+    thisWebWidget = compose_wrapped_with_expanded(widget, handleChild);
   }
   // ----- region clip path ------
   else if (widget instanceof core.ClipRRect) {

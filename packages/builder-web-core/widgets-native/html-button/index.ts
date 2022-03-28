@@ -179,17 +179,6 @@ export class HtmlButton extends Container implements IButtonStyleButton {
       ],
     };
   }
-
-  get finalStyle() {
-    const superstyl = super.finalStyle;
-
-    // width override. ------------------------------------------------------------------------------------------
-    return {
-      ...superstyl,
-      width: undefined,
-    };
-    // ----------------------------------------------------------------------------------------------------------
-  }
 }
 
 const _button_hover_style: CSSProperties = {
