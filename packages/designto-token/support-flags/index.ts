@@ -10,9 +10,12 @@ import { tokenize_flagged_artwork } from "./token-artwork";
 import { tokenize_flagged_heading } from "./token-heading";
 import { tokenize_flagged_paragraph } from "./token-p";
 import { tokenize_flagged_span } from "./token-span";
+import { tokenize_flagged_textfield } from "./token-textfield";
 import { tokenize_flagged_wrap } from "./token-wrap";
 import { tokenize_flagged_wh_declaration } from "./token-wh";
 import { tokenize_flagged_fix_wh } from "./token-wh-fix";
+import { tokenize_flagged_button } from "./token-button";
+import { tokenize_flagged_slider } from "./token-slider";
 
 export default function handleWithFlags(node: ReflectSceneNode) {
   const flags = parse(node.name);
@@ -20,6 +23,7 @@ export default function handleWithFlags(node: ReflectSceneNode) {
 }
 
 function _handle_with_flags(node, flags: FlagsParseResult) {
+  // #region widget altering flags
   // artwork
   const artwork_flag_alias =
     flags["artwork"] ||
@@ -41,6 +45,20 @@ function _handle_with_flags(node, flags: FlagsParseResult) {
     return tokenize_flagged_wrap(node, wrap_flag_alias);
   }
 
+  if (flags.__meta?.contains_button_flag) {
+    return tokenize_flagged_button(node, flags[keys.flag_key__as_button]);
+  }
+
+  if (flags.__meta?.contains_input_flag) {
+    return tokenize_flagged_textfield(node, flags[keys.flag_key__as_input]);
+  }
+
+  if (flags.__meta?.contains_slider_flag) {
+    return tokenize_flagged_slider(node, flags[keys.flag_key__as_slider]);
+  }
+  // #endregion
+
+  // #region element altering flags
   // heading
   const heading_flag_alias =
     flags[keys.flag_key__as_h1] ||
@@ -58,7 +76,9 @@ function _handle_with_flags(node, flags: FlagsParseResult) {
   if (span_flag_alias) {
     return tokenize_flagged_span(node, span_flag_alias);
   }
+  // #endregion
 
+  // #region style extension flags
   const paragraph_flag_alias = flags[keys.flag_key__as_p];
   if (paragraph_flag_alias) {
     return tokenize_flagged_paragraph(node, paragraph_flag_alias);
@@ -84,4 +104,5 @@ function _handle_with_flags(node, flags: FlagsParseResult) {
   if (fix_wh_flags.length) {
     return tokenize_flagged_fix_wh(node, fix_wh_flags);
   }
+  // #endregion style extension flags
 }

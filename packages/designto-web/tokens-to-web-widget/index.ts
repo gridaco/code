@@ -14,10 +14,15 @@ import { compose_wrapped_with_positioned } from "./compose-wrapped-with-position
 import { compose_wrapped_with_clip_stretched } from "./compose-wrapped-with-stretched";
 import { compose_wrapped_with_sized_box } from "./compose-wrapped-with-sized-box";
 import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overflow-box";
+import { compose_wrapped_with_expanded } from "./compose-wrapped-with-expanded";
+import { compose_unwrapped_text_input } from "./compose-unwrapped-text-field";
+import { compose_unwrapped_button } from "./compose-unwrapped-button";
+import { compose_unwrapped_slider } from "./compose-unwrapped-slider";
 import { compose_instanciation } from "./compose-instanciation";
 import { IWHStyleWidget } from "@reflect-ui/core";
 import * as reusable from "@code-features/component/tokens";
 import assert from "assert";
+import { WrappingContainer } from "@designto/token/tokens";
 
 interface WebWidgetComposerConfig {
   /**
@@ -140,6 +145,8 @@ function compose<T extends JsxWidget>(
     thisWebWidget = compose_wrapped_with_blurred(widget, handleChild);
   } else if (widget instanceof core.Rotation) {
     thisWebWidget = compose_wrapped_with_rotation(widget, handleChild);
+  } else if (widget instanceof core.Expanded) {
+    thisWebWidget = compose_wrapped_with_expanded(widget, handleChild);
   }
   // ----- region clip path ------
   else if (widget instanceof core.ClipRRect) {
@@ -176,9 +183,11 @@ function compose<T extends JsxWidget>(
   } else if (widget instanceof core.ImageWidget) {
     thisWebWidget = new web.ImageElement({
       ...widget,
-      alt: config.img_no_alt ? "" : `image of ${_key.name}`,
-      src: widget.src,
       key: _key,
+      src: widget.src,
+      alt: config.img_no_alt
+        ? ""
+        : widget.semanticLabel ?? `image of ${_key.name}`,
     });
   } else if (widget instanceof core.IconWidget) {
     // TODO: not ready - svg & named icon not supported
@@ -216,6 +225,37 @@ function compose<T extends JsxWidget>(
     }
   }
 
+  // #region component widgets
+  // button
+  else if (widget instanceof core.ButtonStyleButton) {
+    // TODO: widget.icon - not supported
+    thisWebWidget = compose_unwrapped_button(_key, widget);
+  }
+  // textfield
+  else if (widget instanceof core.TextField) {
+    thisWebWidget = compose_unwrapped_text_input(_key, widget);
+  } else if (widget instanceof core.Slider) {
+    thisWebWidget = compose_unwrapped_slider(_key, widget);
+  }
+  // wrapping container
+  else if (widget instanceof WrappingContainer) {
+    // #region
+    // mergable widgets for web
+    if (widget.child instanceof core.TextField) {
+      thisWebWidget = compose_unwrapped_text_input(_key, widget.child, widget);
+    } else if (widget.child instanceof core.ButtonStyleButton) {
+      thisWebWidget = compose_unwrapped_button(_key, widget.child, widget);
+    } else if (widget.child instanceof core.Slider) {
+      thisWebWidget = compose_unwrapped_slider(_key, widget.child, widget);
+    } else {
+      throw new Error(
+        `Unsupported widget type: ${widget.child.constructor.name}`
+      );
+    }
+    // #endregion
+  }
+  // #endregion
+
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
   else if (widget instanceof core.Container) {
     const container = new web.Container({
@@ -224,6 +264,7 @@ function compose<T extends JsxWidget>(
       borderRadius: widget.borderRadius,
       width: widget.width,
       height: widget.height,
+      // TODO: add child: (currently no widget is being nested under Container, exept below custom filters)
     });
     container.x = widget.x;
     container.y = widget.y;

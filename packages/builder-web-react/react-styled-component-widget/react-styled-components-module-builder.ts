@@ -15,7 +15,7 @@ import { BlockStatement, Import, ImportDeclaration, Return } from "coli";
 import { JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
-  getWidgetStylesConfigMap,
+  StylesConfigMapBuilder,
   WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
 import { react as react_config } from "@designto/config";
@@ -24,7 +24,7 @@ import { StyledComponentDeclaration } from "@web-builder/styled/styled-component
 export class ReactStyledComponentsBuilder {
   private readonly entry: JsxWidget;
   private readonly widgetName: string;
-  private readonly styledConfigWidgetMap: WidgetStyleConfigMap;
+  private readonly stylesMapper: StylesConfigMapBuilder;
   private readonly namer: ScopedVariableNamer;
   readonly config: react_config.ReactStyledComponentsConfig;
 
@@ -41,17 +41,19 @@ export class ReactStyledComponentsBuilder {
       entry.key.id,
       ReservedKeywordPlatformPresets.react
     );
-    this.styledConfigWidgetMap = getWidgetStylesConfigMap(entry, {
+
+    this.stylesMapper = new StylesConfigMapBuilder(entry, {
       namer: this.namer,
       rename_tag: true /** styled component tag shoule be renamed */,
     });
+
     this.config = config;
   }
 
   private styledConfig(
     id: string
   ): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
-    return this.styledConfigWidgetMap.get(id);
+    return this.stylesMapper.map.get(id);
   }
 
   private jsxBuilder(widget: JsxWidget) {
@@ -89,11 +91,10 @@ export class ReactStyledComponentsBuilder {
   }
 
   partDeclarations() {
-    return Array.from(this.styledConfigWidgetMap.keys())
+    return Array.from(this.stylesMapper.map.keys())
       .map((k) => {
-        return (
-          this.styledConfigWidgetMap.get(k) as StyledComponentJSXElementConfig
-        ).styledComponent;
+        return (this.stylesMapper.map.get(k) as StyledComponentJSXElementConfig)
+          .styledComponent;
       })
       .filter((s) => s);
   }

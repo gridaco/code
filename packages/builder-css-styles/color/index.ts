@@ -19,8 +19,8 @@ export function color(input: CssColorInputLike | Color): string {
   } else if (input instanceof CssNamedColor) {
     return input.name;
   } else if (typeof input == "object") {
-    // with alpha
-    if ("r" in input && "a" in input) {
+    // with alpha  (if alpha is 1, use rgb format instead)
+    if ("r" in input && "a" in input && input.a !== 1) {
       const a = safe_alpha_fallback(validAlphaValue(input.a));
       const rgba = input as ICssRGBA;
       const _r = validColorValue(rgba.r) ?? 0;
@@ -31,6 +31,11 @@ export function color(input: CssColorInputLike | Color): string {
     // no alpha
     else if ("r" in input && "a"! in input) {
       const rgb = input as RGB;
+      const named = namedcolor(rgb);
+      if (named) {
+        return named;
+      }
+
       return `rgb(${validColorValue(rgb.r) ?? 0}, ${
         validColorValue(rgb.g) ?? 0
       }, ${validColorValue(rgb.b) ?? 0})`;
@@ -41,6 +46,29 @@ export function color(input: CssColorInputLike | Color): string {
     )}" cannot be interpreted as valid css color value`;
   }
 }
+
+/**
+ * rgb value of white, black as named colors
+ * @param rgb
+ */
+const namedcolor = (rgb: RGB) => {
+  // black
+  if (rgb.r === 0 && rgb.g === 0 && rgb.b === 0) {
+    return "black";
+  }
+  // white
+  if (rgb.r === 1 && rgb.g === 1 && rgb.b === 1) {
+    return "white";
+  }
+  // blue
+  if (rgb.r === 0 && rgb.g === 0 && rgb.b === 1) {
+    return "blue";
+  }
+  // red
+  if (rgb.r === 1 && rgb.g === 0 && rgb.b === 0) {
+    return "red";
+  }
+};
 
 const validColorValue = (f: number) => {
   if (f === undefined) {

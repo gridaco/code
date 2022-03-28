@@ -9,34 +9,39 @@
  * styled.span`
  * color: white;
  * width: 24px;
+ * ::placeholder {
+ *  color: red;
+ * }
  * `
  * ```
  *
  * to
  * ```
  * styled.span`
- *  color: white;
- *  width: 24px;
+ *   color: white;
+ *   width: 24px;
+ *  ::placeholder {
+ *    color: red;
+ *   }
  * `
  * ```
  */
-export function formatStyledTempplateString(styleString: string): string {
-  const lines = [];
-  let declarationLines = 0;
-  styleString.split("\n").map((l) => {
-    if (l.length <= 1) {
-      // this is not a style property line. ignore it
-      lines.push(l);
-    } else {
-      lines.push(`\t${l}`);
-      declarationLines += 1;
-    }
-  });
+export function formatStyledTempplateString(body: string): string {
+  // format the givven css body with indentation using regex
+  const formatted = body
+    .split("\n")
+    .map((l) => {
+      if (l.length < 1) {
+        // this is not a style property line. ignore it
+        return l;
+      } else {
+        return `\t${l}`;
+      }
+    })
+    .join("\n");
 
-  if (declarationLines == 0) {
-    // if no actual style declration in style string.
-    return "";
-  }
+  // remove linebreaks from the beginning and end of the string, while keeping the indentation
+  const trimmed = formatted.replace(/^\n+/, "").replace(/\n+$/, "");
 
-  return lines.join("\n");
+  return trimmed;
 }

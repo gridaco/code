@@ -18,7 +18,7 @@ import {
 import { JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
-  getWidgetStylesConfigMap,
+  StylesConfigMapBuilder,
   JSXWithoutStyleElementConfig,
   JSXWithStyleElementConfig,
   WidgetStyleConfigMap,
@@ -34,7 +34,7 @@ import { react as react_config } from "@designto/config";
 export class ReactCssModuleBuilder {
   private readonly entry: JsxWidget;
   private readonly widgetName: string;
-  private readonly stylesConfigWidgetMap: WidgetStyleConfigMap;
+  private readonly stylesMapper: StylesConfigMapBuilder;
   private readonly namer: ScopedVariableNamer;
   readonly config: react_config.ReactCssModuleConfig;
 
@@ -51,17 +51,18 @@ export class ReactCssModuleBuilder {
       entry.key.id,
       ReservedKeywordPlatformPresets.react
     );
-    this.stylesConfigWidgetMap = getWidgetStylesConfigMap(entry, {
+    this.stylesMapper = new StylesConfigMapBuilder(entry, {
       namer: this.namer,
       rename_tag: false /** css-module tag shoule not be renamed */,
     });
+
     this.config = config;
   }
 
   private stylesConfig(
     id: string
   ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
-    return this.stylesConfigWidgetMap.get(id);
+    return this.stylesMapper.map.get(id);
   }
 
   private jsxBuilder(widget: JsxWidget) {

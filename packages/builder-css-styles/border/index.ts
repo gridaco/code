@@ -33,6 +33,10 @@ export function border(border: Border): CSSProperties {
 }
 
 export function borderSide(borderSide: BorderSide): CSSProperty.Border {
+  if (borderSide.style === "none") {
+    return "none";
+  }
+
   return `${borderSide.style ?? "solid"} ${px(borderSide.width)} ${color(
     borderSide.color
   )}`;

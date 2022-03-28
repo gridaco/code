@@ -13,7 +13,7 @@ import {
   NameCases,
   ScopedVariableNamer,
 } from "@coli.codes/naming";
-import { CSSProperties, buildCssStandard } from "@coli.codes/css";
+import { CSSProperties, buildCSSStyleData } from "@coli.codes/css";
 import { handle } from "@coli.codes/builder";
 import { formatStyledTempplateString } from "./styled-variable-formatter";
 
@@ -43,14 +43,26 @@ export class StyledComponentDeclaration extends VariableDeclaration {
     style: CSSProperties,
     html5tag: Html5IdentifierNames
   ): TaggedTemplateExpression {
-    const content = formatStyledTempplateString(buildCssStandard(style));
+    const { main, pseudo } = buildCSSStyleData(style);
+
+    const pseudos = Object.keys(pseudo).map((k) => {
+      const b = pseudo[k];
+      const lines = b.split("\n").filter((l) => l.length > 0);
+      return `${k} {${
+        lines.length ? ["", ...lines].join("\n\t") + "\n" : ""
+      }}\n`;
+    });
+
+    const body = [main, ...pseudos].join("\n");
+
+    const _fmted_body = formatStyledTempplateString(body);
     return new TaggedTemplateExpression(
       new PropertyAccessExpression(
         StyledComponentDeclaration.styledIdentifier,
         html5tag
       ),
       {
-        template: new TemplateLiteral(content),
+        template: new TemplateLiteral(`\n${_fmted_body}\n`),
       }
     );
   }
