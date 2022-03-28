@@ -2,6 +2,7 @@ import { CSSProperties } from "@coli.codes/css";
 import { WidgetKeyId, StylableJsxWidget, JsxWidget } from "@web-builder/core";
 import { JSXAttributes, JSXIdentifier, ScopedVariableNamer } from "coli";
 import { buildStyledComponentConfig } from "@web-builder/styled";
+import assert from "assert";
 
 export interface JSXWithStyleElementConfig {
   id: string;
@@ -21,43 +22,50 @@ export type WidgetStyleConfigMap = Map<
   JSXWithStyleElementConfig | JSXWithoutStyleElementConfig
 >;
 
-export function getWidgetStylesConfigMap(
-  rootWidget: JsxWidget,
-  preferences: {
-    namer: ScopedVariableNamer;
-    rename_tag: boolean;
-  }
-): WidgetStyleConfigMap {
-  const styledConfigWidgetMap: WidgetStyleConfigMap = new Map();
+interface StylesConfigMapBuilderPreference {
+  namer: ScopedVariableNamer;
+  rename_tag: boolean;
+}
 
-  function mapper(widget: JsxWidget) {
-    if (!widget) {
-      throw `cannot map trough ${widget}`;
-    }
+export class StylesConfigMapBuilder {
+  readonly root: JsxWidget;
+  readonly preferences: StylesConfigMapBuilderPreference;
+  private readonly _map: WidgetStyleConfigMap = new Map();
+  //
+  constructor(root: JsxWidget, preferences: StylesConfigMapBuilderPreference) {
+    this.root = root;
+    this.preferences = preferences;
+
+    this._mapper(this.root);
+  }
+
+  private _mapper(widget: JsxWidget) {
+    assert(widget, "widget is required for building style config map");
+
     if (widget.jsxConfig().type === "static-tree") {
       return;
     }
 
-    const isRoot = widget.key.id == rootWidget.key.id;
+    const isRoot = widget.key.id == this.root.key.id;
     const id = widget.key.id;
     if (widget instanceof StylableJsxWidget) {
       const styledConfig = buildStyledComponentConfig(widget, {
         transformRootName: true,
-        namer: preferences.namer,
-        rename_tag: preferences.rename_tag,
+        namer: this.preferences.namer,
+        rename_tag: this.preferences.rename_tag,
         context: {
           root: isRoot,
         },
       });
 
-      styledConfigWidgetMap.set(id, styledConfig);
+      this._map.set(id, styledConfig);
     }
     widget.children?.map((childwidget) => {
-      mapper(childwidget);
+      this._mapper(childwidget);
     });
   }
 
-  mapper(rootWidget);
-
-  return styledConfigWidgetMap;
+  public get map(): WidgetStyleConfigMap {
+    return this._map;
+  }
 }

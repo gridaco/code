@@ -11,7 +11,7 @@ import {
 } from "@web-builder/react-core";
 import {
   buildJsx,
-  getWidgetStylesConfigMap,
+  StylesConfigMapBuilder,
   JSXWithoutStyleElementConfig,
   JSXWithStyleElementConfig,
   WidgetStyleConfigMap,
@@ -48,7 +48,8 @@ export class ReactNativeInlineStyleBuilder {
   private readonly widgetName: string;
   readonly config: reactnative_config.ReactNativeInlineStyleConfig;
   private readonly namer: ScopedVariableNamer;
-  private readonly stylesConfigWidgetMap: WidgetStyleConfigMap;
+  private readonly stylesMapper: StylesConfigMapBuilder;
+  // private readonly stylesConfigWidgetMap: WidgetStyleConfigMap;
 
   constructor({
     entry,
@@ -64,7 +65,8 @@ export class ReactNativeInlineStyleBuilder {
       entry.key.id,
       ReservedKeywordPlatformPresets.react
     );
-    this.stylesConfigWidgetMap = getWidgetStylesConfigMap(entry, {
+
+    this.stylesMapper = new StylesConfigMapBuilder(entry, {
       namer: this.namer,
       rename_tag: false,
     });
@@ -73,7 +75,7 @@ export class ReactNativeInlineStyleBuilder {
   private stylesConfig(
     id: string
   ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
-    return this.stylesConfigWidgetMap.get(id);
+    return this.stylesMapper.map.get(id);
   }
 
   private jsxBuilder(widget: JsxWidget) {

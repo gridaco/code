@@ -9,11 +9,7 @@ import {
   styled_components_imports,
 } from "@web-builder/react-core";
 import { JsxWidget } from "@web-builder/core";
-import {
-  buildJsx,
-  getWidgetStylesConfigMap,
-  WidgetStyleConfigMap,
-} from "@web-builder/core/builders";
+import { buildJsx, StylesConfigMapBuilder } from "@web-builder/core/builders";
 import {
   react as react_config,
   reactnative as rn_config,
@@ -28,7 +24,7 @@ import {
 export class ReactNativeStyledComponentsModuleBuilder {
   private readonly entry: JsxWidget;
   private readonly widgetName: string;
-  private readonly styledConfigWidgetMap: WidgetStyleConfigMap;
+  private readonly stylesMapper: StylesConfigMapBuilder;
   private readonly namer: ScopedVariableNamer;
   readonly config: rn_config.ReactNativeStyledComponentsConfig;
 
@@ -45,17 +41,21 @@ export class ReactNativeStyledComponentsModuleBuilder {
       entry.key.id,
       ReservedKeywordPlatformPresets.react
     );
-    this.styledConfigWidgetMap = getWidgetStylesConfigMap(entry, {
+
+    StylesConfigMapBuilder;
+
+    this.stylesMapper = new StylesConfigMapBuilder(entry, {
       namer: this.namer,
       rename_tag: true /** styled component tag shoule be renamed */,
     });
+
     this.config = config;
   }
 
   private styledConfig(
     id: string
   ): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
-    return this.styledConfigWidgetMap.get(id);
+    return this.stylesMapper.map.get(id);
   }
 
   private jsxBuilder(widget: JsxWidget) {
@@ -101,11 +101,10 @@ export class ReactNativeStyledComponentsModuleBuilder {
   }
 
   partDeclarations() {
-    return Array.from(this.styledConfigWidgetMap.keys())
+    return Array.from(this.stylesMapper.map.keys())
       .map((k) => {
-        return (
-          this.styledConfigWidgetMap.get(k) as StyledComponentJSXElementConfig
-        ).styledComponent;
+        return (this.stylesMapper.map.get(k) as StyledComponentJSXElementConfig)
+          .styledComponent;
       })
       .filter((s) => s);
   }

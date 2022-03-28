@@ -18,10 +18,9 @@ import {
 import { JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
-  getWidgetStylesConfigMap,
+  StylesConfigMapBuilder,
   JSXWithoutStyleElementConfig,
   JSXWithStyleElementConfig,
-  WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
 import {
   react as react_config,
@@ -33,7 +32,7 @@ import { StyleSheetDeclaration } from "../rn-style-sheet";
 export class ReactNativeStyleSheetModuleBuilder {
   private readonly entry: JsxWidget;
   private readonly widgetName: string;
-  private readonly stylesConfigWidgetMap: WidgetStyleConfigMap;
+  private readonly stylesMapper: StylesConfigMapBuilder;
   private readonly namer: ScopedVariableNamer;
   readonly config: rn_config.ReactNativeStyleSheetConfig;
 
@@ -50,17 +49,19 @@ export class ReactNativeStyleSheetModuleBuilder {
       entry.key.id,
       ReservedKeywordPlatformPresets.react
     );
-    this.stylesConfigWidgetMap = getWidgetStylesConfigMap(entry, {
+
+    this.stylesMapper = new StylesConfigMapBuilder(entry, {
       namer: this.namer,
       rename_tag: false /** rn StyleSheet tag shoule not be renamed */,
     });
+
     this.config = config;
   }
 
   private stylesConfig(
     id: string
   ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
-    return this.stylesConfigWidgetMap.get(id);
+    return this.stylesMapper.map.get(id);
   }
 
   private jsxBuilder(widget: JsxWidget) {
@@ -136,16 +137,13 @@ export class ReactNativeStyleSheetModuleBuilder {
   }
 
   partStyleSheetDeclaration(): StyleSheetDeclaration<any> {
-    const styles = Array.from(this.stylesConfigWidgetMap.keys()).reduce(
-      (p, c) => {
-        const cfg = this.stylesConfig(c);
-        return {
-          ...p,
-          [cfg.id]: "style" in cfg && cfg.style,
-        };
-      },
-      {}
-    );
+    const styles = Array.from(this.stylesMapper.map.keys()).reduce((p, c) => {
+      const cfg = this.stylesConfig(c);
+      return {
+        ...p,
+        [cfg.id]: "style" in cfg && cfg.style,
+      };
+    }, {});
 
     return new StyleSheetDeclaration("styles", {
       styles: styles,

@@ -8,7 +8,7 @@ import {
 } from "@web-builder/react-core";
 import {
   buildJsx,
-  getWidgetStylesConfigMap,
+  StylesConfigMapBuilder,
   JSXWithoutStyleElementConfig,
   JSXWithStyleElementConfig,
   WidgetStyleConfigMap,
@@ -44,7 +44,7 @@ export class ReactInlineCssBuilder {
   private readonly widgetName: string;
   readonly config: react_config.ReactInlineCssConfig;
   private readonly namer: ScopedVariableNamer;
-  private readonly stylesConfigWidgetMap: WidgetStyleConfigMap;
+  private readonly stylesMapper: StylesConfigMapBuilder;
 
   constructor({
     entry,
@@ -60,7 +60,8 @@ export class ReactInlineCssBuilder {
       entry.key.id,
       ReservedKeywordPlatformPresets.react
     );
-    this.stylesConfigWidgetMap = getWidgetStylesConfigMap(entry, {
+
+    this.stylesMapper = new StylesConfigMapBuilder(entry, {
       namer: this.namer,
       rename_tag: false,
     });
@@ -69,7 +70,7 @@ export class ReactInlineCssBuilder {
   private stylesConfig(
     id: string
   ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
-    return this.stylesConfigWidgetMap.get(id);
+    return this.stylesMapper.map.get(id);
   }
 
   private jsxBuilder(widget: JsxWidget) {
