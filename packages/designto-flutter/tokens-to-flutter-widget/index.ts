@@ -192,6 +192,11 @@ function compose(
       angle: widget.rotation,
       child: handleChild(widget.child),
     });
+  } else if (widget instanceof core.Expanded) {
+    thisFlutterWidget = new flutter.Expanded({
+      flex: widget.flex,
+      child: handleChild(widget.child),
+    });
   }
 
   // ----- region clip path ------
