@@ -11,11 +11,11 @@ import { flag_key__as_wrap } from "./--as-wrap";
 import { flag_key__module } from "./--module";
 import type {
   HeadingFlag,
-  TextElementPreferenceFlag,
   AsParagraphFlag,
   AsTextSpanFlag,
   AsButtonFlag,
   AsInputFlag,
+  AsProgressFlag,
   SimpleBooleanValueFlag,
   FixWHFlag,
   DeclareSpecificationFlag,
@@ -31,6 +31,7 @@ export type FlagsParseResult = Results & {
     contains_button_flag: boolean;
     contains_input_flag: boolean;
     contains_slider_flag: boolean;
+    contains_progress_flag: boolean;
     contains_wh_declaration_flag: boolean;
     contains_fix_wh_flag: boolean;
     contains_declare_flag: boolean;
@@ -69,6 +70,9 @@ export function parse(name: string): FlagsParseResult {
 
       // slider
       __slider_alias_pref,
+
+      // progress
+      __progress_alias_pref,
 
       //#region
       __width_alias_pref,
@@ -120,6 +124,11 @@ export function parse(name: string): FlagsParseResult {
       keys.alias.as_slider
     );
 
+    const as_progress_flag = handle_single_boolean_flag_alias<AsProgressFlag>(
+      _raw_parsed,
+      keys.alias.as_progress
+    );
+
     const wh_declaration_flag =
       transform_wh_declaration_alias_from_raw(_raw_parsed);
     const fix_wh_flag = handle_single_boolean_flag_alias<FixWHFlag>(
@@ -140,6 +149,7 @@ export function parse(name: string): FlagsParseResult {
       ...(as_span_flag ?? {}),
       ...(as_button_flag ?? {}),
       ...(as_input_flag ?? {}),
+      ...(as_progress_flag ?? {}),
       ...(wh_declaration_flag ?? {}),
       ...(fix_wh_flag ?? {}),
       ...(declare_flag ?? {}),
@@ -150,6 +160,7 @@ export function parse(name: string): FlagsParseResult {
         contains_button_flag: notempty(as_button_flag),
         contains_input_flag: notempty(as_input_flag),
         contains_slider_flag: notempty(as_slider_flag),
+        contains_progress_flag: notempty(as_progress_flag),
         contains_wh_declaration_flag: notempty(as_span_flag),
         contains_fix_wh_flag: notempty(fix_wh_flag),
         contains_declare_flag: notempty(declare_flag),
@@ -287,6 +298,10 @@ const __input_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
 
 const __slider_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
   keys.alias.as_slider
+);
+
+const __progress_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.as_progress
 );
 
 // -----------------------------------------------------------------------------

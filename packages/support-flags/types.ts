@@ -9,6 +9,7 @@ import type { AsHeading6Flag } from "./--as-h6";
 import type { AsButtonFlag } from "./--as-button";
 import type { AsInputFlag } from "./--as-input";
 import type { AsSliderFlag } from "./--as-slider";
+import type { AsProgressFlag } from "./--as-progress";
 import type { AsParagraphFlag } from "./--as-p";
 import type { AsTextSpanFlag } from "./--as-span";
 import type { WidthFlag } from "./--width";
@@ -82,7 +83,11 @@ export type HeadingFlag =
 /**
  * Type alias for a flag taht can be used to specify the element casting
  */
-export type ComponentCastingFlag = AsButtonFlag | AsInputFlag | AsSliderFlag;
+export type ComponentCastingFlag =
+  | AsButtonFlag
+  | AsInputFlag
+  | AsSliderFlag
+  | AsProgressFlag;
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -118,6 +123,7 @@ export type { AsTextSpanFlag };
 export type { AsButtonFlag };
 export type { AsInputFlag };
 export type { AsSliderFlag };
+export type { AsProgressFlag };
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
