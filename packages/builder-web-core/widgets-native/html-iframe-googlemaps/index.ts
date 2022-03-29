@@ -1,3 +1,4 @@
+import { URLSearchParams } from "url";
 import { HtmlIframe } from "../html-iframe";
 import type { IIframeProps } from "../html-iframe";
 import type { IWHStyleWidget } from "@reflect-ui/core";
