@@ -30,6 +30,8 @@ import { flag_key_alias__fix_height, flag_key__fix_height } from "./--fix-height
 
 import { flag_key_alias__declare, flag_key__declare } from "./--declare";
 
+// prettier-ignore
+import { flag_key_alias__camera, flag_key__camera } from "./--camera-display";
 import { flag_key_alias__video, flag_key__video } from "./--video";
 import { flag_key_alias__webview, flag_key__webview } from "./--webview";
 // prettier-ignore
@@ -79,6 +81,7 @@ export { flag_key__fix_width, flag_key__fix_height };
 export { flag_key__declare };
 
 export {
+  flag_key__camera,
   flag_key__video,
   flag_key__webview,
   flag_key__x_figma_embed_view,
@@ -110,6 +113,7 @@ export const alias = {
   fix_width: flag_key_alias__fix_width,
   fix_height: flag_key_alias__fix_height,
   declare: flag_key_alias__declare,
+  camera: flag_key_alias__camera,
   video: flag_key_alias__video,
   webview: flag_key_alias__webview,
   x_figma_embed_view: flag_key_alias__x_figma_embed_view,

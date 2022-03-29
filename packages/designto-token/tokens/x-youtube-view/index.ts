@@ -1,6 +1,6 @@
-import { Container, WidgetKey } from "@reflect-ui/core";
+import { Widget, WidgetKey } from "@reflect-ui/core";
 
-export class XYoutubeView extends Container {
+export class XYoutubeView extends Widget {
   readonly _type = "x/youtube-view";
   readonly video: string;
   constructor({

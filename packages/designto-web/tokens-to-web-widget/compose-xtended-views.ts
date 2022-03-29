@@ -8,7 +8,8 @@ export function compose_xtended_views(
     | special.XFigmaEmbedView
     | special.XGoogleMapsView
     | special.XOSMView
-    | special.XYoutubeView,
+    | special.XYoutubeView
+    | special.XCameraDisplayView,
   container?: core.Container
 ) {
   if (widget instanceof special.XFigmaEmbedView) {
@@ -16,7 +17,11 @@ export function compose_xtended_views(
   }
 
   if (widget instanceof special.XGoogleMapsView) {
-    return new web.GoogleMaps({ ...(container ?? {}), ...widget, key });
+    return new web.GoogleMaps({
+      ...(container ?? ({} as core.Container)),
+      ...widget,
+      key,
+    });
   }
 
   if (widget instanceof special.XOSMView) {
@@ -24,7 +29,19 @@ export function compose_xtended_views(
   }
 
   if (widget instanceof special.XYoutubeView) {
-    return new web.Youtube({ ...(container ?? {}), ...widget, key });
+    return new web.Youtube({
+      ...(container ?? ({} as core.Container)),
+      ...widget,
+      key,
+    });
+  }
+
+  if (widget instanceof special.XCameraDisplayView) {
+    return new web.Webcam({
+      ...(container ?? ({} as core.Container)),
+      ...widget,
+      key,
+    });
   }
 
   throw new Error("not implemented");

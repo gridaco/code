@@ -229,7 +229,8 @@ function compose<T extends JsxWidget>(
     widget instanceof special.XFigmaEmbedView ||
     widget instanceof special.XGoogleMapsView ||
     widget instanceof special.XOSMView ||
-    widget instanceof special.XYoutubeView
+    widget instanceof special.XYoutubeView ||
+    widget instanceof special.XCameraDisplayView
   ) {
     // xtended views
     thisWebWidget = compose_xtended_views(_key, widget);
@@ -273,7 +274,8 @@ function compose<T extends JsxWidget>(
       widget.child instanceof special.XFigmaEmbedView ||
       widget.child instanceof special.XGoogleMapsView ||
       widget.child instanceof special.XOSMView ||
-      widget.child instanceof special.XYoutubeView
+      widget.child instanceof special.XYoutubeView ||
+      widget.child instanceof special.XCameraDisplayView
     ) {
       // xtended views
       thisWebWidget = compose_xtended_views(_key, widget.child, widget);
