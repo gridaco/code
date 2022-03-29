@@ -1,5 +1,5 @@
 import type { ElementCssStyleData } from "@coli.codes/css";
-import type { Color, DimensionLength, IWHStyleWidget } from "@reflect-ui/core";
+import type { DimensionLength, IWHStyleWidget } from "@reflect-ui/core";
 import { WidgetKey } from "../../widget-key";
 import type { StylableJSXElementConfig } from "../../widget-core";
 import { Container } from "../container";
@@ -38,8 +38,8 @@ export interface IIframeProps {
 
   readonly src?: string;
   readonly srcdoc?: string;
-  readonly fwidth: DimensionLength;
-  readonly fheight: DimensionLength;
+  readonly fwidth?: DimensionLength;
+  readonly fheight?: DimensionLength;
 
   readonly allow?: string;
   readonly loading?: "eager" | "lazy";
@@ -54,8 +54,8 @@ export class HtmlIframe extends Container implements IIframeProps {
 
   readonly src?: string;
   readonly srcdoc?: string;
-  readonly fwidth: DimensionLength;
-  readonly fheight: DimensionLength;
+  readonly fwidth?: DimensionLength;
+  readonly fheight?: DimensionLength;
 
   readonly allow?: string;
   readonly loading?: "eager" | "lazy";
@@ -69,8 +69,8 @@ export class HtmlIframe extends Container implements IIframeProps {
     title,
     src,
     srcdoc,
-    fwidth: width,
-    fheight: height,
+    fwidth,
+    fheight,
     allow,
     loading,
     name,
@@ -84,8 +84,8 @@ export class HtmlIframe extends Container implements IIframeProps {
     this.title = title;
     this.src = src;
     this.srcdoc = srcdoc;
-    this.fwidth = width;
-    this.fheight = height;
+    this.fwidth = fwidth;
+    this.fheight = fheight;
     this.allow = allow;
     this.loading = loading;
     this.name = name;
