@@ -21,6 +21,7 @@ import { tokenize_flagged_progress } from "./token-progress";
 import { tokenize_flagged_google_maps_view } from "./token-x-google-maps-view";
 import { tokenize_flagged_youtube_view } from "./token-x-youtube-view";
 import { tokenize_flagged_camera_view } from "./token-x-camera-display";
+import { tokenize_flagged_checkbox } from "./token-checkbox";
 
 export default function handleWithFlags(node: ReflectSceneNode) {
   const flags = parse(node.name);
@@ -52,6 +53,10 @@ function _handle_with_flags(node, flags: FlagsParseResult) {
 
   if (flags.__meta?.contains_button_flag) {
     return tokenize_flagged_button(node, flags[keys.flag_key__as_button]);
+  }
+
+  if (flags.__meta?.contains_checkbox_flag) {
+    return tokenize_flagged_checkbox(node, flags[keys.flag_key__as_checkbox]);
   }
 
   if (flags.__meta?.contains_input_flag) {

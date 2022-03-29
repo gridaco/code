@@ -183,6 +183,8 @@ function handleNode(
     if (config.disable_detection) {
       // skip detection
     } else {
+      // TODO: only execute detection if all the nested children is not flagged as other component.
+
       // - icon -
       const _detect_if_icon = detectIf.icon(node);
       if (_detect_if_icon.result) {

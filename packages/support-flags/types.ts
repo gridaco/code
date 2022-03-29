@@ -9,6 +9,7 @@ import type { AsHeading6Flag } from "./--as-h6";
 import type { AsButtonFlag } from "./--as-button";
 import type { AsInputFlag } from "./--as-input";
 import type { AsSliderFlag } from "./--as-slider";
+import type { AsCheckboxFlag } from "./--as-checkbox";
 import type { AsProgressFlag } from "./--as-progress";
 import type { AsParagraphFlag } from "./--as-p";
 import type { AsTextSpanFlag } from "./--as-span";
@@ -105,6 +106,7 @@ export type ValueFeedFlag = QFlag | LatLngFlag;
  */
 export type ComponentCastingFlag =
   | AsButtonFlag
+  | AsCheckboxFlag
   | AsInputFlag
   | AsSliderFlag
   | AsProgressFlag;
@@ -150,6 +152,7 @@ export type { AsTextSpanFlag };
 // ---------------------------------------------------------------------------
 
 export type { AsButtonFlag };
+export type { AsCheckboxFlag };
 export type { AsInputFlag };
 export type { AsSliderFlag };
 export type { AsProgressFlag };

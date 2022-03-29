@@ -17,6 +17,7 @@ import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overfl
 import { compose_wrapped_with_expanded } from "./compose-wrapped-with-expanded";
 import { compose_unwrapped_text_input } from "./compose-unwrapped-text-field";
 import { compose_unwrapped_button } from "./compose-unwrapped-button";
+import { compose_unwrapped_checkbox } from "./compose-unwrapped-checkbox";
 import { compose_unwrapped_slider } from "./compose-unwrapped-slider";
 import { compose_unwrapped_progress } from "./compose-unwrapped-progress";
 import { compose_instanciation } from "./compose-instanciation";
@@ -242,6 +243,10 @@ function compose<T extends JsxWidget>(
     // TODO: widget.icon - not supported
     thisWebWidget = compose_unwrapped_button(_key, widget);
   }
+  // checkbox
+  else if (widget instanceof core.Checkbox) {
+    thisWebWidget = compose_unwrapped_checkbox(_key, widget);
+  }
   // textfield
   else if (widget instanceof core.TextField) {
     thisWebWidget = compose_unwrapped_text_input(_key, widget);
@@ -263,6 +268,8 @@ function compose<T extends JsxWidget>(
       thisWebWidget = compose_unwrapped_text_input(_key, widget.child, widget);
     } else if (widget.child instanceof core.ButtonStyleButton) {
       thisWebWidget = compose_unwrapped_button(_key, widget.child, widget);
+    } else if (widget.child instanceof core.Checkbox) {
+      thisWebWidget = compose_unwrapped_checkbox(_key, widget.child, widget);
     } else if (widget.child instanceof core.Slider) {
       thisWebWidget = compose_unwrapped_slider(_key, widget.child, widget);
     } else if (widget.child instanceof core.ProgressIndicator) {
@@ -283,6 +290,10 @@ function compose<T extends JsxWidget>(
     // --- --- --- --- ---
     // #endregion
     else {
+      console.error(
+        `Unsupported web widget type: ${widget.child.constructor.name}`,
+        widget.child
+      );
       throw new Error(
         `Unsupported web widget type: ${widget.child.constructor.name}`
       );

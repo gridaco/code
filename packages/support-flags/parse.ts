@@ -14,6 +14,7 @@ import type {
   AsParagraphFlag,
   AsTextSpanFlag,
   AsButtonFlag,
+  AsCheckboxFlag,
   AsInputFlag,
   AsProgressFlag,
   SimpleBooleanValueFlag,
@@ -37,6 +38,7 @@ export type FlagsParseResult = Results & {
     contains_paragraph_flag: boolean;
     contains_span_flag: boolean;
     contains_button_flag: boolean;
+    contains_checkbox_flag: boolean;
     contains_input_flag: boolean;
     contains_slider_flag: boolean;
     contains_progress_flag: boolean;
@@ -79,6 +81,9 @@ export function parse(name: string): FlagsParseResult {
 
       // button
       __button_alias_pref,
+
+      // checkbox
+      __checkbox_alias_pref,
 
       // input
       __input_alias_pref,
@@ -137,6 +142,11 @@ export function parse(name: string): FlagsParseResult {
     const as_button_flag = handle_single_boolean_flag_alias<AsButtonFlag>(
       _raw_parsed,
       keys.alias.as_button
+    );
+
+    const as_checkbox_flag = handle_single_boolean_flag_alias<AsButtonFlag>(
+      _raw_parsed,
+      keys.alias.as_checkbox
     );
 
     const as_input_flag = handle_single_boolean_flag_alias<AsInputFlag>(
@@ -211,6 +221,7 @@ export function parse(name: string): FlagsParseResult {
       ...(as_paragraph_flag ?? {}),
       ...(as_span_flag ?? {}),
       ...(as_button_flag ?? {}),
+      ...(as_checkbox_flag ?? {}),
       ...(as_input_flag ?? {}),
       ...(as_progress_flag ?? {}),
       ...(wh_declaration_flag ?? {}),
@@ -229,6 +240,7 @@ export function parse(name: string): FlagsParseResult {
         contains_paragraph_flag: notempty(as_paragraph_flag),
         contains_span_flag: notempty(as_span_flag),
         contains_button_flag: notempty(as_button_flag),
+        contains_checkbox_flag: notempty(as_checkbox_flag),
         contains_input_flag: notempty(as_input_flag),
         contains_slider_flag: notempty(as_slider_flag),
         contains_progress_flag: notempty(as_progress_flag),
@@ -380,6 +392,10 @@ const __textspan_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
 
 const __button_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
   keys.alias.as_button
+);
+
+const __checkbox_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.as_checkbox
 );
 
 const __input_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
