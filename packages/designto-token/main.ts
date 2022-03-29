@@ -150,54 +150,7 @@ function handleNode(
     return;
   }
 
-  // -------------------------------------------------------------------------
-  // --------------------------- Detected tokens -----------------------------
-  // -------------------------------------------------------------------------
-
-  // - image - // image detection is always enabled exceptionally.
-  // TODO: separate image detection with static logic based and the smart one.
-  const _detect_if_image = detectIf.image(node);
-  if (_detect_if_image.result) {
-    return tokenizeGraphics.fromImage(node, _detect_if_image.data);
-  }
-
-  if (config.disable_detection) {
-    // skip detection
-  } else {
-    // - icon -
-    const _detect_if_icon = detectIf.icon(node);
-    if (_detect_if_icon.result) {
-      return tokenizeGraphics.fromIcon(node, _detect_if_icon.data);
-    }
-
-    // - button -
-    // TODO: this causes confliction with flags
-    // const _detect_if_button = detectIf.button(node);
-    // if (_detect_if_button.result) {
-    //   return tokenizeButton.fromManifest(node, _detect_if_button.data);
-    // }
-  }
-  // -------------------------------------------------------------------------
-  // --------------------------- Detected tokens -----------------------------
-  // -------------------------------------------------------------------------
-
-  //
-  //
-  // -------------------------------------------------------------------------
-  //
-  //
-
-  // -------------------------------------------------------------------------
-  // --------------------------- Pre processors ------------------------------
-  // -------------------------------------------------------------------------
   let tokenizedTarget: Widget = null;
-  // masking handler
-  if (containsMasking(node)) {
-    tokenizedTarget = tokenizeMasking.fromMultichild(
-      node as MaskingItemContainingNode,
-      config
-    );
-  }
 
   // flags handler
   if (!tokenizedTarget) {
@@ -212,6 +165,60 @@ function handleNode(
       }
     }
   }
+
+  // -------------------------------------------------------------------------
+  // --------------------------- Detected tokens -----------------------------
+  // -------------------------------------------------------------------------
+
+  // - image - // image detection is always enabled exceptionally.
+  // TODO: separate image detection with static logic based and the smart one.
+  if (!tokenizedTarget) {
+    const _detect_if_image = detectIf.image(node);
+    if (_detect_if_image.result) {
+      return tokenizeGraphics.fromImage(node, _detect_if_image.data);
+    }
+  }
+
+  if (!tokenizedTarget) {
+    if (config.disable_detection) {
+      // skip detection
+    } else {
+      // - icon -
+      const _detect_if_icon = detectIf.icon(node);
+      if (_detect_if_icon.result) {
+        return tokenizeGraphics.fromIcon(node, _detect_if_icon.data);
+      }
+
+      // - button -
+      // TODO: this causes confliction with flags
+      // const _detect_if_button = detectIf.button(node);
+      // if (_detect_if_button.result) {
+      //   return tokenizeButton.fromManifest(node, _detect_if_button.data);
+      // }
+    }
+  }
+  // -------------------------------------------------------------------------
+  // --------------------------- Detected tokens -----------------------------
+  // -------------------------------------------------------------------------
+
+  //
+  //
+  // -------------------------------------------------------------------------
+  //
+  //
+
+  // -------------------------------------------------------------------------
+  // --------------------------- Pre processors ------------------------------
+  // -------------------------------------------------------------------------
+
+  // masking handler
+  if (containsMasking(node)) {
+    tokenizedTarget = tokenizeMasking.fromMultichild(
+      node as MaskingItemContainingNode,
+      config
+    );
+  }
+
   //
   // -------------------------------------------------------------------------
   //

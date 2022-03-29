@@ -16,6 +16,11 @@ import { tokenize_flagged_wh_declaration } from "./token-wh";
 import { tokenize_flagged_fix_wh } from "./token-wh-fix";
 import { tokenize_flagged_button } from "./token-button";
 import { tokenize_flagged_slider } from "./token-slider";
+import { tokenize_flagged_progress } from "./token-progress";
+
+import { tokenize_flagged_google_maps_view } from "./token-x-google-maps-view";
+import { tokenize_flagged_youtube_view } from "./token-x-youtube-view";
+import { tokenize_flagged_camera_view } from "./token-x-camera-display";
 
 export default function handleWithFlags(node: ReflectSceneNode) {
   const flags = parse(node.name);
@@ -56,7 +61,32 @@ function _handle_with_flags(node, flags: FlagsParseResult) {
   if (flags.__meta?.contains_slider_flag) {
     return tokenize_flagged_slider(node, flags[keys.flag_key__as_slider]);
   }
+
+  if (flags.__meta?.contains_progress_flag) {
+    return tokenize_flagged_progress(node, flags[keys.flag_key__as_progress]);
+  }
   // #endregion
+
+  // #region exetnded views
+  if (flags.__meta?.contains_x_google_maps_view_flag) {
+    return tokenize_flagged_google_maps_view(
+      node,
+      flags[keys.flag_key__x_google_maps_view]
+    );
+  }
+
+  if (flags.__meta?.contains_x_youtube_view_flag) {
+    return tokenize_flagged_youtube_view(
+      node,
+      flags[keys.flag_key__x_youtube_view]
+    );
+  }
+
+  if (flags.__meta?.contains_camera_flag) {
+    return tokenize_flagged_camera_view(node, flags[keys.flag_key__camera]);
+  }
+
+  // #end exetnded views
 
   // #region element altering flags
   // heading

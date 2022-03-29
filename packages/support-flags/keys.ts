@@ -12,6 +12,8 @@ import { flag_key_alias__as_span, flag_key__as_span } from "./--as-span";
 import { flag_key__as_button, flag_key_alias__as_button } from "./--as-button";
 import { flag_key__as_input, flag_key_alias_as_input } from "./--as-input";
 import { flag_key__as_slider, flag_key_alias__as_slider } from "./--as-slider";
+// prettier-ignore
+import { flag_key__as_progress, flag_key_alias__as_progress } from "./--as-progress";
 
 import { flag_key_alias__width, flag_key__width } from "./--width";
 import { flag_key_alias__min_width, flag_key__min_width } from "./--min-width";
@@ -27,6 +29,18 @@ import { flag_key_alias__fix_width, flag_key__fix_width } from "./--fix-width";
 import { flag_key_alias__fix_height, flag_key__fix_height } from "./--fix-height";
 
 import { flag_key_alias__declare, flag_key__declare } from "./--declare";
+
+// prettier-ignore
+import { flag_key_alias__camera, flag_key__camera } from "./--camera-display";
+import { flag_key_alias__video, flag_key__video } from "./--video";
+import { flag_key_alias__webview, flag_key__webview } from "./--webview";
+// prettier-ignore
+import { flag_key_alias__x_figma_embed_view, flag_key__x_figma_embed_view } from "./--x-figma-embed-view";
+// prettier-ignore
+import { flag_key_alias__x_google_maps, flag_key__x_google_maps_view } from "./--x-google-maps-view";
+import { flag_key_alias__x_osm, flag_key__x_osm_view } from "./--x-osm-view";
+// prettier-ignore
+import { flag_key_alias__x_youtube_view, flag_key__x_youtube_view } from "./--x-youtube-view";
 
 //
 export {
@@ -52,6 +66,8 @@ export { flag_key__as_input };
 
 export { flag_key__as_slider };
 
+export { flag_key__as_progress };
+
 export {
   flag_key__width,
   flag_key__min_width,
@@ -63,6 +79,16 @@ export {
 export { flag_key__fix_width, flag_key__fix_height };
 
 export { flag_key__declare };
+
+export {
+  flag_key__camera,
+  flag_key__video,
+  flag_key__webview,
+  flag_key__x_figma_embed_view,
+  flag_key__x_google_maps_view,
+  flag_key__x_osm_view,
+  flag_key__x_youtube_view,
+};
 
 export const alias = {
   autofocus: flag_key_alias__autofocus,
@@ -77,6 +103,7 @@ export const alias = {
   as_button: flag_key_alias__as_button,
   as_input: flag_key_alias_as_input,
   as_slider: flag_key_alias__as_slider,
+  as_progress: flag_key_alias__as_progress,
   width: flag_key_alias__width,
   min_width: flag_key_alias__min_width,
   max_width: flag_key_alias__max_width,
@@ -86,4 +113,11 @@ export const alias = {
   fix_width: flag_key_alias__fix_width,
   fix_height: flag_key_alias__fix_height,
   declare: flag_key_alias__declare,
+  camera: flag_key_alias__camera,
+  video: flag_key_alias__video,
+  webview: flag_key_alias__webview,
+  x_figma_embed_view: flag_key_alias__x_figma_embed_view,
+  x_google_maps_view: flag_key_alias__x_google_maps,
+  x_osm_view: flag_key_alias__x_osm,
+  x_youtube_view: flag_key_alias__x_youtube_view,
 };

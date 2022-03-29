@@ -18,7 +18,9 @@ import { compose_wrapped_with_expanded } from "./compose-wrapped-with-expanded";
 import { compose_unwrapped_text_input } from "./compose-unwrapped-text-field";
 import { compose_unwrapped_button } from "./compose-unwrapped-button";
 import { compose_unwrapped_slider } from "./compose-unwrapped-slider";
+import { compose_unwrapped_progress } from "./compose-unwrapped-progress";
 import { compose_instanciation } from "./compose-instanciation";
+import { compose_xtended_views } from "./compose-xtended-views";
 import { IWHStyleWidget } from "@reflect-ui/core";
 import * as reusable from "@code-features/component/tokens";
 import assert from "assert";
@@ -223,6 +225,15 @@ function compose<T extends JsxWidget>(
         break;
       }
     }
+  } else if (
+    widget instanceof special.XFigmaEmbedView ||
+    widget instanceof special.XGoogleMapsView ||
+    widget instanceof special.XOSMView ||
+    widget instanceof special.XYoutubeView ||
+    widget instanceof special.XCameraDisplayView
+  ) {
+    // xtended views
+    thisWebWidget = compose_xtended_views(_key, widget);
   }
 
   // #region component widgets
@@ -234,9 +245,16 @@ function compose<T extends JsxWidget>(
   // textfield
   else if (widget instanceof core.TextField) {
     thisWebWidget = compose_unwrapped_text_input(_key, widget);
-  } else if (widget instanceof core.Slider) {
+  }
+  // slider
+  else if (widget instanceof core.Slider) {
     thisWebWidget = compose_unwrapped_slider(_key, widget);
   }
+  // progress
+  else if (widget instanceof core.ProgressIndicator) {
+    thisWebWidget = compose_unwrapped_progress(_key, widget);
+  }
+
   // wrapping container
   else if (widget instanceof WrappingContainer) {
     // #region
@@ -247,12 +265,28 @@ function compose<T extends JsxWidget>(
       thisWebWidget = compose_unwrapped_button(_key, widget.child, widget);
     } else if (widget.child instanceof core.Slider) {
       thisWebWidget = compose_unwrapped_slider(_key, widget.child, widget);
-    } else {
+    } else if (widget.child instanceof core.ProgressIndicator) {
+      thisWebWidget = compose_unwrapped_progress(_key, widget.child, widget);
+    }
+
+    // --- xtended views
+    else if (
+      widget.child instanceof special.XFigmaEmbedView ||
+      widget.child instanceof special.XGoogleMapsView ||
+      widget.child instanceof special.XOSMView ||
+      widget.child instanceof special.XYoutubeView ||
+      widget.child instanceof special.XCameraDisplayView
+    ) {
+      // xtended views
+      thisWebWidget = compose_xtended_views(_key, widget.child, widget);
+    }
+    // --- --- --- --- ---
+    // #endregion
+    else {
       throw new Error(
-        `Unsupported widget type: ${widget.child.constructor.name}`
+        `Unsupported web widget type: ${widget.child.constructor.name}`
       );
     }
-    // #endregion
   }
   // #endregion
 
