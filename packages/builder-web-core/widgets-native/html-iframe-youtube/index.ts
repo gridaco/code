@@ -22,11 +22,31 @@ export class HtmlIframeYoutube extends HtmlIframe {
       loading,
       sandbox,
       referrerpolicy,
-      src: yturl(video),
+      src: yturl(video, { autoplay: true }),
     });
   }
 }
 
-function yturl(video: string): string {
+function yturl(
+  video: string,
+  opt?: {
+    autoplay?: boolean;
+  }
+): string {
+  const q = {};
+
+  if (opt?.autoplay) {
+    q["autoplay"] = "1";
+  }
+
+  if (Object.keys(q).length > 0) {
+    return `https://www.youtube.com/embed/${video}?${buildq(q)}`;
+  }
+
   return `https://www.youtube.com/embed/${video}`;
 }
+
+const buildq = (q: object): string =>
+  Object.keys(q)
+    .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(q[k])}`)
+    .join("&");
