@@ -21,6 +21,13 @@ import type {
   DeclareSpecificationFlag,
   WHDeclarationFlag,
   AsSliderFlag,
+  VideoFlag,
+  WebViewFlag,
+  XFigmaEmbedFlag,
+  XGoogleMapsFlag,
+  XOSMFlag,
+  XYoutubeFlag,
+  Flag,
 } from "./types";
 
 export type FlagsParseResult = Results & {
@@ -35,6 +42,12 @@ export type FlagsParseResult = Results & {
     contains_wh_declaration_flag: boolean;
     contains_fix_wh_flag: boolean;
     contains_declare_flag: boolean;
+    contains_video_flag: boolean;
+    contains_webview_flag: boolean;
+    contains_x_figma_embed_view_flag: boolean;
+    contains_x_google_maps_view_flag: boolean;
+    contains_x_osm_view_flag: boolean;
+    contains_x_youtube_view_flag: boolean;
     // ...
     [key: string]: boolean;
   };
@@ -92,6 +105,15 @@ export function parse(name: string): FlagsParseResult {
       __declare_alias_pref,
       //#endregion
 
+      // #region
+      __video_alias_pref,
+      __webview_alias_pref,
+      __x_figma_embed_view_alias_pref,
+      __x_google_maps_view_alias_pref,
+      __x_osm_view_alias_pref,
+      __x_youtube_view_alias_pref,
+      // #endregion
+
       {
         name: flag_key__module,
         type: "bool", // TODO: support string also.
@@ -142,6 +164,39 @@ export function parse(name: string): FlagsParseResult {
         keys.alias.declare
       );
 
+    const video_flag = handle_single_typed_value_flag_alias<VideoFlag>(
+      _raw_parsed,
+      keys.alias.video
+    );
+
+    const webview_flag = handle_single_typed_value_flag_alias<WebViewFlag>(
+      _raw_parsed,
+      keys.alias.webview
+    );
+
+    const x_figma_embed_view_flag =
+      handle_single_typed_value_flag_alias<XFigmaEmbedFlag>(
+        _raw_parsed,
+        keys.alias.x_figma_embed_view
+      );
+
+    const x_google_maps_view_flag =
+      handle_single_typed_value_flag_alias<XGoogleMapsFlag>(
+        _raw_parsed,
+        keys.alias.x_google_maps_view
+      );
+
+    const x_osm_view_flag = handle_single_typed_value_flag_alias<XOSMFlag>(
+      _raw_parsed,
+      keys.alias.x_osm_view
+    );
+
+    const x_youtube_view_flag =
+      handle_single_typed_value_flag_alias<XYoutubeFlag>(
+        _raw_parsed,
+        keys.alias.x_youtube_view
+      );
+
     return {
       ..._raw_parsed,
       ...as_heading_flag,
@@ -153,6 +208,13 @@ export function parse(name: string): FlagsParseResult {
       ...(wh_declaration_flag ?? {}),
       ...(fix_wh_flag ?? {}),
       ...(declare_flag ?? {}),
+      ...(video_flag ?? {}),
+      ...(webview_flag ?? {}),
+      ...(x_figma_embed_view_flag ?? {}),
+      ...(x_google_maps_view_flag ?? {}),
+      ...(x_osm_view_flag ?? {}),
+      ...(x_youtube_view_flag ?? {}),
+
       __meta: {
         contains_heading_flag: notempty(as_heading_flag),
         contains_paragraph_flag: notempty(as_paragraph_flag),
@@ -164,6 +226,12 @@ export function parse(name: string): FlagsParseResult {
         contains_wh_declaration_flag: notempty(as_span_flag),
         contains_fix_wh_flag: notempty(fix_wh_flag),
         contains_declare_flag: notempty(declare_flag),
+        contains_video_flag: notempty(video_flag),
+        contains_webview_flag: notempty(webview_flag),
+        contains_x_figma_embed_view_flag: notempty(x_figma_embed_view_flag),
+        contains_x_google_maps_view_flag: notempty(x_google_maps_view_flag),
+        contains_x_osm_view_flag: notempty(x_osm_view_flag),
+        contains_x_youtube_view_flag: notempty(x_youtube_view_flag),
       },
     };
   } catch (_) {
@@ -175,25 +243,30 @@ export function parse(name: string): FlagsParseResult {
 
 const notempty = (obj) => Object.keys(obj ?? {}).length > 0;
 
-const _simple_boolean_value_flag_prefernce_mapper = (
-  k: string | Array<string>
-): Option =>
-  Array.isArray(k)
+const _simple_typed_value_flag_preference_mapper = (
+  k: string | Array<string>,
+  type: Option["type"]
+): Option => {
+  return Array.isArray(k)
     ? {
         names: k,
-        type: "bool",
+        type: type,
       }
     : {
         name: k,
-        type: "bool",
+        type: type,
       };
+};
+const _simple_boolean_value_flag_prefernce_mapper = (
+  k: string | Array<string>
+): Option => _simple_typed_value_flag_preference_mapper(k, "bool");
 
-function handle_single_boolean_flag_alias<T extends SimpleBooleanValueFlag>(
-  raw: { [key: string]: boolean },
-  alias: string[]
-) {
+function handle_single_typed_value_flag_alias<
+  T extends Flag,
+  V extends Flag["value"] = T["value"]
+>(raw: { [key: string]: V }, alias: string[]) {
   // e.g. `[ { h1: true } ]`
-  const mapped: { key: string; value: boolean }[] = alias.map((_) => ({
+  const mapped: { key: string; value: V }[] = alias.map((_) => ({
     key: _,
     value: raw[_],
   }));
@@ -210,6 +283,13 @@ function handle_single_boolean_flag_alias<T extends SimpleBooleanValueFlag>(
   }, {});
 
   if (Object.keys(converted).length > 0) return converted;
+}
+
+function handle_single_boolean_flag_alias<T extends SimpleBooleanValueFlag>(
+  raw: { [key: string]: boolean },
+  alias: string[]
+) {
+  return handle_single_typed_value_flag_alias<T>(raw, alias);
 }
 
 function transform_heading_alias_from_raw(raw: { [key: string]: boolean }): {
@@ -387,4 +467,40 @@ const __fix_height_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
 
 const __declare_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
   keys.alias.declare
+);
+
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+
+const __video_alias_pref = _simple_typed_value_flag_preference_mapper(
+  keys.alias.video,
+  "string"
+);
+
+const __webview_alias_pref = _simple_typed_value_flag_preference_mapper(
+  keys.alias.webview,
+  "string"
+);
+
+const __x_figma_embed_view_alias_pref =
+  _simple_typed_value_flag_preference_mapper(
+    keys.alias.x_figma_embed_view,
+    "string"
+  );
+
+const __x_osm_view_alias_pref = _simple_typed_value_flag_preference_mapper(
+  keys.alias.x_osm_view,
+  "string"
+);
+
+const __x_google_maps_view_alias_pref =
+  _simple_typed_value_flag_preference_mapper(
+    keys.alias.x_google_maps_view,
+    "string"
+  );
+
+const __x_youtube_view_alias_pref = _simple_typed_value_flag_preference_mapper(
+  keys.alias.x_youtube_view,
+  "string"
 );
