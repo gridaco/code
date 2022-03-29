@@ -38,8 +38,8 @@ export interface IIframeProps {
 
   readonly src?: string;
   readonly srcdoc?: string;
-  readonly width: DimensionLength;
-  readonly height: DimensionLength;
+  readonly fwidth: DimensionLength;
+  readonly fheight: DimensionLength;
 
   readonly allow?: string;
   readonly loading?: "eager" | "lazy";
@@ -54,8 +54,8 @@ export class HtmlIframe extends Container implements IIframeProps {
 
   readonly src?: string;
   readonly srcdoc?: string;
-  readonly width: DimensionLength;
-  readonly height: DimensionLength;
+  readonly fwidth: DimensionLength;
+  readonly fheight: DimensionLength;
 
   readonly allow?: string;
   readonly loading?: "eager" | "lazy";
@@ -69,8 +69,8 @@ export class HtmlIframe extends Container implements IIframeProps {
     title,
     src,
     srcdoc,
-    width,
-    height,
+    fwidth: width,
+    fheight: height,
     allow,
     loading,
     name,
@@ -84,8 +84,8 @@ export class HtmlIframe extends Container implements IIframeProps {
     this.title = title;
     this.src = src;
     this.srcdoc = srcdoc;
-    this.width = width;
-    this.height = height;
+    this.fwidth = width;
+    this.fheight = height;
     this.allow = allow;
     this.loading = loading;
     this.name = name;
@@ -104,6 +104,7 @@ export class HtmlIframe extends Container implements IIframeProps {
 
       /* Override default CSS styles */
       border: containerstyle.border ?? "none",
+      overflow: containerstyle.overflow ?? "hidden",
       /* --------------------------- */
 
       // ----------------------
@@ -117,10 +118,10 @@ export class HtmlIframe extends Container implements IIframeProps {
       this.src && new JSXAttribute("src", new StringLiteral(this.src)),
       this.srcdoc && new JSXAttribute("srcdoc", new StringLiteral(this.srcdoc)),
 
-      this.width &&
-        new JSXAttribute("width", new StringLiteral(css.length(this.width))),
-      this.height &&
-        new JSXAttribute("height", new StringLiteral(css.length(this.height))),
+      this.fwidth &&
+        new JSXAttribute("width", new StringLiteral(css.length(this.fwidth))),
+      this.fheight &&
+        new JSXAttribute("height", new StringLiteral(css.length(this.fheight))),
 
       this.sandbox?.length > 0 &&
         new JSXAttribute(
@@ -131,6 +132,8 @@ export class HtmlIframe extends Container implements IIframeProps {
               : (this.sandbox as string)
           )
         ),
+
+      this.allow && new JSXAttribute("allow", new StringLiteral(this.allow)),
     ].filter(Boolean);
 
     return <StylableJSXElementConfig>{
