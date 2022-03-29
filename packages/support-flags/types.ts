@@ -23,6 +23,7 @@ import type { MaxHeightFlag } from "./--max-height";
 import type { FixWidthFlag } from "./--fix-width";
 import type { FixHeightFlag } from "./--fix-height";
 import type { DeclareSpecificationFlag } from "./--declare";
+import type { CameraDisplayFlag } from "./--camera-display";
 import type { VideoFlag } from "./--video";
 import type { WebViewFlag } from "./--webview";
 import type { XFigmaEmbedFlag } from "./--x-figma-embed-view";
@@ -109,6 +110,7 @@ export type ComponentCastingFlag =
   | AsProgressFlag;
 
 export type ExtendedComponentCastingFlag =
+  | CameraDisplayFlag
   | VideoFlag
   | WebViewFlag
   | XFigmaEmbedFlag
@@ -168,6 +170,7 @@ export type { DeclareSpecificationFlag };
 // ---------------------------------------------------------------------------
 
 export type {
+  CameraDisplayFlag,
   VideoFlag,
   WebViewFlag,
   XFigmaEmbedFlag,

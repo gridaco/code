@@ -21,6 +21,7 @@ import type {
   DeclareSpecificationFlag,
   WHDeclarationFlag,
   AsSliderFlag,
+  CameraDisplayFlag,
   VideoFlag,
   WebViewFlag,
   XFigmaEmbedFlag,
@@ -42,6 +43,7 @@ export type FlagsParseResult = Results & {
     contains_wh_declaration_flag: boolean;
     contains_fix_wh_flag: boolean;
     contains_declare_flag: boolean;
+    contains_camera_flag: boolean;
     contains_video_flag: boolean;
     contains_webview_flag: boolean;
     contains_x_figma_embed_view_flag: boolean;
@@ -106,6 +108,7 @@ export function parse(name: string): FlagsParseResult {
       //#endregion
 
       // #region
+      __camera_alias_pref,
       __video_alias_pref,
       __webview_alias_pref,
       __x_figma_embed_view_alias_pref,
@@ -164,6 +167,11 @@ export function parse(name: string): FlagsParseResult {
         keys.alias.declare
       );
 
+    const camera_flag = handle_single_boolean_flag_alias<CameraDisplayFlag>(
+      _raw_parsed,
+      keys.alias.camera
+    );
+
     const video_flag = handle_single_typed_value_flag_alias<VideoFlag>(
       _raw_parsed,
       keys.alias.video
@@ -208,6 +216,7 @@ export function parse(name: string): FlagsParseResult {
       ...(wh_declaration_flag ?? {}),
       ...(fix_wh_flag ?? {}),
       ...(declare_flag ?? {}),
+      ...(camera_flag ?? {}),
       ...(video_flag ?? {}),
       ...(webview_flag ?? {}),
       ...(x_figma_embed_view_flag ?? {}),
@@ -226,6 +235,7 @@ export function parse(name: string): FlagsParseResult {
         contains_wh_declaration_flag: notempty(as_span_flag),
         contains_fix_wh_flag: notempty(fix_wh_flag),
         contains_declare_flag: notempty(declare_flag),
+        contains_camera_flag: notempty(camera_flag),
         contains_video_flag: notempty(video_flag),
         contains_webview_flag: notempty(webview_flag),
         contains_x_figma_embed_view_flag: notempty(x_figma_embed_view_flag),
@@ -472,6 +482,10 @@ const __declare_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
+
+const __camera_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+  keys.alias.camera
+);
 
 const __video_alias_pref = _simple_typed_value_flag_preference_mapper(
   keys.alias.video,
