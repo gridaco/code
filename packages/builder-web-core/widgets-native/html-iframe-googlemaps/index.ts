@@ -1,4 +1,3 @@
-import { URLSearchParams } from "url";
 import { HtmlIframe } from "../html-iframe";
 import type { IIframeProps } from "../html-iframe";
 import type { IWHStyleWidget } from "@reflect-ui/core";
@@ -30,19 +29,18 @@ export class HtmlIframeGoogleMaps extends HtmlIframe {
 
 function gmapurl(q: string, apikey?: string): string {
   // build query param
-  const query = new URLSearchParams();
-  query.set("q", q);
+  const query = {};
+  query["q"] = q;
   if (apikey) {
-    query.set("key", apikey);
-    // build url
-    const url = new URL("https://www.google.com/maps/embed/v1/place");
-    url.search = query.toString();
-
-    return url.toString();
+    query["key"] = apikey;
+    return `https://www.google.com/maps/embed/v1/place?${buildq(query)}`;
   } else {
-    query.set("output", "embed");
-    const url = new URL("https://maps.google.com/maps");
-    url.search = query.toString();
-    return url.toString();
+    query["output"] = "embed";
+    return `https://maps.google.com/maps?${buildq(query)}`;
   }
 }
+
+const buildq = (q: object): string =>
+  Object.keys(q)
+    .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(q[k])}`)
+    .join("&");
