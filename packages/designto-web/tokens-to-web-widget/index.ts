@@ -20,6 +20,7 @@ import { compose_unwrapped_button } from "./compose-unwrapped-button";
 import { compose_unwrapped_slider } from "./compose-unwrapped-slider";
 import { compose_unwrapped_progress } from "./compose-unwrapped-progress";
 import { compose_instanciation } from "./compose-instanciation";
+import { compose_xtended_views } from "./compose-xtended-views";
 import { IWHStyleWidget } from "@reflect-ui/core";
 import * as reusable from "@code-features/component/tokens";
 import assert from "assert";
@@ -224,6 +225,14 @@ function compose<T extends JsxWidget>(
         break;
       }
     }
+  } else if (
+    widget instanceof special.XFigmaEmbedView ||
+    widget instanceof special.XGoogleMapsView ||
+    widget instanceof special.XOSMView ||
+    widget instanceof special.XYoutubeView
+  ) {
+    // xtended views
+    thisWebWidget = compose_xtended_views(_key, widget);
   }
 
   // #region component widgets
@@ -257,12 +266,25 @@ function compose<T extends JsxWidget>(
       thisWebWidget = compose_unwrapped_slider(_key, widget.child, widget);
     } else if (widget.child instanceof core.ProgressIndicator) {
       thisWebWidget = compose_unwrapped_progress(_key, widget.child, widget);
-    } else {
+    }
+
+    // --- xtended views
+    else if (
+      widget.child instanceof special.XFigmaEmbedView ||
+      widget.child instanceof special.XGoogleMapsView ||
+      widget.child instanceof special.XOSMView ||
+      widget.child instanceof special.XYoutubeView
+    ) {
+      // xtended views
+      thisWebWidget = compose_xtended_views(_key, widget.child, widget);
+    }
+    // --- --- --- --- ---
+    // #endregion
+    else {
       throw new Error(
         `Unsupported web widget type: ${widget.child.constructor.name}`
       );
     }
-    // #endregion
   }
   // #endregion
 

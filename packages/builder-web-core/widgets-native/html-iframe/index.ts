@@ -122,7 +122,7 @@ export class HtmlIframe extends Container implements IIframeProps {
       this.height &&
         new JSXAttribute("height", new StringLiteral(css.length(this.height))),
 
-      this.sandbox.length > 0 &&
+      this.sandbox?.length > 0 &&
         new JSXAttribute(
           "sandbox",
           new StringLiteral(

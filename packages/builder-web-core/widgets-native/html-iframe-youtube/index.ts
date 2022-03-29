@@ -12,6 +12,7 @@ export class HtmlIframeYoutube extends HtmlIframe {
     key,
     loading = "lazy",
     referrerpolicy = "no-referrer-when-downgrade",
+    sandbox = ["allow-scripts", "allow-same-origin"],
     video,
     ...rest
   }: { key: WidgetKey } & YoutubeProps & IWHStyleWidget) {
@@ -19,6 +20,7 @@ export class HtmlIframeYoutube extends HtmlIframe {
       key,
       ...rest,
       loading,
+      sandbox,
       referrerpolicy,
       src: yturl(video),
     });

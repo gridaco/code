@@ -12,6 +12,7 @@ export * from "./html-input";
 export { HtmlIframe as Iframe } from "./html-iframe";
 export { HtmlIframeGoogleMaps as GoogleMaps } from "./html-iframe-googlemaps";
 export { HtmlIframeOpenStreetMap as OpenStreetMap } from "./html-iframe-osm";
+export { HtmlIframeYoutube as Youtube } from "./html-iframe-youtube";
 export { HtmlIframeFigma as EmbedFigma } from "./html-iframe-figma";
 export * from "./error-widget";
 
