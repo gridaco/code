@@ -30,6 +30,16 @@ import { flag_key_alias__fix_height, flag_key__fix_height } from "./--fix-height
 
 import { flag_key_alias__declare, flag_key__declare } from "./--declare";
 
+import { flag_key_alias__video, flag_key__video } from "./--video";
+import { flag_key_alias__webview, flag_key__webview } from "./--webview";
+// prettier-ignore
+import { flag_key_alias__x_figma_embed_view, flag_key__x_figma_embed_view } from "./--x-figma-embed-view";
+// prettier-ignore
+import { flag_key_alias__x_google_maps, flag_key__x_google_maps_view } from "./--x-google-maps-view";
+import { flag_key_alias__x_osm, flag_key__x_osm_view } from "./--x-osm-view";
+// prettier-ignore
+import { flag_key_alias__x_youtube_view, flag_key__x_youtube_view } from "./--x-youtube-view";
+
 //
 export {
   //
@@ -68,6 +78,15 @@ export { flag_key__fix_width, flag_key__fix_height };
 
 export { flag_key__declare };
 
+export {
+  flag_key__video,
+  flag_key__webview,
+  flag_key__x_figma_embed_view,
+  flag_key__x_google_maps_view,
+  flag_key__x_osm_view,
+  flag_key__x_youtube_view,
+};
+
 export const alias = {
   autofocus: flag_key_alias__autofocus,
   as_h1: flag_key_alias__as_h1,
@@ -91,4 +110,10 @@ export const alias = {
   fix_width: flag_key_alias__fix_width,
   fix_height: flag_key_alias__fix_height,
   declare: flag_key_alias__declare,
+  video: flag_key_alias__video,
+  webview: flag_key_alias__webview,
+  x_figma_embed_view: flag_key_alias__x_figma_embed_view,
+  x_google_maps_view: flag_key_alias__x_google_maps,
+  x_osm_view: flag_key_alias__x_osm,
+  x_youtube_view: flag_key_alias__x_youtube_view,
 };

@@ -18,6 +18,10 @@ import { tokenize_flagged_button } from "./token-button";
 import { tokenize_flagged_slider } from "./token-slider";
 import { tokenize_flagged_progress } from "./token-progress";
 
+import { tokenize_flagged_google_maps_view } from "./token-x-google-maps-view";
+import { tokenize_gradient_direction_from_angle } from "../token-gradient";
+import { tokenize_flagged_youtube_view } from "./token-x-youtube-view";
+
 export default function handleWithFlags(node: ReflectSceneNode) {
   const flags = parse(node.name);
   return _handle_with_flags(node, flags);
@@ -62,6 +66,22 @@ function _handle_with_flags(node, flags: FlagsParseResult) {
     return tokenize_flagged_progress(node, flags[keys.flag_key__as_progress]);
   }
   // #endregion
+
+  // #region exetnded views
+  if (flags.__meta?.contains_x_google_maps_view_flag) {
+    return tokenize_flagged_google_maps_view(
+      node,
+      flags[keys.flag_key__x_google_maps_view]
+    );
+  }
+
+  if (flags.__meta?.contains_x_youtube_view_flag) {
+    return tokenize_flagged_youtube_view(
+      node,
+      flags[keys.flag_key__x_youtube_view]
+    );
+  }
+  // #end exetnded views
 
   // #region element altering flags
   // heading

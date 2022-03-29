@@ -12,6 +12,8 @@ import type { AsSliderFlag } from "./--as-slider";
 import type { AsProgressFlag } from "./--as-progress";
 import type { AsParagraphFlag } from "./--as-p";
 import type { AsTextSpanFlag } from "./--as-span";
+import type { QFlag } from "./--q";
+import type { LatLngFlag } from "./--latlng";
 import type { WidthFlag } from "./--width";
 import type { MinWidthFlag } from "./--min-width";
 import type { MaxWidthFlag } from "./--max-width";
@@ -21,17 +23,32 @@ import type { MaxHeightFlag } from "./--max-height";
 import type { FixWidthFlag } from "./--fix-width";
 import type { FixHeightFlag } from "./--fix-height";
 import type { DeclareSpecificationFlag } from "./--declare";
+import type { VideoFlag } from "./--video";
+import type { WebViewFlag } from "./--webview";
+import type { XFigmaEmbedFlag } from "./--x-figma-embed-view";
+import type { XGoogleMapsFlag } from "./--x-google-maps-view";
+import type { XOSMFlag } from "./--x-osm-view";
+import type { XYoutubeFlag } from "./--x-youtube-view";
 
 export type Flag =
+  | SimpleValueFalg
   | AutofocusFlag
   | ArtworkFlag
   | TextElementPreferenceFlag
   | WHDeclarationFlag
   | FixWHFlag
+  | ValueFeedFlag
   | DeclareSpecificationFlag
+  | ExtendedComponentCastingFlag
   | ComponentCastingFlag;
 
-export interface SimpleBooleanValueFlag {
+export interface SimpleValueFalg<T = any> {
+  flag: string;
+  value: boolean;
+  _raw?: string;
+}
+
+export interface SimpleBooleanValueFlag extends SimpleValueFalg<boolean> {
   flag: string;
   value: boolean;
   _raw?: string;
@@ -80,6 +97,8 @@ export type HeadingFlag =
   | AsHeading5Flag
   | AsHeading6Flag;
 
+export type ValueFeedFlag = QFlag | LatLngFlag;
+
 /**
  * Type alias for a flag taht can be used to specify the element casting
  */
@@ -88,6 +107,14 @@ export type ComponentCastingFlag =
   | AsInputFlag
   | AsSliderFlag
   | AsProgressFlag;
+
+export type ExtendedComponentCastingFlag =
+  | VideoFlag
+  | WebViewFlag
+  | XFigmaEmbedFlag
+  | XGoogleMapsFlag
+  | XOSMFlag
+  | XYoutubeFlag;
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -136,3 +163,20 @@ export type { FixWidthFlag, FixHeightFlag };
 // ---------------------------------------------------------------------------
 
 export type { DeclareSpecificationFlag };
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+export type {
+  VideoFlag,
+  WebViewFlag,
+  XFigmaEmbedFlag,
+  XGoogleMapsFlag,
+  XOSMFlag,
+  XYoutubeFlag,
+};
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+export type { QFlag, LatLngFlag };
