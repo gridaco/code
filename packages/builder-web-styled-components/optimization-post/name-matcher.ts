@@ -27,39 +27,38 @@ export type NameMatchStrategy =
 export function is_matching_name(
   a: string,
   b: string,
-  matcher: NameMatchStrategy
+  matcher: NameMatchStrategy | NameMatchStrategy[]
 ) {
-  switch (matcher) {
-    case "exact":
-      return a === b;
-    case "suffix-number": {
-      // the suffix is optional.
-      // yes: 'Wrapper' = 'Wrapper1' = 'Wrapper2' = 'Wrapper002'
-      // no: 'Wrapper' !== 'Wrapper_001' !== 'Wrapper_A' !== 'Wrapper_A'
+  for (const match of Array.isArray(matcher) ? matcher : [matcher]) {
+    switch (match) {
+      case "exact":
+        if (a === b) return true;
+      case "suffix-number": {
+        // the suffix is optional.
+        // yes: 'Wrapper' = 'Wrapper1' = 'Wrapper2' = 'Wrapper002'
+        // no: 'Wrapper' !== 'Wrapper_001' !== 'Wrapper_A' !== 'Wrapper_A'
 
-      if (a.includes(b)) {
-        const suffix = a.replace(b, "");
-        return /(\d+)/.test(suffix);
-      } else if (b.includes(a)) {
-        const suffix = b.replace(a, "");
-        return /(\d+)/.test(suffix);
-      } else {
-        return false;
+        // 1. remove the suffix number from both strings
+        const a_no_suffix = a.replace(/\d+$/, "");
+        const b_no_suffix = b.replace(/\d+$/, "");
+
+        // 2. if no-suffix value is same, then it's a match
+        if (a_no_suffix === b_no_suffix) return true;
       }
+
+      case "suffix-separator-number":
+        // allowed spearator is .. '.', '-', '_'
+        // yes: 'Wrapper' = 'Wrapper-1' = 'Wrapper.2' = 'Wrapper_001'
+        // no: 'Wrapper' !== 'Wrapper1' !== 'Wrapper2' !== 'Wrapper_A' !== 'Wrapper_A'
+
+        if (a.includes(b)) {
+          const suffix = a.replace(b, "");
+          if (/^((\-|\.|\_)?\d+)$/.test(suffix)) return true;
+        } else if (b.includes(a)) {
+          const suffix = b.replace(a, "");
+          if (/^((\-|\.|\_)?\d+)$/.test(suffix)) return true;
+        }
     }
-
-    case "suffix-separator-number":
-      // allowed spearator is .. '.', '-', '_'
-      // yes: 'Wrapper' = 'Wrapper-1' = 'Wrapper.2' = 'Wrapper_001'
-      // no: 'Wrapper' !== 'Wrapper1' !== 'Wrapper2' !== 'Wrapper_A' !== 'Wrapper_A'
-
-      if (a.includes(b)) {
-        const suffix = a.replace(b, "");
-        return /^((\-|\.|\_)?\d+)$/.test(suffix);
-      } else if (b.includes(a)) {
-        const suffix = b.replace(a, "");
-        return /^((\-|\.|\_)?\d+)$/.test(suffix);
-      }
-      return false;
   }
+  return false;
 }
