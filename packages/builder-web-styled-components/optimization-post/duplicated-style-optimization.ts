@@ -16,7 +16,24 @@ interface MinimalCssStyleRepresenation {
   style: ElementCssStyleData;
 }
 
-type CompareFunc<T> = (a: T, b: T) => boolean;
+export type CompareFunc<T, Res = any, Opt = any> = (
+  a: T,
+  b: T,
+  options?: Opt
+) => false | [true, Res];
+
+export function find_duplication_in<T, Opt = any>(
+  a: T,
+  others: Array<T>,
+  matcher: CompareFunc<T, any, Opt>,
+  options?: Opt
+) {
+  for (const b of others) {
+    if (matcher(a, b, options)) {
+      return b;
+    }
+  }
+}
 
 /**
  * returns boolean based on input's name and style data. if both matches, return true.
@@ -31,11 +48,12 @@ export function is_duplicate_by_name_and_style(
   a: MinimalCssStyleRepresenation,
   b: MinimalCssStyleRepresenation,
   options: {
-    name_match: NameMatchStrategy;
+    name_match: NameMatchStrategy | NameMatchStrategy[];
   }
-) {
+): false | [true, string] {
   // name should be the same
-  if (!is_matching_name(a.name, b.name, options.name_match)) {
+  const namematch = is_matching_name(a.name, b.name, options.name_match);
+  if (!namematch) {
     return false;
   }
 
@@ -47,7 +65,12 @@ export function is_duplicate_by_name_and_style(
   }
 
   // 2. if lengh is same, check the style content
-  return JSON.stringify(a.style) === JSON.stringify(b.style);
+  const stylematch = JSON.stringify(a.style) === JSON.stringify(b.style);
+  if (stylematch) {
+    return [true, namematch[1]];
+  } else {
+    return false;
+  }
 }
 
 type MatchResult<T> = {
@@ -55,6 +78,9 @@ type MatchResult<T> = {
   result: false | T;
 };
 
+/**
+ * @deprecated NOT READY, NOT USED
+ */
 export abstract class DuplicationChecker<T extends { id: string }> {
   readonly memory: Map<string, MatchResult<T>>;
   readonly proxies: Map<string, string> = new Map();
