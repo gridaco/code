@@ -28,11 +28,11 @@ export function is_matching_name(
   a: string,
   b: string,
   matcher: NameMatchStrategy | NameMatchStrategy[]
-) {
+): [true, string] | false {
   for (const match of Array.isArray(matcher) ? matcher : [matcher]) {
     switch (match) {
       case "exact":
-        if (a === b) return true;
+        if (a === b) return [true, a];
       case "suffix-number": {
         // the suffix is optional.
         // yes: 'Wrapper' = 'Wrapper1' = 'Wrapper2' = 'Wrapper002'
@@ -43,7 +43,7 @@ export function is_matching_name(
         const b_no_suffix = b.replace(/\d+$/, "");
 
         // 2. if no-suffix value is same, then it's a match
-        if (a_no_suffix === b_no_suffix) return true;
+        if (a_no_suffix === b_no_suffix) return [true, a_no_suffix];
       }
 
       case "suffix-separator-number":
@@ -53,10 +53,10 @@ export function is_matching_name(
 
         if (a.includes(b)) {
           const suffix = a.replace(b, "");
-          if (/^((\-|\.|\_)?\d+)$/.test(suffix)) return true;
+          if (/^((\-|\.|\_)?\d+)$/.test(suffix)) return [true, a];
         } else if (b.includes(a)) {
           const suffix = b.replace(a, "");
-          if (/^((\-|\.|\_)?\d+)$/.test(suffix)) return true;
+          if (/^((\-|\.|\_)?\d+)$/.test(suffix)) return [true, b];
         }
     }
   }

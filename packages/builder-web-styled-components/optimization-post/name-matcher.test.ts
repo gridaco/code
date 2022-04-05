@@ -6,10 +6,10 @@ test("is_matching_name", () => {
       "exact",
       "suffix-number",
       "suffix-separator-number",
-    ])
+    ])[0]
   ).toBe(true);
 
   expect(
-    is_matching_name("Rectangle826", "Rectangle827", ["suffix-number"])
+    is_matching_name("Rectangle826", "Rectangle827", ["suffix-number"])[0]
   ).toBe(true);
 });
