@@ -77,7 +77,7 @@ export interface NamePreference {
   overrideFinalName?: string;
 }
 
-export function declareStyledComponentVariable(
+export function composeStyledComponentVariableDeclaration(
   widgetConfig: WidgetWithStyle,
   preferences: {
     name?: NamePreference;

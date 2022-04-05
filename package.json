@@ -17,5 +17,8 @@
         "externals/reflect-core/packages/*",
         "externals/design-sdk/*",
         "externals/coli/packages/*"
-    ]
+    ],
+    "devDependencies": {
+        "ts-jest": "^27.1.4"
+    }
 }
