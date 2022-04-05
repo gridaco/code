@@ -1,22 +1,19 @@
-import { handle } from "@coli.codes/builder";
-import { buildCssStandard } from "@coli.codes/css";
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
 import {
-  k,
-  TextChildWidget,
-  StylableJsxWidget,
-  JsxWidget,
-} from "@web-builder/core";
+  buildCSSBody,
+  buildCSSStyleData,
+  CSSProperties,
+} from "@coli.codes/css";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import { k, JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
-  getWidgetStylesConfigMap,
+  StylesConfigMapBuilder,
   JSXWithoutStyleElementConfig,
   JSXWithStyleElementConfig,
   WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
 import {
   JSXAttribute,
-  JSXClosingElement,
   JSXElement,
   JSXElementLike,
   JSXOpeningElement,
@@ -41,17 +38,32 @@ ${indenter(body, 2)}
 </html>`;
 };
 
-export function export_inlined_css_html_file(widget: JsxWidget) {
+interface CssDeclaration {
+  key: {
+    name: string;
+    selector: "tag" | "id" | "class";
+  };
+  style: CSSProperties;
+}
+
+export function export_inlined_css_html_file(
+  widget: JsxWidget,
+  config: {
+    additional_css_declarations?: CssDeclaration[];
+  }
+) {
   const componentName = widget.key.name;
   const styledComponentNamer = new ScopedVariableNamer(
     widget.key.id,
     ReservedKeywordPlatformPresets.html
   );
 
-  const styles_map: WidgetStyleConfigMap = getWidgetStylesConfigMap(widget, {
+  const mapper = new StylesConfigMapBuilder(widget, {
     namer: styledComponentNamer,
     rename_tag: false, // vanilla html tag will be preserved.
   });
+
+  const styles_map: WidgetStyleConfigMap = mapper.map;
 
   function getStyleConfigById(
     id: string
@@ -60,10 +72,16 @@ export function export_inlined_css_html_file(widget: JsxWidget) {
   }
 
   function buildBodyHtml(widget: JsxWidget) {
-    return buildJsx(widget, {
-      styledConfig: (id) => getStyleConfigById(id),
-      idTransformer: (jsx, id) => injectIdToJsx(jsx, id),
-    });
+    return buildJsx(
+      widget,
+      {
+        styledConfig: (id) => getStyleConfigById(id),
+        idTransformer: (jsx, id) => injectIdToJsx(jsx, id),
+      },
+      {
+        self_closing_if_possible: false,
+      }
+    );
   }
 
   const css_declarations = Array.from(styles_map.keys())
@@ -78,12 +96,19 @@ export function export_inlined_css_html_file(widget: JsxWidget) {
       };
     })
     .filter((s) => s);
+
+  // global vanilla default injected style
   css_declarations.push({
     key: {
       name: "*",
       selector: "tag",
     },
     style: k.user_agent_stylesheet_override_default,
+  });
+
+  // declare additional styles requested by user
+  config.additional_css_declarations?.forEach((d) => {
+    css_declarations.push(d);
   });
 
   const strfied_css = css_declarations
@@ -93,9 +118,23 @@ export function export_inlined_css_html_file(widget: JsxWidget) {
         class: ".",
         tag: "",
       };
-      const stylestring = buildCssStandard(css.style);
+
+      const style = buildCSSStyleData(css.style);
       const key = selectors[css.key.selector] + css.key.name;
-      return `${key} {${formatCssBodyString(stylestring)}}`;
+
+      // main
+      const main = `${key} {${formatCssBodyString(style.main)}}`;
+
+      // support pseudo-selectors
+      const pseudos = Object.keys(style.pseudo).map((k) => {
+        const body = style.pseudo[k];
+        const pseudo = `${key}${k} {${formatCssBodyString(body)}}`;
+        return pseudo;
+      });
+
+      const all = [main, ...pseudos].join("\n");
+
+      return all;
     })
     .join("\n\n");
   const body = buildBodyHtml(widget);

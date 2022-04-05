@@ -1,3 +1,4 @@
-# Position as Fixed.
+# `--position-fixed` Flag
 
-describing based on figma, figma position is always absolute. there is not way to represent a fixed position. (we can, but only via fix position on scrolling)
+- Visit the [design documentation](../docs/--position-fixed.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--position-fixed)

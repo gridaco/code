@@ -19,6 +19,8 @@ export function compose_wrapped_with_clip_stretched(
   const child = child_composer(widget.child);
   child.extendStyle({
     "align-self": "stretch",
+    // TODO: this is required, for fixed width / height to work, but not sure this is the best place to be.
+    "flex-shrink": 0,
     [remove_size]: undefined,
   });
   return child;

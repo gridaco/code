@@ -1,5 +1,4 @@
-# `--x-code-component` - eXtended Code Component
+# `--x-code-component` Flag
 
-> A.k.a User provided code with interface
-
-User provided code, ready to except a props from parents.
+- Visit the [design documentation](../docs/--x-code-component.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--x-code-component)

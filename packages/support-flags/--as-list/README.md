@@ -1,7 +1,4 @@
-# `--as=list` - [Reflect UI](https://reflect-ui.com) ListView Widget Indication Flag
+# `--as-list` Flag
 
-## Syntax
-
-- `--as-list`
-- `--as-list=true`
-- `--as=list`
+- Visit the [design documentation](../docs/--as-list.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--as-list)

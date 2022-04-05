@@ -46,25 +46,27 @@ export class MasterComponentMetaToken<T> {
   }
 }
 
-interface Property<T> {
+export interface Property<T> {
   key: string;
   type: any;
   defaultValue: any;
   link: PropertyLink<T>;
 }
 
-type PropertyLink<T> = InstanciationPropertyLink<T> | DesignPropertyLink<T>;
+export type PropertyLink<T> =
+  | InstanciationPropertyLink<T>
+  | DesignPropertyLink<T>;
 
 /**
  * Property link to a instanciation of (another) component.
  */
-interface InstanciationPropertyLink<T> {
+export interface InstanciationPropertyLink<T> {
   type: "instanciation-link";
   master: MasterComponentMetaToken<T>;
   linksto: Link;
 }
 
-interface DesignPropertyLink<T> {
+export interface DesignPropertyLink<T> {
   type: "design-link";
   /**
    * path to a property as indexpath.

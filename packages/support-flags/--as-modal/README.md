@@ -1,7 +1,4 @@
-# `--as=modal` - [Reflect UI](https://reflect-ui.com) Modal Widget Indication Flag
+# `--as-modal` Flag
 
-## Syntax
-
-- `--as-modal`
-- `--as-modal=true`
-- `--as=modal`
+- Visit the [design documentation](../docs/--as-modal.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--as-modal)

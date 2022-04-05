@@ -1,8 +1,4 @@
-# `--break-component` - Break Component (A.k.a Raw View)
+# `--break-component` Flag
 
-Breaks the component constraints, interpret it as a raw copy of the instance view
-
-```
-origianlly: <AppHeaderBar>
-wouldbe: <div id="app-header-bar-1">...</div>
-```
+- Visit the [design documentation](../docs/--break-component.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--break-component)

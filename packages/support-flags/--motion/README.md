@@ -1,9 +1,4 @@
-## `--motion` Flag (Draft)
+# `--motion` Flag
 
-> Family of `--motion-*` flags.
-
-Example
-
-```txt
---motion=auto
-```
+- Visit the [design documentation](../docs/--motion.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--motion)

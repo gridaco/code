@@ -1,10 +1,4 @@
-# Link (Href) data provider
+# `--href` Flag
 
-_Examples_
-
-- `--link=https://grida.co`
-- `--link=/signup`
-
-## Disclaimer
-
-We choosed name `link` instead of `href` since it is more intuitive across non web developers. Also NextJS has a component named `<Link/>` which suggested us the idea.
+- Visit the [design documentation](../docs/--href.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--href)

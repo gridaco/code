@@ -1,5 +1,7 @@
 import { nodes } from "@design-sdk/core";
-import { Widget } from "@reflect-ui/core";
+import { Expanded, Widget } from "@reflect-ui/core";
+import type { Blurred, Opacity, Rotation } from "@reflect-ui/core";
+import type { Stretched } from "./tokens";
 import { tokenizeText } from "./token-text";
 import { tokenizeLayout } from "./token-layout";
 import { tokenizeContainer } from "./token-container";
@@ -19,6 +21,7 @@ import {
   hasLayerBlurType,
   hasRotation,
   hasStretching,
+  hasFlexible,
 } from "./detection";
 import { MaskingItemContainingNode, tokenizeMasking } from "./token-masking";
 import { wrap_with_opacity } from "./token-opacity";
@@ -26,6 +29,7 @@ import { wrap_with_stretched } from "./token-stretch";
 import { wrap_with_layer_blur } from "./token-effect/layer-blur";
 import { wrap_with_background_blur } from "./token-effect/background-blur";
 import { wrap_with_rotation } from "./token-rotation";
+import { wrap_with_expanded } from "./token-expanded";
 import flags_handling_gate from "./support-flags";
 
 export type { Widget };
@@ -146,28 +150,55 @@ function handleNode(
     return;
   }
 
+  let tokenizedTarget: Widget = null;
+
+  // flags handler
+  if (!tokenizedTarget) {
+    if (
+      !config.disable_flags_support &&
+      config.should_ignore_flag?.(node) !== true
+    ) {
+      try {
+        tokenizedTarget = flags_handling_gate(node);
+      } catch (e) {
+        console.error("error while interpreting flags.. skipping", e);
+      }
+    }
+  }
+
   // -------------------------------------------------------------------------
   // --------------------------- Detected tokens -----------------------------
   // -------------------------------------------------------------------------
 
-  // - image -
-  const _detect_if_image = detectIf.image(node);
-  if (_detect_if_image.result) {
-    return tokenizeGraphics.fromImage(node, _detect_if_image.data);
+  // - image - // image detection is always enabled exceptionally.
+  // TODO: separate image detection with static logic based and the smart one.
+  if (!tokenizedTarget) {
+    const _detect_if_image = detectIf.image(node);
+    if (_detect_if_image.result) {
+      return tokenizeGraphics.fromImage(node, _detect_if_image.data);
+    }
   }
 
-  // - icon -
-  const _detect_if_icon = detectIf.icon(node);
-  if (_detect_if_icon.result) {
-    return tokenizeGraphics.fromIcon(node, _detect_if_icon.data);
-  }
+  if (!tokenizedTarget) {
+    if (config.disable_detection) {
+      // skip detection
+    } else {
+      // TODO: only execute detection if all the nested children is not flagged as other component.
 
-  // - button -
-  const _detect_if_button = detectIf.button(node);
-  if (_detect_if_button.result) {
-    return tokenizeButton.fromManifest(node, _detect_if_button.data);
-  }
+      // - icon -
+      const _detect_if_icon = detectIf.icon(node);
+      if (_detect_if_icon.result) {
+        return tokenizeGraphics.fromIcon(node, _detect_if_icon.data);
+      }
 
+      // - button -
+      // TODO: this causes confliction with flags
+      // const _detect_if_button = detectIf.button(node);
+      // if (_detect_if_button.result) {
+      //   return tokenizeButton.fromManifest(node, _detect_if_button.data);
+      // }
+    }
+  }
   // -------------------------------------------------------------------------
   // --------------------------- Detected tokens -----------------------------
   // -------------------------------------------------------------------------
@@ -181,7 +212,7 @@ function handleNode(
   // -------------------------------------------------------------------------
   // --------------------------- Pre processors ------------------------------
   // -------------------------------------------------------------------------
-  let tokenizedTarget: Widget = null;
+
   // masking handler
   if (containsMasking(node)) {
     tokenizedTarget = tokenizeMasking.fromMultichild(
@@ -190,15 +221,6 @@ function handleNode(
     );
   }
 
-  // flags handler
-  if (!tokenizedTarget) {
-    if (
-      !config.disable_flags_support &&
-      config.should_ignore_flag?.(node) !== true
-    ) {
-      tokenizedTarget = flags_handling_gate(node);
-    }
-  }
   //
   // -------------------------------------------------------------------------
   //
@@ -225,33 +247,40 @@ function handleNode(
   return tokenizedTarget;
 }
 
-function post_wrap(node: nodes.ReflectSceneNode, tokenizedTarget: Widget) {
-  if (tokenizedTarget) {
-    if (hasStretching(node)) {
-      tokenizedTarget = wrap_with_stretched(node, tokenizedTarget);
-    }
+export function post_wrap(
+  node: nodes.ReflectSceneNode,
+  tokenizedTarget: Widget
+): Widget | Stretched | Opacity | Blurred | Rotation | Expanded {
+  let wrapped = tokenizedTarget;
+
+  if (hasStretching(node)) {
+    wrapped = wrap_with_stretched(node, wrapped);
+  }
+
+  if (hasFlexible(node)) {
+    wrapped = wrap_with_expanded(node, wrapped);
   }
 
   if (hasDimmedOpacity(node)) {
-    tokenizedTarget = wrap_with_opacity(node, tokenizedTarget);
+    wrapped = wrap_with_opacity(node, wrapped);
   }
 
   node.effects.map((d) => {
     const blurEffect = hasBlurType(d);
     if (blurEffect) {
       if (hasLayerBlurType(blurEffect)) {
-        tokenizedTarget = wrap_with_layer_blur(node, tokenizedTarget);
+        wrapped = wrap_with_layer_blur(node, wrapped);
       } else if (hasBackgroundBlurType(blurEffect)) {
-        tokenizedTarget = wrap_with_background_blur(node, tokenizedTarget);
+        wrapped = wrap_with_background_blur(node, wrapped);
       }
     }
   });
 
   if (hasRotation(node)) {
-    tokenizedTarget = wrap_with_rotation(node, tokenizedTarget);
+    wrapped = wrap_with_rotation(node, wrapped);
   }
 
-  return tokenizedTarget;
+  return wrapped;
 }
 
 function handle_by_types(
@@ -265,6 +294,21 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.text:
+      // FIXME: aberation handling (remove me if required) --------------------------------
+      // FIXME: this is for giving extra space for text so it won't break line accidently.
+      // FIXME: consider applying this only to a preview build
+      // TODO: change logic to word count.
+      const wordcount = node.data.split(" ").length;
+      const txtlen = node.data.length;
+      if (wordcount <= 1) {
+        /* skip, since there is no word break */
+      } else if (txtlen <= 6 && wordcount <= 2) {
+        node.width = node.width + 1;
+      } else if (txtlen < 30) {
+        node.width = node.width + 2;
+      }
+      // FIXME: ---------------------------------------------------------------------------------
+
       tokenizedTarget = tokenizeText.fromText(node as nodes.ReflectTextNode);
       break;
 
@@ -301,7 +345,13 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.ellipse:
-      tokenizedTarget = tokenizeContainer.fromEllipse(node);
+      if (node.arcData.startingAngle === 0 && node.arcData.innerRadius === 0) {
+        // a standard ellipse
+        tokenizedTarget = tokenizeContainer.fromEllipse(node);
+      } else {
+        // a customized ellipse, most likely to be part of a graphical element.
+        tokenizedTarget = tokenizeGraphics.fromIrregularEllipse(node);
+      }
       break;
 
     case nodes.ReflectSceneNodeType.boolean_operation:
@@ -309,11 +359,9 @@ function handle_by_types(
       break;
 
     case nodes.ReflectSceneNodeType.line:
-      // FIXME: this is a temporary fallback. line should be handled with unique handler. (using rect's handler instead.)
-      tokenizedTarget = tokenizeContainer.fromRectangle(node as any);
+      tokenizedTarget = tokenizeContainer.fromLine(node as any);
+      // tokenizedTarget = tokenizeDivider.fromLine(_line);
       break;
-    // const _line = node as nodes.ReflectLineNode;
-    // tokenizedTarget = tokenizeDivider.fromLine(_line);
 
     default:
       console.error(`${node["type"]} is not yet handled by "@designto/token"`);

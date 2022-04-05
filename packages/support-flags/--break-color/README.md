@@ -1,8 +1,4 @@
-# `--break-color` - Break Color (A.k.a Raw Color)
+# `--break-color` Flag
 
-Breaks the color style constraints.
-
-```
-input: colorstyle=primary-light-blue
-output: rgb(173, 216, 230)
-```
+- Visit the [design documentation](../docs/--break-color.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--break-color)

@@ -4,7 +4,7 @@ import { px, vw, vh } from "../dimensions";
 import { percent } from "../percent";
 
 export function length(d: DimensionLength | string, a?: Axis) {
-  if (d === undefined) {
+  if (d === undefined || d === null) {
     return;
   }
   if (typeof d === "number") {
@@ -59,5 +59,5 @@ export function length(d: DimensionLength | string, a?: Axis) {
   }
 
   throw `no matching length type found. "${JSON.stringify(d)}" was givven`;
-  return px((d as any) as number);
+  return px(d as any as number);
 }
