@@ -109,6 +109,16 @@ export async function designToCode({
   };
 
   switch (framework_config.framework) {
+    case "preview":
+      return {
+        ...(await designToVanillaPreview({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          vanilla_config: framework_config,
+          asset_config: asset_config,
+        })),
+        ..._extend_result,
+      };
     case "vanilla":
       return {
         ...(await designToVanilla({
@@ -286,6 +296,59 @@ export async function designToFlutter({
 
 export function designToVue(input: input.IDesignInput): output.ICodeOutput {
   return;
+}
+
+export async function designToVanillaPreview({
+  input,
+  asset_config,
+  vanilla_config,
+  build_config,
+}: {
+  input: { widget: Widget };
+  /**
+   * TODO: pass this to tokenizer +@
+   */
+  build_config: config.BuildConfiguration;
+  vanilla_config: config.VanillaPreviewFrameworkConfig;
+  asset_config?: AssetsConfig;
+}): Promise<output.ICodeOutput> {
+  const vanillawidget = toVanilla.buildVanillaWidget(
+    input.widget,
+    (vanilla_config as any) as config.VanillaFrameworkConfig
+  );
+  const res = toVanilla.buildVanillaPreviewFile(vanillawidget, vanilla_config);
+
+  // ------------------------------------------------------------------------
+  // finilize temporary assets
+  // this should be placed somewhere else
+  if (asset_config.custom_asset_replacement) {
+    const keys = Object.keys(asset_config.asset_repository.mergeAll());
+    res.code.raw = dangerous_custom_static_resource_replacer(
+      res.code.raw,
+      keys,
+      asset_config.custom_asset_replacement.resource
+    );
+    res.scaffold.raw = dangerous_custom_static_resource_replacer(
+      res.scaffold.raw,
+      keys,
+      asset_config.custom_asset_replacement.resource
+    );
+  } else {
+    if (
+      asset_config?.asset_repository &&
+      !asset_config.skip_asset_replacement
+    ) {
+      const assets = await fetch_all_assets(asset_config.asset_repository);
+      res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
+      res.scaffold.raw = dangerous_temporary_asset_replacer(
+        res.scaffold.raw,
+        assets
+      );
+    }
+  }
+  // ------------------------------------------------------------------------
+
+  return res;
 }
 
 export async function designToVanilla({
