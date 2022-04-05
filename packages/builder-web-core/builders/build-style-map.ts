@@ -17,21 +17,39 @@ export interface JSXWithoutStyleElementConfig {
   attributes?: JSXAttributes;
 }
 
+export type JSXWithOrWithoutStyleElementConfig =
+  | JSXWithStyleElementConfig
+  | JSXWithoutStyleElementConfig;
+
 export type WidgetStyleConfigMap = Map<
   WidgetKeyId,
-  JSXWithStyleElementConfig | JSXWithoutStyleElementConfig
+  JSXWithOrWithoutStyleElementConfig
 >;
 
 interface StylesConfigMapBuilderPreference {
+  /**
+   * namer is required regardless to the `rename_tag` preference. this renamer also contributes to the id / class of the building css block, even if the `rename_tag` is set to false
+   */
   namer: ScopedVariableNamer;
+
+  /**
+   * rather to rename the tag of the element while building a config map.
+   * this will actually alter the name of the coli object while iterating.
+   */
   rename_tag: boolean;
 }
 
+/**
+ * builds the config map for the styled components with the givven root jsx tree.
+ * iterates throught the children recursively and builds the config map.
+ *
+ * optimizer can be passed here to reduce the output size of the config map.
+ */
 export class StylesConfigMapBuilder {
   readonly root: JsxWidget;
   readonly preferences: StylesConfigMapBuilderPreference;
-  private readonly _map: WidgetStyleConfigMap = new Map();
-  //
+  private _map: WidgetStyleConfigMap = new Map();
+
   constructor(root: JsxWidget, preferences: StylesConfigMapBuilderPreference) {
     this.root = root;
     this.preferences = preferences;
@@ -46,8 +64,9 @@ export class StylesConfigMapBuilder {
       return;
     }
 
-    const isRoot = widget.key.id == this.root.key.id;
-    const id = widget.key.id;
+    const { id } = widget.key;
+    const isRoot = id == this.root.key.id;
+
     if (widget instanceof StylableJsxWidget) {
       const styledConfig = buildStyledComponentConfig(widget, {
         transformRootName: true,
@@ -58,6 +77,7 @@ export class StylesConfigMapBuilder {
         },
       });
 
+      // set to map
       this._map.set(id, styledConfig);
     }
     widget.children?.map((childwidget) => {
