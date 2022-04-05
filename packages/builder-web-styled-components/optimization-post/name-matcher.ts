@@ -1,20 +1,4 @@
-///
-/// General duplicated style optimization.
-/// this is based on static rule, based on the names of the layer and styles.
-///
-
-import type { ElementCssStyleData } from "@coli.codes/css";
-
-/// 1. based on final built style
-/// 2. based on pre-build style comparison
-/// - suggesting the merged style name
-
-interface MinimalStyleRepresenation {
-  name: string;
-  style: ElementCssStyleData;
-}
-
-type NameMatcher =
+export type NameMatchStrategy =
   // /**
   //  * provide a custom regex to compare two names
   //  */
@@ -40,7 +24,11 @@ type NameMatcher =
    */
   | "suffix-separator-number";
 
-function is_matching_name(a: string, b: string, matcher: NameMatcher) {
+export function is_matching_name(
+  a: string,
+  b: string,
+  matcher: NameMatchStrategy
+) {
   switch (matcher) {
     case "exact":
       return a === b;
@@ -74,27 +62,4 @@ function is_matching_name(a: string, b: string, matcher: NameMatcher) {
       }
       return false;
   }
-}
-
-/**
- * returns boolean based on input's name and style data. if both matches, return true.
- * @param a 1st element
- * @param b 2nd element
- * @param options
- * @returns
- */
-export function is_duplicate_by_name_and_style(
-  a: MinimalStyleRepresenation,
-  b: MinimalStyleRepresenation,
-  options: {
-    name_match: NameMatcher;
-  }
-) {
-  // name should be the same
-  if (!is_matching_name(a.name, b.name, options.name_match)) {
-    return false;
-  }
-
-  // style should be the same
-  return JSON.stringify(a.style) === JSON.stringify(b.style);
 }

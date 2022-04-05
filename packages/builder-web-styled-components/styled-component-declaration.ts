@@ -15,7 +15,7 @@ import {
 } from "@coli.codes/naming";
 import { CSSProperties, buildCSSStyleData } from "@coli.codes/css";
 import { handle } from "@coli.codes/builder";
-import { formatStyledTempplateString } from "./styled-variable-formatter";
+import { formatStyledTempplateString } from "./formatter";
 
 export class StyledComponentDeclaration extends VariableDeclaration {
   static styledIdentifier = new Identifier("styled");

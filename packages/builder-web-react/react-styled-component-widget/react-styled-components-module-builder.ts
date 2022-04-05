@@ -1,5 +1,7 @@
-import { ScopedVariableNamer } from "@coli.codes/naming";
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import {
+  ScopedVariableNamer,
+  ReservedKeywordPlatformPresets,
+} from "@coli.codes/naming";
 import {
   NoStyleJSXElementConfig,
   StyledComponentJSXElementConfig,
@@ -11,13 +13,9 @@ import {
   emotion_styled_imports,
   styled_components_imports,
 } from "@web-builder/react-core";
-import { BlockStatement, Import, ImportDeclaration, Return } from "coli";
 import { JsxWidget } from "@web-builder/core";
-import {
-  buildJsx,
-  StylesConfigMapBuilder,
-  WidgetStyleConfigMap,
-} from "@web-builder/core/builders";
+import { BlockStatement, ImportDeclaration, Return } from "coli";
+import { buildJsx, StylesConfigMapBuilder } from "@web-builder/core/builders";
 import { react as react_config } from "@designto/config";
 import { StyledComponentDeclaration } from "@web-builder/styled/styled-component-declaration";
 
