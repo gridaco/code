@@ -121,6 +121,16 @@ export const vanilla_presets = {
   },
 };
 
+export const preview_presets = {
+  default: <config.VanillaPreviewFrameworkConfig>{
+    framework: "preview",
+    language: Language.html,
+    imgage_alt: {
+      no_alt: true,
+    },
+  },
+};
+
 export const flutter_presets = {
   flutter_default: <config.FlutterFrameworkConfig>{
     framework: Framework.flutter,
