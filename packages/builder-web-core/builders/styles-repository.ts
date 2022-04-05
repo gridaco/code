@@ -44,8 +44,15 @@ export class StylesRepository {
   }
 
   get(key): JSXWithOrWithoutStyleElementConfig {
-    const k = this._get_proxied(key);
-    return this.map.get(k);
+    const t = this._get_proxied(key);
+    const targetstyle = this.map.get(t);
+    const originconfig = this.map.get(key);
+
+    return {
+      ...targetstyle,
+      // attributes must be preserved.
+      attributes: originconfig.attributes,
+    };
   }
 
   keys(): string[] {
