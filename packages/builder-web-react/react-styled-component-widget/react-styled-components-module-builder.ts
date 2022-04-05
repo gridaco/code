@@ -15,14 +15,22 @@ import {
 } from "@web-builder/react-core";
 import { JsxWidget } from "@web-builder/core";
 import { BlockStatement, ImportDeclaration, Return } from "coli";
-import { buildJsx, StylesConfigMapBuilder } from "@web-builder/core/builders";
+import {
+  buildJsx,
+  StylesConfigMapBuilder,
+  StylesRepository,
+} from "@web-builder/core/builders";
 import { react as react_config } from "@designto/config";
-import { StyledComponentDeclaration } from "@web-builder/styled/styled-component-declaration";
+import {
+  StyledComponentDeclaration,
+  create_duplication_reduction_map,
+} from "@web-builder/styled";
 
 export class ReactStyledComponentsBuilder {
   private readonly entry: JsxWidget;
   private readonly widgetName: string;
   private readonly stylesMapper: StylesConfigMapBuilder;
+  private readonly stylesRepository: StylesRepository;
   private readonly namer: ScopedVariableNamer;
   readonly config: react_config.ReactStyledComponentsConfig;
 
@@ -45,13 +53,18 @@ export class ReactStyledComponentsBuilder {
       rename_tag: true /** styled component tag shoule be renamed */,
     });
 
+    this.stylesRepository = new StylesRepository(
+      this.stylesMapper.map,
+      create_duplication_reduction_map
+    );
+
     this.config = config;
   }
 
   private styledConfig(
     id: string
   ): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
-    return this.stylesMapper.map.get(id);
+    return this.stylesRepository.get(id);
   }
 
   private jsxBuilder(widget: JsxWidget) {
@@ -89,9 +102,9 @@ export class ReactStyledComponentsBuilder {
   }
 
   partDeclarations() {
-    return Array.from(this.stylesMapper.map.keys())
+    return Array.from(this.stylesRepository.uniques())
       .map((k) => {
-        return (this.stylesMapper.map.get(k) as StyledComponentJSXElementConfig)
+        return (this.stylesRepository.get(k) as StyledComponentJSXElementConfig)
           .styledComponent;
       })
       .filter((s) => s);

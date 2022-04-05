@@ -21,9 +21,10 @@ import {
   StylesConfigMapBuilder,
   JSXWithoutStyleElementConfig,
   JSXWithStyleElementConfig,
-  WidgetStyleConfigMap,
+  StylesRepository,
 } from "@web-builder/core/builders";
 import { react as react_config } from "@designto/config";
+import { create_duplication_reduction_map } from "@web-builder/styled";
 
 /**
  * CSS Module Builder for React Framework
@@ -35,6 +36,7 @@ export class ReactCssModuleBuilder {
   private readonly entry: JsxWidget;
   private readonly widgetName: string;
   private readonly stylesMapper: StylesConfigMapBuilder;
+  private readonly stylesRepository: StylesRepository;
   private readonly namer: ScopedVariableNamer;
   readonly config: react_config.ReactCssModuleConfig;
 
@@ -51,10 +53,15 @@ export class ReactCssModuleBuilder {
       entry.key.id,
       ReservedKeywordPlatformPresets.react
     );
+
     this.stylesMapper = new StylesConfigMapBuilder(entry, {
       namer: this.namer,
       rename_tag: false /** css-module tag shoule not be renamed */,
     });
+    this.stylesRepository = new StylesRepository(
+      this.stylesMapper.map,
+      create_duplication_reduction_map
+    );
 
     this.config = config;
   }
@@ -62,7 +69,7 @@ export class ReactCssModuleBuilder {
   private stylesConfig(
     id: string
   ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
-    return this.stylesMapper.map.get(id);
+    return this.stylesRepository.get(id);
   }
 
   private jsxBuilder(widget: JsxWidget) {
