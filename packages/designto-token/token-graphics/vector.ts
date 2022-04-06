@@ -21,13 +21,13 @@ function fromPoligon(): VectorWidget {
 }
 
 function fromVector(vector: ReflectVectorNode) {
+  // TODO: support vector.fillGeomatery.
+
   if (!vector?.vectorPaths || vector.vectorPaths.length === 0) {
     // we are not sure when specifically this happens, but as reported, curvy lines does not contain a vector paths.
     // so we just return a image bake of it.
-    console.warn(
-      `tried to get path data from vector, but none was provided. baking as a bitmap instead.`,
-      vector
-    );
+    // console.info(`tried to get path data from vector, but none was provided. baking as a bitmap instead.`, vector);
+
     return tokenizeBitmap.fromAnyNode(vector);
   }
   const _key = keyFromNode(vector);

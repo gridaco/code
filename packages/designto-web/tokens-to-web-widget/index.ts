@@ -14,31 +14,53 @@ import { compose_wrapped_with_positioned } from "./compose-wrapped-with-position
 import { compose_wrapped_with_clip_stretched } from "./compose-wrapped-with-stretched";
 import { compose_wrapped_with_sized_box } from "./compose-wrapped-with-sized-box";
 import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overflow-box";
+import { compose_wrapped_with_expanded } from "./compose-wrapped-with-expanded";
+import { compose_unwrapped_text_input } from "./compose-unwrapped-text-field";
+import { compose_unwrapped_button } from "./compose-unwrapped-button";
+import { compose_unwrapped_checkbox } from "./compose-unwrapped-checkbox";
+import { compose_unwrapped_slider } from "./compose-unwrapped-slider";
+import { compose_unwrapped_progress } from "./compose-unwrapped-progress";
 import { compose_instanciation } from "./compose-instanciation";
+import { compose_xtended_views } from "./compose-xtended-views";
 import { IWHStyleWidget } from "@reflect-ui/core";
 import * as reusable from "@code-features/component/tokens";
+import assert from "assert";
+import { WrappingContainer } from "@designto/token/tokens";
 
-export function buildWebWidgetFromTokens(widget: core.Widget): JsxWidget {
-  const composed = compose(widget, {
-    is_root: true,
-  });
+interface WebWidgetComposerConfig {
+  /**
+   * set alt to "" so when image is broken the broken image symbol won't show.
+   */
+  img_no_alt?: boolean;
+}
 
-  if (process.env.NODE_ENV === "development") {
-    console.info("dev::", "final web token composed", composed);
-  }
+export function buildWebWidgetFromTokens(
+  widget: core.Widget,
+  config: WebWidgetComposerConfig
+): JsxWidget {
+  const composed = compose(
+    widget,
+    {
+      is_root: true,
+    },
+    config
+  );
 
   return composed;
 }
 
 export type Composer = (
   widget: core.Widget,
-  context?: { is_root: boolean }
+  context?: { is_root: boolean },
+  config?: WebWidgetComposerConfig
 ) => StylableJsxWidget;
 
 function compose<T extends JsxWidget>(
   widget: core.Widget,
-  context: { is_root: boolean }
+  context: { is_root: boolean },
+  config: WebWidgetComposerConfig
 ): T {
+  assert(widget, "input widget is required");
   const handleChildren = <T extends JsxWidget>(
     children: core.Widget[]
   ): T[] => {
@@ -48,7 +70,7 @@ function compose<T extends JsxWidget>(
   };
 
   const handleChild = <T extends JsxWidget>(child: core.Widget): T => {
-    return compose(child, { ...context, is_root: false });
+    return compose(child, { ...context, is_root: false }, config);
   };
 
   const _remove_width_height_if_root_wh = {
@@ -126,6 +148,8 @@ function compose<T extends JsxWidget>(
     thisWebWidget = compose_wrapped_with_blurred(widget, handleChild);
   } else if (widget instanceof core.Rotation) {
     thisWebWidget = compose_wrapped_with_rotation(widget, handleChild);
+  } else if (widget instanceof core.Expanded) {
+    thisWebWidget = compose_wrapped_with_expanded(widget, handleChild);
   }
   // ----- region clip path ------
   else if (widget instanceof core.ClipRRect) {
@@ -145,10 +169,12 @@ function compose<T extends JsxWidget>(
   else if (widget instanceof core.RenderedText) {
     thisWebWidget = new web.Text({
       ...widget,
+      key: _key,
       textStyle:
         widget.style /** explicit assignment - field name is different */,
       data: widget.data,
-      key: _key,
+      // experimental element specification
+      elementPreference: widget.element_preference_experimental,
     });
   } else if (widget instanceof core.VectorWidget) {
     thisWebWidget = new web.SvgElement({
@@ -160,8 +186,11 @@ function compose<T extends JsxWidget>(
   } else if (widget instanceof core.ImageWidget) {
     thisWebWidget = new web.ImageElement({
       ...widget,
-      src: widget.src,
       key: _key,
+      src: widget.src,
+      alt: config.img_no_alt
+        ? ""
+        : widget.semanticLabel ?? `image of ${_key.name}`,
     });
   } else if (widget instanceof core.IconWidget) {
     // TODO: not ready - svg & named icon not supported
@@ -197,7 +226,80 @@ function compose<T extends JsxWidget>(
         break;
       }
     }
+  } else if (
+    widget instanceof special.XFigmaEmbedView ||
+    widget instanceof special.XGoogleMapsView ||
+    widget instanceof special.XOSMView ||
+    widget instanceof special.XYoutubeView ||
+    widget instanceof special.XCameraDisplayView
+  ) {
+    // xtended views
+    thisWebWidget = compose_xtended_views(_key, widget);
   }
+
+  // #region component widgets
+  // button
+  else if (widget instanceof core.ButtonStyleButton) {
+    // TODO: widget.icon - not supported
+    thisWebWidget = compose_unwrapped_button(_key, widget);
+  }
+  // checkbox
+  else if (widget instanceof core.Checkbox) {
+    thisWebWidget = compose_unwrapped_checkbox(_key, widget);
+  }
+  // textfield
+  else if (widget instanceof core.TextField) {
+    thisWebWidget = compose_unwrapped_text_input(_key, widget);
+  }
+  // slider
+  else if (widget instanceof core.Slider) {
+    thisWebWidget = compose_unwrapped_slider(_key, widget);
+  }
+  // progress
+  else if (widget instanceof core.ProgressIndicator) {
+    thisWebWidget = compose_unwrapped_progress(_key, widget);
+  }
+
+  // wrapping container
+  else if (widget instanceof WrappingContainer) {
+    // #region
+    // mergable widgets for web
+    if (widget.child instanceof core.TextField) {
+      thisWebWidget = compose_unwrapped_text_input(_key, widget.child, widget);
+    } else if (widget.child instanceof core.ButtonStyleButton) {
+      thisWebWidget = compose_unwrapped_button(_key, widget.child, widget);
+    } else if (widget.child instanceof core.Checkbox) {
+      thisWebWidget = compose_unwrapped_checkbox(_key, widget.child, widget);
+    } else if (widget.child instanceof core.Slider) {
+      thisWebWidget = compose_unwrapped_slider(_key, widget.child, widget);
+    } else if (widget.child instanceof core.ProgressIndicator) {
+      thisWebWidget = compose_unwrapped_progress(_key, widget.child, widget);
+    }
+
+    // --- xtended views
+    else if (
+      widget.child instanceof special.XFigmaEmbedView ||
+      widget.child instanceof special.XGoogleMapsView ||
+      widget.child instanceof special.XOSMView ||
+      widget.child instanceof special.XYoutubeView ||
+      widget.child instanceof special.XCameraDisplayView
+    ) {
+      // xtended views
+      thisWebWidget = compose_xtended_views(_key, widget.child, widget);
+    }
+    // --- --- --- --- ---
+    // #endregion
+    else {
+      console.error(
+        `Unsupported web widget type: ${widget.child.constructor.name}`,
+        widget.child
+      );
+      throw new Error(
+        `Unsupported web widget type: ${widget.child.constructor.name}`
+      );
+    }
+  }
+  // #endregion
 
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
   else if (widget instanceof core.Container) {
@@ -207,6 +309,7 @@ function compose<T extends JsxWidget>(
       borderRadius: widget.borderRadius,
       width: widget.width,
       height: widget.height,
+      // TODO: add child: (currently no widget is being nested under Container, exept below custom filters)
     });
     container.x = widget.x;
     container.y = widget.y;
@@ -232,6 +335,10 @@ function compose<T extends JsxWidget>(
   // end of logic gate
   // -------------------------------------
   else {
+    if (thisWebWidget)
+      throw new Error(
+        "internal error. this final exception gate should not be entered since there is already a composed widget."
+      );
     // todo - handle case more specific
     thisWebWidget = new web.ErrorWidget({
       key: _key,
@@ -239,6 +346,7 @@ function compose<T extends JsxWidget>(
         widget.key.originName
       }" type of "${widget._type}" - ${JSON.stringify(widget.key)}`,
     });
+    console.warn("not handled", widget);
   }
   // -------------------------------------
   // -------------------------------------

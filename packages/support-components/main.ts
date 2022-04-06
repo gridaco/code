@@ -37,15 +37,16 @@ export function reusable({
     components: repository.components,
   });
 
-  const components = component_use_repository.components.map(
-    composeComponentMeta
-  );
+  const components =
+    component_use_repository.components.map(composeComponentMeta);
 
-  return {
+  const _ = {
     // asumming root is always a multi child widget
     tree: composeInstanciationTree(entry, repository, component_use_repository),
     components: components,
   };
+  // console.log("reusable", _);
+  return _;
 }
 
 function composeInstanciationTree(
@@ -56,15 +57,10 @@ function composeInstanciationTree(
   widget = unwrappedChild(widget); // unwrap child to reach original input.
   const { key, _type: _widget_type } = widget;
   const node = repository.get(key.id);
-  if (!node) {
-    console.warn(
-      "node not found",
-      key,
-      repository,
-      "this is a know issue when trying to find a masking group. this will be fixed in the future."
-    );
-    return;
-  }
+
+  // prettier-ignore
+  if (!node) { console.warn("node not found", key, repository, "this is a know issue when trying to find a masking group. this will be fixed in the future."); return; }
+
   if (node.origin === "INSTANCE") {
     const instanceMeta = componentsUsageRepository.getUsageOf(node.id);
     const instance = new InstanceWidget({
@@ -77,25 +73,25 @@ function composeInstanciationTree(
       widget instanceof MultiChildRenderObjectWidget &&
       widget.children.length > 0
     ) {
-      return {
-        ...widget,
-        children: widget.children.map((c) => {
-          return composeInstanciationTree(
-            c,
-            repository,
-            componentsUsageRepository
-          );
-        }),
-      };
-    } else if (widget instanceof SingleChildRenderObjectWidget) {
-      return {
-        ...widget,
-        child: composeInstanciationTree(
-          widget.child,
+      // @ts-ignore
+      widget.children = widget.children.map((c) => {
+        return composeInstanciationTree(
+          c,
           repository,
           componentsUsageRepository
-        ),
-      };
+        );
+      });
+
+      return widget;
+    } else if (widget instanceof SingleChildRenderObjectWidget) {
+      // @ts-ignore
+      widget.child = composeInstanciationTree(
+        widget.child,
+        repository,
+        componentsUsageRepository
+      );
+
+      return widget;
     } else {
       return widget;
     }
@@ -106,9 +102,8 @@ function composeComponentMeta(
   component: MasterComponentMetaToken<any>
 ): MasterComponentWidget {
   const componentNode = component.body as ComponentNode;
-  const componentTokenizedBody = tokenizeComponent.fromComponentNode(
-    componentNode
-  );
+  const componentTokenizedBody =
+    tokenizeComponent.fromComponentNode(componentNode);
 
   return new MasterComponentWidget({
     key: component.key,

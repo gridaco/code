@@ -1,17 +1,21 @@
 {
     "name": "designto.codes",
+    "homepage": "https://designto.codes/",
+    "repository": "https://github.com/gridaco/designto-code",
+    "license": "Apache 2.0",
     "private": true,
     "scripts": {
+        "checkout:all": "git submodule update --init --recursive",
         "editor": "yarn workspace editor dev"
     },
     "workspaces": [
         "editor",
         "editor-packages/*",
+        "editor-packages/base-sdk/_firstparty/*",
         "packages/*",
-        "ui/*",
-        "packages/reflect-core/packages/*",
-        "packages/design-sdk/*",
-        "packages/coli/packages/*",
-        "packages/builder-web/*"
+        "ui/editor-ui/packages/*",
+        "externals/reflect-core/packages/*",
+        "externals/design-sdk/*",
+        "externals/coli/packages/*"
     ]
 }

@@ -1,4 +1,4 @@
-import { PackageManifest } from "../../../builder-web-nodejs/package/manifest";
+import { PackageManifest } from "@web-builder/nodejs";
 
 /**
  * ```
@@ -37,10 +37,9 @@ import { PackageManifest } from "../../../builder-web-nodejs/package/manifest";
 }
  * ```
  */
-export const CRA_TYPESCRIPT_PACKAGE_PRESET: PackageManifest = new PackageManifest(
-  {
-    name: "@packages.bridged.xyz/react-typescript",
-    description: "Bridged React Typescript Preset",
+export const CRA_TYPESCRIPT_PACKAGE_PRESET: PackageManifest =
+  new PackageManifest({
+    name: "@packages.grida.co/react-typescript",
+    description: "Grida React Typescript Preset",
     version: "0.0.0",
-  }
-);
+  });

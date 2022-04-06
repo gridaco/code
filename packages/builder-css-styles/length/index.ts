@@ -4,7 +4,7 @@ import { px, vw, vh } from "../dimensions";
 import { percent } from "../percent";
 
 export function length(d: DimensionLength | string, a?: Axis) {
-  if (d === undefined) {
+  if (d === undefined || d === null) {
     return;
   }
   if (typeof d === "number") {
@@ -12,6 +12,11 @@ export function length(d: DimensionLength | string, a?: Axis) {
   }
 
   if (typeof d === "string") {
+    // To handle cases such as "0%"
+    const extractNum = d.replace(/[^0-9]/, "");
+    if (parseInt(extractNum) === 0) {
+      return;
+    }
     if (d === "match-screen-size") {
       switch (a) {
         case Axis.horizontal:
@@ -54,5 +59,5 @@ export function length(d: DimensionLength | string, a?: Axis) {
   }
 
   throw `no matching length type found. "${JSON.stringify(d)}" was givven`;
-  return px((d as any) as number);
+  return px(d as any as number);
 }

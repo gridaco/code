@@ -1,8 +1,4 @@
-# Mark as size
+# `--as-size` Flag
 
-## Will be
-
-```
-element: --as-size
-is: Sized() | Container() | Padding()
-```
+- Visit the [design documentation](../docs/--as-size.md)
+- View it on Grida [Docs](https://grida.co/docs/flags/--as-size)

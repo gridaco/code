@@ -1,7 +1,7 @@
 import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
 import { CSSProperties } from "@coli.codes/css";
-import { JSXElementConfig, StylableJSXElementConfig, WidgetKey } from "../..";
-import { px, color } from "@web-builder/styles";
+import { StylableJSXElementConfig, WidgetKey } from "../..";
+import * as css from "@web-builder/styles";
 import {
   JSX,
   JSXAttribute,
@@ -10,7 +10,6 @@ import {
   JSXIdentifier,
   JSXOpeningElement,
   JSXSelfClosingElement,
-  Snippet,
   StringLiteral,
 } from "coli";
 import { Color, GradientType } from "@reflect-ui/core";
@@ -54,7 +53,7 @@ export class SvgElement extends StylableJsxWidget {
    */
   readonly stroke?: Color;
 
-  readonly children;
+  readonly children: StylableJsxWidget[];
 
   constructor(p: {
     key: WidgetKey;
@@ -82,27 +81,28 @@ export class SvgElement extends StylableJsxWidget {
     this.children = this._init_children();
   }
 
-  private _init_children() {
-    const path_with_fill = (fill: string | false) =>
-      <StylableJsxWidget>{
-        key: new WidgetKey(`${this.key.id}.svg-path`, "svg-path"),
-        styleData: () => null,
-        jsxConfig: () => {
-          const _tag = JSX.identifier("path");
-          return {
-            tag: _tag,
-            type: "tag-and-attr",
-            attributes: [
-              fill &&
-                new JSXAttribute("fill", new StringLiteral(fill || "current")),
-              new JSXAttribute("d", new StringLiteral(this.data ?? "")),
-            ],
-          };
-        },
-      };
+  path({ fill }: { fill: string | false }) {
+    return <StylableJsxWidget>{
+      key: new WidgetKey(`${this.key.id}.svg-path`, "svg-path"),
+      styleData: () => null,
+      jsxConfig: () => {
+        const _tag = JSX.identifier("path");
+        return {
+          tag: _tag,
+          type: "tag-and-attr",
+          attributes: [
+            fill &&
+              new JSXAttribute("fill", new StringLiteral(fill || "current")),
+            new JSXAttribute("d", new StringLiteral(this.data ?? "")),
+          ],
+        };
+      },
+    };
+  }
 
+  private _init_children() {
     if (!this.fill) {
-      return [path_with_fill("transparent")];
+      return [this.path({ fill: "transparent" })];
     }
 
     if (Array.isArray(this.fill)) {
@@ -110,11 +110,11 @@ export class SvgElement extends StylableJsxWidget {
     } else {
       switch (this.fill.type) {
         case "solid-color": {
-          return [path_with_fill(color(this.fill as Color))];
+          return [this.path({ fill: css.color(this.fill as Color) })];
         }
         case "graphics": {
           console.error("graphics fill for svg not supported.");
-          return [path_with_fill("black")];
+          return [this.path({ fill: "black" })];
         }
         case "gradient": {
           switch (this.fill._type) {
@@ -127,7 +127,7 @@ export class SvgElement extends StylableJsxWidget {
                     new JSXAttribute("offset", new StringLiteral(`${stop}%`)),
                     new JSXAttribute(
                       "style",
-                      new StringLiteral(`stop-color: ${color(c)}`)
+                      new StringLiteral(`stop-color: ${css.color(c)}`)
                     ),
                   ],
                 });
@@ -169,11 +169,11 @@ export class SvgElement extends StylableJsxWidget {
                 },
               };
 
-              return [fill, path_with_fill(`url(#${fillid})`)];
+              return [fill, this.path({ fill: `url(#${fillid})` })];
             }
             default: {
               console.error("unsupported gradient type for svg path.");
-              return [path_with_fill("black")];
+              return [this.path({ fill: "black" })];
             }
           }
         }
@@ -194,14 +194,27 @@ export class SvgElement extends StylableJsxWidget {
       };
     }
     return {
-      width: px(this.width),
-      height: px(this.height),
-      color: color(this.color),
+      width: css.length(this.width),
+      height: css.length(this.height),
+      color: css.color(this.color),
     };
   }
 
-  jsxConfig(): StylableJSXElementConfig {
+  // @override
+  get finalStyle() {
+    const super_finalStyle = super.finalStyle;
     return {
+      ...super_finalStyle,
+      // TODO: this is a hot fix of svg & path's constraint handling
+      // width & height for the svg must be preserved. (it wont' follow the constraints anyway.)
+      // it can also be 100%
+      width: css.length(this.width),
+      height: css.length(this.height),
+    };
+  }
+
+  jsxConfig(): StylableJSXElementConfig | UnstylableJSXElementConfig {
+    return <StylableJSXElementConfig>{
       type: "tag-and-attr",
       tag: JSX.identifier("svg"),
       attributes: [

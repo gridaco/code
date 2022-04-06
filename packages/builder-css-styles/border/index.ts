@@ -12,14 +12,32 @@ export function border(border: Border): CSSProperties {
   if (!border) {
     return;
   }
-  return {
+  const borderobj = {
     "border-left": border.left && borderSide(border.left),
     "border-top": border.top && borderSide(border.top),
     "border-bottom": border.bottom && borderSide(border.bottom),
     "border-right": border.right && borderSide(border.right),
   };
+
+  if (
+    borderobj["border-left"] === borderobj["border-top"] &&
+    borderobj["border-top"] === borderobj["border-bottom"] &&
+    borderobj["border-bottom"] === borderobj["border-right"]
+  ) {
+    // if all border side value is same, then use single `border:` syntax
+    return {
+      border: borderobj["border-left"],
+    };
+  }
+  return borderobj;
 }
 
 export function borderSide(borderSide: BorderSide): CSSProperty.Border {
-  return `solid ${px(borderSide.width)} ${color(borderSide.color)}`;
+  if (borderSide.style === "none") {
+    return "none";
+  }
+
+  return `${borderSide.style ?? "solid"} ${px(borderSide.width)} ${color(
+    borderSide.color
+  )}`;
 }

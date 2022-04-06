@@ -91,14 +91,15 @@ function fromMultichild(
     // endregion
     // --------------------------------------------------
 
-    const clippedcontents_new_layout_except_irrelavents = tokenizeLayout.fromFrameOrGroup(
-      cloned_container,
-      maskitee,
-      {
-        is_root: cloned_container.isRoot,
-      },
-      config
-    );
+    const clippedcontents_new_layout_except_irrelavents =
+      tokenizeLayout.fromFrameOrGroup(
+        cloned_container,
+        maskitee,
+        {
+          is_root: cloned_container.isRoot,
+        },
+        config
+      );
 
     const raw_maskier_key = keyFromNode(maskier); // we do not override key for clipped because maskier it self is not being nested, but being converted as a container-like.
     let clipped;
@@ -130,7 +131,7 @@ function fromMultichild(
         case ReflectSceneNodeType.vector:
           // TODO: multi path vector is not supported
           const vector_asset_data = (maskier as ReflectVectorNode)
-            .vectorPaths[0]?.data;
+            .vectorPaths?.[0]?.data;
 
           clipped = new ClipPath({
             key: raw_maskier_key,

@@ -4,25 +4,29 @@ import {
   StylableJSXElementConfig,
   StylableJsxWidget,
 } from "@web-builder/core";
-import { JSXElementConfig, WidgetKey } from "../..";
+import { WidgetKey } from "../..";
 import { CSSProperties, CSSProperty } from "@coli.codes/css";
-import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
 import * as css from "@web-builder/styles";
 import {
+  Background,
+  BoxShadowManifest,
   Border,
   BorderRadiusManifest,
   Clip,
   DimensionLength,
 } from "@reflect-ui/core";
 import { CssMinHeightMixin } from "../../widgets";
-import { Background } from "@reflect-ui/core/lib/background";
 
 export class Stack extends MultiChildWidget implements CssMinHeightMixin {
   readonly _type = "stack";
 
-  width: number;
-  height: number;
+  width: DimensionLength;
+  height: DimensionLength;
+  minWidth?: DimensionLength;
+  maxWidth?: DimensionLength;
   minHeight?: DimensionLength;
+  maxHeight?: DimensionLength;
+
   borderRadius?: BorderRadiusManifest;
   border?: Border;
   clipBehavior?: Clip;
@@ -30,20 +34,28 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
   constructor(p: {
     key: WidgetKey;
     children: Array<StylableJsxWidget>;
-    width: number;
-    height: number;
+
+    width: DimensionLength;
+    height: DimensionLength;
+    minWidth?: DimensionLength;
+    maxWidth?: DimensionLength;
     minHeight?: DimensionLength;
-    boxShadow?: BoxShadowManifest;
+    maxHeight?: DimensionLength;
+
+    boxShadow?: BoxShadowManifest[];
     borderRadius?: BorderRadiusManifest;
     border?: Border;
     background?: Background;
     clipBehavior?: Clip;
   }) {
     super(p);
+
     this.width = p.width;
     this.height = p.height;
-
+    this.minWidth = p.minWidth;
+    this.maxWidth = p.maxWidth;
     this.minHeight = p.minHeight;
+    this.maxHeight = p.maxHeight;
 
     this.background = p.background;
     this.borderRadius = p.borderRadius;
@@ -63,10 +75,13 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
 
   styleData(): CSSProperties {
     return {
-      width: css.px(this.width),
-      height: css.px(this.height),
+      width: css.length(this.width),
+      height: css.length(this.height),
+      "min-width": css.length(this.minWidth),
+      "max-width": css.length(this.maxWidth),
+      "min-height": css.length(this.minHeight),
+      "max-height": css.length(this.maxHeight),
 
-      "min-height": css.minHeight(this.minHeight),
       overflow: clip(this.clipBehavior),
       ...css.background(this.background),
       ...css.border(this.border),
@@ -74,7 +89,7 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
       // for stacking elements under parent, parent's position shall be relative, children shall be absolute with anchor (e.g. bottom: 0)
       // can it be always relative?
       position: "relative",
-      "box-shadow": css.boxshadow(this.boxShadow),
+      "box-shadow": css.boxshadow(...(this.boxShadow ?? [])),
     };
   }
 }

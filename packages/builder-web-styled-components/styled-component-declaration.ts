@@ -13,9 +13,9 @@ import {
   NameCases,
   ScopedVariableNamer,
 } from "@coli.codes/naming";
-import { CSSProperties, buildCssStandard } from "@coli.codes/css";
+import { CSSProperties, buildCSSStyleData } from "@coli.codes/css";
 import { handle } from "@coli.codes/builder";
-import { formatStyledTempplateString } from "./styled-variable-formatter";
+import { formatStyledTempplateString } from "./formatter";
 
 export class StyledComponentDeclaration extends VariableDeclaration {
   static styledIdentifier = new Identifier("styled");
@@ -43,15 +43,26 @@ export class StyledComponentDeclaration extends VariableDeclaration {
     style: CSSProperties,
     html5tag: Html5IdentifierNames
   ): TaggedTemplateExpression {
-    const stylestring = buildCssStandard(style);
-    const formatedStyleStringWithTab = formatStyledTempplateString(stylestring);
+    const { main, pseudo } = buildCSSStyleData(style);
+
+    const pseudos = Object.keys(pseudo).map((k) => {
+      const b = pseudo[k];
+      const lines = b.split("\n").filter((l) => l.length > 0);
+      return `${k} {${
+        lines.length ? ["", ...lines].join("\n\t") + "\n" : ""
+      }}\n`;
+    });
+
+    const body = [main, ...pseudos].join("\n");
+
+    const _fmted_body = formatStyledTempplateString(body);
     return new TaggedTemplateExpression(
       new PropertyAccessExpression(
         StyledComponentDeclaration.styledIdentifier,
         html5tag
       ),
       {
-        template: new TemplateLiteral(formatedStyleStringWithTab),
+        template: new TemplateLiteral(`\n${_fmted_body}\n`),
       }
     );
   }
@@ -66,7 +77,7 @@ export interface NamePreference {
   overrideFinalName?: string;
 }
 
-export function declareStyledComponentVariable(
+export function composeStyledComponentVariableDeclaration(
   widgetConfig: WidgetWithStyle,
   preferences: {
     name?: NamePreference;
@@ -90,7 +101,7 @@ export function declareStyledComponentVariable(
   }
   ///
 
-  const style_data = widgetConfig.style;
+  const style_data = widgetConfig.finalStyle;
   /**
    * if the style is null, it means don't make element as a styled component at all. if style is a empty object, it means to make a empty styled component.
    */

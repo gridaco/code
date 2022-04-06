@@ -7,8 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: run pre-deploy (build docs and more)
+        run: |
+          chmod +x ./scripts/docs-deploy/pre-deploy.sh
+          ./scripts/docs-deploy/pre-deploy.sh
+        shell: bash
       - name: copy docs to gridaco/grida.co
-        uses: DevOpenWRT-Router/github-action-push-to-another-repository@main
+        uses: cpina/github-action-push-to-another-repository@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:

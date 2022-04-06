@@ -1,38 +1,67 @@
 import { CSSProperties } from "@coli.codes/css";
-import { EdgeInsets } from "@reflect-ui/core";
+import {
+  EdgeInsets,
+  edgeInsetsShorthandMode,
+  EdgeInsetsShorthandMode,
+} from "@reflect-ui/core";
 import { px } from "../dimensions";
 
-export function padding(padding: EdgeInsets): CSSProperties {
-  if (!padding) {
-    return {};
+type PaddingValue = number | "auto";
+
+export function padding(
+  p: EdgeInsets,
+  options?: {
+    explicit?: boolean;
   }
-  if (
-    padding.top === 0 &&
-    padding.right === 0 &&
-    padding.bottom === 0 &&
-    padding.left === 0
-  ) {
-    return {};
+): CSSProperties {
+  switch (edgeInsetsShorthandMode(p, options)) {
+    case EdgeInsetsShorthandMode.empty: {
+      return {};
+    }
+    case EdgeInsetsShorthandMode.all: {
+      return {
+        padding: _pv(p.top),
+      };
+    }
+    case EdgeInsetsShorthandMode.symetric: {
+      return {
+        padding: `${_pv(p.top)} ${_pv(p.left)}`,
+      };
+    }
+    case EdgeInsetsShorthandMode.top_horiz_bottom: {
+      return {
+        padding: `${_pv(p.top)} ${_pv(p.left)} ${_pv(p.bottom)}`,
+      };
+    }
+    case EdgeInsetsShorthandMode.trbl:
+    default: {
+      return {
+        "padding-bottom": _makeifRequired(p?.bottom, options?.explicit),
+        "padding-top": _makeifRequired(p?.top, options?.explicit),
+        "padding-left": _makeifRequired(p?.left, options?.explicit),
+        "padding-right": _makeifRequired(p?.right, options?.explicit),
+      };
+    }
   }
-  if (padding.top === padding.bottom && padding.left === padding.right) {
-    return {
-      padding: `${px(padding.top)} ${px(padding.left)}`,
-    };
-  } else if (padding.left === padding.right) {
-    return {
-      padding: `${px(padding.top)} ${px(padding.left)} ${px(padding.bottom)}`,
-    };
-  }
-  return {
-    "padding-bottom": _makeifRequired(padding?.bottom),
-    "padding-top": _makeifRequired(padding?.top),
-    "padding-left": _makeifRequired(padding?.left),
-    "padding-right": _makeifRequired(padding?.right),
-  };
 }
 
-function _makeifRequired(val: number): string | undefined {
-  if (val && val > 0) {
+/**
+ * Margin Value - mv
+ * @param pv
+ * @returns
+ */
+function _pv(pv: PaddingValue) {
+  if (pv === undefined) {
+    return;
+  }
+  if (pv === "auto") {
+    return "auto";
+  }
+  return px(pv);
+}
+
+function _makeifRequired(val: number, explicit?: boolean): string | undefined {
+  if (explicit || (val && val > 0)) {
     return px(val);
   }
 }
