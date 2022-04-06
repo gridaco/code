@@ -2715,7 +2715,7 @@
   dependencies:
     state-local "^1.0.6"
 
-"@monaco-editor/react@^4.1.3":
+"@monaco-editor/react@^4.4.1":
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-4.4.1.tgz#2e2b9b369f3082b0e14f47cdbe35658fd56c7c7d"
   integrity sha512-95E/XPC4dbm/7qdkhSsU/a1kRgcn2PYhRTVIc+/cixWCZrwRURW1DRPaIZ2lOawBJ6kAOLywxuD4A4UmbT0ZIw==
@@ -12815,10 +12815,10 @@ moment@^2.29.1:
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.2.tgz#00910c60b20843bcba52d37d58c628b47b1f20e4"
   integrity sha512-UgzG4rvxYpN15jgCmVJwac49h9ly9NurikMWGPdVxm8GZD6XjkKPxDTjQQ43gtGgnV3X0cAyWDdP2Wexoquifg==
 
-monaco-editor@^0.24.0:
-  version "0.24.0"
-  resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.24.0.tgz#990b55096bcc95d08d8d28e55264c6eb17707269"
-  integrity sha512-o1f0Lz6ABFNTtnEqqqvlY9qzNx24rQZx1RgYNQ8SkWkE+Ka63keHH/RqxQ4QhN4fs/UYOnvAtEUZsPrzccH++A==
+monaco-editor@^0.33.0:
+  version "0.33.0"
+  resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.33.0.tgz#842e244f3750a2482f8a29c676b5684e75ff34af"
+  integrity sha512-VcRWPSLIUEgQJQIE0pVT8FcGBIgFoxz7jtqctE+IiCxWugD0DwgyQBcZBhdSrdMC84eumoqMZsGl2GTreOzwqw==
 
 move-concurrently@^1.0.1:
   version "1.0.1"
