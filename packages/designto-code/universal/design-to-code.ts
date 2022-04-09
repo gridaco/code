@@ -84,6 +84,7 @@ export async function designToCode({
 
   const vanilla_token = tokenize(input.entry, tokenizer_config);
 
+  /* COMPONENT SUPPORT IS DISABLED.
   // post token processing for componentization
   let reusable_widget_tree;
   if (!build_config.disable_components) {
@@ -97,10 +98,11 @@ export async function designToCode({
       console.error("error while building reusable widget tree.", _);
     }
   }
+  */
 
   const _tokenized_widget_input = {
     widget: vanilla_token,
-    reusable_widget_tree: reusable_widget_tree,
+    // reusable_widget_tree: reusable_widget_tree,
   };
 
   const _extend_result = {
@@ -165,7 +167,6 @@ export async function designToCode({
     // @ts-ignore
     framework_config.framework
   }" is not supported at this point.`;
-  return;
 }
 
 export const designTo = {
@@ -314,7 +315,7 @@ export async function designToVanillaPreview({
 }): Promise<output.ICodeOutput> {
   const vanillawidget = toVanilla.buildVanillaWidget(
     input.widget,
-    (vanilla_config as any) as config.VanillaFrameworkConfig
+    vanilla_config as any as config.VanillaFrameworkConfig
   );
   const res = toVanilla.buildVanillaPreviewFile(vanillawidget, vanilla_config);
 

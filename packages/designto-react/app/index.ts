@@ -77,6 +77,8 @@ export function buildReusableReactApp__Experimental({
   tree;
   components;
 }) {
+  console.info("starting experimental react reusable components build");
+
   const res = finalizeReactReusable_StyledComponents__Experimental({
     tree,
     components,
