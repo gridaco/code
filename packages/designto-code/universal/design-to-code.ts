@@ -16,7 +16,7 @@ import {
   TokenizerConfig,
 } from "@designto/token/config";
 import { default_build_configuration, FrameworkConfig } from "@designto/config";
-import { reusable } from "@code-features/component";
+// import { reusable } from "@code-features/component";
 import assert from "assert";
 
 interface AssetsConfig {
@@ -32,17 +32,19 @@ export type Result = output.ICodeOutput & { widget: Widget } & {
   framework: FrameworkConfig;
 };
 
+export type DesignToCodeInput = {
+  input: input.IDesignInput;
+  framework: config.FrameworkConfig;
+  build_config?: config.BuildConfiguration;
+  asset_config: AssetsConfig;
+};
+
 export async function designToCode({
   input,
   framework: framework_config,
   asset_config,
   build_config = config.default_build_configuration,
-}: {
-  input: input.IDesignInput;
-  framework: config.FrameworkConfig;
-  build_config?: config.BuildConfiguration;
-  asset_config: AssetsConfig;
-}): Promise<Result> {
+}: DesignToCodeInput): Promise<Result> {
   assert(input, "input is required");
   if (process.env.NODE_ENV === "development") {
     if (framework_config.framework == "vanilla") {
