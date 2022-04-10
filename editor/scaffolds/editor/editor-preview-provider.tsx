@@ -9,6 +9,7 @@ import assert from "assert";
 import { useDispatch } from "core/dispatch";
 import { useTargetContainer } from "hooks";
 import { WidgetKey } from "@reflect-ui/core";
+import { placeholderimg_transparent_100x100 } from "k";
 
 const esbuild_base_html_code = `<div id="root"></div>`;
 
@@ -143,8 +144,7 @@ export function EditorPreviewDataProvider({
         asset_repository: MainImageRepository.instance,
         custom_asset_replacement: {
           type: "static",
-          resource:
-            "https://bridged-service-static.s3.us-west-1.amazonaws.com/placeholder-images/image-placeholder-bw-tile-100.png",
+          resource: placeholderimg_transparent_100x100,
         },
       },
     })

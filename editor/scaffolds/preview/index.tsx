@@ -8,12 +8,10 @@ import { VanillaRunner } from "components/app-runner/vanilla-app-runner";
 import { colorFromFills } from "@design-sdk/core/utils/colors";
 import type { FrameOptimizationFactors } from "@code-editor/canvas/frame";
 import { remote } from "@design-sdk/figma";
+import { placeholderimg_transparent_100x100 } from "k";
 
 const DEV_ONLY_FIGMA_PAT =
   process.env.NEXT_PUBLIC_DEVELOPER_FIGMA_PERSONAL_ACCESS_TOKEN;
-
-const placeholderimg =
-  "https://bridged-service-static.s3.us-west-1.amazonaws.com/placeholder-images/image-placeholder-bw-tile-100.png";
 
 const build_config: config.BuildConfiguration = {
   ...config.default_build_configuration,
@@ -96,7 +94,7 @@ export function Preview({
           asset_repository: MainImageRepository.instance,
           custom_asset_replacement: {
             type: "static",
-            resource: placeholderimg,
+            resource: placeholderimg_transparent_100x100,
           },
         },
       });
@@ -145,7 +143,7 @@ export function Preview({
           .then((r) => {
             on_preview_result(r, false);
             // if the result contains a image and needs to be fetched,
-            if (r.code.raw.includes(placeholderimg)) {
+            if (r.code.raw.includes(placeholderimg_transparent_100x100)) {
               // TODO: we don't yet have other way to know if image is used, other than checking if placeholder image is used. - this needs to be updated in d2c module to include used images meta in the result.
               d2c_imageload();
             }
