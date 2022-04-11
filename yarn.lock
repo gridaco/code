@@ -8983,7 +8983,7 @@ es6-shim@^0.35.5:
   resolved "https://registry.yarnpkg.com/es6-shim/-/es6-shim-0.35.6.tgz#d10578301a83af2de58b9eadb7c2c9945f7388a0"
   integrity sha512-EmTr31wppcaIAgblChZiuN/l9Y7DPyw8Xtbg7fIVngn6zMW+IEBJDJngeKC3x6wr0V/vcA2wqeFnaw1bFJbDdA==
 
-esbuild-wasm@^0.14.34:
+esbuild-wasm@0.14.34:
   version "0.14.34"
   resolved "https://registry.yarnpkg.com/esbuild-wasm/-/esbuild-wasm-0.14.34.tgz#cde4a4c10405b6dfb677652092eb5b9788670d70"
   integrity sha512-0GYXI7gNla1PePGpXMqSH8U/k0xDkVYwH62L0ZLq3MuI26NPabhAlShOOELISpNZIaYiJ8vlkwdYZ4V229zf2A==
