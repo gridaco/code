@@ -4,6 +4,7 @@ export * as ios from "../framework-ios";
 export * as react from "../framework-react";
 export * as reactnative from "../framework-reactnative";
 export * as vanilla from "../framework-vanilla";
+export * as preview from "../framework-vanilla-preview";
 export * as vue from "../framework-vue";
 
 // universal

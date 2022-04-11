@@ -16,7 +16,7 @@ import {
   TokenizerConfig,
 } from "@designto/token/config";
 import { default_build_configuration, FrameworkConfig } from "@designto/config";
-import { reusable } from "@code-features/component";
+// import { reusable } from "@code-features/component";
 import assert from "assert";
 
 interface AssetsConfig {
@@ -32,17 +32,19 @@ export type Result = output.ICodeOutput & { widget: Widget } & {
   framework: FrameworkConfig;
 };
 
+export type DesignToCodeInput = {
+  input: input.IDesignInput;
+  framework: config.FrameworkConfig;
+  build_config?: config.BuildConfiguration;
+  asset_config: AssetsConfig;
+};
+
 export async function designToCode({
   input,
   framework: framework_config,
   asset_config,
   build_config = config.default_build_configuration,
-}: {
-  input: input.IDesignInput;
-  framework: config.FrameworkConfig;
-  build_config?: config.BuildConfiguration;
-  asset_config: AssetsConfig;
-}): Promise<Result> {
+}: DesignToCodeInput): Promise<Result> {
   assert(input, "input is required");
   if (process.env.NODE_ENV === "development") {
     if (framework_config.framework == "vanilla") {
@@ -84,6 +86,7 @@ export async function designToCode({
 
   const vanilla_token = tokenize(input.entry, tokenizer_config);
 
+  /* COMPONENT SUPPORT IS DISABLED.
   // post token processing for componentization
   let reusable_widget_tree;
   if (!build_config.disable_components) {
@@ -97,10 +100,11 @@ export async function designToCode({
       console.error("error while building reusable widget tree.", _);
     }
   }
+  */
 
   const _tokenized_widget_input = {
     widget: vanilla_token,
-    reusable_widget_tree: reusable_widget_tree,
+    // reusable_widget_tree: reusable_widget_tree,
   };
 
   const _extend_result = {
@@ -109,6 +113,16 @@ export async function designToCode({
   };
 
   switch (framework_config.framework) {
+    case "preview":
+      return {
+        ...(await designToVanillaPreview({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          vanilla_config: framework_config,
+          asset_config: asset_config,
+        })),
+        ..._extend_result,
+      };
     case "vanilla":
       return {
         ...(await designToVanilla({
@@ -155,7 +169,6 @@ export async function designToCode({
     // @ts-ignore
     framework_config.framework
   }" is not supported at this point.`;
-  return;
 }
 
 export const designTo = {
@@ -286,6 +299,59 @@ export async function designToFlutter({
 
 export function designToVue(input: input.IDesignInput): output.ICodeOutput {
   return;
+}
+
+export async function designToVanillaPreview({
+  input,
+  asset_config,
+  vanilla_config,
+  build_config,
+}: {
+  input: { widget: Widget };
+  /**
+   * TODO: pass this to tokenizer +@
+   */
+  build_config: config.BuildConfiguration;
+  vanilla_config: config.VanillaPreviewFrameworkConfig;
+  asset_config?: AssetsConfig;
+}): Promise<output.ICodeOutput> {
+  const vanillawidget = toVanilla.buildVanillaWidget(
+    input.widget,
+    vanilla_config as any as config.VanillaFrameworkConfig
+  );
+  const res = toVanilla.buildVanillaPreviewFile(vanillawidget, vanilla_config);
+
+  // ------------------------------------------------------------------------
+  // finilize temporary assets
+  // this should be placed somewhere else
+  if (asset_config.custom_asset_replacement) {
+    const keys = Object.keys(asset_config.asset_repository.mergeAll());
+    res.code.raw = dangerous_custom_static_resource_replacer(
+      res.code.raw,
+      keys,
+      asset_config.custom_asset_replacement.resource
+    );
+    res.scaffold.raw = dangerous_custom_static_resource_replacer(
+      res.scaffold.raw,
+      keys,
+      asset_config.custom_asset_replacement.resource
+    );
+  } else {
+    if (
+      asset_config?.asset_repository &&
+      !asset_config.skip_asset_replacement
+    ) {
+      const assets = await fetch_all_assets(asset_config.asset_repository);
+      res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
+      res.scaffold.raw = dangerous_temporary_asset_replacer(
+        res.scaffold.raw,
+        assets
+      );
+    }
+  }
+  // ------------------------------------------------------------------------
+
+  return res;
 }
 
 export async function designToVanilla({
