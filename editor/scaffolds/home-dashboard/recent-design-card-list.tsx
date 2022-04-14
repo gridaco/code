@@ -22,12 +22,15 @@ export function RecentDesignCardList({
 
   return (
     <ListWrap>
-      <ImportNewDesignCard />
-      {also_show_demo && <BuiltinDemoFileCard />}
+      <ImportNewDesignCard key={"importnew"} />
+      {also_show_demo && <BuiltinDemoFileCard key={"builtin"} />}
       {recents.map((recentDesign) => {
         switch (recentDesign.type) {
           case "file": {
             return <Cards.File key={recentDesign.key} data={recentDesign} />;
+          }
+          default: {
+            throw new Error("unknown type");
           }
         }
       })}
