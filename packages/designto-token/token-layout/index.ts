@@ -247,7 +247,8 @@ function find_original(ogchildren: Array<nodes.ReflectSceneNode>, of: Widget) {
       c.id === (_unwrappedChild && _unwrappedChild.key.id) ||
       // target the widget itself - some widgets are not wrapped, yet being converted to a container-like (e.g. maskier)
       c.id === of.key.id ||
-      c.id === of.key.id.split(".")[0] // {id}.positioned or {id}.scroll-wrap TODO: this logic can cause problem later on.
+      c.id === of.key.id.split(".")[0] || // {id}.positioned or {id}.scroll-wrap TODO: this logic can cause problem later on.
+      of.key.id.includes(c.id) // other cases
   );
   if (!ogchild) {
     console.error(
