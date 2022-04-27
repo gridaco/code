@@ -1,0 +1,28 @@
+{
+  "name": "api.designto.codes",
+  "description": "@designto/code with a rest api",
+  "version": "0.1.0",
+  "scripts": {
+    "deploy:prod": "sls deploy",
+    "dev": "sls offline start"
+  },
+  "dependencies": {
+    "@vendia/serverless-express": "^4.8.0",
+    "express": "^4.18.0",
+    "express-useragent": "^1.0.15",
+    "moment": "^2.29.3",
+    "nanoid": "^3.3.3",
+    "serverless-http": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.95",
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.29",
+    "serverless": "^3.15.2",
+    "serverless-domain-manager": "^6.0.3",
+    "serverless-offline": "^8.7.0",
+    "serverless-plugin-optimize": "^4.2.1-rc.1",
+    "serverless-plugin-typescript": "^2.1.2",
+    "typescript": "^4.6.3"
+  }
+}

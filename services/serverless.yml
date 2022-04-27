@@ -1,0 +1,45 @@
+# Welcome to serverless. Read the docs
+# https://serverless.com/framework/docs/
+
+service: d2c
+useDotenv: true
+custom:
+  customDomain:
+    domainName: api.designto.codes
+    basePath: ""
+    hostedZoneId: us-west-1
+    stage: "production"
+
+  serverless-offline:
+    httpPort: 6627
+
+provider:
+  name: aws
+  memorySize: 128
+  runtime: nodejs12.x
+  apiGateway:
+    shouldStartNameWithService: true
+  region: us-west-1
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+
+# The `functions` block defines what code to deploy
+functions:
+  api:
+    handler: src/index.handler
+    maximumEventAge: 60
+    maximumRetryAttempts: 0
+    timeout: 12
+    events:
+      - http:
+          path: /{proxy+}
+          method: any
+      - http:
+          path: /
+          method: get
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-plugin-optimize
+  - serverless-offline
+  - serverless-domain-manager
