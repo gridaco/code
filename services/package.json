@@ -1,5 +1,5 @@
 {
-  "name": "api.designto.codes",
+  "name": "services",
   "description": "@designto/code with a rest api",
   "version": "0.1.0",
   "scripts": {

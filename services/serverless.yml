@@ -39,6 +39,9 @@ functions:
           path: /
           method: get
 
+package:
+  excludeDevDependencies: false
+
 plugins:
   - serverless-plugin-monorepo
   - serverless-plugin-typescript
