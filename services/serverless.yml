@@ -12,6 +12,7 @@ custom:
 
   serverless-offline:
     httpPort: 6627
+    noPrependStageInUrl: true
 
 provider:
   name: aws
@@ -39,6 +40,7 @@ functions:
           method: get
 
 plugins:
+  - serverless-plugin-monorepo
   - serverless-plugin-typescript
   - serverless-plugin-optimize
   - serverless-offline
