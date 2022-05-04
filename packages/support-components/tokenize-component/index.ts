@@ -8,7 +8,13 @@ import { ReflectSceneNode } from "@design-sdk/figma-node";
 function fromComponentNode(component: ComponentNode) {
   assert(component);
 
-  const reflect = convert.intoReflectNode(component);
+  // FIXME:
+  // FIXME:
+  // FIXME: setting "rest" temporarily. this should be set to match the environment. (currently development is done with web editor, so rest is set to true)
+  const reflect = convert.intoReflectNode(component, null, "rest");
+  // FIXME:
+  // FIXME:
+  // FIXME:
 
   return handleNode(reflect);
 }
