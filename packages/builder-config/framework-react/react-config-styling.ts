@@ -1,4 +1,4 @@
-import type { CssStylingConfig } from "../framework-css";
+import type { CssStylingConfig } from "../module-css";
 
 export type ReactStylingStrategy =
   | ReactInlineCssConfig
