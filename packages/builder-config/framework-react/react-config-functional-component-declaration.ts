@@ -1,10 +1,4 @@
-export type ReactFunctionalComponentDeclarationConfig = ReactFunctionalComponentDeclarationStyle;
+import type { JsxFunctionalComponentDeclarationConfig } from "../module-jsx";
 
-interface ReactFunctionalComponentDeclarationStyle {
-  // props: {} vs {} : {}
-  props_parameter_style: UnwrappedPropsCodeStyle;
-}
-
-interface UnwrappedPropsCodeStyle {
-  style: "unwrapped-props";
-}
+export type ReactFunctionalComponentDeclarationConfig =
+  JsxFunctionalComponentDeclarationConfig;
