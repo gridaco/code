@@ -14,6 +14,9 @@ export interface StandardLibraryManifest {
   name: string;
   version: string;
   website: string;
+  alias?: {
+    [key: string]: string;
+  };
 }
 
 /**
@@ -250,6 +253,10 @@ const SOLIDJS: StandardLibraryManifest = {
   name: "solid-js",
   version: "1.4.4",
   website: "https://www.solidjs.com/",
+  alias: {
+    web: "web",
+    store: "store",
+  },
 };
 
 /**
