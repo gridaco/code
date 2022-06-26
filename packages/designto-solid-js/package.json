@@ -1,0 +1,13 @@
+{
+  "name": "@designto/solid-js",
+  "version": "0.0.0",
+  "description": "design to solidjs",
+  "main": "dist/index.js",
+  "repository": "https://github.com/bridgedxyz/design-to-code",
+  "author": "Grida OSS authors",
+  "license": "Apache 2.0",
+  "private": false,
+  "dependencies": {
+    "@web-builder/react": "17.0.2"
+  }
+}
