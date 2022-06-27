@@ -1,7 +1,10 @@
 import {
+  CallExpression,
+  HTML5IDENTIFIERNAMES,
   Html5IdentifierNames,
   Identifier,
   PropertyAccessExpression,
+  StringLiteral,
   TaggedTemplateExpression,
   TemplateLiteral,
   VariableDeclaration,
@@ -10,32 +13,46 @@ import { SyntaxKind } from "@coli.codes/core-syntax-kind";
 import { CSSProperties, buildCSSStyleData } from "@coli.codes/css";
 import { formatStyledTempplateString } from "../formatter";
 
+type StyledComponentDeclarationInitializerIdentifierOption<T extends string> =
+  | {
+      type: "tagged-template";
+      identifier: T;
+    }
+  | {
+      type: "parameter-call";
+      identifier: Html5IdentifierNames;
+    };
+
+/**
+ * taggged template - styled.div`${style}`
+ * parameter call - styled("div")`${style(props)}` (only sting)
+ */
+export type StyledComponentDeclarationInitializer<
+  T extends string = Html5IdentifierNames
+> = {
+  style: CSSProperties;
+} & StyledComponentDeclarationInitializerIdentifierOption<T>;
+
 export class StyledComponentDeclaration extends VariableDeclaration {
   static styledIdentifier = new Identifier("styled");
-
-  styledAccessorIdentifier: Html5IdentifierNames;
+  private initialization: StyledComponentDeclarationInitializer;
   constructor(
     readonly name: string,
-    params: {
-      style: CSSProperties;
-      identifier: Html5IdentifierNames;
-    }
+    initializer: StyledComponentDeclarationInitializer
   ) {
     super(name, {
       initializer: StyledComponentDeclaration.makeinitializer(
-        params.style,
-        params.identifier
+        initializer.style,
+        initializer.identifier,
+        initializer.type
       ),
       kind: SyntaxKind.ConstKeyword,
     });
 
-    this.styledAccessorIdentifier = params.identifier;
+    this.initialization = initializer;
   }
 
-  static makeinitializer(
-    style: CSSProperties,
-    html5tag: Html5IdentifierNames
-  ): TaggedTemplateExpression {
+  static makeStyleBody(style: CSSProperties) {
     const { main, pseudo } = buildCSSStyleData(style);
 
     const pseudos = Object.keys(pseudo).map((k) => {
@@ -49,14 +66,46 @@ export class StyledComponentDeclaration extends VariableDeclaration {
     const body = [main, ...pseudos].join("\n");
 
     const _fmted_body = formatStyledTempplateString(body);
-    return new TaggedTemplateExpression(
-      new PropertyAccessExpression(
-        StyledComponentDeclaration.styledIdentifier,
-        html5tag
-      ),
-      {
-        template: new TemplateLiteral(`\n${_fmted_body}\n`),
+
+    return _fmted_body;
+  }
+
+  static makeinitializer(
+    style: CSSProperties,
+    identifier: string,
+    type: StyledComponentDeclarationInitializerIdentifierOption<any>["type"] = "tagged-template"
+  ): TaggedTemplateExpression {
+    let tag;
+    switch (type) {
+      // styled("div")`${style}`
+      // styled(Container)`${style}`
+      case "parameter-call": {
+        // check if the identifier is a html5 identifier. if not, then do not make it a string literal.
+        let arg;
+        if (HTML5IDENTIFIERNAMES.includes(identifier)) {
+          arg = new StringLiteral(identifier);
+        } else {
+          arg = new Identifier(identifier);
+        }
+
+        tag = new CallExpression(
+          StyledComponentDeclaration.styledIdentifier,
+          arg
+        );
+        break;
       }
-    );
+      // styled.div`${style}`
+      case "tagged-template": {
+        tag = new PropertyAccessExpression(
+          StyledComponentDeclaration.styledIdentifier,
+          identifier
+        );
+        break;
+      }
+    }
+
+    return new TaggedTemplateExpression(tag, {
+      template: new TemplateLiteral(`\n${this.makeStyleBody(style)}\n`),
+    });
   }
 }

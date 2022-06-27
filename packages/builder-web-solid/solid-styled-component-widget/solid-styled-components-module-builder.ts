@@ -24,6 +24,7 @@ import {
   EsWidgetModuleExportable,
   makeEsWidgetModuleFile,
 } from "@web-builder/module-es";
+import { Framework } from "@grida/builder-platform-types";
 
 export class SolidStyledComponentsBuilder {
   private readonly entry: JsxWidget;
@@ -47,10 +48,14 @@ export class SolidStyledComponentsBuilder {
       ReservedKeywordPlatformPresets.react
     );
 
-    this.stylesMapper = new StylesConfigMapBuilder(entry, {
-      namer: this.namer,
-      rename_tag: true /** styled component tag shoule be renamed */,
-    });
+    this.stylesMapper = new StylesConfigMapBuilder(
+      entry,
+      {
+        namer: this.namer,
+        rename_tag: true /** styled component tag shoule be renamed */,
+      },
+      Framework.solid
+    );
 
     this.stylesRepository = new StylesRepository(
       this.stylesMapper.map,

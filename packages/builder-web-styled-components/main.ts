@@ -1,5 +1,6 @@
 import { handle } from "@coli.codes/builder";
 import { ScopedVariableNamer } from "@coli.codes/naming";
+import { Framework } from "@grida/builder-platform-types";
 import { WidgetWithStyle } from "@web-builder/core";
 import { JSXIdentifier } from "coli";
 import {
@@ -35,6 +36,7 @@ export function buildStyledComponentConfig(
        */
       root: boolean;
     };
+    framework: Framework;
   }
 ): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
   const config = widget.jsxConfig() as StyledComponentJSXElementConfig;
@@ -49,6 +51,7 @@ export function buildStyledComponentConfig(
 
   const styledVar = composeStyledComponentVariableDeclaration(widget, {
     name: namePref,
+    framework: preferences.framework,
   });
 
   if (styledVar) {

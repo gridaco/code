@@ -3,6 +3,7 @@ import { WidgetKeyId, StylableJsxWidget, JsxWidget } from "@web-builder/core";
 import { JSXAttributes, JSXIdentifier, ScopedVariableNamer } from "coli";
 import { buildStyledComponentConfig } from "@web-builder/styled";
 import assert from "assert";
+import { Framework } from "@grida/builder-platform-types";
 
 export interface JSXWithStyleElementConfig {
   id: string;
@@ -46,14 +47,13 @@ interface StylesConfigMapBuilderPreference {
  * optimizer can be passed here to reduce the output size of the config map.
  */
 export class StylesConfigMapBuilder {
-  readonly root: JsxWidget;
-  readonly preferences: StylesConfigMapBuilderPreference;
   private _map: WidgetStyleConfigMap = new Map();
 
-  constructor(root: JsxWidget, preferences: StylesConfigMapBuilderPreference) {
-    this.root = root;
-    this.preferences = preferences;
-
+  constructor(
+    readonly root: JsxWidget,
+    readonly preferences: StylesConfigMapBuilderPreference,
+    readonly framework: Framework
+  ) {
     this._mapper(this.root);
   }
 
@@ -75,6 +75,7 @@ export class StylesConfigMapBuilder {
         context: {
           root: isRoot,
         },
+        framework: this.framework,
       });
 
       // set to map

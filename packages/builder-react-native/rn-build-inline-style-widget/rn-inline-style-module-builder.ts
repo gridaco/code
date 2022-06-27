@@ -4,6 +4,7 @@ import {
   reactnative as reactnative_config,
 } from "@designto/config";
 import type { JsxWidget } from "@web-builder/core";
+import { Framework } from "@grida/builder-platform-types";
 import {
   react_imports,
   ReactWidgetModuleExportable,
@@ -66,10 +67,14 @@ export class ReactNativeInlineStyleBuilder {
       ReservedKeywordPlatformPresets.react
     );
 
-    this.stylesMapper = new StylesConfigMapBuilder(entry, {
-      namer: this.namer,
-      rename_tag: false,
-    });
+    this.stylesMapper = new StylesConfigMapBuilder(
+      entry,
+      {
+        namer: this.namer,
+        rename_tag: false,
+      },
+      Framework.reactnative
+    );
   }
 
   private stylesConfig(

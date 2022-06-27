@@ -25,6 +25,7 @@ import {
   create_duplication_reduction_map,
 } from "@web-builder/styled";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
+import { Framework } from "@grida/builder-platform-types";
 
 export class ReactNativeStyledComponentsModuleBuilder {
   private readonly entry: JsxWidget;
@@ -48,10 +49,14 @@ export class ReactNativeStyledComponentsModuleBuilder {
       ReservedKeywordPlatformPresets.react
     );
 
-    this.stylesMapper = new StylesConfigMapBuilder(entry, {
-      namer: this.namer,
-      rename_tag: true /** styled component tag shoule be renamed */,
-    });
+    this.stylesMapper = new StylesConfigMapBuilder(
+      entry,
+      {
+        namer: this.namer,
+        rename_tag: true /** styled component tag shoule be renamed */,
+      },
+      Framework.reactnative
+    );
 
     this.stylesRepository = new StylesRepository(
       this.stylesMapper.map,

@@ -26,6 +26,7 @@ import {
 import { cssToJson } from "@web-builder/styles/_utils";
 import { CSSProperties } from "@coli.codes/css";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
+import { Framework } from "@grida/builder-platform-types";
 
 /**
  * InlineCss Style builder for React Framework
@@ -61,10 +62,14 @@ export class ReactInlineCssBuilder {
       ReservedKeywordPlatformPresets.react
     );
 
-    this.stylesMapper = new StylesConfigMapBuilder(entry, {
-      namer: this.namer,
-      rename_tag: false,
-    });
+    this.stylesMapper = new StylesConfigMapBuilder(
+      entry,
+      {
+        namer: this.namer,
+        rename_tag: false,
+      },
+      Framework.react
+    );
   }
 
   private stylesConfig(

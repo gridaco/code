@@ -4,11 +4,13 @@ import type { NamePreference } from "./types";
 import { handle } from "@coli.codes/builder";
 import { StyledComponentDeclaration } from "./styled-component-declaration";
 import type { Html5IdentifierNames } from "@coli.codes/jsx-core";
+import { Framework } from "@grida/builder-platform-types";
 
 export function composeStyledComponentVariableDeclaration(
   widgetConfig: WidgetWithStyle,
   preferences: {
     name?: NamePreference;
+    framework?: Framework;
   }
 ): StyledComponentDeclaration {
   const jsxconfg = widgetConfig.jsxConfig() as StylableJSXElementConfig;
@@ -36,6 +38,10 @@ export function composeStyledComponentVariableDeclaration(
   const should_be_styled = style_data !== null;
   if (should_be_styled) {
     return new StyledComponentDeclaration(varname, {
+      type:
+        preferences.framework == Framework.solid
+          ? "parameter-call"
+          : "tagged-template",
       style: style_data,
       identifier: handle(jsxconfg.tag).name as Html5IdentifierNames,
     });
