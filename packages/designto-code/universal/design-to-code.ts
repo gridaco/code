@@ -2,6 +2,7 @@ import { input, output, config, build } from "../proc";
 import { tokenize, wrap } from "@designto/token";
 import { Widget } from "@reflect-ui/core";
 import * as toReact from "@designto/react";
+import * as toSolid from "@designto/solid-js";
 import * as toReactNative from "@designto/react-native";
 import * as toVanilla from "@designto/vanilla";
 import * as toFlutter from "@designto/flutter";
@@ -163,6 +164,16 @@ export async function designToCode({
         })),
         ..._extend_result,
       };
+    case "solid-js":
+      return {
+        ...(await designToSolid({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          solid_config: framework_config,
+          asset_config: asset_config,
+        })),
+        ..._extend_result,
+      };
   }
 
   throw `The framework "${
@@ -298,7 +309,57 @@ export async function designToFlutter({
 }
 
 export function designToVue(input: input.IDesignInput): output.ICodeOutput {
-  return;
+  throw "not ready";
+}
+
+export async function designToSolid({
+  input,
+  solid_config,
+  build_config,
+  asset_config,
+}: {
+  input: { widget: Widget; reusable_widget_tree? };
+  solid_config: config.SolidFrameworkConfig;
+  /**
+   * TODO: pass this to tokenizer +@
+   */
+  build_config: config.BuildConfiguration;
+  asset_config?: AssetsConfig;
+}): Promise<output.ICodeOutput> {
+  if (
+    build_config.disable_components ||
+    // automatically fallbacks if no valid data was passed
+    !input.reusable_widget_tree
+  ) {
+    const reactwidget = toReact.buildReactWidget(input.widget);
+    if (process.env.NODE_ENV === "development") {
+      console.info("dev::", "final web token composed", {
+        input: input.widget,
+        reactwidget,
+      });
+    }
+
+    const res = toSolid.buildSolidApp(reactwidget, solid_config);
+    // ------------------------------------------------------------------------
+    // finilize temporary assets
+    // this should be placed somewhere else
+    if (
+      asset_config?.asset_repository &&
+      !asset_config.skip_asset_replacement
+    ) {
+      const assets = await fetch_all_assets(asset_config.asset_repository);
+      res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
+      res.scaffold.raw = dangerous_temporary_asset_replacer(
+        res.scaffold.raw,
+        assets
+      );
+    }
+    // ------------------------------------------------------------------------
+
+    return res;
+  } else {
+    throw "Reusable components for solid-js is not ready yet.";
+  }
 }
 
 export async function designToVanillaPreview({

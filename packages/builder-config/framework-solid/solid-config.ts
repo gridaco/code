@@ -6,7 +6,7 @@ import type { SolidStylingStrategy } from "./solid-config-styling";
  * builder configuration input for solidjs applications
  */
 export interface SolidFrameworkConfig {
-  framework: "solidjs";
+  framework: "solid-js";
   language: Language.jsx | Language.tsx;
   styling: SolidStylingStrategy;
   component_declaration_style: {
