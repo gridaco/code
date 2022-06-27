@@ -90,7 +90,6 @@ export class SolidStyledComponentsBuilder {
   partImportStyled() {
     switch (this.config.module) {
       case "solid-styled-components":
-        console.log("impot", solid_styled_components_imports.import_styled);
         return solid_styled_components_imports.import_styled;
     }
     throw (
