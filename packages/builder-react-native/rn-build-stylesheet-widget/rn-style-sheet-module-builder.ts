@@ -12,7 +12,6 @@ import {
 } from "coli";
 import {
   react_imports,
-  makeReactModuleFile,
   ReactWidgetModuleExportable,
 } from "@web-builder/react-core";
 import { JsxWidget } from "@web-builder/core";
@@ -30,6 +29,7 @@ import {
 import { reactnative_imports } from "../rn-import-specifications";
 import { StyleSheetDeclaration } from "../rn-style-sheet";
 import { create_duplication_reduction_map } from "@web-builder/styled";
+import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 
 export class ReactNativeStyleSheetModuleBuilder {
   private readonly entry: JsxWidget;
@@ -201,7 +201,7 @@ export class ReactStyleSheeteWidgetModuleExportable extends ReactWidgetModuleExp
   }: {
     exporting: react_config.ReactComponentExportingCofnig;
   }) {
-    return makeReactModuleFile({
+    return makeEsWidgetModuleFile({
       name: this.name,
       path: "src/components",
       imports: this.imports,

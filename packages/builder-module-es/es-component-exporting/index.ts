@@ -39,7 +39,7 @@ export function add_export_keyword_modifier_to_declaration<
  * @param id
  * @returns
  */
-export function wrap_with_export_assignment_react_component_identifier(
+export function wrap_with_export_assignment_jsx_component_identifier(
   id: Identifier
 ) {
   return new ExportAssignment(id);

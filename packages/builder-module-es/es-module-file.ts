@@ -8,19 +8,19 @@ import {
   Declaration,
 } from "coli";
 import { SyntaxKind } from "@coli.codes/core-syntax-kind";
-import { react as react_config } from "@designto/config";
+import { EsComponentExportingCofnig } from "@designto/config/module-es";
 import {
   add_export_keyword_modifier_to_declaration,
-  wrap_with_export_assignment_react_component_identifier,
-} from "../react-component-exporting";
+  wrap_with_export_assignment_jsx_component_identifier,
+} from "./es-component-exporting";
 
-export class ReactModuleFile extends SourceFile {
+export class EsWidgetModuleFile extends SourceFile {
   constructor({ name, path }: { name: string; path: string }) {
     super({ name, path });
   }
 }
 
-export function makeReactModuleFile({
+export function makeEsWidgetModuleFile({
   name,
   path,
   imports,
@@ -34,11 +34,11 @@ export function makeReactModuleFile({
   body: BlockStatement;
   declarations: Declaration[];
   config: {
-    exporting: react_config.ReactComponentExportingCofnig;
+    exporting: EsComponentExportingCofnig;
   };
 }) {
   const { exporting } = config;
-  const file = new ReactModuleFile({
+  const file = new EsWidgetModuleFile({
     name: `${name}.tsx`,
     path: path,
   });
@@ -75,8 +75,8 @@ export function makeReactModuleFile({
         case "after-declaration":
           file.declare(named_function_declaration);
           file.export(
-            wrap_with_export_assignment_react_component_identifier(
-              named_function_declaration.id
+            wrap_with_export_assignment_jsx_component_identifier(
+              named_function_declaration.id!
             )
           );
           file.declare(...declarations);
@@ -85,8 +85,8 @@ export function makeReactModuleFile({
           file.declare(named_function_declaration);
           file.declare(...declarations);
           file.export(
-            wrap_with_export_assignment_react_component_identifier(
-              named_function_declaration.id
+            wrap_with_export_assignment_jsx_component_identifier(
+              named_function_declaration.id!
             )
           );
           break;
