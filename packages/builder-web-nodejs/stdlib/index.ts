@@ -9,14 +9,16 @@
 };
  * ```
  */
-export interface StandardLibraryManifest {
+export interface StandardLibraryManifest<
+  ALIAS extends {
+    [key: string]: { name: string };
+  } = any
+> {
   id: string;
   name: string;
   version: string;
   website: string;
-  alias?: {
-    [key: string]: string;
-  };
+  alias?: ALIAS;
 }
 
 /**
@@ -248,14 +250,17 @@ const MATERIAL_UI_STYLES: StandardLibraryManifest = {
  * last-update: Jun 2022
  * https://www.npmjs.com/package/solid-js
  */
-const SOLIDJS: StandardLibraryManifest = {
+const SOLIDJS: StandardLibraryManifest<{
+  web: { name: string };
+  store: { name: string };
+}> = {
   id: "solid-js",
   name: "solid-js",
   version: "1.4.4",
   website: "https://www.solidjs.com/",
   alias: {
-    web: "web",
-    store: "store",
+    web: { name: "solid-js/web" },
+    store: { name: "solid-js/store" },
   },
 };
 

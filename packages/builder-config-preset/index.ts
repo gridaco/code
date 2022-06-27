@@ -1,7 +1,7 @@
 import { config, react } from "@designto/config";
 import { Framework, Language } from "@grida/builder-platform-types";
 
-const _react_component_declaration_style = {
+const _jsx_component_declaration_style = {
   exporting_style: {
     type: "export-named-functional-component",
     exporting_position: "with-declaration",
@@ -18,7 +18,7 @@ export const react_presets = {
       type: "styled-components",
       module: "@emotion/styled",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   react_with_styled_components: <config.ReactFrameworkConfig>{
     framework: Framework.react,
@@ -27,7 +27,7 @@ export const react_presets = {
       type: "styled-components",
       module: "styled-components",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   react_with_emotion_styled: <config.ReactFrameworkConfig>{
     framework: Framework.react,
@@ -36,7 +36,7 @@ export const react_presets = {
       type: "styled-components",
       module: "@emotion/styled",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   react_with_inline_css: <config.ReactFrameworkConfig>{
     framework: Framework.react,
@@ -44,7 +44,7 @@ export const react_presets = {
     styling: {
       type: "inline-css",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   react_with_css_module: <config.ReactFrameworkConfig>{
     framework: Framework.react,
@@ -55,14 +55,14 @@ export const react_presets = {
       importDefault: "styles",
       loader: "css-loader",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   react_with_css: <config.ReactFrameworkConfig>{
     framework: Framework.react,
     language: Language.tsx,
     styling: { type: "css" },
   },
-  component_declaration_style: _react_component_declaration_style,
+  component_declaration_style: _jsx_component_declaration_style,
 };
 
 export const reactnative_presets = {
@@ -75,7 +75,7 @@ export const reactnative_presets = {
       type: "react-native-stylesheet",
       module: "react-native",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   reactnative_with_style_sheet: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
@@ -86,7 +86,7 @@ export const reactnative_presets = {
       type: "react-native-stylesheet",
       module: "react-native",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   reactnative_with_styled_components: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
@@ -97,7 +97,7 @@ export const reactnative_presets = {
       type: "styled-components",
       module: "styled-components/native",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   reactnative_with_inline_style: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
@@ -107,7 +107,28 @@ export const reactnative_presets = {
     styling: {
       type: "inline-style",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
+  },
+};
+
+export const solid_presets = {
+  solid_with_styled_components: <config.SolidFrameworkConfig>{
+    framework: Framework.solid,
+    language: Language.tsx,
+    styling: {
+      type: "styled-components",
+      module: "solid-styled-components",
+    },
+    component_declaration_style: _jsx_component_declaration_style,
+  },
+  solid_default: <config.SolidFrameworkConfig>{
+    framework: Framework.solid,
+    language: Language.tsx,
+    styling: {
+      type: "styled-components",
+      module: "solid-styled-components",
+    },
+    component_declaration_style: _jsx_component_declaration_style,
   },
 };
 
