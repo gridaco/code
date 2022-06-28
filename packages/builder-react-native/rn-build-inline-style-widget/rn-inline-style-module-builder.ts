@@ -4,10 +4,10 @@ import {
   reactnative as reactnative_config,
 } from "@designto/config";
 import type { JsxWidget } from "@web-builder/core";
+import { Framework } from "@grida/builder-platform-types";
 import {
   react_imports,
   ReactWidgetModuleExportable,
-  makeReactModuleFile,
 } from "@web-builder/react-core";
 import {
   buildJsx,
@@ -30,6 +30,7 @@ import {
 import { cssToJson } from "@web-builder/styles/_utils";
 import { CSSProperties } from "@coli.codes/css";
 import { reactnative_imports } from "..";
+import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 
 /**
  * CSS In JS Style builder for React Framework
@@ -66,10 +67,14 @@ export class ReactNativeInlineStyleBuilder {
       ReservedKeywordPlatformPresets.react
     );
 
-    this.stylesMapper = new StylesConfigMapBuilder(entry, {
-      namer: this.namer,
-      rename_tag: false,
-    });
+    this.stylesMapper = new StylesConfigMapBuilder(
+      entry,
+      {
+        namer: this.namer,
+        rename_tag: false,
+      },
+      Framework.reactnative
+    );
   }
 
   private stylesConfig(
@@ -182,7 +187,7 @@ export class ReactNativeInlineStyleWidgetModuleExportable extends ReactWidgetMod
   }: {
     exporting: react_config.ReactComponentExportingCofnig;
   }) {
-    return makeReactModuleFile({
+    return makeEsWidgetModuleFile({
       name: this.name,
       path: "src/components",
       imports: this.imports,

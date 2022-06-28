@@ -4,7 +4,6 @@ import type { JsxWidget } from "@web-builder/core";
 import {
   react_imports,
   ReactWidgetModuleExportable,
-  makeReactModuleFile,
 } from "@web-builder/react-core";
 import {
   buildJsx,
@@ -26,6 +25,8 @@ import {
 } from "coli";
 import { cssToJson } from "@web-builder/styles/_utils";
 import { CSSProperties } from "@coli.codes/css";
+import { makeEsWidgetModuleFile } from "@web-builder/module-es";
+import { Framework } from "@grida/builder-platform-types";
 
 /**
  * InlineCss Style builder for React Framework
@@ -61,10 +62,14 @@ export class ReactInlineCssBuilder {
       ReservedKeywordPlatformPresets.react
     );
 
-    this.stylesMapper = new StylesConfigMapBuilder(entry, {
-      namer: this.namer,
-      rename_tag: false,
-    });
+    this.stylesMapper = new StylesConfigMapBuilder(
+      entry,
+      {
+        namer: this.namer,
+        rename_tag: false,
+      },
+      Framework.react
+    );
   }
 
   private stylesConfig(
@@ -174,7 +179,7 @@ export class ReactInlineCssWidgetModuleExportable extends ReactWidgetModuleExpor
   }: {
     exporting: react_config.ReactComponentExportingCofnig;
   }) {
-    return makeReactModuleFile({
+    return makeEsWidgetModuleFile({
       name: this.name,
       path: "src/components",
       imports: this.imports,

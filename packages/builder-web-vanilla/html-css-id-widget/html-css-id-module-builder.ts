@@ -22,6 +22,7 @@ import {
   stringfy,
   StringLiteral,
 } from "coli";
+import { Framework } from "@grida/builder-platform-types";
 
 interface CssDeclaration {
   key: {
@@ -59,10 +60,14 @@ export class HtmlIdCssModuleBuilder {
       ReservedKeywordPlatformPresets.html
     );
 
-    this.stylesMapper = new StylesConfigMapBuilder(entry, {
-      namer: this.namer,
-      rename_tag: false, // vanilla html tag will be preserved.
-    });
+    this.stylesMapper = new StylesConfigMapBuilder(
+      entry,
+      {
+        namer: this.namer,
+        rename_tag: false, // vanilla html tag will be preserved.
+      },
+      Framework.vanilla
+    );
 
     this.stylesRepository = new StylesRepository(
       this.stylesMapper.map,

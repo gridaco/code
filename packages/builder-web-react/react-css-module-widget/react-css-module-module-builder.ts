@@ -12,7 +12,6 @@ import {
 } from "coli";
 import {
   react_imports,
-  makeReactModuleFile,
   ReactWidgetModuleExportable,
 } from "@web-builder/react-core";
 import { JsxWidget } from "@web-builder/core";
@@ -25,6 +24,8 @@ import {
 } from "@web-builder/core/builders";
 import { react as react_config } from "@designto/config";
 import { create_duplication_reduction_map } from "@web-builder/styled";
+import { makeEsWidgetModuleFile } from "@web-builder/module-es";
+import { Framework } from "@grida/builder-platform-types";
 
 /**
  * CSS Module Builder for React Framework
@@ -54,10 +55,14 @@ export class ReactCssModuleBuilder {
       ReservedKeywordPlatformPresets.react
     );
 
-    this.stylesMapper = new StylesConfigMapBuilder(entry, {
-      namer: this.namer,
-      rename_tag: false /** css-module tag shoule not be renamed */,
-    });
+    this.stylesMapper = new StylesConfigMapBuilder(
+      entry,
+      {
+        namer: this.namer,
+        rename_tag: false /** css-module tag shoule not be renamed */,
+      },
+      Framework.react
+    );
     this.stylesRepository = new StylesRepository(
       this.stylesMapper.map,
       create_duplication_reduction_map
@@ -182,7 +187,7 @@ export class ReactCssModuleWidgetModuleExportable extends ReactWidgetModuleExpor
   }: {
     exporting: react_config.ReactComponentExportingCofnig;
   }) {
-    return makeReactModuleFile({
+    return makeEsWidgetModuleFile({
       name: this.name,
       path: "src/components",
       imports: this.imports,

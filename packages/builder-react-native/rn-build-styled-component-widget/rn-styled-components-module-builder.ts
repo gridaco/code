@@ -3,7 +3,6 @@ import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
 import { BlockStatement, ImportDeclaration, Return } from "coli";
 import {
   react_imports,
-  makeReactModuleFile,
   ReactWidgetModuleExportable,
   emotion_styled_imports,
   styled_components_imports,
@@ -25,6 +24,8 @@ import {
   StyledComponentDeclaration,
   create_duplication_reduction_map,
 } from "@web-builder/styled";
+import { makeEsWidgetModuleFile } from "@web-builder/module-es";
+import { Framework } from "@grida/builder-platform-types";
 
 export class ReactNativeStyledComponentsModuleBuilder {
   private readonly entry: JsxWidget;
@@ -48,10 +49,14 @@ export class ReactNativeStyledComponentsModuleBuilder {
       ReservedKeywordPlatformPresets.react
     );
 
-    this.stylesMapper = new StylesConfigMapBuilder(entry, {
-      namer: this.namer,
-      rename_tag: true /** styled component tag shoule be renamed */,
-    });
+    this.stylesMapper = new StylesConfigMapBuilder(
+      entry,
+      {
+        namer: this.namer,
+        rename_tag: true /** styled component tag shoule be renamed */,
+      },
+      Framework.reactnative
+    );
 
     this.stylesRepository = new StylesRepository(
       this.stylesMapper.map,
@@ -170,7 +175,7 @@ export class ReactNativeStyledComponentWidgetModuleExportable extends ReactWidge
   }: {
     exporting: react_config.ReactComponentExportingCofnig;
   }) {
-    return makeReactModuleFile({
+    return makeEsWidgetModuleFile({
       name: this.name,
       path: "src/components",
       imports: this.imports,
