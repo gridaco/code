@@ -2,10 +2,7 @@ import {
   ScopedVariableNamer,
   ReservedKeywordPlatformPresets,
 } from "@coli.codes/naming";
-import {
-  NoStyleJSXElementConfig,
-  StyledComponentJSXElementConfig,
-} from "@web-builder/styled";
+import { StyledComponentJSXElementConfig } from "@web-builder/styled";
 import { solid_js_imports } from "@web-builder/solid-js";
 import { JsxWidget } from "@web-builder/core";
 import { BlockStatement, ImportDeclaration, Return } from "coli";
@@ -25,15 +22,9 @@ import {
   makeEsWidgetModuleFile,
 } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
+import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
 
-export class SolidStyledComponentsBuilder {
-  private readonly entry: JsxWidget;
-  private readonly widgetName: string;
-  private readonly stylesMapper: StylesConfigMapBuilder;
-  private readonly stylesRepository: StylesRepository;
-  private readonly namer: ScopedVariableNamer;
-  readonly config: solid_config.SolidStyledComponentsConfig;
-
+export class SolidStyledComponentsBuilder extends JsxComponentModuleBuilder<solid_config.SolidStyledComponentsConfig> {
   constructor({
     entry,
     config,
@@ -41,41 +32,40 @@ export class SolidStyledComponentsBuilder {
     entry: JsxWidget;
     config: solid_config.SolidStyledComponentsConfig;
   }) {
-    this.entry = entry;
-    this.widgetName = entry.key.name;
-    this.namer = new ScopedVariableNamer(
-      entry.key.id,
-      ReservedKeywordPlatformPresets.react
-    );
-
-    this.stylesMapper = new StylesConfigMapBuilder(
+    super({
       entry,
+      config,
+      framework: Framework.solid,
+      namer: new ScopedVariableNamer(
+        entry.key.id,
+        ReservedKeywordPlatformPresets.react
+      ),
+    });
+  }
+
+  protected initStylesConfigMapBuilder() {
+    return new StylesConfigMapBuilder(
+      this.entry,
       {
         namer: this.namer,
         rename_tag: true /** styled component tag shoule be renamed */,
       },
       Framework.solid
     );
+  }
 
-    this.stylesRepository = new StylesRepository(
+  protected initStylesRepository() {
+    return new StylesRepository(
       this.stylesMapper.map,
       create_duplication_reduction_map
     );
-
-    this.config = config;
   }
 
-  private styledConfig(
-    id: string
-  ): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
-    return this.stylesRepository.get(id);
-  }
-
-  private jsxBuilder(widget: JsxWidget) {
+  protected jsxBuilder(widget: JsxWidget) {
     return buildJsx(
       widget,
       {
-        styledConfig: (id) => this.styledConfig(id),
+        styledConfig: (id) => this.stylesConfig(id),
       },
       {
         self_closing_if_possible: true,
@@ -83,11 +73,11 @@ export class SolidStyledComponentsBuilder {
     );
   }
 
-  partImports() {
+  protected partImports() {
     return [this.partImportSolidJS(), this.partImportStyled()];
   }
 
-  partImportStyled() {
+  protected partImportStyled() {
     switch (this.config.module) {
       case "solid-styled-components":
         return solid_styled_components_imports.import_styled;
@@ -98,16 +88,16 @@ export class SolidStyledComponentsBuilder {
     );
   }
 
-  partImportSolidJS() {
+  protected partImportSolidJS() {
     return solid_js_imports.render;
   }
 
-  partBody(): BlockStatement {
+  protected partBody(): BlockStatement {
     let jsxTree = this.jsxBuilder(this.entry);
     return new BlockStatement(new Return(jsxTree));
   }
 
-  partDeclarations() {
+  protected partDeclarations() {
     return Array.from(this.stylesRepository.uniques())
       .map((k) => {
         return (this.stylesRepository.get(k) as StyledComponentJSXElementConfig)
@@ -116,7 +106,7 @@ export class SolidStyledComponentsBuilder {
       .filter((s) => s);
   }
 
-  asExportableModule() {
+  public asExportableModule() {
     const body = this.partBody();
     const imports = this.partImports();
     const styled_declarations = this.partDeclarations();

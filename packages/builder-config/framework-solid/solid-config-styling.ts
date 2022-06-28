@@ -13,6 +13,15 @@ interface SolidOfficialStyledComponentsConfig {
   module: "solid-styled-components";
 }
 
+/**
+ * Inline css styling
+ *
+ * ```tsx
+ * // examples
+ * <div style={{background: "black", width: 50, height: 50, "font-weight": 800}}/>
+ * <div style={box_style}/>
+ * ```
+ */
 export interface SolidInlineCssConfig {
   type: "inline-css";
 }

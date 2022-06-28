@@ -10,7 +10,6 @@ import {
   StylesConfigMapBuilder,
   JSXWithoutStyleElementConfig,
   JSXWithStyleElementConfig,
-  WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
 import {
   BlockStatement,
@@ -27,6 +26,7 @@ import { cssToJson } from "@web-builder/styles/_utils";
 import { CSSProperties } from "@coli.codes/css";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
+import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
 
 /**
  * InlineCss Style builder for React Framework
@@ -40,13 +40,7 @@ import { Framework } from "@grida/builder-platform-types";
  * ```
  *
  */
-export class ReactInlineCssBuilder {
-  private readonly entry: JsxWidget;
-  private readonly widgetName: string;
-  readonly config: react_config.ReactInlineCssConfig;
-  private readonly namer: ScopedVariableNamer;
-  private readonly stylesMapper: StylesConfigMapBuilder;
-
+export class ReactInlineCssBuilder extends JsxComponentModuleBuilder<react_config.ReactInlineCssConfig> {
   constructor({
     entry,
     config,
@@ -54,16 +48,20 @@ export class ReactInlineCssBuilder {
     entry: JsxWidget;
     config: react_config.ReactInlineCssConfig;
   }) {
-    this.entry = entry;
-    this.widgetName = entry.key.name;
-    this.config = config;
-    this.namer = new ScopedVariableNamer(
-      entry.key.id,
-      ReservedKeywordPlatformPresets.react
-    );
-
-    this.stylesMapper = new StylesConfigMapBuilder(
+    super({
       entry,
+      config,
+      framework: Framework.react,
+      namer: new ScopedVariableNamer(
+        entry.key.id,
+        ReservedKeywordPlatformPresets.react
+      ),
+    });
+  }
+
+  protected initStylesConfigMapBuilder() {
+    return new StylesConfigMapBuilder(
+      this.entry,
       {
         namer: this.namer,
         rename_tag: false,
@@ -72,13 +70,17 @@ export class ReactInlineCssBuilder {
     );
   }
 
-  private stylesConfig(
-    id: string
-  ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
-    return this.stylesMapper.map.get(id);
+  protected initStylesRepository() {
+    return false as false;
   }
 
-  private jsxBuilder(widget: JsxWidget) {
+  protected stylesConfig(
+    id: string
+  ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
+    return this.stylesMapper.map.get(id)!;
+  }
+
+  protected jsxBuilder(widget: JsxWidget) {
     return buildJsx(
       widget,
       {
@@ -99,7 +101,9 @@ export class ReactInlineCssBuilder {
             //
             const styledata: CSSProperties =
               (cfg as JSXWithStyleElementConfig).style ?? {};
-            const reactStyleData = cssToJson(styledata);
+            const reactStyleData = cssToJson(styledata, {
+              camelcase: true,
+            });
             const properties: PropertyAssignment[] = Object.keys(
               reactStyleData
             ).map(
@@ -123,7 +127,7 @@ export class ReactInlineCssBuilder {
           const newattributes = [
             ...(_default_attr ?? []),
             //
-            style,
+            style!,
           ];
 
           cfg.attributes = newattributes;

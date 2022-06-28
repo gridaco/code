@@ -98,7 +98,7 @@ export class HtmlIdCssModuleBuilder {
   }
 
   partStyles(): string {
-    const css_declarations = [];
+    const css_declarations: CssDeclaration[] = [];
 
     // global vanilla default injected style
     css_declarations.push({
@@ -117,7 +117,7 @@ export class HtmlIdCssModuleBuilder {
           const item = this.stylesRepository.get(
             k
           ) as JSXWithStyleElementConfig;
-          return {
+          return <CssDeclaration>{
             key: {
               name: item.id,
               selector: "id",
@@ -256,7 +256,7 @@ ${indenter(body, 2)}
  * ```
  */
 function formatCssBodyString(styleString: string): string {
-  const lines = [];
+  const lines: string[] = [];
   let declarationLines = 0;
   styleString.split("\n").map((l) => {
     if (l.length <= 1) {

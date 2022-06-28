@@ -22,12 +22,19 @@ import camel from "camelcase-css";
  * ```
  * @param payload
  */
-export function cssToJson(payload: CSSProperties) {
+export function cssToJson(
+  payload: CSSProperties,
+  options?: {
+    camelcase?: boolean;
+  }
+) {
   const obj = Object.keys(payload).reduce(function (previous, key) {
-    const camelkey = camel(key);
+    // handle option "camelcase"
+    key = options?.camelcase ? camel(key) : key;
+
     return {
       ...previous,
-      [camelkey]: payload[key],
+      [key]: payload[key],
     };
   }, {});
   return JSON.parse(JSON.stringify(obj));

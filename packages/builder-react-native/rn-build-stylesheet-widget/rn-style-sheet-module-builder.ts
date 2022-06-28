@@ -18,8 +18,6 @@ import { JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
   StylesConfigMapBuilder,
-  JSXWithoutStyleElementConfig,
-  JSXWithStyleElementConfig,
   StylesRepository,
 } from "@web-builder/core/builders";
 import {
@@ -31,15 +29,8 @@ import { StyleSheetDeclaration } from "../rn-style-sheet";
 import { create_duplication_reduction_map } from "@web-builder/styled";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
-
-export class ReactNativeStyleSheetModuleBuilder {
-  private readonly entry: JsxWidget;
-  private readonly widgetName: string;
-  private readonly stylesMapper: StylesConfigMapBuilder;
-  private readonly stylesRepository: StylesRepository;
-  private readonly namer: ScopedVariableNamer;
-  readonly config: rn_config.ReactNativeStyleSheetConfig;
-
+import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
+export class ReactNativeStyleSheetModuleBuilder extends JsxComponentModuleBuilder<rn_config.ReactNativeStyleSheetConfig> {
   constructor({
     entry,
     config,
@@ -47,37 +38,36 @@ export class ReactNativeStyleSheetModuleBuilder {
     entry: JsxWidget;
     config: rn_config.ReactNativeStyleSheetConfig;
   }) {
-    this.entry = entry;
-    this.widgetName = entry.key.name;
-    this.namer = new ScopedVariableNamer(
-      entry.key.id,
-      ReservedKeywordPlatformPresets.react
-    );
-
-    this.stylesMapper = new StylesConfigMapBuilder(
+    super({
       entry,
+      config,
+      framework: Framework.reactnative,
+      namer: new ScopedVariableNamer(
+        entry.key.id,
+        ReservedKeywordPlatformPresets.react
+      ),
+    });
+  }
+
+  protected initStylesConfigMapBuilder(): StylesConfigMapBuilder {
+    return new StylesConfigMapBuilder(
+      this.entry,
       {
         namer: this.namer,
         rename_tag: false /** rn StyleSheet tag shoule not be renamed */,
       },
       Framework.reactnative
     );
+  }
 
-    this.stylesRepository = new StylesRepository(
+  protected initStylesRepository(): false | StylesRepository {
+    return new StylesRepository(
       this.stylesMapper.map,
       create_duplication_reduction_map
     );
-
-    this.config = config;
   }
 
-  private stylesConfig(
-    id: string
-  ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
-    return this.stylesRepository.get(id);
-  }
-
-  private jsxBuilder(widget: JsxWidget) {
+  protected jsxBuilder(widget: JsxWidget) {
     // e.g. const styles = StyleSheet.create({...});
     const stylesheetDeclarationIdentifier = new Identifier("styles");
     const style_attr_name = "style";
@@ -109,7 +99,7 @@ export class ReactNativeStyleSheetModuleBuilder {
                   // TODO: this currently generates styles.ClassName, but it also should be compatible with
                   // - styles.className
                   // - styles.["class-name"]
-                  cfg.id
+                  cfg.id!
                 )
               )
             );
@@ -118,7 +108,7 @@ export class ReactNativeStyleSheetModuleBuilder {
           const newattributes = [
             ...(_default_attr ?? []),
             //
-            styleAttr,
+            styleAttr!,
           ];
 
           cfg.attributes = newattributes;
@@ -132,30 +122,30 @@ export class ReactNativeStyleSheetModuleBuilder {
     );
   }
 
-  partImports(): Array<ImportDeclaration> {
+  protected partImports(): Array<ImportDeclaration> {
     return [this.partImportReact(), this.partImportReactNative()];
   }
 
-  partImportReact(): ImportDeclaration {
+  protected partImportReact(): ImportDeclaration {
     return react_imports.import_react_from_react;
   }
 
-  partImportReactNative(): ImportDeclaration {
+  protected partImportReactNative(): ImportDeclaration {
     return reactnative_imports.import_react_prepacked;
   }
 
-  partBody(): BlockStatement {
+  protected partBody(): BlockStatement {
     let jsxTree = this.jsxBuilder(this.entry);
     return new BlockStatement(new Return(jsxTree));
   }
 
-  partStyleSheetDeclaration(): StyleSheetDeclaration<any> {
+  protected partStyleSheetDeclaration(): StyleSheetDeclaration<any> {
     const styles = Array.from(this.stylesRepository.uniques()).reduce(
       (p, c) => {
         const cfg = this.stylesConfig(c);
         return {
           ...p,
-          [cfg.id]: "style" in cfg && cfg.style,
+          [cfg.id!]: "style" in cfg && cfg.style,
         };
       },
       {}
@@ -166,7 +156,7 @@ export class ReactNativeStyleSheetModuleBuilder {
     });
   }
 
-  asExportableModule() {
+  public asExportableModule() {
     const body = this.partBody();
     const imports = this.partImports();
     const declarations = this.partStyleSheetDeclaration();
