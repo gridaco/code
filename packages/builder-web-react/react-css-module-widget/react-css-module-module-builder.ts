@@ -18,14 +18,13 @@ import { JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
   StylesConfigMapBuilder,
-  JSXWithoutStyleElementConfig,
-  JSXWithStyleElementConfig,
   StylesRepository,
 } from "@web-builder/core/builders";
 import { react as react_config } from "@designto/config";
 import { create_duplication_reduction_map } from "@web-builder/styled";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
+import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
 
 /**
  * CSS Module Builder for React Framework
@@ -33,14 +32,7 @@ import { Framework } from "@grida/builder-platform-types";
  *
  * - @todo: css file not built
  */
-export class ReactCssModuleBuilder {
-  private readonly entry: JsxWidget;
-  private readonly widgetName: string;
-  private readonly stylesMapper: StylesConfigMapBuilder;
-  private readonly stylesRepository: StylesRepository;
-  private readonly namer: ScopedVariableNamer;
-  readonly config: react_config.ReactCssModuleConfig;
-
+export class ReactCssModuleBuilder extends JsxComponentModuleBuilder<react_config.ReactCssModuleConfig> {
   constructor({
     entry,
     config,
@@ -48,36 +40,36 @@ export class ReactCssModuleBuilder {
     entry: JsxWidget;
     config: react_config.ReactCssModuleConfig;
   }) {
-    this.entry = entry;
-    this.widgetName = entry.key.name;
-    this.namer = new ScopedVariableNamer(
-      entry.key.id,
-      ReservedKeywordPlatformPresets.react
-    );
-
-    this.stylesMapper = new StylesConfigMapBuilder(
+    super({
       entry,
+      config,
+      framework: Framework.react,
+      namer: new ScopedVariableNamer(
+        entry.key.id,
+        ReservedKeywordPlatformPresets.react
+      ),
+    });
+  }
+
+  protected initStylesConfigMapBuilder(): StylesConfigMapBuilder {
+    return new StylesConfigMapBuilder(
+      this.entry,
       {
         namer: this.namer,
         rename_tag: false /** css-module tag shoule not be renamed */,
       },
       Framework.react
     );
-    this.stylesRepository = new StylesRepository(
+  }
+
+  protected initStylesRepository(): false | StylesRepository {
+    return new StylesRepository(
       this.stylesMapper.map,
       create_duplication_reduction_map
     );
-
-    this.config = config;
   }
 
-  private stylesConfig(
-    id: string
-  ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
-    return this.stylesRepository.get(id);
-  }
-
-  private jsxBuilder(widget: JsxWidget) {
+  protected jsxBuilder(widget: JsxWidget) {
     // e.g. import styles from "./?.module.css"
     const importedCssIdentifier = new Identifier(this.config.importDefault);
 
@@ -108,7 +100,7 @@ export class ReactCssModuleBuilder {
                   // TODO: this currently generates styles.ClassName, but it also should be compatible with
                   // - styles.className
                   // - styles.["class-name"]
-                  cfg.id
+                  cfg.id!
                 )
               )
             );
@@ -117,7 +109,7 @@ export class ReactCssModuleBuilder {
           const newattributes = [
             ...(_default_attr ?? []),
             //
-            className,
+            className!,
           ];
 
           cfg.attributes = newattributes;
@@ -131,15 +123,15 @@ export class ReactCssModuleBuilder {
     );
   }
 
-  partImports(): Array<ImportDeclaration> {
+  protected partImports(): Array<ImportDeclaration> {
     return [this.partImportReact(), this.partImportModuleCss()];
   }
 
-  partImportReact(): ImportDeclaration {
+  protected partImportReact(): ImportDeclaration {
     return react_imports.import_react_from_react;
   }
 
-  partImportModuleCss(): ImportDeclaration {
+  protected partImportModuleCss(): ImportDeclaration {
     return (
       new Import()
         .importDefault(this.config.importDefault)
@@ -149,12 +141,12 @@ export class ReactCssModuleBuilder {
     );
   }
 
-  partBody(): BlockStatement {
+  protected partBody(): BlockStatement {
     let jsxTree = this.jsxBuilder(this.entry);
     return new BlockStatement(new Return(jsxTree));
   }
 
-  asExportableModule() {
+  public asExportableModule() {
     const body = this.partBody();
     const imports = this.partImports();
     return new ReactCssModuleWidgetModuleExportable(this.widgetName, {

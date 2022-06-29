@@ -12,9 +12,8 @@ import {
 import {
   buildJsx,
   StylesConfigMapBuilder,
-  JSXWithoutStyleElementConfig,
   JSXWithStyleElementConfig,
-  WidgetStyleConfigMap,
+  StylesRepository,
 } from "@web-builder/core/builders";
 import {
   BlockStatement,
@@ -31,6 +30,7 @@ import { cssToJson } from "@web-builder/styles/_utils";
 import { CSSProperties } from "@coli.codes/css";
 import { reactnative_imports } from "..";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
+import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
 
 /**
  * CSS In JS Style builder for React Framework
@@ -44,14 +44,7 @@ import { makeEsWidgetModuleFile } from "@web-builder/module-es";
  * ```
  *
  */
-export class ReactNativeInlineStyleBuilder {
-  private readonly entry: JsxWidget;
-  private readonly widgetName: string;
-  readonly config: reactnative_config.ReactNativeInlineStyleConfig;
-  private readonly namer: ScopedVariableNamer;
-  private readonly stylesMapper: StylesConfigMapBuilder;
-  // private readonly stylesConfigWidgetMap: WidgetStyleConfigMap;
-
+export class ReactNativeInlineStyleBuilder extends JsxComponentModuleBuilder<reactnative_config.ReactNativeInlineStyleConfig> {
   constructor({
     entry,
     config,
@@ -59,16 +52,20 @@ export class ReactNativeInlineStyleBuilder {
     entry: JsxWidget;
     config: reactnative_config.ReactNativeInlineStyleConfig;
   }) {
-    this.entry = entry;
-    this.widgetName = entry.key.name;
-    this.config = config;
-    this.namer = new ScopedVariableNamer(
-      entry.key.id,
-      ReservedKeywordPlatformPresets.react
-    );
-
-    this.stylesMapper = new StylesConfigMapBuilder(
+    super({
       entry,
+      config,
+      framework: Framework.reactnative,
+      namer: new ScopedVariableNamer(
+        entry.key.id,
+        ReservedKeywordPlatformPresets.react
+      ),
+    });
+  }
+
+  protected initStylesConfigMapBuilder() {
+    return new StylesConfigMapBuilder(
+      this.entry,
       {
         namer: this.namer,
         rename_tag: false,
@@ -77,13 +74,11 @@ export class ReactNativeInlineStyleBuilder {
     );
   }
 
-  private stylesConfig(
-    id: string
-  ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
-    return this.stylesMapper.map.get(id);
+  protected initStylesRepository(): false | StylesRepository {
+    return false;
   }
 
-  private jsxBuilder(widget: JsxWidget) {
+  protected jsxBuilder(widget: JsxWidget) {
     return buildJsx(
       widget,
       {
@@ -104,7 +99,9 @@ export class ReactNativeInlineStyleBuilder {
             //
             const styledata: CSSProperties =
               (cfg as JSXWithStyleElementConfig).style ?? {};
-            const reactStyleData = cssToJson(styledata);
+            const reactStyleData = cssToJson(styledata, {
+              camelcase: true,
+            });
             const properties: PropertyAssignment[] = Object.keys(
               reactStyleData
             ).map(
@@ -128,7 +125,7 @@ export class ReactNativeInlineStyleBuilder {
           const newattributes = [
             ...(_default_attr ?? []),
             //
-            style,
+            style!,
           ];
 
           cfg.attributes = newattributes;
@@ -142,14 +139,14 @@ export class ReactNativeInlineStyleBuilder {
     );
   }
 
-  partImports() {
+  protected partImports() {
     return [
       react_imports.import_react_from_react,
       reactnative_imports.import_react_prepacked,
     ];
   }
 
-  partBody(): BlockStatement {
+  protected partBody(): BlockStatement {
     let jsxTree = this.jsxBuilder(this.entry);
     return new BlockStatement(new Return(jsxTree));
   }

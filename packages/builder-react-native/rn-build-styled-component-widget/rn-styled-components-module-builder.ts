@@ -26,15 +26,9 @@ import {
 } from "@web-builder/styled";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
+import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
 
-export class ReactNativeStyledComponentsModuleBuilder {
-  private readonly entry: JsxWidget;
-  private readonly widgetName: string;
-  private readonly stylesMapper: StylesConfigMapBuilder;
-  private readonly stylesRepository: StylesRepository;
-  private readonly namer: ScopedVariableNamer;
-  readonly config: rn_config.ReactNativeStyledComponentsConfig;
-
+export class ReactNativeStyledComponentsModuleBuilder extends JsxComponentModuleBuilder<rn_config.ReactNativeStyledComponentsConfig> {
   constructor({
     entry,
     config,
@@ -42,41 +36,40 @@ export class ReactNativeStyledComponentsModuleBuilder {
     entry: JsxWidget;
     config: rn_config.ReactNativeStyledComponentsConfig;
   }) {
-    this.entry = entry;
-    this.widgetName = entry.key.name;
-    this.namer = new ScopedVariableNamer(
-      entry.key.id,
-      ReservedKeywordPlatformPresets.react
-    );
-
-    this.stylesMapper = new StylesConfigMapBuilder(
+    super({
       entry,
+      config,
+      framework: Framework.solid,
+      namer: new ScopedVariableNamer(
+        entry.key.id,
+        ReservedKeywordPlatformPresets.react
+      ),
+    });
+  }
+
+  protected initStylesConfigMapBuilder(): StylesConfigMapBuilder {
+    return new StylesConfigMapBuilder(
+      this.entry,
       {
         namer: this.namer,
         rename_tag: true /** styled component tag shoule be renamed */,
       },
       Framework.reactnative
     );
+  }
 
-    this.stylesRepository = new StylesRepository(
+  protected initStylesRepository(): false | StylesRepository {
+    return new StylesRepository(
       this.stylesMapper.map,
       create_duplication_reduction_map
     );
-
-    this.config = config;
   }
 
-  private styledConfig(
-    id: string
-  ): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
-    return this.stylesRepository.get(id);
-  }
-
-  private jsxBuilder(widget: JsxWidget) {
+  protected jsxBuilder(widget: JsxWidget) {
     return buildJsx(
       widget,
       {
-        styledConfig: (id) => this.styledConfig(id),
+        styledConfig: (id) => this.stylesConfig(id),
       },
       {
         self_closing_if_possible: true,
@@ -84,7 +77,7 @@ export class ReactNativeStyledComponentsModuleBuilder {
     );
   }
 
-  partImports() {
+  protected partImports() {
     return [
       this.partImportReact(),
       this.partImportReactNative(),
@@ -92,7 +85,7 @@ export class ReactNativeStyledComponentsModuleBuilder {
     ];
   }
 
-  partImportStyled() {
+  protected partImportStyled() {
     switch (this.config.module) {
       case "@emotion/native":
         return emotion_styled_imports.import_styled_from_emotion_native;
@@ -101,29 +94,29 @@ export class ReactNativeStyledComponentsModuleBuilder {
     }
   }
 
-  partImportReact() {
+  protected partImportReact() {
     return react_imports.import_react_from_react;
   }
 
-  partImportReactNative() {
+  protected partImportReactNative() {
     return reactnative_imports.import_react_prepacked;
   }
 
-  partBody(): BlockStatement {
+  protected partBody(): BlockStatement {
     let jsxTree = this.jsxBuilder(this.entry);
     return new BlockStatement(new Return(jsxTree));
   }
 
-  partDeclarations() {
+  protected partDeclarations() {
     return Array.from(this.stylesRepository.uniques())
       .map((k) => {
-        return (this.styledConfig(k) as StyledComponentJSXElementConfig)
+        return (this.stylesConfig(k) as StyledComponentJSXElementConfig)
           .styledComponent;
       })
       .filter((s) => s);
   }
 
-  asExportableModule() {
+  public asExportableModule() {
     const body = this.partBody();
     const imports = this.partImports();
     const styled_declarations = this.partDeclarations();

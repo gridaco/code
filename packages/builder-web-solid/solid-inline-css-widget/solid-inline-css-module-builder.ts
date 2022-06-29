@@ -1,15 +1,13 @@
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
-import { react as react_config } from "@designto/config";
+import { solid as solid_config } from "@designto/config";
 import type { JsxWidget } from "@web-builder/core";
-import {
-  react_imports,
-  ReactWidgetModuleExportable,
-} from "@web-builder/react-core";
+import { solid_js_imports } from "@web-builder/solid-js";
 import {
   buildJsx,
   StylesConfigMapBuilder,
   JSXWithoutStyleElementConfig,
   JSXWithStyleElementConfig,
+  StylesRepository,
 } from "@web-builder/core/builders";
 import {
   BlockStatement,
@@ -20,16 +18,20 @@ import {
   PropertyAssignment,
   Return,
   ScopedVariableNamer,
+  StringLiteral,
   TemplateLiteral,
 } from "coli";
 import { cssToJson } from "@web-builder/styles/_utils";
 import { CSSProperties } from "@coli.codes/css";
-import { makeEsWidgetModuleFile } from "@web-builder/module-es";
+import {
+  EsWidgetModuleExportable,
+  makeEsWidgetModuleFile,
+} from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
 import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
 
 /**
- * InlineCss Style builder for React Framework
+ * InlineCss Style builder for SolidJS Framework
  *
  *
  * css in js is a pattern that allows you to use css as a object in jsx, to property `style`.
@@ -40,44 +42,38 @@ import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
  * ```
  *
  */
-export class ReactInlineCssBuilder extends JsxComponentModuleBuilder<react_config.ReactInlineCssConfig> {
+export class SolidInlineCssBuilder extends JsxComponentModuleBuilder<solid_config.SolidInlineCssConfig> {
   constructor({
     entry,
     config,
   }: {
     entry: JsxWidget;
-    config: react_config.ReactInlineCssConfig;
+    config: solid_config.SolidInlineCssConfig;
   }) {
     super({
       entry,
       config,
-      framework: Framework.react,
+      framework: Framework.solid,
       namer: new ScopedVariableNamer(
         entry.key.id,
-        ReservedKeywordPlatformPresets.react
+        ReservedKeywordPlatformPresets.solidjs
       ),
     });
   }
 
-  protected initStylesConfigMapBuilder() {
+  protected initStylesConfigMapBuilder(): StylesConfigMapBuilder {
     return new StylesConfigMapBuilder(
       this.entry,
       {
         namer: this.namer,
         rename_tag: false,
       },
-      Framework.react
+      Framework.solid
     );
   }
 
-  protected initStylesRepository() {
-    return false as false;
-  }
-
-  protected stylesConfig(
-    id: string
-  ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
-    return this.stylesMapper.map.get(id)!;
+  protected initStylesRepository(): false | StylesRepository {
+    return false;
   }
 
   protected jsxBuilder(widget: JsxWidget) {
@@ -89,7 +85,7 @@ export class ReactInlineCssBuilder extends JsxComponentModuleBuilder<react_confi
           const _default_attr = cfg.attributes;
 
           const existingstyleattr = _default_attr?.find(
-            // where style refers to react's jsx style attribute
+            // where style refers to solid's jsx style attribute
             (a) => a.name.name === "style"
           );
 
@@ -101,16 +97,19 @@ export class ReactInlineCssBuilder extends JsxComponentModuleBuilder<react_confi
             //
             const styledata: CSSProperties =
               (cfg as JSXWithStyleElementConfig).style ?? {};
-            const reactStyleData = cssToJson(styledata, {
-              camelcase: true,
+            const solidStyleData = cssToJson(styledata, {
+              camelcase: false,
             });
             const properties: PropertyAssignment[] = Object.keys(
-              reactStyleData
+              solidStyleData
             ).map(
               (key) =>
                 new PropertyAssignment({
-                  name: key as unknown as Identifier,
-                  initializer: new TemplateLiteral(reactStyleData[key]),
+                  // optional string literal assignment when key is kebab-cased
+                  name: key.includes("-")
+                    ? new StringLiteral(key)
+                    : new Identifier(key),
+                  initializer: new TemplateLiteral(solidStyleData[key]),
                 })
             );
 
@@ -141,26 +140,26 @@ export class ReactInlineCssBuilder extends JsxComponentModuleBuilder<react_confi
     );
   }
 
-  partImports() {
-    return [react_imports.import_react_from_react];
+  protected partImports() {
+    return [solid_js_imports.render];
   }
 
-  partBody(): BlockStatement {
+  protected partBody(): BlockStatement {
     let jsxTree = this.jsxBuilder(this.entry);
     return new BlockStatement(new Return(jsxTree));
   }
 
-  asExportableModule() {
+  public asExportableModule() {
     const body = this.partBody();
     const imports = this.partImports();
-    return new ReactInlineCssWidgetModuleExportable(this.widgetName, {
+    return new SolidInlineCssWidgetModuleExportable(this.widgetName, {
       body,
       imports,
     });
   }
 }
 
-export class ReactInlineCssWidgetModuleExportable extends ReactWidgetModuleExportable {
+export class SolidInlineCssWidgetModuleExportable extends EsWidgetModuleExportable {
   constructor(
     name,
     {
@@ -181,7 +180,7 @@ export class ReactInlineCssWidgetModuleExportable extends ReactWidgetModuleExpor
   asFile({
     exporting,
   }: {
-    exporting: react_config.ReactComponentExportingCofnig;
+    exporting: solid_config.SolidComponentExportingCofnig;
   }) {
     return makeEsWidgetModuleFile({
       name: this.name,
