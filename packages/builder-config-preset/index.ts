@@ -130,6 +130,14 @@ export const solid_presets = {
     },
     component_declaration_style: _jsx_component_declaration_style,
   },
+  solid_with_inline_css: <config.SolidFrameworkConfig>{
+    framework: Framework.solid,
+    language: Language.tsx,
+    styling: {
+      type: "inline-css",
+    },
+    component_declaration_style: _jsx_component_declaration_style,
+  },
 };
 
 export const vanilla_presets = {
