@@ -1,0 +1,7 @@
+{
+  "name": "@web-builder/preact",
+  "version": "0.0.0",
+  "dependencies": {
+    "@web-builder/react": "18.2.0"
+  }
+}

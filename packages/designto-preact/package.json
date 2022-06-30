@@ -1,10 +1,13 @@
 {
-  "name": "@designto/solid-js",
+  "name": "@designto/preact",
   "version": "0.0.0",
-  "description": "design to solid-js",
+  "description": "design to preact",
   "main": "dist/index.js",
   "repository": "https://github.com/gridaco/designto-code",
   "author": "Grida OSS authors",
   "license": "Apache 2.0",
-  "private": false
+  "private": false,
+  "dependencies": {
+    "@web-builder/preact": "0.0.0"
+  }
 }
