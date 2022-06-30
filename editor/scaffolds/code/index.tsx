@@ -174,6 +174,23 @@ export function CodeSegment() {
               }
               break;
             }
+            case "preact": {
+              switch (o.styling) {
+                case "styled-components":
+                  c = get_framework_config("preact-with-styled-components");
+                  break;
+                case "inline-css":
+                  c = get_framework_config("preact-with-inline-css");
+                  break;
+                case "css-module":
+                  c = get_framework_config("preact-with-css-module");
+                  break;
+                case "css":
+                  // TODO:
+                  break;
+              }
+              break;
+            }
             case "solid-js": {
               switch (o.styling) {
                 case "styled-components":

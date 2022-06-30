@@ -111,6 +111,61 @@ export const reactnative_presets = {
   },
 };
 
+export const preact_presets = {
+  default: <config.PreactFrameworkConfig>{
+    framework: Framework.preact,
+    language: Language.tsx,
+    styling: {
+      type: "styled-components",
+      module: "@emotion/styled",
+    },
+    component_declaration_style: _jsx_component_declaration_style,
+  },
+  with_styled_components: <config.PreactFrameworkConfig>{
+    framework: Framework.preact,
+    language: Language.tsx,
+    styling: {
+      type: "styled-components",
+      module: "styled-components",
+    },
+    component_declaration_style: _jsx_component_declaration_style,
+  },
+  with_emotion_styled: <config.PreactFrameworkConfig>{
+    framework: Framework.preact,
+    language: Language.tsx,
+    styling: {
+      type: "styled-components",
+      module: "@emotion/styled",
+    },
+    component_declaration_style: _jsx_component_declaration_style,
+  },
+  with_inline_css: <config.PreactFrameworkConfig>{
+    framework: Framework.preact,
+    language: Language.tsx,
+    styling: {
+      type: "inline-css",
+    },
+    component_declaration_style: _jsx_component_declaration_style,
+  },
+  with_css_module: <config.PreactFrameworkConfig>{
+    framework: Framework.preact,
+    language: Language.tsx,
+    styling: {
+      type: "css-module",
+      lang: "css",
+      importDefault: "styles",
+      loader: "css-loader",
+    },
+    component_declaration_style: _jsx_component_declaration_style,
+  },
+  with_css: <config.PreactFrameworkConfig>{
+    framework: Framework.preact,
+    language: Language.tsx,
+    styling: { type: "css" },
+  },
+  component_declaration_style: _jsx_component_declaration_style,
+};
+
 export const solid_presets = {
   solid_with_styled_components: <config.SolidFrameworkConfig>{
     framework: Framework.solid,
@@ -177,6 +232,7 @@ export const all_preset_options__prod = [
   flutter_presets.flutter_default,
   react_presets.react_default,
   react_presets.react_with_styled_components,
+  preact_presets.default,
   vanilla_presets.vanilla_default,
   // react_with_css_in_jsx // NOT ON PRODUCTION
   // react_with_css // NOT ON PRODUCTION
