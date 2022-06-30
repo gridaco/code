@@ -24,6 +24,7 @@ const withTM = require("next-transpile-modules")([
   "@designto/vanilla",
   "@designto/react",
   "@designto/react-native",
+  "@designto/preact",
 
   "@code-features/assets",
   "@code-features/component",
@@ -93,6 +94,7 @@ const withTM = require("next-transpile-modules")([
   "@web-builder/react-core",
   "@web-builder/react",
   "@web-builder/react-native",
+  "@web-builder/preact",
   "@web-builder/reflect-ui",
   "@web-builder/styled",
   "@web-builder/styles",

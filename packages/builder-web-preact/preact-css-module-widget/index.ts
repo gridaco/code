@@ -1,1 +1,1 @@
-export { finalizeReactWidget_CssModule } from "./from-static-widget-tree";
+export { finalizePreactWidget_CssModule } from "./from-static-widget-tree";

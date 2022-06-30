@@ -6,7 +6,7 @@ import { PreactCssModuleBuilder } from "./preact-css-module-module-builder";
 /**
  * css-module pattern with
  */
-export function finalizeReactWidget_CssModule(
+export function finalizePreactWidget_CssModule(
   entry: JsxWidget,
   {
     styling,

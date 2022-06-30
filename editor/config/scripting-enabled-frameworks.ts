@@ -29,6 +29,11 @@ export const scripting_and_preview_framework_config: {
     nativeScripting: false,
     enabled: false,
   },
+  preact: {
+    nativePreview: true,
+    nativeScripting: true,
+    enabled: true,
+  },
   flutter: {
     nativePreview: false,
     nativeScripting: false,
@@ -39,6 +44,7 @@ export const scripting_and_preview_framework_config: {
     nativeScripting: false,
     enabled: false,
   },
+
   preview: null,
 } as const;
 
