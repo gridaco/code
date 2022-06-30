@@ -243,6 +243,25 @@ const MATERIAL_UI_STYLES: StandardLibraryManifest = {
 ///
 
 ///
+/// region preact
+///
+
+/**
+ * last-update: Jul 2022
+ * https://www.npmjs.com/package/preact
+ */
+const PREACT: StandardLibraryManifest = {
+  id: "preact",
+  name: "preact",
+  version: "10.8.2",
+  website: "https://preactjs.com/",
+};
+
+///
+/// endregion preact
+///
+
+///
 /// region solidjs
 ///
 
@@ -291,6 +310,9 @@ export const standard_libraries = {
 
   // react-native
   react_native: REACT_NATIVE,
+
+  // preact
+  preact: PREACT,
 
   // emotion
   emotion_css: EMOTION_CSS,
