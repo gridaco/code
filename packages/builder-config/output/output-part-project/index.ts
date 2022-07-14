@@ -1,5 +1,5 @@
 import { File } from "../output-file";
-import type { Module } from "../output-module";
+import type { ModuleFile } from "../output-module";
 
 /**
  * PartProject interface.
@@ -36,7 +36,7 @@ export interface ProjectPart {
 
   license?: string;
 
-  modules: Module[];
+  modules: ModuleFile[];
 
   files: File[];
 

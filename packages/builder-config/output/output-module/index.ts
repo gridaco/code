@@ -1,4 +1,7 @@
-export interface Module extends File {
+/**
+ * a
+ */
+export interface ModuleFile extends File {
   _type: "module";
   language: "ts" | "tsx" | "js" | "jsx" | "vue" | "dart" | "svelte";
 
