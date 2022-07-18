@@ -28,7 +28,7 @@ import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
 import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
 
-export class ReactStyledComponentsBuilder extends JsxComponentModuleBuilder<react_config.ReactStyledComponentsConfig> {
+export class ReactStyledComponentsModuleBuilder extends JsxComponentModuleBuilder<react_config.ReactStyledComponentsConfig> {
   constructor({
     entry,
     config,
@@ -99,13 +99,17 @@ export class ReactStyledComponentsBuilder extends JsxComponentModuleBuilder<reac
     return new BlockStatement(new Return(jsxTree));
   }
 
-  protected partDeclarations() {
+  private partStyledComponentsDeclarations() {
     return Array.from(this.stylesRepository.uniques())
       .map((k) => {
         return (this.stylesRepository.get(k) as StyledComponentJSXElementConfig)
           .styledComponent;
       })
       .filter((s) => s);
+  }
+
+  protected partDeclarations() {
+    return this.partStyledComponentsDeclarations();
   }
 
   public asExportableModule() {
