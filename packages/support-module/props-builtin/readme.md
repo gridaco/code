@@ -1,4 +1,4 @@
-# default props for widget modules
+# builtin props for widget modules
 
 **form events**
 
