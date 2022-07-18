@@ -150,7 +150,7 @@ function handleNode(
     return;
   }
 
-  let tokenizedTarget: Widget = null;
+  let tokenizedTarget: Widget | null | undefined = null;
 
   // flags handler
   if (!tokenizedTarget) {
@@ -160,6 +160,7 @@ function handleNode(
     ) {
       try {
         tokenizedTarget = flags_handling_gate(node);
+        console.log("handled flags", tokenizedTarget);
       } catch (e) {
         console.error("error while interpreting flags.. skipping", e);
       }
