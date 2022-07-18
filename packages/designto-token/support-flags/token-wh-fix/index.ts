@@ -7,7 +7,7 @@ import { unwrappedChild } from "../../wrappings";
 export function tokenize_flagged_fix_wh(
   node: ReflectSceneNode,
   flag: FixWHFlag[]
-): Widget {
+): Widget | undefined {
   if (!flag.length) return;
   const widget = tokenize(node, {
     should_ignore_flag: (n) => {
