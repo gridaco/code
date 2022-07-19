@@ -26,9 +26,9 @@ import {
 } from "@web-builder/styled";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
 
-export class ReactNativeStyledComponentsModuleBuilder extends JsxComponentModuleBuilder<rn_config.ReactNativeStyledComponentsConfig> {
+export class ReactNativeStyledComponentsModuleBuilder extends JSXWidgetModuleBuilder<rn_config.ReactNativeStyledComponentsConfig> {
   constructor({
     entry,
     config,

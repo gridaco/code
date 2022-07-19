@@ -26,7 +26,7 @@ import { cssToJson } from "@web-builder/styles/_utils";
 import { CSSProperties } from "@coli.codes/css";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
 
 /**
  * InlineCss Style builder for React Framework
@@ -40,7 +40,7 @@ import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
  * ```
  *
  */
-export class ReactInlineCssBuilder extends JsxComponentModuleBuilder<react_config.ReactInlineCssConfig> {
+export class ReactInlineCssBuilder extends JSXWidgetModuleBuilder<react_config.ReactInlineCssConfig> {
   constructor({
     entry,
     config,

@@ -22,9 +22,9 @@ import {
   makeEsWidgetModuleFile,
 } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
 
-export class SolidStyledComponentsBuilder extends JsxComponentModuleBuilder<solid_config.SolidStyledComponentsConfig> {
+export class SolidStyledComponentsBuilder extends JSXWidgetModuleBuilder<solid_config.SolidStyledComponentsConfig> {
   constructor({
     entry,
     config,

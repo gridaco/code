@@ -28,7 +28,7 @@ import {
   makeEsWidgetModuleFile,
 } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
 
 /**
  * InlineCss Style builder for SolidJS Framework
@@ -42,7 +42,7 @@ import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
  * ```
  *
  */
-export class SolidInlineCssBuilder extends JsxComponentModuleBuilder<solid_config.SolidInlineCssConfig> {
+export class SolidInlineCssBuilder extends JSXWidgetModuleBuilder<solid_config.SolidInlineCssConfig> {
   constructor({
     entry,
     config,

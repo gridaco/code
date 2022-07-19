@@ -2,10 +2,7 @@ import {
   ScopedVariableNamer,
   ReservedKeywordPlatformPresets,
 } from "@coli.codes/naming";
-import {
-  NoStyleJSXElementConfig,
-  StyledComponentJSXElementConfig,
-} from "@web-builder/styled";
+import { StyledComponentJSXElementConfig } from "@web-builder/styled";
 import {
   react_imports,
   ReactWidgetModuleExportable,
@@ -26,9 +23,9 @@ import {
 } from "@web-builder/styled";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
 
-export class ReactStyledComponentsModuleBuilder extends JsxComponentModuleBuilder<react_config.ReactStyledComponentsConfig> {
+export class ReactStyledComponentsModuleBuilder extends JSXWidgetModuleBuilder<react_config.ReactStyledComponentsConfig> {
   constructor({
     entry,
     config,

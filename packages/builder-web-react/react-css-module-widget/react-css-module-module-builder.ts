@@ -24,7 +24,7 @@ import { react as react_config } from "@designto/config";
 import { create_duplication_reduction_map } from "@web-builder/styled";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
 
 /**
  * CSS Module Builder for React Framework
@@ -32,7 +32,7 @@ import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
  *
  * - @todo: css file not built
  */
-export class ReactCssModuleBuilder extends JsxComponentModuleBuilder<react_config.ReactCssModuleConfig> {
+export class ReactCssModuleBuilder extends JSXWidgetModuleBuilder<react_config.ReactCssModuleConfig> {
   constructor({
     entry,
     config,

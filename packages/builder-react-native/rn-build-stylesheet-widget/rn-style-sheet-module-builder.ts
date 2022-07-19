@@ -29,8 +29,8 @@ import { StyleSheetDeclaration } from "../rn-style-sheet";
 import { create_duplication_reduction_map } from "@web-builder/styled";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
-export class ReactNativeStyleSheetModuleBuilder extends JsxComponentModuleBuilder<rn_config.ReactNativeStyleSheetConfig> {
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+export class ReactNativeStyleSheetModuleBuilder extends JSXWidgetModuleBuilder<rn_config.ReactNativeStyleSheetConfig> {
   constructor({
     entry,
     config,

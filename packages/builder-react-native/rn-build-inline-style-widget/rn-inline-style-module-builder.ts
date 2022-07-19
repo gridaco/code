@@ -30,7 +30,7 @@ import { cssToJson } from "@web-builder/styles/_utils";
 import { CSSProperties } from "@coli.codes/css";
 import { reactnative_imports } from "..";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
 
 /**
  * CSS In JS Style builder for React Framework
@@ -44,7 +44,7 @@ import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
  * ```
  *
  */
-export class ReactNativeInlineStyleBuilder extends JsxComponentModuleBuilder<reactnative_config.ReactNativeInlineStyleConfig> {
+export class ReactNativeInlineStyleBuilder extends JSXWidgetModuleBuilder<reactnative_config.ReactNativeInlineStyleConfig> {
   constructor({
     entry,
     config,
