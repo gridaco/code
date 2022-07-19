@@ -61,6 +61,8 @@ export interface ProjectPart {
 
   /**
    * the main entry point of the project (just like in package.json for example)
+   *
+   * to locate the main file
    */
   main: string;
 }
