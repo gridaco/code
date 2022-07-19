@@ -13,7 +13,7 @@ import {
   ScopedVariableNamer,
 } from "coli";
 
-export abstract class JsxComponentModuleBuilder<CONFIG> {
+export abstract class JSXWidgetModuleBuilder<CONFIG> {
   readonly entry: JsxWidget;
   readonly widgetName: string;
   readonly config: CONFIG;
