@@ -139,6 +139,10 @@ export class ReactNativeStyleSheetModuleBuilder extends JSXWidgetModuleBuilder<r
     return new BlockStatement(new Return(jsxTree));
   }
 
+  protected partDocumentation() {
+    return undefined;
+  }
+
   protected partStyleSheetDeclaration(): StyleSheetDeclaration<any> {
     const styles = Array.from(this.stylesRepository.uniques()).reduce(
       (p, c) => {

@@ -67,7 +67,7 @@ function Widget({ ...props }: WidgetProps) {
  * }
  * ```
  * ---
- * @param props (any) - this widget does not contains any typed props, but you can pass dynamic props as you want.
+ * @param props (any) - this widget does not requires props. you can pass custom dynamic props to the widget as you want (on typescript, it will raise type check issues).
  *
  * ---
  * @preview

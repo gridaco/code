@@ -149,6 +149,10 @@ export class SolidInlineCssBuilder extends JSXWidgetModuleBuilder<solid_config.S
     return new BlockStatement(new Return(jsxTree));
   }
 
+  protected partDocumentation() {
+    return undefined;
+  }
+
   public asExportableModule() {
     const body = this.partBody();
     const imports = this.partImports();

@@ -97,6 +97,10 @@ export class SolidStyledComponentsBuilder extends JSXWidgetModuleBuilder<solid_c
     return new BlockStatement(new Return(jsxTree));
   }
 
+  protected partDocumentation() {
+    return undefined;
+  }
+
   protected partDeclarations() {
     return Array.from(this.stylesRepository.uniques())
       .map((k) => {

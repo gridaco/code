@@ -151,6 +151,10 @@ export class ReactNativeInlineStyleBuilder extends JSXWidgetModuleBuilder<reactn
     return new BlockStatement(new Return(jsxTree));
   }
 
+  protected partDocumentation() {
+    return undefined;
+  }
+
   asExportableModule() {
     const body = this.partBody();
     const imports = this.partImports();

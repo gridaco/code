@@ -1,12 +1,14 @@
-import { Framework } from "@grida/builder-platform-types";
+import type { Framework } from "@grida/builder-platform-types";
 import type { JsxWidget } from "@web-builder/core";
-import {
+import type {
   StylesConfigMapBuilder,
   JSXWithoutStyleElementConfig,
   JSXWithStyleElementConfig,
   StylesRepository,
 } from "@web-builder/core/builders";
-import {
+import type { WidgetDeclarationDocumentation } from "@code-features/documentation";
+import type { EsWidgetModuleExportable } from "@web-builder/module-es";
+import type {
   BlockStatement,
   ImportDeclaration,
   JSXChildLike,
@@ -57,9 +59,13 @@ export abstract class JSXWidgetModuleBuilder<CONFIG> {
 
   protected abstract jsxBuilder(widget: JsxWidget): JSXChildLike;
 
+  protected abstract partDocumentation():
+    | WidgetDeclarationDocumentation
+    | undefined;
+
   protected abstract partImports(): Array<ImportDeclaration>;
 
   protected abstract partBody(): BlockStatement;
 
-  abstract asExportableModule();
+  abstract asExportableModule(): EsWidgetModuleExportable;
 }

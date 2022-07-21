@@ -2,10 +2,9 @@ import {
   SourceFile,
   BlockStatement,
   FunctionDeclaration,
-  Import,
   ImportDeclaration,
-  Return,
   Declaration,
+  MultilineCommentTrivia,
 } from "coli";
 import { SyntaxKind } from "@coli.codes/core-syntax-kind";
 import { EsComponentExportingCofnig } from "@designto/config/module-es";
@@ -13,6 +12,7 @@ import {
   add_export_keyword_modifier_to_declaration,
   wrap_with_export_assignment_jsx_component_identifier,
 } from "./es-component-exporting";
+import type { WidgetDeclarationDocumentation } from "@code-features/documentation";
 
 export class EsWidgetModuleFile extends SourceFile {
   constructor({ name, path }: { name: string; path: string }) {
@@ -25,18 +25,20 @@ export function makeEsWidgetModuleFile({
   path,
   imports,
   body,
-  declarations,
+  documentation,
+  declarations = [],
   config,
 }: {
   name: string;
   path: string;
   imports: ImportDeclaration[];
   body: BlockStatement;
-  declarations: Declaration[];
+  documentation?: WidgetDeclarationDocumentation;
+  declarations?: Declaration[];
   config: {
     exporting: EsComponentExportingCofnig;
   };
-}) {
+}): EsWidgetModuleFile {
   const { exporting } = config;
   const file = new EsWidgetModuleFile({
     name: `${name}.tsx`,
@@ -59,6 +61,12 @@ export function makeEsWidgetModuleFile({
             export: SyntaxKind.ExportKeyword,
           },
         });
+
+      addWidgetDocumentIfPresent(
+        export_default_anaonymous_functional_component,
+        documentation
+      );
+
       file.declare(export_default_anaonymous_functional_component);
       file.declare(...declarations);
       break;
@@ -70,6 +78,8 @@ export function makeEsWidgetModuleFile({
       const named_function_declaration = new FunctionDeclaration(name, {
         body: body,
       });
+
+      addWidgetDocumentIfPresent(named_function_declaration, documentation);
 
       switch (exporting.exporting_position) {
         case "after-declaration":
@@ -108,4 +118,15 @@ export function makeEsWidgetModuleFile({
   }
 
   return file;
+}
+
+function addWidgetDocumentIfPresent(
+  declaration: FunctionDeclaration,
+  documentation?: WidgetDeclarationDocumentation
+) {
+  if (documentation) {
+    declaration.withDocument(
+      new MultilineCommentTrivia({ text: documentation })
+    );
+  }
 }

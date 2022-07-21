@@ -24,6 +24,8 @@ import {
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
 import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import type { WidgetDeclarationDocumentation } from "@code-features/documentation";
+import { ReactWidgetDeclarationDocBuilder } from "@code-features/documentation";
 
 export class ReactStyledComponentsModuleBuilder extends JSXWidgetModuleBuilder<react_config.ReactStyledComponentsConfig> {
   constructor({
@@ -91,6 +93,19 @@ export class ReactStyledComponentsModuleBuilder extends JSXWidgetModuleBuilder<r
     return react_imports.import_react_from_react;
   }
 
+  protected partDocumentation(): string {
+    const docstr = new ReactWidgetDeclarationDocBuilder({
+      module: {}, // TODO: add module info support
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
+  }
+
   protected partBody(): BlockStatement {
     let jsxTree = this.jsxBuilder(this.entry);
     return new BlockStatement(new Return(jsxTree));
@@ -110,6 +125,7 @@ export class ReactStyledComponentsModuleBuilder extends JSXWidgetModuleBuilder<r
   }
 
   public asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     const styled_declarations = this.partDeclarations();
@@ -118,7 +134,8 @@ export class ReactStyledComponentsModuleBuilder extends JSXWidgetModuleBuilder<r
       {
         body,
         imports,
-        declarations: styled_declarations,
+        documentation: doc,
+        styledDeclarations: styled_declarations,
       },
       {
         dependencies: ["react", this.config.module],
@@ -135,11 +152,13 @@ export class ReactStyledComponentWidgetModuleExportable extends ReactWidgetModul
     {
       body,
       imports,
-      declarations,
+      documentation,
+      styledDeclarations,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
-      declarations: StyledComponentDeclaration[];
+      documentation: WidgetDeclarationDocumentation;
+      styledDeclarations: StyledComponentDeclaration[];
     },
     {
       dependencies = [],
@@ -151,9 +170,10 @@ export class ReactStyledComponentWidgetModuleExportable extends ReactWidgetModul
       name,
       body,
       imports,
+      documentation,
     });
 
-    this.declarations = declarations;
+    this.declarations = styledDeclarations;
   }
 
   asFile({
@@ -167,6 +187,7 @@ export class ReactStyledComponentWidgetModuleExportable extends ReactWidgetModul
       imports: this.imports,
       declarations: this.declarations,
       body: this.body,
+      documentation: this.documentation,
       config: {
         exporting: exporting,
       },

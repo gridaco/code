@@ -146,6 +146,10 @@ export class ReactCssModuleBuilder extends JSXWidgetModuleBuilder<react_config.R
     return new BlockStatement(new Return(jsxTree));
   }
 
+  protected partDocumentation() {
+    return undefined;
+  }
+
   public asExportableModule() {
     const body = this.partBody();
     const imports = this.partImports();

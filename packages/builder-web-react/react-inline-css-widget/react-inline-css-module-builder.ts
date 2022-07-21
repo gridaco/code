@@ -150,6 +150,10 @@ export class ReactInlineCssBuilder extends JSXWidgetModuleBuilder<react_config.R
     return new BlockStatement(new Return(jsxTree));
   }
 
+  protected partDocumentation() {
+    return undefined;
+  }
+
   asExportableModule() {
     const body = this.partBody();
     const imports = this.partImports();

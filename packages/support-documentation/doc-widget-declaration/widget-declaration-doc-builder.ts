@@ -1,5 +1,10 @@
-import type { Declaration, FunctionDeclaration, Identifier } from "coli";
-import type { WidgetModuleInfo, PropsInfo, PropsDefaultValues } from "./types";
+import { FunctionDeclaration, Identifier } from "coli";
+import type {
+  WidgetModuleInfo,
+  PropsInfo,
+  PropsDefaultValues,
+  WidgetDeclarationInfo,
+} from "./types";
 export abstract class WidgetDeclarationDocBuilder {
   /**
    * package info
@@ -11,7 +16,7 @@ export abstract class WidgetDeclarationDocBuilder {
   /**
    * the widget declaration token
    */
-  readonly declaration: FunctionDeclaration;
+  readonly declaration: WidgetDeclarationInfo;
 
   /**
    * @alpha TODO: not supported
@@ -21,14 +26,35 @@ export abstract class WidgetDeclarationDocBuilder {
   /**
    * @alpha TODO: not supported
    */
-  readonly defaultValues: PropsDefaultValues;
+  readonly defaultValues?: PropsDefaultValues | undefined;
 
-  constructor() {
-    //
+  constructor({
+    module,
+    declaration,
+    params,
+    defaultValues,
+  }: {
+    module: WidgetModuleInfo;
+    declaration: WidgetDeclarationInfo;
+    params: PropsInfo;
+    defaultValues?: PropsDefaultValues;
+  }) {
+    this.module = module;
+    this.declaration = declaration;
+    this.params = params;
+    this.defaultValues = defaultValues;
   }
 
   protected get anonymous(): boolean {
-    return this.declaration.id === undefined;
+    if (this.declaration instanceof FunctionDeclaration) {
+      return this.declaration.id === undefined;
+    } else {
+      return (
+        this.declaration.type === "export-anonymous-class-component" ||
+        this.declaration.type ===
+          "export-default-anonymous-functional-component"
+      );
+    }
   }
 
   protected get widgetname(): string {
@@ -36,7 +62,11 @@ export abstract class WidgetDeclarationDocBuilder {
       // anonymous default export
       return "Widget"; // for building example
     } else {
-      return this.declaration.id!.name;
+      if (this.declaration instanceof FunctionDeclaration) {
+        return this.declaration.id!.name;
+      } else {
+        return this.declaration.identifier;
+      }
     }
   }
 

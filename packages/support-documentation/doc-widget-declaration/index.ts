@@ -9,3 +9,7 @@ const make_widget_declaration_doc_for = {
 };
 
 export default make_widget_declaration_doc_for;
+
+export type WidgetDeclarationDocumentation = string;
+
+export { ReactWidgetDeclarationDocBuilder } from "./widget-declaration-doc-builder-react";
