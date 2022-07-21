@@ -36,7 +36,7 @@ export type { Widget };
 
 export type RuntimeChildrenInput = Array<nodes.ReflectSceneNode | Widget>;
 
-let __dangerous_current_config: TokenizerConfig = null;
+let __dangerous_current_config: TokenizerConfig | null = null;
 
 /**
  * ENTRY POINT MAIN FUCTION
@@ -106,7 +106,7 @@ function handle_with_custom_wrapping_provider(
   input: {
     token: Widget;
     node: nodes.ReflectSceneNode;
-    depth: number;
+    depth?: number;
   }
 ): Widget {
   const wrapped_or_not = provider?.(input.token, input.node, input.depth);
@@ -132,7 +132,7 @@ export function handleChildren(
     } else {
       config =
         config === "dangerously_use_current"
-          ? __dangerous_current_config
+          ? __dangerous_current_config!
           : config;
       return dynamicGenerator(n, config) as Widget;
     }
@@ -144,13 +144,13 @@ function handleNode(
   config: TokenizerConfig
 ): Widget {
   if (!node.type) {
-    console.error(
-      "cannot handle unknown type of node. node.type was undefined or null"
+    console.error();
+    throw new Error(
+      "tokenizer:: cannot handle unknown type of node. node.type was undefined or null"
     );
-    return;
   }
 
-  let tokenizedTarget: Widget = null;
+  let tokenizedTarget: Widget | undefined;
 
   // flags handler
   if (!tokenizedTarget) {
@@ -175,7 +175,7 @@ function handleNode(
   if (!tokenizedTarget) {
     const _detect_if_image = detectIf.image(node);
     if (_detect_if_image.result) {
-      return tokenizeGraphics.fromImage(node, _detect_if_image.data);
+      return tokenizeGraphics.fromImage(node, _detect_if_image.data!);
     }
   }
 
@@ -188,7 +188,7 @@ function handleNode(
       // - icon -
       const _detect_if_icon = detectIf.icon(node);
       if (_detect_if_icon.result) {
-        return tokenizeGraphics.fromIcon(node, _detect_if_icon.data);
+        return tokenizeGraphics.fromIcon(node, _detect_if_icon.data!);
       }
 
       // - button -
@@ -339,7 +339,7 @@ function handle_by_types(
       tokenizedTarget = tokenizeLayout.fromGroup(
         node,
         node.children,
-        undefined,
+        [],
         config
       );
       break;
@@ -366,7 +366,9 @@ function handle_by_types(
     default:
       console.error(`${node["type"]} is not yet handled by "@designto/token"`);
       tokenizedTarget = tokenizeGraphics.fromAnyNode(node); // this is expensive
-      tokenizedTarget.key.originName = `Fallbacked to image from - "${tokenizedTarget.key.originName}". this is a bug.`;
+      tokenizedTarget.key!.originName = `fallback: from - "${
+        tokenizedTarget.key!.originName
+      }"`;
       break;
   }
   return tokenizedTarget;

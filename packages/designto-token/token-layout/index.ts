@@ -27,7 +27,7 @@ import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { TokenizerConfig } from "../config";
 import { keyFromNode } from "../key";
-import { handleChildren, RuntimeChildrenInput } from "../main";
+import { handleChildren, RuntimeChildrenInput } from "../tokenizer";
 import { tokenizeBackground } from "../token-background";
 import { tokenizeBorder } from "../token-border";
 import { Stretched } from "../tokens";
@@ -496,7 +496,7 @@ function fromGroup(
       return c;
     } else {
       const ogchild = find_original(
-        only_original(children).concat(references || []),
+        only_original(children).concat(references),
         c
       );
       return stackChild({
