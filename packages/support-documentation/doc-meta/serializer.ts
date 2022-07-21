@@ -73,11 +73,11 @@ export function makeMarkdownCommentFromMeta<
     if (typeof v === "boolean") {
       fields.push(k);
     } else {
-      fields.push(`${k}\s:\s${v}`);
+      fields.push(`${k} : ${v}`);
     }
   });
 
-  return `<!-- ${fields.join("|")} -->`;
+  return `<!-- ${fields.join(" | ")} -->`;
 }
 
 const _ = {

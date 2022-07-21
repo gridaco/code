@@ -5,7 +5,7 @@ export const grida_doc_meta_delimiters = {
 };
 
 export interface GridaWidgetDeclarationDocumentationMeta {
-  delimiter: typeof grida_doc_meta_delimiters.widget_declaraton;
+  delimiter: "grida.meta.widget_declaration";
   engine: string;
   uri: string;
   source: string;
@@ -48,7 +48,12 @@ export class GridaTSDocWidgetDeclarationMetaManager extends GridaTSDocMetaManage
     }
   }
 
-  make(meta: GridaWidgetDeclarationDocumentationMeta) {
-    return docmeta.encode(meta);
+  static make(
+    meta: Omit<GridaWidgetDeclarationDocumentationMeta, "delimiter">
+  ) {
+    return docmeta.encode(<GridaWidgetDeclarationDocumentationMeta>{
+      ...meta,
+      delimiter: "grida.meta.widget_declaration",
+    });
   }
 }
