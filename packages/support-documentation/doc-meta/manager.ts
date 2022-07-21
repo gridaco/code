@@ -6,9 +6,10 @@ export const grida_doc_meta_delimiters = {
 
 export interface GridaWidgetDeclarationDocumentationMeta {
   delimiter: "grida.meta.widget_declaration";
-  engine: string;
-  uri: string;
-  source: string;
+  engine: string; // e.g. v.2.0.0
+  platform?: string; // e.g. cli:v1.0.0 / code.grida.co:v2022.08 / grida:v0.0.0
+  uri: string; // e.g. grida.co/scenes/xxx
+  source: string; // e.g. figma.com/files/xxx/yyy
 }
 
 class DocMetaManager {}
