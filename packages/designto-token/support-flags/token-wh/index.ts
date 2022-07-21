@@ -8,7 +8,7 @@ import {
   IWHStyleWidget,
   Widget,
 } from "@reflect-ui/core";
-import { tokenize } from "../../main";
+import { tokenize } from "../../tokenizer";
 import { unwrappedChild } from "../../wrappings";
 
 export function tokenize_flagged_wh_declaration(
