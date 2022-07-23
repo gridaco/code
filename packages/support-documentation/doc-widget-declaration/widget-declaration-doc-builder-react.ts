@@ -5,6 +5,7 @@ import { react_imports } from "@web-builder/react-core";
 import type { WidgetDeclarationInfo, WidgetModuleInfo } from "./types";
 import { GridaTSDocWidgetDeclarationMetaManager } from "../doc-meta";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
+import { version } from "@designto/code";
 
 class ReactWidgetDeclarationDocUsageExampleBuilder {
   protected readonly sourceuri?: string | undefined;
@@ -143,7 +144,7 @@ export class ReactWidgetDeclarationDocBuilder extends WidgetDeclarationDocBuilde
     const infoline =
       "<!-- Info: Please do not remove this comment unless intended. removing this section will break grida integrations. -->";
     const dataline = GridaTSDocWidgetDeclarationMetaManager.make({
-      engine: "v2022.07",
+      engine: version,
       source: "https://todo.com",
       uri: "https://todo.com",
     });
