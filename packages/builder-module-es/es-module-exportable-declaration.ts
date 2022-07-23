@@ -44,6 +44,7 @@ export abstract class EsWidgetModuleExportable {
     const file = this.asFile({ exporting: config });
     const final = stringfy(file.blocks, {
       language: "tsx",
+      indentation: 2,
     });
     return {
       code: final,

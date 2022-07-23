@@ -73,6 +73,7 @@ class ReactWidgetDeclarationDocUsageExampleBuilder {
 
     const code = stringfy(file, {
       language: "tsx",
+      indentation: 2,
     });
     return `\`\`\`tsx\n${code}\`\`\``;
   }
