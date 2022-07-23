@@ -87,7 +87,7 @@ export class HtmlButton extends Container implements IButtonStyleButton {
     if (this.child instanceof Text) {
       return [
         <StylableJsxWidget>{
-          key: new WidgetKey(`${this.key.id}.text`, "text"),
+          key: new WidgetKey({ id: `${this.key.id}.text`, name: "text" }),
           styleData: () => null,
           jsxConfig: () => {
             return <JSXElementConfig>{

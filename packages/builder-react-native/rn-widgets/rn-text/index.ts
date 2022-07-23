@@ -53,7 +53,7 @@ export class Text extends TextChildWidget<ViewStyle> {
 
   textData() {
     return new TextDataWidget({
-      key: { ...this.key, id: this.key.id + ".text-data" },
+      key: WidgetKey.copyWith(this.key, { id: this.key.id + ".text-data" }),
       data: this.data,
     });
   }
