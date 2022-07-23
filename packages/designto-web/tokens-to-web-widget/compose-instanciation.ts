@@ -2,6 +2,7 @@ import { Composer } from ".";
 import * as reusable from "@code-features/component/tokens";
 import * as web from "@web-builder/core";
 import { nameit, NameCases } from "coli";
+import { WidgetKey } from "@web-builder/core";
 
 export function compose_instanciation(
   widget: reusable.InstanceWidget,
@@ -14,10 +15,9 @@ export function compose_instanciation(
   }).name;
 
   return new web.InstanciationElement({
-    key: {
-      name: "ExampleUsageOf_" + identifier, // FIXME: should not use identifier as name
-      id: widget.key.id,
-    },
+    key: WidgetKey.copyWith(widget.key, {
+      name: "ExampleUsageOf_" + identifier,
+    }),
     identifier: identifier,
     arguments: widget.meta.arguments,
   });

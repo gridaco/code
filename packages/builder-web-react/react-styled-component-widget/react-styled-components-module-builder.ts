@@ -26,10 +26,7 @@ import { Framework } from "@grida/builder-platform-types";
 import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
 import type { WidgetDeclarationDocumentation } from "@code-features/documentation";
 import { ReactWidgetDeclarationDocBuilder } from "@code-features/documentation";
-import {
-  dirty_widget_doc_meta_postprocessing_replacer as replacer,
-  dirty_widget_doc_meta_postprocessing_replacer_keys as replacer_keys,
-} from "dirty/hard-replace-widget-declaration-documentation-meta";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
 
 export class ReactStyledComponentsModuleBuilder extends JSXWidgetModuleBuilder<react_config.ReactStyledComponentsConfig> {
   constructor({
@@ -98,13 +95,10 @@ export class ReactStyledComponentsModuleBuilder extends JSXWidgetModuleBuilder<r
   }
 
   protected partDocumentation(): string {
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
     const docstr = new ReactWidgetDeclarationDocBuilder({
       module: {
-        // TODO: add proper module info support (accept info from builder's constructor)
-        designsource: replacer.reserve(replacer_keys.designsource, "unknown"),
-        filekey: replacer.reserve(replacer_keys.filekey, "unknown"),
-        name: this.entry.key.name,
-        id: this.entry.key.id,
+        ...metafromkey,
       },
       declaration: {
         type: "unknown",

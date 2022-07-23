@@ -106,8 +106,9 @@ export class ReactWidgetDeclarationDocBuilder extends WidgetDeclarationDocBuilde
   }
 
   protected partIntro() {
-    if (this.module.designsource) {
-      return `${this._widgetname} - from design {@link ${this.module.designsource}}`;
+    const link = buildOriginDesignLinkIfPossible(this.module);
+    if (link) {
+      return `${this._widgetname} - from design {@link ${link}}`;
     }
     return this._widgetname;
   }
@@ -187,4 +188,17 @@ export class ReactWidgetDeclarationDocBuilder extends WidgetDeclarationDocBuilde
       .filter(Boolean)
       .join("\n");
   }
+}
+
+function buildOriginDesignLinkIfPossible(
+  module: WidgetModuleInfo
+): string | undefined {
+  if (module.designsource) {
+    if (module.designsource === "figma") {
+      if (module.filekey) {
+        return `https://figma.com/file/${module.filekey}?node-id=${module.id}`;
+      }
+    }
+  }
+  return;
 }

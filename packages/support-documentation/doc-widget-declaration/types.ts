@@ -2,7 +2,7 @@ import type { EsComponentExportingCofnig } from "@designto/config/module-es";
 import type { FunctionDeclaration, Literal, Parameter } from "coli";
 
 export interface WidgetModuleInfo {
-  designsource?: string;
+  designsource?: "figma" | "unknown";
   filekey?: string;
   id: string;
   name: string;

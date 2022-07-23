@@ -367,7 +367,7 @@ function handle_by_types(
     default:
       console.error(`${node["type"]} is not yet handled by "@designto/token"`);
       tokenizedTarget = tokenizeGraphics.fromAnyNode(node); // this is expensive
-      tokenizedTarget.key!.originName = `fallback: from - "${
+      tokenizedTarget.key!.name = `fallback: from - "${
         tokenizedTarget.key!.originName
       }"`;
       break;
