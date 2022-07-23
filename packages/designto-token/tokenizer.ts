@@ -160,7 +160,7 @@ function handleNode(
     ) {
       try {
         tokenizedTarget = flags_handling_gate(node);
-        console.log("handled flags", tokenizedTarget);
+        // console.log("handled flags", tokenizedTarget);
       } catch (e) {
         console.error("error while interpreting flags.. skipping", e);
       }
