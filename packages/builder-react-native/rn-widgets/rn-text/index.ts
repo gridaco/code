@@ -67,7 +67,9 @@ export class Text extends TextChildWidget<ViewStyle> {
 
       fontSize: this.textStyle.fontSize,
       fontFamily: css.fontFamily(this.textStyle.fontFamily),
-      fontWeight: css.numericFontWeight(this.textStyle.fontWeight),
+      fontWeight: css
+        .numericFontWeight(this.textStyle.fontWeight)
+        ?.toString() as TextStyle["fontWeight"],
       // FIXME: non numeric value can be passed
       letterSpacing: css.letterSpacing(
         this.textStyle.letterSpacing
