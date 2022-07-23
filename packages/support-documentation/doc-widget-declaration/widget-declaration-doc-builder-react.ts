@@ -95,12 +95,19 @@ export class ReactWidgetDeclarationDocBuilder extends WidgetDeclarationDocBuilde
     this.sourceuri = sourceuri;
   }
 
-  protected partIntro() {
+  private get _widgetname(): string {
     if (this.anonymous) {
       return "Anonymous Widget";
     } else {
       return `${this.widgetname}`;
     }
+  }
+
+  protected partIntro() {
+    if (this.module.designsource) {
+      return `${this._widgetname} - from design {@link ${this.module.designsource}}`;
+    }
+    return this._widgetname;
   }
 
   protected partExample() {

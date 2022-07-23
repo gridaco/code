@@ -1,7 +1,12 @@
 import type { EsComponentExportingCofnig } from "@designto/config/module-es";
 import type { FunctionDeclaration, Literal, Parameter } from "coli";
 
-export interface WidgetModuleInfo {}
+export interface WidgetModuleInfo {
+  designsource?: string;
+  filekey?: string;
+  id: string;
+  name: string;
+}
 export type PropsInfo = Array<Parameter>;
 export type PropsDefaultValues = { [key: string]: Literal };
 export type WidgetDeclarationInfo =
