@@ -8,8 +8,8 @@ export interface GridaWidgetDeclarationDocumentationMeta {
   delimiter: "grida.meta.widget_declaration";
   engine: string; // e.g. v.2.0.0
   platform?: string; // e.g. cli:v1.0.0 / code.grida.co:v2022.08 / grida:v0.0.0
-  uri: string; // e.g. grida.co/scenes/xxx
-  source: string; // e.g. figma.com/files/xxx/yyy
+  uri?: string; // e.g. grida.co/scenes/xxx
+  source?: string; // e.g. figma.com/files/xxx/yyy
 }
 
 class DocMetaManager {}
@@ -52,9 +52,11 @@ export class GridaTSDocWidgetDeclarationMetaManager extends GridaTSDocMetaManage
   static make(
     meta: Omit<GridaWidgetDeclarationDocumentationMeta, "delimiter">
   ) {
-    return docmeta.encode(<GridaWidgetDeclarationDocumentationMeta>{
+    return docmeta.encode(<
+      Omit<GridaWidgetDeclarationDocumentationMeta, "delimiter">
+    >{
       ...meta,
-      delimiter: "grida.meta.widget_declaration",
+      "grida.meta.widget_declaration": true,
     });
   }
 }

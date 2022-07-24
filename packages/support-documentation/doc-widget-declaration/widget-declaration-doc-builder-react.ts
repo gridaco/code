@@ -6,6 +6,7 @@ import type { WidgetDeclarationInfo, WidgetModuleInfo } from "./types";
 import { GridaTSDocWidgetDeclarationMetaManager } from "../doc-meta";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { version } from "@designto/code";
+import { MainImageRepository } from "@design-sdk/core/assets-repository";
 
 class ReactWidgetDeclarationDocUsageExampleBuilder {
   protected readonly sourceuri?: string | undefined;
@@ -71,10 +72,11 @@ class ReactWidgetDeclarationDocUsageExampleBuilder {
       },
     });
 
-    const code = stringfy(file, {
-      language: "tsx",
-      indentation: 2,
-    });
+    const code =
+      stringfy(file, {
+        language: "tsx",
+        indentation: 2,
+      }).trimEnd() + "\n";
     return `\`\`\`tsx\n${code}\`\`\``;
   }
 }
@@ -106,11 +108,16 @@ export class ReactWidgetDeclarationDocBuilder extends WidgetDeclarationDocBuilde
   }
 
   protected partIntro() {
-    const link = buildOriginDesignLinkIfPossible(this.module);
-    if (link) {
-      return `${this._widgetname} - from design {@link ${link}}`;
-    }
-    return this._widgetname;
+    const nameinfo = `\`<${this.module.name}>\` ('${this.module.originalname}')`;
+    const designlink = buildOriginDesignLinkIfPossible(this.module);
+    const gridalink = buildGridaCodeLinkIfPossible(this.module);
+    return [
+      nameinfo,
+      designlink ? `- [${designlink.name}](${designlink.url})` : undefined,
+      gridalink ? `- [${gridalink.name}](${gridalink.url})` : undefined,
+    ]
+      .filter(Boolean)
+      .join("\n");
   }
 
   protected partExample() {
@@ -118,7 +125,7 @@ export class ReactWidgetDeclarationDocBuilder extends WidgetDeclarationDocBuilde
       identifier: this.widgetname,
       sourceuri: this.sourceuri,
     }).snippet();
-    return `${snippet}`;
+    return `@example\n${snippet}`;
   }
 
   protected partParams() {
@@ -130,7 +137,15 @@ export class ReactWidgetDeclarationDocBuilder extends WidgetDeclarationDocBuilde
     }
   }
   protected partPreview() {
-    return "@preview TODO: preview";
+    /**
+     * @deprecated TODO: update the asset repository pattern.
+     */
+    const _asset_key = "fill-later-assets";
+    const _tmp_img = MainImageRepository.instance.get(_asset_key).addImage({
+      key: this.module.id,
+    });
+
+    return `@preview\n![](${_tmp_img.url})`;
   }
   protected partRemarks() {
     return "@remarks\n@see {@link https://grida.co/docs/widgets} for more information.";
@@ -147,8 +162,8 @@ export class ReactWidgetDeclarationDocBuilder extends WidgetDeclarationDocBuilde
       "<!-- Info: Please do not remove this comment unless intended. removing this section will break grida integrations. -->";
     const dataline = GridaTSDocWidgetDeclarationMetaManager.make({
       engine: version,
-      source: "https://todo.com",
-      uri: "https://todo.com",
+      source: `${this.module.designsource}://${this.module.filekey}/${this.module.id}`,
+      uri: undefined,
     });
     return [infoline, dataline].join("\n");
   }
@@ -173,15 +188,14 @@ export class ReactWidgetDeclarationDocBuilder extends WidgetDeclarationDocBuilde
       this.partExample(),
       hr(),
       this.partParams(),
-      br(),
+      hr(),
+      this.partPreview(),
       hr(),
       this.partRemarks(),
-      br(),
       hr(),
       this.partPrivateRemarks(),
       br(),
       this.partBrandingFooter(),
-      br(),
       this.partGridaMetaComment(),
     ]
       .map((i) => i?.toString())
@@ -192,12 +206,29 @@ export class ReactWidgetDeclarationDocBuilder extends WidgetDeclarationDocBuilde
 
 function buildOriginDesignLinkIfPossible(
   module: WidgetModuleInfo
-): string | undefined {
+): { name: string; url: string } | undefined {
   if (module.designsource) {
     if (module.designsource === "figma") {
       if (module.filekey) {
-        return `https://figma.com/file/${module.filekey}?node-id=${module.id}`;
+        return {
+          name: "Open in Figma",
+          url: `https://figma.com/file/${module.filekey}?node-id=${module.id}`,
+        };
       }
+    }
+  }
+  return;
+}
+
+function buildGridaCodeLinkIfPossible(
+  module: WidgetModuleInfo
+): { name: string; url: string } | undefined {
+  if (module.designsource) {
+    if (module.filekey) {
+      return {
+        name: "Open in Grida",
+        url: `https://code.grida.co/files/${module.filekey}?node=${module.id}`,
+      };
     }
   }
   return;

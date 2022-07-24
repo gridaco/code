@@ -5,6 +5,7 @@ export interface WidgetModuleInfo {
   designsource?: "figma" | "unknown";
   filekey?: string;
   id: string;
+  originalname?: string;
   name: string;
 }
 export type PropsInfo = Array<Parameter>;

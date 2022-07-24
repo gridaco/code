@@ -6,6 +6,7 @@ export function extractMetaFromWidgetKey(key: WidgetKey): {
   filekey: string | undefined;
   id: string;
   name: string;
+  originalname?: string | undefined;
 } {
   if (key instanceof FigmaWidgetKey) {
     return {
@@ -13,6 +14,7 @@ export function extractMetaFromWidgetKey(key: WidgetKey): {
       filekey: typeof key.filekey === "string" ? key.filekey : undefined,
       id: key.id,
       name: key.name,
+      originalname: key.originName,
     };
   }
 
@@ -21,5 +23,6 @@ export function extractMetaFromWidgetKey(key: WidgetKey): {
     filekey: undefined,
     id: key.id,
     name: key.name,
+    originalname: key.originName,
   };
 }
