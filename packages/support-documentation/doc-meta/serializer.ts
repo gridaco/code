@@ -66,18 +66,23 @@ export function parseMetaFromMarkdownComment<
 export function makeMarkdownCommentFromMeta<
   T extends { [key: string]: string | boolean } | object
 >(meta: T): string {
+  const flags: string[] = [];
   const fields: string[] = [];
 
   Object.keys(meta).forEach((k) => {
     const v = meta[k];
-    if (typeof v === "boolean") {
-      fields.push(k);
+    if (typeof v === "boolean" && v) {
+      flags.push(k);
     } else {
-      fields.push(`${k} : ${v}`);
+      if (v) {
+        fields.push(`${k} : ${v}`);
+      }
     }
   });
 
-  return `<!-- ${fields.join(" | ")} -->`;
+  const items = [...flags, ...fields];
+
+  return `<!-- ${items.join(" | ")} -->`;
 }
 
 const _ = {
