@@ -176,6 +176,7 @@ export class HtmlIdCssModuleBuilder {
   render(): string {
     const strfied_body = stringfy(this.partBody(), {
       language: "jsx",
+      indentation: "\t",
     });
 
     const final = html_render({

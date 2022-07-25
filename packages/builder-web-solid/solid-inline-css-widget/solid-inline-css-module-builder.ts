@@ -28,7 +28,12 @@ import {
   makeEsWidgetModuleFile,
 } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
+import {
+  SolidJSWidgetDeclarationDocBuilder,
+  WidgetDeclarationDocumentation,
+} from "@code-features/documentation";
 
 /**
  * InlineCss Style builder for SolidJS Framework
@@ -42,7 +47,7 @@ import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
  * ```
  *
  */
-export class SolidInlineCssBuilder extends JsxComponentModuleBuilder<solid_config.SolidInlineCssConfig> {
+export class SolidInlineCssBuilder extends JSXWidgetModuleBuilder<solid_config.SolidInlineCssConfig> {
   constructor({
     entry,
     config,
@@ -149,11 +154,29 @@ export class SolidInlineCssBuilder extends JsxComponentModuleBuilder<solid_confi
     return new BlockStatement(new Return(jsxTree));
   }
 
+  protected partDocumentation() {
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new SolidJSWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
+  }
+
   public asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     return new SolidInlineCssWidgetModuleExportable(this.widgetName, {
       body,
+      documentation: doc,
       imports,
     });
   }
@@ -164,9 +187,11 @@ export class SolidInlineCssWidgetModuleExportable extends EsWidgetModuleExportab
     name,
     {
       body,
+      documentation,
       imports,
     }: {
       body: BlockStatement;
+      documentation: WidgetDeclarationDocumentation;
       imports: ImportDeclaration[];
     }
   ) {
@@ -174,6 +199,7 @@ export class SolidInlineCssWidgetModuleExportable extends EsWidgetModuleExportab
       name,
       body,
       imports,
+      documentation,
     });
   }
 
@@ -188,6 +214,7 @@ export class SolidInlineCssWidgetModuleExportable extends EsWidgetModuleExportab
       imports: this.imports,
       declarations: [],
       body: this.body,
+      documentation: this.documentation,
       config: {
         exporting: exporting,
       },

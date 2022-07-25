@@ -42,7 +42,10 @@ export class DesignInput implements IDesignInput {
       nodes: this._flat_all(design),
     });
 
-    return new DesignInput({ entry: design, repository: repository });
+    return new DesignInput({
+      entry: design,
+      repository: repository,
+    });
   }
 
   static fromDesignWithComponents({

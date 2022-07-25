@@ -2,10 +2,7 @@ import {
   ScopedVariableNamer,
   ReservedKeywordPlatformPresets,
 } from "@coli.codes/naming";
-import {
-  NoStyleJSXElementConfig,
-  StyledComponentJSXElementConfig,
-} from "@web-builder/styled";
+import { StyledComponentJSXElementConfig } from "@web-builder/styled";
 import {
   react_imports,
   ReactWidgetModuleExportable,
@@ -26,9 +23,12 @@ import {
 } from "@web-builder/styled";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import type { WidgetDeclarationDocumentation } from "@code-features/documentation";
+import { ReactWidgetDeclarationDocBuilder } from "@code-features/documentation";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
 
-export class ReactStyledComponentsBuilder extends JsxComponentModuleBuilder<react_config.ReactStyledComponentsConfig> {
+export class ReactStyledComponentsModuleBuilder extends JSXWidgetModuleBuilder<react_config.ReactStyledComponentsConfig> {
   constructor({
     entry,
     config,
@@ -94,12 +94,28 @@ export class ReactStyledComponentsBuilder extends JsxComponentModuleBuilder<reac
     return react_imports.import_react_from_react;
   }
 
+  protected partDocumentation(): string {
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new ReactWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
+  }
+
   protected partBody(): BlockStatement {
     let jsxTree = this.jsxBuilder(this.entry);
     return new BlockStatement(new Return(jsxTree));
   }
 
-  protected partDeclarations() {
+  private partStyledComponentsDeclarations() {
     return Array.from(this.stylesRepository.uniques())
       .map((k) => {
         return (this.stylesRepository.get(k) as StyledComponentJSXElementConfig)
@@ -108,7 +124,12 @@ export class ReactStyledComponentsBuilder extends JsxComponentModuleBuilder<reac
       .filter((s) => s);
   }
 
+  protected partDeclarations() {
+    return this.partStyledComponentsDeclarations();
+  }
+
   public asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     const styled_declarations = this.partDeclarations();
@@ -117,7 +138,8 @@ export class ReactStyledComponentsBuilder extends JsxComponentModuleBuilder<reac
       {
         body,
         imports,
-        declarations: styled_declarations,
+        documentation: doc,
+        styledDeclarations: styled_declarations,
       },
       {
         dependencies: ["react", this.config.module],
@@ -134,11 +156,13 @@ export class ReactStyledComponentWidgetModuleExportable extends ReactWidgetModul
     {
       body,
       imports,
-      declarations,
+      documentation,
+      styledDeclarations,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
-      declarations: StyledComponentDeclaration[];
+      documentation: WidgetDeclarationDocumentation;
+      styledDeclarations: StyledComponentDeclaration[];
     },
     {
       dependencies = [],
@@ -150,9 +174,10 @@ export class ReactStyledComponentWidgetModuleExportable extends ReactWidgetModul
       name,
       body,
       imports,
+      documentation,
     });
 
-    this.declarations = declarations;
+    this.declarations = styledDeclarations;
   }
 
   asFile({
@@ -166,6 +191,7 @@ export class ReactStyledComponentWidgetModuleExportable extends ReactWidgetModul
       imports: this.imports,
       declarations: this.declarations,
       body: this.body,
+      documentation: this.documentation,
       config: {
         exporting: exporting,
       },

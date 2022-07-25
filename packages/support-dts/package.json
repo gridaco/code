@@ -1,0 +1,5 @@
+{
+  "name": "@code-features/dts",
+  "version": "0.0.0",
+  "description": ".d.ts codegen support for plain js outputs"
+}

@@ -76,7 +76,7 @@ function button(
   }
 
   return new WrappingContainer({
-    key: WidgetKey.copyWith(_key, { id: _key.id + ".sizedbox" }),
+    key: _key.copyWith({ id: _key.id + ".sizedbox" }),
     width: sizing.width,
     height: sizing.height,
     child: button,

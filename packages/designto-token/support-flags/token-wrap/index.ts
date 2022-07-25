@@ -35,7 +35,7 @@ import { unwrappedChild } from "../../wrappings";
 export function tokenize_flagged_wrap(
   node: ReflectSceneNode,
   flag: AsWrapFlag
-): Wrap {
+): Wrap | undefined {
   if (flag.value === false) return;
 
   const validated = validate_input(node as any);

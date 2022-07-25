@@ -23,6 +23,9 @@ import { tokenize_flagged_youtube_view } from "./token-x-youtube-view";
 import { tokenize_flagged_camera_view } from "./token-x-camera-display";
 import { tokenize_flagged_checkbox } from "./token-checkbox";
 
+// module related
+import { tokenize_flagged_declare } from "./token-declare";
+
 export default function handleWithFlags(node: ReflectSceneNode) {
   const flags = parse(node.name);
   return _handle_with_flags(node, flags);
@@ -140,4 +143,10 @@ function _handle_with_flags(node, flags: FlagsParseResult) {
     return tokenize_flagged_fix_wh(node, fix_wh_flags);
   }
   // #endregion style extension flags
+
+  // #region module related flags
+  if (flags.__meta?.contains_declare_flag) {
+    return tokenize_flagged_declare(node, flags[keys.flag_key__declare]);
+  }
+  // #endregion module related flags
 }
