@@ -17,7 +17,7 @@ export class ErrorWidget extends TextChildWidget<TextStyle> {
 
   textData() {
     return new TextDataWidget({
-      key: WidgetKey.copyWith(this.key, { id: this.key.id + ".text-data" }),
+      key: this.key.copyWith({ id: this.key.id + ".text-data" }),
       data: this.errorMessage,
     });
   }

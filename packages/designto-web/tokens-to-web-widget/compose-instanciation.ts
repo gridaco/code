@@ -2,7 +2,6 @@ import { Composer } from ".";
 import * as reusable from "@code-features/component/tokens";
 import * as web from "@web-builder/core";
 import { nameit, NameCases } from "coli";
-import { WidgetKey } from "@web-builder/core";
 
 export function compose_instanciation(
   widget: reusable.InstanceWidget,
@@ -15,7 +14,7 @@ export function compose_instanciation(
   }).name;
 
   return new web.InstanciationElement({
-    key: WidgetKey.copyWith(widget.key, {
+    key: widget.key.copyWith({
       name: "ExampleUsageOf_" + identifier,
     }),
     identifier: identifier,

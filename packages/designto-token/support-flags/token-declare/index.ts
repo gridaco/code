@@ -3,7 +3,6 @@ import { tokenize } from "../..";
 import { default_tokenizer_config } from "../../config";
 import type { ReflectSceneNode } from "@design-sdk/figma-node";
 import { DeclarationWidgetToken } from "@code-features/module";
-import { WidgetKey } from "@reflect-ui/core";
 
 export function tokenize_flagged_declare(
   node: ReflectSceneNode,
@@ -23,7 +22,7 @@ export function tokenize_flagged_declare(
   const _key = child.key!;
 
   return new DeclarationWidgetToken({
-    key: WidgetKey.copyWith(_key, { id: _key.id + "--declare" }),
+    key: _key.copyWith({ id: _key.id + "--declare" }),
     child: child,
   });
 }
