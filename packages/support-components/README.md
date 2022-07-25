@@ -1,4 +1,4 @@
-# Components support
+# Components support (subset of @code-features/module)
 
 ## 1. Simplest scenario - master:instance with POJO values
 

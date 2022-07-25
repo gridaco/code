@@ -20,13 +20,10 @@ import { compose_unwrapped_button } from "./compose-unwrapped-button";
 import { compose_unwrapped_checkbox } from "./compose-unwrapped-checkbox";
 import { compose_unwrapped_slider } from "./compose-unwrapped-slider";
 import { compose_unwrapped_progress } from "./compose-unwrapped-progress";
-import { compose_instanciation } from "./compose-instanciation";
-import { compose_declaration } from "./compose-declaration";
 import { compose_xtended_views } from "./compose-xtended-views";
 import { IWHStyleWidget } from "@reflect-ui/core";
-import * as reusable from "@code-features/component/tokens";
-import assert from "assert";
 import { WrappingContainer } from "@designto/token/tokens";
+import assert from "assert";
 
 interface WebWidgetComposerConfig {
   /**
@@ -323,18 +320,6 @@ function compose<T extends JsxWidget>(
   // -------------------------------------
   else if (widget instanceof special.Stretched) {
     thisWebWidget = compose_wrapped_with_clip_stretched(widget, handleChild);
-  }
-  // -------------------------------------
-  // -------------------------------------
-  // module related
-  else if (widget instanceof special.WidgetDeclarationToken) {
-    thisWebWidget = compose_declaration(widget, handleChild);
-  }
-  // -------------------------------------
-  // -------------------------------------
-  // support component / instance
-  else if (widget instanceof reusable.InstanceWidget) {
-    thisWebWidget = compose_instanciation(widget, handleChild);
   }
   //
   // -------------------------------------
