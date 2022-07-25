@@ -31,6 +31,11 @@ import { CSSProperties } from "@coli.codes/css";
 import { reactnative_imports } from "..";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
+import {
+  ReactNativeWidgetDeclarationDocBuilder,
+  WidgetDeclarationDocumentation,
+} from "@code-features/documentation";
 
 /**
  * CSS In JS Style builder for React Framework
@@ -142,7 +147,7 @@ export class ReactNativeInlineStyleBuilder extends JSXWidgetModuleBuilder<reactn
   protected partImports() {
     return [
       react_imports.import_react_from_react,
-      reactnative_imports.import_react_prepacked,
+      reactnative_imports.import_react_native_prepacked,
     ];
   }
 
@@ -152,15 +157,29 @@ export class ReactNativeInlineStyleBuilder extends JSXWidgetModuleBuilder<reactn
   }
 
   protected partDocumentation() {
-    return undefined;
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new ReactNativeWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
   }
 
   asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     return new ReactNativeInlineStyleWidgetModuleExportable(this.widgetName, {
       body,
       imports,
+      documentation: doc,
     });
   }
 }
@@ -171,15 +190,18 @@ export class ReactNativeInlineStyleWidgetModuleExportable extends ReactWidgetMod
     {
       body,
       imports,
+      documentation,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
+      documentation: WidgetDeclarationDocumentation;
     }
   ) {
     super({
       name,
       body,
       imports,
+      documentation: documentation,
     });
   }
 
@@ -194,6 +216,7 @@ export class ReactNativeInlineStyleWidgetModuleExportable extends ReactWidgetMod
       imports: this.imports,
       declarations: [],
       body: this.body,
+      documentation: this.documentation,
       config: {
         exporting: exporting,
       },

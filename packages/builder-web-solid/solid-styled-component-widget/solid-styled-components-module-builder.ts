@@ -23,6 +23,11 @@ import {
 } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
 import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
+import {
+  SolidJSWidgetDeclarationDocBuilder,
+  WidgetDeclarationDocumentation,
+} from "@code-features/documentation";
 
 export class SolidStyledComponentsBuilder extends JSXWidgetModuleBuilder<solid_config.SolidStyledComponentsConfig> {
   constructor({
@@ -98,7 +103,19 @@ export class SolidStyledComponentsBuilder extends JSXWidgetModuleBuilder<solid_c
   }
 
   protected partDocumentation() {
-    return undefined;
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new SolidJSWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
   }
 
   protected partDeclarations() {
@@ -111,6 +128,7 @@ export class SolidStyledComponentsBuilder extends JSXWidgetModuleBuilder<solid_c
   }
 
   public asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     const styled_declarations = this.partDeclarations();
@@ -119,6 +137,7 @@ export class SolidStyledComponentsBuilder extends JSXWidgetModuleBuilder<solid_c
       {
         body,
         imports,
+        documentation: doc,
         declarations: styled_declarations,
       },
       {
@@ -136,10 +155,12 @@ export class SolidStyledComponentWidgetModuleExportable extends EsWidgetModuleEx
     {
       body,
       imports,
+      documentation,
       declarations,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
+      documentation: WidgetDeclarationDocumentation;
       declarations: StyledComponentDeclaration[];
     },
     {
@@ -152,6 +173,7 @@ export class SolidStyledComponentWidgetModuleExportable extends EsWidgetModuleEx
       name,
       body,
       imports,
+      documentation,
     });
 
     this.declarations = declarations;
@@ -167,6 +189,7 @@ export class SolidStyledComponentWidgetModuleExportable extends EsWidgetModuleEx
       path: "src/components",
       imports: this.imports,
       declarations: this.declarations,
+      documentation: this.documentation,
       body: this.body,
       config: {
         exporting: exporting,

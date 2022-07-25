@@ -3,20 +3,20 @@ import {
   JsxWidgetDeclarationDocBuilder,
   JsxWidgetDeclarationDocUsageExampleBuilder,
 } from "./widget-declaration-doc-builder-jsx";
-import { react_imports } from "@web-builder/react-core";
+import { solid_js_imports } from "@web-builder/solid-js";
 import type { WidgetDeclarationInfo, WidgetModuleInfo } from "./types";
 
-class ReactWidgetDeclarationDocUsageExampleBuilder extends JsxWidgetDeclarationDocUsageExampleBuilder {
+class SolidJSWidgetDeclarationDocUsageExampleBuilder extends JsxWidgetDeclarationDocUsageExampleBuilder {
   constructor(p: { identifier: string; sourceuri?: string }) {
     super(p);
   }
 
-  protected partImportReact() {
-    return react_imports.import_react_minimal;
+  protected partImportSolid() {
+    return solid_js_imports.render;
   }
 
   protected partImportFramework() {
-    return this.partImportReact();
+    return this.partImportSolid();
   }
 
   protected partImport(): ImportDeclaration | undefined {
@@ -25,7 +25,7 @@ class ReactWidgetDeclarationDocUsageExampleBuilder extends JsxWidgetDeclarationD
   }
 }
 
-export class ReactWidgetDeclarationDocBuilder extends JsxWidgetDeclarationDocBuilder {
+export class SolidJSWidgetDeclarationDocBuilder extends JsxWidgetDeclarationDocBuilder {
   constructor(p: {
     module: WidgetModuleInfo;
     declaration: WidgetDeclarationInfo;
@@ -37,7 +37,7 @@ export class ReactWidgetDeclarationDocBuilder extends JsxWidgetDeclarationDocBui
   }
 
   protected partExample() {
-    const snippet = new ReactWidgetDeclarationDocUsageExampleBuilder({
+    const snippet = new SolidJSWidgetDeclarationDocUsageExampleBuilder({
       identifier: this.widgetname,
       sourceuri: this.sourceuri,
     }).snippet();

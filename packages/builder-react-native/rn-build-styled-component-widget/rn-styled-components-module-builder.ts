@@ -27,6 +27,11 @@ import {
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
 import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
+import {
+  ReactNativeWidgetDeclarationDocBuilder,
+  WidgetDeclarationDocumentation,
+} from "@code-features/documentation";
 
 export class ReactNativeStyledComponentsModuleBuilder extends JSXWidgetModuleBuilder<rn_config.ReactNativeStyledComponentsConfig> {
   constructor({
@@ -99,7 +104,7 @@ export class ReactNativeStyledComponentsModuleBuilder extends JSXWidgetModuleBui
   }
 
   protected partImportReactNative() {
-    return reactnative_imports.import_react_prepacked;
+    return reactnative_imports.import_react_native_prepacked;
   }
 
   protected partBody(): BlockStatement {
@@ -108,7 +113,19 @@ export class ReactNativeStyledComponentsModuleBuilder extends JSXWidgetModuleBui
   }
 
   protected partDocumentation() {
-    return undefined;
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new ReactNativeWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
   }
 
   protected partDeclarations() {
@@ -121,6 +138,7 @@ export class ReactNativeStyledComponentsModuleBuilder extends JSXWidgetModuleBui
   }
 
   public asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     const styled_declarations = this.partDeclarations();
@@ -129,6 +147,7 @@ export class ReactNativeStyledComponentsModuleBuilder extends JSXWidgetModuleBui
       {
         body,
         imports,
+        documentation: doc,
         declarations: styled_declarations,
       },
       {
@@ -146,10 +165,12 @@ export class ReactNativeStyledComponentWidgetModuleExportable extends ReactWidge
     {
       body,
       imports,
+      documentation,
       declarations,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
+      documentation: WidgetDeclarationDocumentation;
       declarations: StyledComponentDeclaration[];
     },
     {
@@ -162,6 +183,7 @@ export class ReactNativeStyledComponentWidgetModuleExportable extends ReactWidge
       name,
       body,
       imports,
+      documentation,
     });
 
     this.declarations = declarations;
@@ -178,6 +200,7 @@ export class ReactNativeStyledComponentWidgetModuleExportable extends ReactWidge
       imports: this.imports,
       declarations: this.declarations,
       body: this.body,
+      documentation: this.documentation,
       config: {
         exporting: exporting,
       },

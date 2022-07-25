@@ -3,20 +3,21 @@ import {
   JsxWidgetDeclarationDocBuilder,
   JsxWidgetDeclarationDocUsageExampleBuilder,
 } from "./widget-declaration-doc-builder-jsx";
-import { react_imports } from "@web-builder/react-core";
+import { reactnative_imports } from "@web-builder/react-native";
 import type { WidgetDeclarationInfo, WidgetModuleInfo } from "./types";
+import { ReactWidgetDeclarationDocBuilder } from "./widget-declaration-doc-builder-react";
 
-class ReactWidgetDeclarationDocUsageExampleBuilder extends JsxWidgetDeclarationDocUsageExampleBuilder {
+class ReactNativeWidgetDeclarationDocUsageExampleBuilder extends JsxWidgetDeclarationDocUsageExampleBuilder {
   constructor(p: { identifier: string; sourceuri?: string }) {
     super(p);
   }
 
-  protected partImportReact() {
-    return react_imports.import_react_minimal;
+  protected partImportReactNative() {
+    return reactnative_imports.import_react_native_prepacked;
   }
 
   protected partImportFramework() {
-    return this.partImportReact();
+    return this.partImportReactNative();
   }
 
   protected partImport(): ImportDeclaration | undefined {
@@ -25,7 +26,7 @@ class ReactWidgetDeclarationDocUsageExampleBuilder extends JsxWidgetDeclarationD
   }
 }
 
-export class ReactWidgetDeclarationDocBuilder extends JsxWidgetDeclarationDocBuilder {
+export class ReactNativeWidgetDeclarationDocBuilder extends ReactWidgetDeclarationDocBuilder {
   constructor(p: {
     module: WidgetModuleInfo;
     declaration: WidgetDeclarationInfo;
@@ -37,7 +38,7 @@ export class ReactWidgetDeclarationDocBuilder extends JsxWidgetDeclarationDocBui
   }
 
   protected partExample() {
-    const snippet = new ReactWidgetDeclarationDocUsageExampleBuilder({
+    const snippet = new ReactNativeWidgetDeclarationDocUsageExampleBuilder({
       identifier: this.widgetname,
       sourceuri: this.sourceuri,
     }).snippet();

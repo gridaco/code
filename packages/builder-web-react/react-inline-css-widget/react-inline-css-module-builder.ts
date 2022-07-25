@@ -27,6 +27,11 @@ import { CSSProperties } from "@coli.codes/css";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
 import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
+import {
+  ReactWidgetDeclarationDocBuilder,
+  WidgetDeclarationDocumentation,
+} from "@code-features/documentation";
 
 /**
  * InlineCss Style builder for React Framework
@@ -151,15 +156,29 @@ export class ReactInlineCssBuilder extends JSXWidgetModuleBuilder<react_config.R
   }
 
   protected partDocumentation() {
-    return undefined;
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new ReactWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
   }
 
   asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     return new ReactInlineCssWidgetModuleExportable(this.widgetName, {
       body,
       imports,
+      documentation: doc,
     });
   }
 }
@@ -170,15 +189,18 @@ export class ReactInlineCssWidgetModuleExportable extends ReactWidgetModuleExpor
     {
       body,
       imports,
+      documentation,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
+      documentation: WidgetDeclarationDocumentation;
     }
   ) {
     super({
       name,
       body,
       imports,
+      documentation,
     });
   }
 
@@ -193,6 +215,7 @@ export class ReactInlineCssWidgetModuleExportable extends ReactWidgetModuleExpor
       imports: this.imports,
       declarations: [],
       body: this.body,
+      documentation: this.documentation,
       config: {
         exporting: exporting,
       },

@@ -1,5 +1,5 @@
 import { license, version } from "@designto/code";
-import { FunctionDeclaration, Identifier } from "coli";
+import { FunctionDeclaration } from "coli";
 import type {
   WidgetModuleInfo,
   PropsInfo,
