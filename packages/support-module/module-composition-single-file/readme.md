@@ -52,3 +52,84 @@ function ___() {}
 export { _, __, ___ };
 export default _;
 ```
+
+While..
+
+- `D` stands for declaration
+- `I` stands for instanciation
+
+```
+- D
+  - D
+  - I
+  - I
+    - D
+      - I
+      - I
+  - I
+```
+
+```
+- D
+  - I:D1
+  - I
+  - I
+    - I:D2
+- D1
+- D2
+```
+
+```tsx
+const D = (
+  <>
+    <D1 />
+    <I />
+    <I>
+      <D2 />
+      <I />
+      <I />
+    </I>
+  </>
+);
+
+const D1 = <></>;
+
+const D2 = (
+  <>
+    <I />
+    <I />
+  </>
+);
+```
+
+There are few ways to handle the input tree like above.
+
+- Iterative declaration: declare required components while looping through the input tree.
+- Pre-iteration declarations: declare abstraction with pre-iteration and declare with plain array (non nested)
+
+Pro & Cons:
+Iterative declaration is more human like and easy to understand the progress. But this recursive approach can cause unexpected behavior.
+
+Pre iteration has more structure and abstraction, can be also used for multi-file declaration. But this approach is considered non human-like (Not the way human developers think)
+
+## Input Model
+
+```ts
+import type { Widget } from "@reflect-ui/core";
+type Token = Widget | WidgetDeclarationToken | WidgetInstanciationToken;
+
+type Input = {
+  entry: DeclarationToken;
+};
+
+abstract class DeclarationToken {}
+abstract class InstanciationToken {}
+
+class WidgetDeclarationToken extends DeclarationToken {
+  declaration: Widget;
+}
+
+class WidgetInstanciationToken extends InstanciationToken {
+  instanciation: WidgetDeclarationToken;
+}
+```

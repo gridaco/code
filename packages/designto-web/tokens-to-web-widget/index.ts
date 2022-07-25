@@ -327,9 +327,7 @@ function compose<T extends JsxWidget>(
   // -------------------------------------
   // -------------------------------------
   // module related
-  else if (widget instanceof special.DeclarationWidgetToken) {
-    throw "explicit declaration not supported yet";
-    // @ts-ignore
+  else if (widget instanceof special.WidgetDeclarationToken) {
     thisWebWidget = compose_declaration(widget, handleChild);
   }
   // -------------------------------------
