@@ -8909,6 +8909,11 @@ dart-services@^0.2.3:
   dependencies:
     axios "^0.21.0"
 
+dart-services@^0.2.5:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/dart-services/-/dart-services-0.2.5.tgz#14bfcdbfe7a5f025e373eea2bd1ac7287d12ba78"
+  integrity sha512-cdnnF3fZZbqXaL8tfkCnm5o6SpGkwiz5Yfjkpxv6jUy4FOpE45VN/e+6f7rId3b03t7zZTVq3DBTyCE+oV8ynw==
+
 dart-style@^1.3.2-dev:
   version "1.3.2-dev"
   resolved "https://registry.yarnpkg.com/dart-style/-/dart-style-1.3.2-dev.tgz#d21a80ff0b7f9d800584ec6a6a659ac3242ac855"
