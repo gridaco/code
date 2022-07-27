@@ -17,5 +17,9 @@
         "externals/reflect-core/packages/*",
         "externals/design-sdk/*",
         "externals/coli/packages/*"
-    ]
+    ],
+    "resolutions": {
+        "@reflect-ui/core": "0.0.3",
+        "csstype": "3.1.0"
+    }
 }

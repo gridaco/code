@@ -8,13 +8,13 @@ import {
   IWHStyleWidget,
   Widget,
 } from "@reflect-ui/core";
-import { tokenize } from "../../main";
+import { tokenize } from "../../tokenizer";
 import { unwrappedChild } from "../../wrappings";
 
 export function tokenize_flagged_wh_declaration(
   node: ReflectSceneNode,
   flag: WHDeclarationFlag[]
-): Widget {
+): Widget | undefined {
   if (!flag.length) return;
 
   const merged = flag

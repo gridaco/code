@@ -3,7 +3,7 @@ import { calc, operation } from "../calc";
 import { px, vw, vh } from "../dimensions";
 import { percent } from "../percent";
 
-export function length(d: DimensionLength | string, a?: Axis) {
+export function length(d: DimensionLength | string | undefined, a?: Axis) {
   if (d === undefined || d === null) {
     return;
   }
@@ -50,7 +50,7 @@ export function length(d: DimensionLength | string, a?: Axis) {
   }
 
   if (d.type == "calc") {
-    return calc(d.operations, a);
+    return calc(d.operations, a!);
   }
 
   if (d.type == "op") {

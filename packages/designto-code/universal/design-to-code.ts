@@ -2,6 +2,7 @@ import { input, output, config, build } from "../proc";
 import { tokenize, wrap } from "@designto/token";
 import { Widget } from "@reflect-ui/core";
 import * as toReact from "@designto/react";
+import * as toSolid from "@designto/solid-js";
 import * as toReactNative from "@designto/react-native";
 import * as toVanilla from "@designto/vanilla";
 import * as toFlutter from "@designto/flutter";
@@ -16,8 +17,9 @@ import {
   TokenizerConfig,
 } from "@designto/token/config";
 import { default_build_configuration, FrameworkConfig } from "@designto/config";
-import { reusable } from "@code-features/component";
+// import { reusable } from "@code-features/component";
 import assert from "assert";
+import { debug, debugIf } from "@designto/debugger";
 
 interface AssetsConfig {
   asset_repository?: BaseImageRepositories<string>;
@@ -32,30 +34,28 @@ export type Result = output.ICodeOutput & { widget: Widget } & {
   framework: FrameworkConfig;
 };
 
+export type DesignToCodeInput = {
+  input: input.IDesignInput;
+  framework: config.FrameworkConfig;
+  build_config?: config.BuildConfiguration;
+  asset_config: AssetsConfig;
+};
+
 export async function designToCode({
   input,
   framework: framework_config,
   asset_config,
   build_config = config.default_build_configuration,
-}: {
-  input: input.IDesignInput;
-  framework: config.FrameworkConfig;
-  build_config?: config.BuildConfiguration;
-  asset_config: AssetsConfig;
-}): Promise<Result> {
+}: DesignToCodeInput): Promise<Result> {
   assert(input, "input is required");
-  if (process.env.NODE_ENV === "development") {
-    if (framework_config.framework == "vanilla") {
-    } else {
-      console.info(
-        "dev: starting designtocode with user input",
-        input,
-        framework_config,
-        build_config,
-        asset_config
-      );
-    }
-  }
+  debugIf(
+    framework_config.framework !== "vanilla",
+    "dev: starting designtocode with user input",
+    input,
+    framework_config,
+    build_config,
+    asset_config
+  );
 
   // post token processing
   let tokenizer_config: TokenizerConfig = {
@@ -84,6 +84,7 @@ export async function designToCode({
 
   const vanilla_token = tokenize(input.entry, tokenizer_config);
 
+  /* COMPONENT SUPPORT IS DISABLED.
   // post token processing for componentization
   let reusable_widget_tree;
   if (!build_config.disable_components) {
@@ -97,10 +98,11 @@ export async function designToCode({
       console.error("error while building reusable widget tree.", _);
     }
   }
+  */
 
   const _tokenized_widget_input = {
     widget: vanilla_token,
-    reusable_widget_tree: reusable_widget_tree,
+    // reusable_widget_tree: reusable_widget_tree,
   };
 
   const _extend_result = {
@@ -109,6 +111,16 @@ export async function designToCode({
   };
 
   switch (framework_config.framework) {
+    case "preview":
+      return {
+        ...(await designToVanillaPreview({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          vanilla_config: framework_config,
+          asset_config: asset_config,
+        })),
+        ..._extend_result,
+      };
     case "vanilla":
       return {
         ...(await designToVanilla({
@@ -149,13 +161,22 @@ export async function designToCode({
         })),
         ..._extend_result,
       };
+    case "solid-js":
+      return {
+        ...(await designToSolid({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          solid_config: framework_config,
+          asset_config: asset_config,
+        })),
+        ..._extend_result,
+      };
   }
 
   throw `The framework "${
     // @ts-ignore
     framework_config.framework
   }" is not supported at this point.`;
-  return;
 }
 
 export const designTo = {
@@ -185,12 +206,10 @@ export async function designToReact({
     !input.reusable_widget_tree
   ) {
     const reactwidget = toReact.buildReactWidget(input.widget);
-    if (process.env.NODE_ENV === "development") {
-      console.info("dev::", "final web token composed", {
-        input: input.widget,
-        reactwidget,
-      });
-    }
+    debug("dev::", "final web token composed", {
+      input: input.widget,
+      reactwidget,
+    });
 
     const res = toReact.buildReactApp(reactwidget, react_config);
     // ------------------------------------------------------------------------
@@ -285,7 +304,109 @@ export async function designToFlutter({
 }
 
 export function designToVue(input: input.IDesignInput): output.ICodeOutput {
-  return;
+  throw "not ready";
+}
+
+export async function designToSolid({
+  input,
+  solid_config,
+  build_config,
+  asset_config,
+}: {
+  input: { widget: Widget; reusable_widget_tree? };
+  solid_config: config.SolidFrameworkConfig;
+  /**
+   * TODO: pass this to tokenizer +@
+   */
+  build_config: config.BuildConfiguration;
+  asset_config?: AssetsConfig;
+}): Promise<output.ICodeOutput> {
+  if (
+    build_config.disable_components ||
+    // automatically fallbacks if no valid data was passed
+    !input.reusable_widget_tree
+  ) {
+    const reactwidget = toReact.buildReactWidget(input.widget);
+
+    debug("dev::", "final web token composed", {
+      input: input.widget,
+      reactwidget,
+    });
+
+    const res = toSolid.buildSolidApp(reactwidget, solid_config);
+    // ------------------------------------------------------------------------
+    // finilize temporary assets
+    // this should be placed somewhere else
+    if (
+      asset_config?.asset_repository &&
+      !asset_config.skip_asset_replacement
+    ) {
+      const assets = await fetch_all_assets(asset_config.asset_repository);
+      res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
+      res.scaffold.raw = dangerous_temporary_asset_replacer(
+        res.scaffold.raw,
+        assets
+      );
+    }
+    // ------------------------------------------------------------------------
+
+    return res;
+  } else {
+    throw "Reusable components for solid-js is not ready yet.";
+  }
+}
+
+export async function designToVanillaPreview({
+  input,
+  asset_config,
+  vanilla_config,
+  build_config,
+}: {
+  input: { widget: Widget };
+  /**
+   * TODO: pass this to tokenizer +@
+   */
+  build_config: config.BuildConfiguration;
+  vanilla_config: config.VanillaPreviewFrameworkConfig;
+  asset_config?: AssetsConfig;
+}): Promise<output.ICodeOutput> {
+  const vanillawidget = toVanilla.buildVanillaWidget(
+    input.widget,
+    vanilla_config as any as config.VanillaFrameworkConfig
+  );
+  const res = toVanilla.buildVanillaPreviewFile(vanillawidget, vanilla_config);
+
+  // ------------------------------------------------------------------------
+  // finilize temporary assets
+  // this should be placed somewhere else
+  if (asset_config.custom_asset_replacement) {
+    const keys = Object.keys(asset_config.asset_repository.mergeAll());
+    res.code.raw = dangerous_custom_static_resource_replacer(
+      res.code.raw,
+      keys,
+      asset_config.custom_asset_replacement.resource
+    );
+    res.scaffold.raw = dangerous_custom_static_resource_replacer(
+      res.scaffold.raw,
+      keys,
+      asset_config.custom_asset_replacement.resource
+    );
+  } else {
+    if (
+      asset_config?.asset_repository &&
+      !asset_config.skip_asset_replacement
+    ) {
+      const assets = await fetch_all_assets(asset_config.asset_repository);
+      res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
+      res.scaffold.raw = dangerous_temporary_asset_replacer(
+        res.scaffold.raw,
+        assets
+      );
+    }
+  }
+  // ------------------------------------------------------------------------
+
+  return res;
 }
 
 export async function designToVanilla({

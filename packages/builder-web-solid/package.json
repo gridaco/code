@@ -1,0 +1,11 @@
+{
+  "name": "@web-builder/solid-js",
+  "description": "Grida's Solid code builder for development automation built uppon coli",
+  "version": "1.4.3",
+  "license": "Apache 2.0",
+  "homepage": "https://coli.codes/solid-js",
+  "author": "Grida Authors",
+  "dependencies": {
+    "@web-builder/react-core": "17.0.2"
+  }
+}

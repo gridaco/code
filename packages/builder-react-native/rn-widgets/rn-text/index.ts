@@ -53,7 +53,7 @@ export class Text extends TextChildWidget<ViewStyle> {
 
   textData() {
     return new TextDataWidget({
-      key: { ...this.key, id: this.key.id + ".text-data" },
+      key: this.key.copyWith({ id: this.key.id + ".text-data" }),
       data: this.data,
     });
   }
@@ -67,7 +67,9 @@ export class Text extends TextChildWidget<ViewStyle> {
 
       fontSize: this.textStyle.fontSize,
       fontFamily: css.fontFamily(this.textStyle.fontFamily),
-      fontWeight: css.numericFontWeight(this.textStyle.fontWeight),
+      fontWeight: css
+        .numericFontWeight(this.textStyle.fontWeight)
+        ?.toString() as TextStyle["fontWeight"],
       // FIXME: non numeric value can be passed
       letterSpacing: css.letterSpacing(
         this.textStyle.letterSpacing

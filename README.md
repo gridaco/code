@@ -32,7 +32,9 @@ update pulling - `git submodule update --init --recursive`
 | ReactJS            |  ✅   |
 | Flutter            |  ✅   |
 | React Native       |  ✅   |
+| SolidJS            |  ✅   |
 | Vanilla (html/css) |  ✅   |
+| Svelte             |  ✅   |
 | Vue                | (wip) |
 
 | **ReactJS**         |       |
@@ -75,6 +77,11 @@ update pulling - `git submodule update --init --recursive`
 | ------------------- | :---: |
 | `styled-components` |  ✅   |
 | `@mui/material`     | (wip) |
+
+| **Solid**                 |     |
+| ------------------------- | :-: |
+| `solid-styled-components` | ✅  |
+| `inline-css`              | ✅  |
 
 | **iOS** |       |
 | ------- | :---: |

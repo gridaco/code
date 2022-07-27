@@ -124,13 +124,15 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
       ...css.justifyContent(this.mainAxisAlignment),
       "flex-direction": direction(this.direction),
       "align-items": flex_align_items(this.crossAxisAlignment),
-      flex: this.flex,
+      flex: this.flex > 0 ? this.flex : undefined,
       "flex-wrap": this.flexWrap,
       gap:
         // if justify-content is set to space-between, do not set the gap.
         this.mainAxisAlignment == MainAxisAlignment.spaceBetween
           ? undefined
-          : this.itemSpacing && css.px(this.itemSpacing),
+          : this.itemSpacing > 0
+          ? css.px(this.itemSpacing)
+          : undefined,
       "box-shadow": css.boxshadow(...(this.boxShadow ?? [])),
       ...css.border(this.border),
       ...css.borderRadius(this.borderRadius),

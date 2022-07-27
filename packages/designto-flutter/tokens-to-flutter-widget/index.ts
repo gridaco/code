@@ -14,6 +14,8 @@ import {
   handle_flutter_case_no_size_stack_children,
 } from "../case-handling";
 import { rd } from "../_utils";
+import assert from "assert";
+import { WrappingContainer } from "@designto/token/tokens";
 
 export function buildFlutterWidgetFromTokens(
   widget: core.DefaultStyleWidget
@@ -33,6 +35,8 @@ function compose(
   widget: core.DefaultStyleWidget,
   context: { is_root: boolean }
 ) {
+  assert(widget, "input widget is required");
+
   const handleChildren = (
     children: core.DefaultStyleWidget[]
   ): flutter.Widget[] => {
@@ -55,6 +59,9 @@ function compose(
     ..._remove_width_height_if_root_wh,
   };
 
+  //   const _key = keyFromWidget(widget);
+  let thisFlutterWidget: flutter.Widget;
+
   const flex_props = (f: core.Flex) => {
     return {
       mainAxisAlignment: rendering.mainAxisAlignment(f.mainAxisAlignment),
@@ -63,9 +70,7 @@ function compose(
       verticalDirection: painting.verticalDirection(f.verticalDirection),
     };
   };
-  //   const _key = keyFromWidget(widget);
 
-  let thisFlutterWidget: flutter.Widget;
   if (widget instanceof core.Column) {
     const children = compose_item_spacing_children(widget.children, {
       itemspacing: widget.itemSpacing,
@@ -106,13 +111,15 @@ function compose(
     });
   } else if (widget instanceof core.Flex) {
     // FIXME: FLEX not supported yet.
-    // thisFlutterWidget = new flutter.Flex({
-    //   //   direction: widget.direction,
-    //   //   ...widget,
-    //   //   ...default_props_for_layout,
-    //   children: handleChildren(widget.children),
-    //   //   key: _key,
-    // });
+    thisFlutterWidget = new flutter.Flex({
+      ...widget,
+      ...default_props_for_layout,
+      ...flex_props(widget),
+      clipBehavior: null,
+      direction: painting.axis(widget.direction),
+      children: handleChildren(widget.children),
+      //   key: _key,
+    });
   } else if (widget instanceof core.Stack) {
     const _remove_overflow_if_root_overflow = {
       clipBehavior: context.is_root
@@ -163,29 +170,34 @@ function compose(
       }
       // -------------------------------------
     }
+  } else if (widget instanceof core.SizedBox) {
+    //
+  } else if (widget instanceof core.OverflowBox) {
+    //
   } else if (widget instanceof core.Opacity) {
     thisFlutterWidget = new flutter.Opacity({
       opacity: widget.opacity,
       child: handleChild(widget.child),
     });
+  } else if (widget instanceof core.Blurred) {
+    // FIXME: blur flutter control
+    //   const isBlurVisibile = widget.blur.visible;
+    //   if (isBlurVisibile) {
+    //     if (widget.blur.type === "LAYER_BLUR") {
+    //     } else if (widget.blur.type === "BACKGROUND_BLUR") {
+    //     }
+    //   }
   } else if (widget instanceof core.Rotation) {
     thisFlutterWidget = flutter.Transform.rotate({
       angle: widget.rotation,
       child: handleChild(widget.child),
     });
+  } else if (widget instanceof core.Expanded) {
+    thisFlutterWidget = new flutter.Expanded({
+      flex: widget.flex,
+      child: handleChild(widget.child),
+    });
   }
-
-  // FIXME: blur flutter control
-  // else if (widget instanceof core.Blurred) {
-  //   const isBlurVisibile = widget.blur.visible;
-  //   if (isBlurVisibile) {
-
-  //     if (widget.blur.type === "LAYER_BLUR") {
-
-  //     } else if (widget.blur.type === "BACKGROUND_BLUR") {
-  //     }
-  //   }
-  // }
 
   // ----- region clip path ------
   else if (widget instanceof core.ClipRRect) {
@@ -252,6 +264,41 @@ function compose(
       }
     }
   }
+
+  // #region component widgets
+  // button
+  else if (widget instanceof core.ButtonStyleButton) {
+    // TODO: widget.icon - not supported
+    // thisFlutterWidget = compose_unwrapped_button(_key, widget);
+  }
+  // textfield
+  else if (widget instanceof core.TextField) {
+    // thisFlutterWidget = compose_unwrapped_text_input(_key, widget);
+  } else if (widget instanceof core.Slider) {
+    // thisFlutterWidget = compose_unwrapped_slider(_key, widget);
+  }
+  // wrapping container
+  else if (widget instanceof WrappingContainer) {
+    // #region
+    // mergable widgets for web
+    // if (widget.child instanceof core.TextField) {
+    //   thisFlutterWidget = compose_unwrapped_text_input(
+    //     _key,
+    //     widget.child,
+    //     widget
+    //   );
+    // } else if (widget.child instanceof core.ButtonStyleButton) {
+    //   thisFlutterWidget = compose_unwrapped_button(_key, widget.child, widget);
+    // } else if (widget.child instanceof core.Slider) {
+    //   thisFlutterWidget = compose_unwrapped_slider(_key, widget.child, widget);
+    // } else {
+    //   throw new Error(
+    //     `Unsupported widget type: ${widget.child.constructor.name}`
+    //   );
+    // }
+    // #endregion
+  }
+  // #endregion
 
   // execution order matters - some above widgets inherits from Container, this shall be handled at the last.
   else if (widget instanceof core.Container) {

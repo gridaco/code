@@ -1,6 +1,6 @@
 export * as tokens from "./tokens";
 // main
-export { tokenize } from "./main";
+export { tokenize } from "./tokenizer";
 
 // region utils
 export * as utils from "./utils";

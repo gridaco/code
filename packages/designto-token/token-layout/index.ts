@@ -1,5 +1,6 @@
 import { nodes, ReflectSceneNodeType } from "@design-sdk/core";
 import { layoutAlignToReflectMainAxisSize } from "@design-sdk/figma-node-conversion";
+import type { Constraints } from "@design-sdk/figma-types";
 import * as core from "@reflect-ui/core";
 import {
   Axis,
@@ -7,7 +8,6 @@ import {
   Stack,
   Flex,
   Row,
-  Opacity,
   Positioned,
   Widget,
   VerticalDirection,
@@ -19,9 +19,6 @@ import {
   Calculation,
   Clip,
   Border,
-  ClipRRect,
-  Blurred,
-  Rotation,
   IWHStyleWidget,
   Operation,
 } from "@reflect-ui/core";
@@ -30,7 +27,7 @@ import { Background } from "@reflect-ui/core/lib/background";
 import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
 import { TokenizerConfig } from "../config";
 import { keyFromNode } from "../key";
-import { handleChildren, RuntimeChildrenInput } from "../main";
+import { handleChildren, RuntimeChildrenInput } from "../tokenizer";
 import { tokenizeBackground } from "../token-background";
 import { tokenizeBorder } from "../token-border";
 import { Stretched } from "../tokens";
@@ -249,7 +246,9 @@ function find_original(ogchildren: Array<nodes.ReflectSceneNode>, of: Widget) {
       // target the unwrapped child
       c.id === (_unwrappedChild && _unwrappedChild.key.id) ||
       // target the widget itself - some widgets are not wrapped, yet being converted to a container-like (e.g. maskier)
-      c.id === of.key.id
+      c.id === of.key.id ||
+      c.id === of.key.id.split(".")[0] || // {id}.positioned or {id}.scroll-wrap TODO: this logic can cause problem later on.
+      of.key.id.includes(c.id) // other cases
   );
   if (!ogchild) {
     console.error(
@@ -278,7 +277,7 @@ function stackChild({
   container: nodes.ReflectSceneNode;
   wchild: core.Widget;
 }) {
-  const constraint = {
+  let constraint = {
     left: undefined,
     top: undefined,
     right: undefined,
@@ -290,15 +289,10 @@ function stackChild({
   const _unwrappedChild: IWHStyleWidget = unwrappedChild(
     child
   ) as IWHStyleWidget;
-  const wh = {
+  let wh = {
     width: _unwrappedChild.width,
     height: _unwrappedChild.height,
   };
-
-  const _l = ogchild.x;
-  const _r = container.width - (ogchild.x + ogchild.width);
-  const _t = ogchild.y;
-  const _b = container.height - (ogchild.y + ogchild.height);
 
   /**
    * "MIN": Left or Top
@@ -320,101 +314,25 @@ function stackChild({
     );
     // throw `${ogchild.toString()} has no constraints. this can happen when node under group item tokenization is incomplete. this is engine's error.`;
   } else {
-    switch (ogchild.constraints.horizontal) {
-      case "MIN":
-        constraint.left = _l;
-        break;
-      case "MAX":
-        constraint.right = _r;
-        break;
-      case "SCALE": /** scale fallbacks to stretch */
-      case "STRETCH":
-        constraint.left = _l;
-        constraint.right = _r;
-        wh.width = undefined; // no fixed width
-        break;
-      case "CENTER":
-        const half_w = ogchild.width / 2;
-        const centerdiff =
-          // center of og
-          half_w +
-          ogchild.x -
-          // center of frame
-          container.width / 2;
-        constraint.left = <Calculation>{
-          type: "calc",
-          operations: <Operation>{
-            type: "op",
-            left: {
-              type: "calc",
-              operations: <Operation>{
-                type: "op",
-                left: "50%",
-                op: "+",
-                right: centerdiff,
-              },
-            },
-            op: "-", // this part is different
-            right: half_w,
-          },
-        };
-        // --- we can also specify the right, but left is enough.
-        // constraint.right = <Calculation>{
-        //   type: "calc",
-        //   operations: {
-        //     left: {
-        //       type: "calc",
-        //       operations: { left: "50%", op: "+", right: centerdiff },
-        //     },
-        //     op: "+", // this part is different
-        //     right: half,
-        //   },
-        // };
-        break;
-    }
-    switch (ogchild.constraints.vertical) {
-      case "MIN":
-        constraint.top = _t;
-        break;
-      case "MAX":
-        constraint.bottom = _b;
-        break;
-      case "SCALE": /** scale fallbacks to stretch */
-      case "STRETCH":
-        constraint.top = _t;
-        constraint.bottom = _b;
-        wh.height = undefined;
-        break;
-      case "CENTER":
-        const half_height = ogchild.height / 2;
-        const container_snapshot_center = container.height / 2;
-        const child_snapshot_center = half_height + ogchild.y;
+    const _l = ogchild.x;
+    const _r = container.width - (ogchild.x + ogchild.width);
+    const _t = ogchild.y;
+    const _b = container.height - (ogchild.y + ogchild.height);
 
-        const centerdiff =
-          // center of og
-          child_snapshot_center -
-          // center of frame
-          container_snapshot_center;
+    const res = handlePositioning({
+      constraints: ogchild.constraints,
+      pos: { l: _l, t: _t, b: _b, r: _r, x: ogchild.x, y: ogchild.y },
+      width: ogchild.width,
+      height: ogchild.height,
+      containerWidth: container.width,
+      containerHeight: container.height,
+    });
 
-        constraint.top = <Calculation>{
-          type: "calc",
-          operations: <Operation>{
-            type: "op",
-            left: {
-              type: "calc",
-              operations: <Operation>{
-                type: "op",
-                left: "50%",
-                op: "+",
-                right: centerdiff,
-              },
-            },
-            op: "-", // this part is different
-            right: half_height,
-          },
-        };
-        break;
-    }
+    constraint = res.constraint;
+    wh = {
+      ...wh,
+      ...res.wh,
+    };
   }
 
   // console.log("positioning based on constraints", { wh, constraint, child });
@@ -428,6 +346,140 @@ function stackChild({
     ...wh,
     child: child,
   });
+}
+
+/**
+ * calculates the position & constraints based on the input.
+ * @param
+ * @returns
+ */
+function handlePositioning({
+  constraints,
+  pos,
+  width,
+  height,
+  containerWidth,
+  containerHeight,
+}: {
+  constraints: Constraints;
+  pos: { l: number; r: number; t: number; b: number; x: number; y: number };
+  width: number;
+  height: number;
+  containerWidth: number;
+  containerHeight: number;
+}): {
+  constraint;
+  wh: {
+    width?: number;
+    height?: number;
+  };
+} {
+  const constraint = {
+    left: undefined,
+    top: undefined,
+    right: undefined,
+    bottom: undefined,
+  };
+  const wh = { width, height };
+
+  switch (constraints.horizontal) {
+    case "MIN":
+      constraint.left = pos.l;
+      break;
+    case "MAX":
+      constraint.right = pos.r;
+      break;
+    case "SCALE": /** scale fallbacks to stretch */
+    case "STRETCH":
+      constraint.left = pos.l;
+      constraint.right = pos.r;
+      wh.width = undefined; // no fixed width
+      break;
+    case "CENTER":
+      const half_w = width / 2;
+      const centerdiff =
+        // center of og
+        half_w +
+        pos.x -
+        // center of frame
+        containerWidth / 2;
+      constraint.left = <Calculation>{
+        type: "calc",
+        operations: <Operation>{
+          type: "op",
+          left: {
+            type: "calc",
+            operations: <Operation>{
+              type: "op",
+              left: "50%",
+              op: "+",
+              right: centerdiff,
+            },
+          },
+          op: "-", // this part is different
+          right: half_w,
+        },
+      };
+      // --- we can also specify the right, but left is enough.
+      // constraint.right = <Calculation>{
+      //   type: "calc",
+      //   operations: {
+      //     left: {
+      //       type: "calc",
+      //       operations: { left: "50%", op: "+", right: centerdiff },
+      //     },
+      //     op: "+", // this part is different
+      //     right: half,
+      //   },
+      // };
+      break;
+  }
+  switch (constraints.vertical) {
+    case "MIN":
+      constraint.top = pos.t;
+      break;
+    case "MAX":
+      // TODO: add this custom logic - if fixed to bottom 0 , it should be fixed rather than absolute. (as a footer)
+      constraint.bottom = pos.b;
+      break;
+    case "SCALE": /** scale fallbacks to stretch */
+    case "STRETCH":
+      constraint.top = pos.t;
+      constraint.bottom = pos.b;
+      wh.height = undefined;
+      break;
+    case "CENTER":
+      const half_height = height / 2;
+      const container_snapshot_center = containerHeight / 2;
+      const child_snapshot_center = half_height + pos.y;
+
+      const centerdiff =
+        // center of og
+        child_snapshot_center -
+        // center of frame
+        container_snapshot_center;
+
+      constraint.top = <Calculation>{
+        type: "calc",
+        operations: <Operation>{
+          type: "op",
+          left: {
+            type: "calc",
+            operations: <Operation>{
+              type: "op",
+              left: "50%",
+              op: "+",
+              right: centerdiff,
+            },
+          },
+          op: "-", // this part is different
+          right: half_height,
+        },
+      };
+      break;
+  }
+
+  return { constraint, wh };
 }
 
 function fromGroup(
@@ -444,7 +496,7 @@ function fromGroup(
       return c;
     } else {
       const ogchild = find_original(
-        only_original(children).concat(references || []),
+        only_original(children).concat(references),
         c
       );
       return stackChild({

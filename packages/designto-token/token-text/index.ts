@@ -47,6 +47,7 @@ export function fromText(node: nodes.ReflectTextNode): RenderedText {
       color: node.primaryColor,
       lineHeight: node.lineHeight,
       letterSpacing: node.letterSpacing,
+      textTransform: node.textCase,
       textShadow: node.shadows as TextShadowManifest[],
     }),
     ...wh,

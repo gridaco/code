@@ -79,5 +79,5 @@ export const reactnative_imports = {
    *
    * `import { StyleSheet, Text, View } from "react-native";`
    */
-  import_react_prepacked: import_stylesheet_text_view_from_react_native,
+  import_react_native_prepacked: import_stylesheet_text_view_from_react_native,
 };

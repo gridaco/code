@@ -4,14 +4,12 @@ import type { JsxWidget } from "@web-builder/core";
 import {
   react_imports,
   ReactWidgetModuleExportable,
-  makeReactModuleFile,
 } from "@web-builder/react-core";
 import {
   buildJsx,
-  getWidgetStylesConfigMap,
+  StylesConfigMapBuilder,
   JSXWithoutStyleElementConfig,
   JSXWithStyleElementConfig,
-  WidgetStyleConfigMap,
 } from "@web-builder/core/builders";
 import {
   BlockStatement,
@@ -26,6 +24,14 @@ import {
 } from "coli";
 import { cssToJson } from "@web-builder/styles/_utils";
 import { CSSProperties } from "@coli.codes/css";
+import { makeEsWidgetModuleFile } from "@web-builder/module-es";
+import { Framework } from "@grida/builder-platform-types";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
+import {
+  ReactWidgetDeclarationDocBuilder,
+  WidgetDeclarationDocumentation,
+} from "@code-features/documentation";
 
 /**
  * InlineCss Style builder for React Framework
@@ -39,13 +45,7 @@ import { CSSProperties } from "@coli.codes/css";
  * ```
  *
  */
-export class ReactInlineCssBuilder {
-  private readonly entry: JsxWidget;
-  private readonly widgetName: string;
-  readonly config: react_config.ReactInlineCssConfig;
-  private readonly namer: ScopedVariableNamer;
-  private readonly stylesConfigWidgetMap: WidgetStyleConfigMap;
-
+export class ReactInlineCssBuilder extends JSXWidgetModuleBuilder<react_config.ReactInlineCssConfig> {
   constructor({
     entry,
     config,
@@ -53,26 +53,39 @@ export class ReactInlineCssBuilder {
     entry: JsxWidget;
     config: react_config.ReactInlineCssConfig;
   }) {
-    this.entry = entry;
-    this.widgetName = entry.key.name;
-    this.config = config;
-    this.namer = new ScopedVariableNamer(
-      entry.key.id,
-      ReservedKeywordPlatformPresets.react
-    );
-    this.stylesConfigWidgetMap = getWidgetStylesConfigMap(entry, {
-      namer: this.namer,
-      rename_tag: false,
+    super({
+      entry,
+      config,
+      framework: Framework.react,
+      namer: new ScopedVariableNamer(
+        entry.key.id,
+        ReservedKeywordPlatformPresets.react
+      ),
     });
   }
 
-  private stylesConfig(
-    id: string
-  ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
-    return this.stylesConfigWidgetMap.get(id);
+  protected initStylesConfigMapBuilder() {
+    return new StylesConfigMapBuilder(
+      this.entry,
+      {
+        namer: this.namer,
+        rename_tag: false,
+      },
+      Framework.react
+    );
   }
 
-  private jsxBuilder(widget: JsxWidget) {
+  protected initStylesRepository() {
+    return false as false;
+  }
+
+  protected stylesConfig(
+    id: string
+  ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
+    return this.stylesMapper.map.get(id)!;
+  }
+
+  protected jsxBuilder(widget: JsxWidget) {
     return buildJsx(
       widget,
       {
@@ -93,7 +106,9 @@ export class ReactInlineCssBuilder {
             //
             const styledata: CSSProperties =
               (cfg as JSXWithStyleElementConfig).style ?? {};
-            const reactStyleData = cssToJson(styledata);
+            const reactStyleData = cssToJson(styledata, {
+              camelcase: true,
+            });
             const properties: PropertyAssignment[] = Object.keys(
               reactStyleData
             ).map(
@@ -117,7 +132,7 @@ export class ReactInlineCssBuilder {
           const newattributes = [
             ...(_default_attr ?? []),
             //
-            style,
+            style!,
           ];
 
           cfg.attributes = newattributes;
@@ -140,12 +155,30 @@ export class ReactInlineCssBuilder {
     return new BlockStatement(new Return(jsxTree));
   }
 
+  protected partDocumentation() {
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new ReactWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
+  }
+
   asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     return new ReactInlineCssWidgetModuleExportable(this.widgetName, {
       body,
       imports,
+      documentation: doc,
     });
   }
 }
@@ -156,15 +189,18 @@ export class ReactInlineCssWidgetModuleExportable extends ReactWidgetModuleExpor
     {
       body,
       imports,
+      documentation,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
+      documentation: WidgetDeclarationDocumentation;
     }
   ) {
     super({
       name,
       body,
       imports,
+      documentation,
     });
   }
 
@@ -173,12 +209,13 @@ export class ReactInlineCssWidgetModuleExportable extends ReactWidgetModuleExpor
   }: {
     exporting: react_config.ReactComponentExportingCofnig;
   }) {
-    return makeReactModuleFile({
+    return makeEsWidgetModuleFile({
       name: this.name,
       path: "src/components",
       imports: this.imports,
       declarations: [],
       body: this.body,
+      documentation: this.documentation,
       config: {
         exporting: exporting,
       },

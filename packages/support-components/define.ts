@@ -184,7 +184,8 @@ export function make_instance_component_meta({ entry, components }: Input) {
   };
 
   const masterMeta = new MasterComponentMetaToken({
-    key: keyFromNode(findIn(components, masterId)),
+    // TODO: remove casting after component node support on reflect nodes
+    key: keyFromNode(findIn(components, masterId) as any as ReflectSceneNode),
     properties: properties.map((p) => {
       return <Property<any>>{
         key: get_property_key(p.type, p.master),
@@ -205,7 +206,8 @@ export function make_instance_component_meta({ entry, components }: Input) {
 
   const entryInstanceMeta = new InstanceMetaToken({
     master: masterMeta,
-    key: keyFromNode(entry),
+    // TODO: remove casting after component node support on reflect nodes
+    key: keyFromNode(entry as any as ReflectSceneNode),
     arguments: properties.reduce(function (result, item, index, array) {
       result[item.type] = {
         key: get_property_key(item.type, item.master),
