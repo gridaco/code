@@ -1,3 +1,7 @@
+<center>
+<image src="./branding/gh-artwork.png"/>
+</center>
+
 # Design to code
 
 https://user-images.githubusercontent.com/16307013/145498355-58fb2cf3-a6a0-44a3-8515-3859b048c3a4.mov
@@ -107,7 +111,8 @@ Integrated usage
 </details>
 
 <details>
-<summary>Vue3</summary>
+<summary>SolidJS</summary>
+
 | **Solid**                 |     |
 | ------------------------- | :-: |
 | `solid-styled-components` | ✅  |
@@ -160,9 +165,42 @@ yarn editor
 
 </details>
 
-### Architecture
+## Features
 
-Read [architecture.md](./architecture.md)
+- preprocessing
+  - lint
+    - layout lint
+    - naming lint
+- design
+  - layouts
+  - animations
+  - constraints
+  - breakpoints
+- code
+  - documentation
+    - tsdoc
+  - single-file module
+  - multi-file module
+
+<details>
+<summary>Layouts</summary>
+
+</details>
+
+<details>
+<summary>Animations (motions)</summary>
+
+</details>
+
+<details>
+<summary>Constraints</summary>
+
+</details>
+
+<details>
+<summary>Breakpoints</summary>
+
+</details>
 
 ### Editor (web IDE)
 
@@ -186,3 +224,7 @@ Visit project ([`./editor`](./editor/))
 ![Grida's design to code. design node visualization snapshot](./branding/example-visualization-design-nodes.png)
 
 </details>
+
+## Architecture
+
+Read [architecture.md](./architecture.md)
