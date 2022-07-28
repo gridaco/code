@@ -1,9 +1,19 @@
 <center>
-<image src="./branding/gh-artwork.png"/>
-<h2>Design to code</h2>
-Design to code engine. A design ✌️ code standard.
 
 </center>
+
+<p align="center">
+  <a href="https://code.grida.co">
+  <image src="./branding/gh-artwork.png" />
+    <h3 align="center">Design to Code</h3>
+  </a>
+</p>
+
+<p align="center">
+  Design to code engine. A design ✌️ code standard.
+</p>
+
+---
 
 https://user-images.githubusercontent.com/16307013/145498355-58fb2cf3-a6a0-44a3-8515-3859b048c3a4.mov
 
@@ -16,6 +26,13 @@ npx designto react https://www.figma.com/files/XXX
 **Or.. [👩‍💻 Try designto-code from browser IDE](https://code.grida.co)**
 
 ## Usage
+
+```bash
+npm i -g @designto/cli
+
+# react + figma example
+designto react https://www.figma.com/files/XXX -o mypage.tsx
+```
 
 Integrated usage
 
