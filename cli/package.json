@@ -1,15 +1,22 @@
 {
-    "name": "@designto/cli",
+    "name": "@grida/code-cli",
     "version": "0.0.0",
     "dependencies": {
         "ts-node": "^10.9.1",
         "yargs": "^17.2.1"
     },
+    "scripts": {
+        "dev": "ts-node index.ts",
+        "test": "jest"
+    },
     "devDependencies": {
         "@types/node": "^18.6.1",
-        "@types/yargs": "^17.0.3"
+        "@types/yargs": "^17.0.3",
+        "jest": "^28.1.3",
+        "ts-jest": "^28.0.7",
+        "typescript": "^4.7.4"
     },
     "bin": {
-        "designto": "./bin/index.js"
+        "grida": "./bin/index.js"
     }
 }
