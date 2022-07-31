@@ -1,11 +1,11 @@
 import * as flutter from "@flutter-builder/flutter";
-import { nodes } from "@design-sdk/core";
+import { IReflectLayoutMixin } from "@design-sdk/figma-node";
 
 /**
  * https://api.flutter.dev/flutter/widgets/Transform-class.html
  */
 export function wrapWithRotation(
-  node: nodes.IReflectLayoutMixin,
+  node: IReflectLayoutMixin,
   child: flutter.Widget
 ): flutter.Widget {
   if (node.rotation !== undefined && child && Math.round(node.rotation) !== 0) {

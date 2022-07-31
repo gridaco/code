@@ -1,11 +1,11 @@
 import * as flutter from "@flutter-builder/flutter";
-import { nodes } from "@design-sdk/core";
+import type { ReflectSceneNode } from "@design-sdk/figma-node";
 
 /**
  * Wrap widget with visibility if possible
  */
 export function wrapWithVisibility(
-  node: nodes.ReflectSceneNode,
+  node: ReflectSceneNode,
   child: flutter.Widget
 ): flutter.Widget {
   if (node.visible !== undefined && node.visible === false && child) {

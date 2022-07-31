@@ -1,6 +1,13 @@
 import { convertToSize } from "../_utils";
-import { Figma, nodes } from "@design-sdk/figma";
-import { converters } from "@reflect-ui/core/lib";
+import { Figma } from "@design-sdk/figma";
+import {
+  ReflectSceneNode,
+  ReflectRectangleNode,
+  ReflectEllipseNode,
+  ReflectFrameNode,
+} from "@design-sdk/figma-node";
+import { mixed } from "@design-sdk/figma-core";
+import { converters } from "@reflect-ui/core";
 import * as flutter from "@flutter-builder/flutter";
 // import { makeColor } from "../make/color.make";
 // import { makeShape as makeShape } from "../make/shape.make";
@@ -9,10 +16,7 @@ import { wrapWithPadding } from "./padding.wrap";
 
 // https://api.flutter.dev/flutter/material/Material-class.html
 export function wrapWithMaterial(
-  node:
-    | nodes.ReflectRectangleNode
-    | nodes.ReflectEllipseNode
-    | nodes.ReflectFrameNode,
+  node: ReflectRectangleNode | ReflectEllipseNode | ReflectFrameNode,
   child: flutter.Widget
 ): flutter.Widget {
   // ignore the view when size is zero or less
@@ -49,10 +53,7 @@ export function wrapWithMaterial(
 }
 
 function materialColor(
-  node:
-    | nodes.ReflectRectangleNode
-    | nodes.ReflectEllipseNode
-    | nodes.ReflectFrameNode
+  node: ReflectRectangleNode | ReflectEllipseNode | ReflectFrameNode
 ): flutter.Color {
   const color = makeColor(node.fills);
   if (!color) {
@@ -62,10 +63,7 @@ function materialColor(
 }
 
 function materialShape(
-  node:
-    | nodes.ReflectRectangleNode
-    | nodes.ReflectEllipseNode
-    | nodes.ReflectFrameNode
+  node: ReflectRectangleNode | ReflectEllipseNode | ReflectFrameNode
 ): flutter.ShapeBorder | flutter.BorderRadiusGeometry {
   if (node.type === "ELLIPSE" || node.strokes?.length > 0) {
     return makeShape(node);
@@ -74,10 +72,10 @@ function materialShape(
   }
 }
 
-function getClipping(node: nodes.ReflectSceneNode): string {
+function getClipping(node: ReflectSceneNode): string {
   let clip = false;
-  if (node instanceof nodes.ReflectFrameNode) {
-    if (node.cornerRadius != nodes.mixed && node.cornerRadius !== 0) {
+  if (node instanceof ReflectFrameNode) {
+    if (node.cornerRadius != mixed && node.cornerRadius !== 0) {
       clip = node.clipsContent;
     }
   }
@@ -86,7 +84,7 @@ function getClipping(node: nodes.ReflectSceneNode): string {
 }
 
 function flutterElevationAndShadowColor(
-  node: nodes.ReflectSceneNode
+  node: ReflectSceneNode
 ): [string, string] {
   let elevation = "";
   let shadowColor = "";

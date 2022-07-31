@@ -1,7 +1,7 @@
 import { Figma } from "@design-sdk/figma";
 import { retrieveFill } from "@design-sdk/core/utils";
 import * as flutter from "@flutter-builder/flutter";
-import { converters } from "@reflect-ui/core/lib";
+import { converters } from "@reflect-ui/core";
 
 /**
  * Retrieve the SOLID color for Flutter when existent, otherwise ""

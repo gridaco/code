@@ -1,4 +1,4 @@
-import { ReflectSceneNode } from "@design-sdk/core";
+import { ReflectSceneNode } from "@design-sdk/figma-node";
 import * as flutter from "@flutter-builder/flutter";
 import {
   findRemotePreservedDefaultNamedOssIcon,
@@ -7,7 +7,7 @@ import {
 } from "../interpreter/icon.interpreter";
 import { Color, IconManifest, MdiConfig } from "@reflect-ui/core";
 import * as dartui from "../dart-ui";
-import { DetectedIconData } from "@reflect-ui/detection/lib/icon.detection";
+import type { DetectedIconData } from "@reflect-ui/detection";
 import { rd } from "../_utils";
 
 type FlutterDynamicIconLike = flutter.Icon | flutter.Image;

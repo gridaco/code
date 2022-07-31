@@ -8,6 +8,7 @@
   "license": "Apache 2.0",
   "private": false,
   "dependencies": {
-    "@reflect-ui/core": "0.0.3"
+    "@reflect-ui/core": "^0.0.8",
+    "@reflect-ui/detection": "0.1.6"
   }
 }

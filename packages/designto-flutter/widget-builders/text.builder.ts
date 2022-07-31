@@ -1,4 +1,4 @@
-import { ReflectTextNode } from "@design-sdk/core";
+import { ReflectTextNode } from "@design-sdk/figma-node";
 import { SizedBox, Text, Widget } from "@flutter-builder/flutter";
 import { makeText } from "../make/make-flutter-text";
 import { WidgetBuilder } from "./default.builder";

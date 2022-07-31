@@ -1,10 +1,10 @@
-import { ReflectDefaultShapeMixin } from "@design-sdk/core";
+import { ReflectDefaultShapeMixin } from "@design-sdk/figma-node";
 import { ImageProvider, NetworkImage } from "@flutter-builder/flutter";
 import {
   retrieveImageFill,
   retrievePrimaryImageFill,
 } from "@design-sdk/core/utils/retrieve-image-fills";
-import { repo_assets } from "@design-sdk/core";
+import { MainImageRepository } from "@design-sdk/asset-repository";
 import { Figma } from "@design-sdk/figma";
 
 /**
@@ -34,7 +34,7 @@ export function interpretImageFills(
     image = retrieveImageFill(fills as Figma.ImagePaint);
   }
 
-  const hostedImage = repo_assets.MainImageRepository.instance
+  const hostedImage = MainImageRepository.instance
     .get("fill-later-assets")
     .addImage({
       key: key,
@@ -50,7 +50,7 @@ export function interpretImageFill(
   key: string
 ): ImageProvider {
   let image = retrieveImageFill(fill);
-  const hostedImage = repo_assets.MainImageRepository.instance
+  const hostedImage = MainImageRepository.instance
     .get("fill-later-assets")
     .addImage({
       key: key,

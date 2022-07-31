@@ -11,15 +11,12 @@
     "workspaces": [
         "editor",
         "editor-packages/*",
-        "editor-packages/base-sdk/_firstparty/*",
         "packages/*",
-        "ui/editor-ui/packages/*",
-        "externals/reflect-core/packages/*",
-        "externals/design-sdk/*",
-        "externals/coli/packages/*"
+        "ui/editor-ui/packages/*"
     ],
     "resolutions": {
-        "@reflect-ui/core": "0.0.3",
+        "@design-sdk/figma-node": "0.0.25",
+        "@reflect-ui/core": "0.0.8",
         "csstype": "3.1.0"
     }
 }

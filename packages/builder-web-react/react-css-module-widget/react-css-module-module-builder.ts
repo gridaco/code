@@ -1,5 +1,5 @@
 import { ScopedVariableNamer } from "@coli.codes/naming";
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
 import {
   BlockStatement,
   Identifier,

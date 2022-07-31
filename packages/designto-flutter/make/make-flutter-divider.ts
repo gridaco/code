@@ -1,4 +1,4 @@
-import { nodes } from "@design-sdk/core";
+import type { ReflectDefaultShapeMixin } from "@design-sdk/figma-node";
 import * as core from "@reflect-ui/core";
 import * as flutter from "@flutter-builder/flutter";
 import { makeColor } from "./make-flutter-color";
@@ -32,7 +32,7 @@ export function makeFlutterDivider(
  * @param node
  * @returns
  */
-export function makeVerticalDivider(node: nodes.ReflectDefaultShapeMixin) {
+export function makeVerticalDivider(node: ReflectDefaultShapeMixin) {
   return new flutter.VerticalDivider({
     width: rd(node.width),
     color: makeColor(node.fills),

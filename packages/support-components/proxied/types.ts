@@ -1,4 +1,4 @@
-import { Proxied } from "@reflect-ui/core/lib/_utility-types";
+import { Proxied } from "@reflect-ui/core/reflection";
 
 export class ParameterProxy<T> extends Proxied<T> {
   readonly key: string;

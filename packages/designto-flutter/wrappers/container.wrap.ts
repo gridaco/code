@@ -1,5 +1,10 @@
 import { convertToSize } from "../_utils";
-import { nodes } from "@design-sdk/core";
+import {
+  ReflectRectangleNode,
+  ReflectEllipseNode,
+  ReflectFrameNode,
+  ReflectGroupNode,
+} from "@design-sdk/figma-node";
 import { array } from "@reflect-ui/uiutils";
 import * as flutter from "@flutter-builder/flutter";
 import { makeBoxDecoration } from "../make/make-flutter-box-decoration";
@@ -8,10 +13,10 @@ import * as painting from "../painting";
 
 export function wrapWithContainer(
   node:
-    | nodes.ReflectRectangleNode
-    | nodes.ReflectEllipseNode
-    | nodes.ReflectFrameNode
-    | nodes.ReflectGroupNode,
+    | ReflectRectangleNode
+    | ReflectEllipseNode
+    | ReflectFrameNode
+    | ReflectGroupNode,
   child?: flutter.Widget,
   options?: { size: flutter.Size }
 ): flutter.Widget {
@@ -24,9 +29,7 @@ export function wrapWithContainer(
 
   const _boxDecoration =
     // ignore for GroupNode
-    node instanceof nodes.ReflectGroupNode
-      ? undefined
-      : makeBoxDecoration(node);
+    node instanceof ReflectGroupNode ? undefined : makeBoxDecoration(node);
 
   // if option passed, use option's value
   const _size = array.filters.notEmpty(options?.size)
@@ -37,7 +40,7 @@ export function wrapWithContainer(
   // todo Image, Gradient & multiple fills
 
   let _padding: flutter.EdgeInsetsGeometry;
-  if (node instanceof nodes.ReflectFrameNode) {
+  if (node instanceof ReflectFrameNode) {
     _padding = painting.edgeinsets(node.padding);
   }
 

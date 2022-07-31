@@ -1,4 +1,8 @@
-import { nodes } from "@design-sdk/core";
+import {
+  ReflectRectangleNode,
+  ReflectEllipseNode,
+  ReflectFrameNode,
+} from "@design-sdk/figma-node";
 import { Figma } from "@design-sdk/figma";
 import { retrieveFill } from "@design-sdk/core/utils";
 import * as flutter from "@flutter-builder/flutter";
@@ -14,10 +18,7 @@ type DecorationBackgroundLike =
   | flutter.ImageProvider;
 
 export function makeBoxDecoration(
-  node:
-    | nodes.ReflectRectangleNode
-    | nodes.ReflectEllipseNode
-    | nodes.ReflectFrameNode
+  node: ReflectRectangleNode | ReflectEllipseNode | ReflectFrameNode
 ): flutter.BoxDecoration | flutter.Color {
   const _border = tokenizeBorder.fromNode(node);
   const decorationBorder = painting.border(_border);
@@ -48,7 +49,7 @@ export function makeBoxDecoration(
 
   // modify the circle's shape when type is ellipse
   const decorationShape: flutter.BoxShape =
-    node instanceof nodes.ReflectEllipseNode
+    node instanceof ReflectEllipseNode
       ? (flutter.BoxShape.circle as flutter.Snippet)
       : undefined;
 

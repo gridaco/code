@@ -10,8 +10,8 @@ import { fetchTargetAsReflect } from "@design-sdk/figma-remote";
 import {
   ImageRepository,
   MainImageRepository,
-} from "@design-sdk/core/assets-repository";
-import { RemoteImageRepositories } from "@design-sdk/figma-remote/lib/asset-repository/image-repository";
+} from "@design-sdk/asset-repository";
+import { RemoteImageRepositories } from "@design-sdk/figma-remote/asset-repository";
 
 import fs from "fs";
 import path from "path";

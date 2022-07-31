@@ -1,12 +1,13 @@
 import * as flutter from "@flutter-builder/flutter";
-import { nodes } from "@design-sdk/core";
+import {
+  ReflectFrameNode,
+  ReflectEllipseNode,
+  ReflectRectangleNode,
+} from "@design-sdk/figma-node";
 import { makeEdgeInsets } from "../make/edge-insets.make";
 
 export function wrapWithPadding(
-  node:
-    | nodes.ReflectFrameNode
-    | nodes.ReflectEllipseNode
-    | nodes.ReflectRectangleNode,
+  node: ReflectFrameNode | ReflectEllipseNode | ReflectRectangleNode,
   child: flutter.Widget
 ): flutter.Widget {
   const padding = makeEdgeInsets(node);

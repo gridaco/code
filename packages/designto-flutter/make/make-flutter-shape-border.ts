@@ -1,7 +1,11 @@
 import * as flutter from "@flutter-builder/flutter";
 import * as painting from "../painting";
 import { makeColor } from "./make-flutter-color";
-import { nodes } from "@design-sdk/core";
+import {
+  ReflectRectangleNode,
+  ReflectEllipseNode,
+  ReflectFrameNode,
+} from "@design-sdk/figma-node";
 
 /**
  * [Flutter#ShapeBorder](https://api.flutter.dev/flutter/painting/ShapeBorder-class.html)
@@ -10,10 +14,7 @@ import { nodes } from "@design-sdk/core";
  * @returns
  */
 export function makeShape(
-  node:
-    | nodes.ReflectRectangleNode
-    | nodes.ReflectEllipseNode
-    | nodes.ReflectFrameNode
+  node: ReflectRectangleNode | ReflectEllipseNode | ReflectFrameNode
 ): flutter.ShapeBorder {
   const strokeColor = makeColor(node.strokes);
   const side: flutter.BorderSide =

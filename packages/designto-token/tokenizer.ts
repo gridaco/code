@@ -1,4 +1,8 @@
-import { nodes } from "@design-sdk/core";
+import {
+  ReflectSceneNode,
+  ReflectTextNode,
+  ReflectSceneNodeType,
+} from "@design-sdk/figma-node";
 import { Expanded, Widget } from "@reflect-ui/core";
 import type { Blurred, Opacity, Rotation } from "@reflect-ui/core";
 import type { Stretched } from "./tokens";
@@ -34,7 +38,7 @@ import flags_handling_gate from "./support-flags";
 
 export type { Widget };
 
-export type RuntimeChildrenInput = Array<nodes.ReflectSceneNode | Widget>;
+export type RuntimeChildrenInput = Array<ReflectSceneNode | Widget>;
 
 let __dangerous_current_config: TokenizerConfig | null = null;
 
@@ -43,7 +47,7 @@ let __dangerous_current_config: TokenizerConfig | null = null;
  * Main function for converting reflect design node tree to reflect widget token tree
  */
 export function tokenize(
-  node: nodes.ReflectSceneNode,
+  node: ReflectSceneNode,
   config: TokenizerConfig = default_tokenizer_config
 ): Widget {
   if (!node) {
@@ -57,7 +61,7 @@ export function tokenize(
  * tokenize a single node, without any reference of component use.
  */
 function independantTokenizer(
-  node: SingleOrArray<nodes.ReflectSceneNode>,
+  node: SingleOrArray<ReflectSceneNode>,
   config: TokenizerConfig
 ) {
   return dynamicGenerator(node, config) as Widget;
@@ -69,7 +73,7 @@ function independantTokenizer(
  * @returns
  */
 function dynamicGenerator(
-  node: SingleOrArray<nodes.ReflectSceneNode>,
+  node: SingleOrArray<ReflectSceneNode>,
   config: TokenizerConfig
 ): SingleOrArray<Widget> {
   const node_handler = (node, config) => {
@@ -85,7 +89,7 @@ function dynamicGenerator(
 
   if (isNotEmptyArray(node)) {
     const widgets: Array<Widget> = [];
-    node = node as Array<nodes.ReflectSceneNode>;
+    node = node as Array<ReflectSceneNode>;
     node
       // .sort(byY)
       .filter(ignore_masking_pipline(config.sanitizer_ignore_masking_node))
@@ -105,7 +109,7 @@ function handle_with_custom_wrapping_provider(
   provider: TokenizerConfig["custom_wrapping_provider"] | undefined,
   input: {
     token: Widget;
-    node: nodes.ReflectSceneNode;
+    node: ReflectSceneNode;
     depth?: number;
   }
 ): Widget {
@@ -139,10 +143,7 @@ export function handleChildren(
   });
 }
 
-function handleNode(
-  node: nodes.ReflectSceneNode,
-  config: TokenizerConfig
-): Widget {
+function handleNode(node: ReflectSceneNode, config: TokenizerConfig): Widget {
   if (!node.type) {
     console.error();
     throw new Error(
@@ -249,7 +250,7 @@ function handleNode(
 }
 
 export function post_wrap(
-  node: nodes.ReflectSceneNode,
+  node: ReflectSceneNode,
   tokenizedTarget: Widget
 ): Widget | Stretched | Opacity | Blurred | Rotation | Expanded {
   let wrapped = tokenizedTarget;
@@ -285,16 +286,16 @@ export function post_wrap(
 }
 
 function handle_by_types(
-  node: nodes.ReflectSceneNode,
+  node: ReflectSceneNode,
   config: TokenizerConfig
 ): Widget {
   let tokenizedTarget: Widget;
   switch (node.type) {
-    case nodes.ReflectSceneNodeType.rectangle:
+    case ReflectSceneNodeType.rectangle:
       tokenizedTarget = tokenizeContainer.fromRectangle(node);
       break;
 
-    case nodes.ReflectSceneNodeType.text:
+    case ReflectSceneNodeType.text:
       // FIXME: aberation handling (remove me if required) --------------------------------
       // FIXME: this is for giving extra space for text so it won't break line accidently.
       // FIXME: consider applying this only to a preview build
@@ -310,10 +311,10 @@ function handle_by_types(
       }
       // FIXME: ---------------------------------------------------------------------------------
 
-      tokenizedTarget = tokenizeText.fromText(node as nodes.ReflectTextNode);
+      tokenizedTarget = tokenizeText.fromText(node as ReflectTextNode);
       break;
 
-    case nodes.ReflectSceneNodeType.frame:
+    case ReflectSceneNodeType.frame:
       tokenizedTarget = tokenizeLayout.fromFrame(
         node,
         node.children,
@@ -324,19 +325,19 @@ function handle_by_types(
       );
       break;
 
-    case nodes.ReflectSceneNodeType.vector:
+    case ReflectSceneNodeType.vector:
       tokenizedTarget = tokenizeVector.fromVector(node);
       break;
 
-    // case nodes.ReflectSceneNodeType.star:
+    // case ReflectSceneNodeType.star:
     //   tokenizedTarget = tokenizeVector.fromStar();
     //   break;
 
-    // case nodes.ReflectSceneNodeType.poligon:
+    // case ReflectSceneNodeType.poligon:
     //   tokenizedTarget = tokenizeVector.fromPoligon();
     //   break;
 
-    case nodes.ReflectSceneNodeType.group:
+    case ReflectSceneNodeType.group:
       tokenizedTarget = tokenizeLayout.fromGroup(
         node,
         node.children,
@@ -345,7 +346,7 @@ function handle_by_types(
       );
       break;
 
-    case nodes.ReflectSceneNodeType.ellipse:
+    case ReflectSceneNodeType.ellipse:
       if (node.arcData.startingAngle === 0 && node.arcData.innerRadius === 0) {
         // a standard ellipse
         tokenizedTarget = tokenizeContainer.fromEllipse(node);
@@ -355,11 +356,11 @@ function handle_by_types(
       }
       break;
 
-    case nodes.ReflectSceneNodeType.boolean_operation:
+    case ReflectSceneNodeType.boolean_operation:
       tokenizedTarget = tokenizeGraphics.fromBooleanOperation(node);
       break;
 
-    case nodes.ReflectSceneNodeType.line:
+    case ReflectSceneNodeType.line:
       tokenizedTarget = tokenizeContainer.fromLine(node as any);
       // tokenizedTarget = tokenizeDivider.fromLine(_line);
       break;

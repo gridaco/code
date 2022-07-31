@@ -1,6 +1,6 @@
-import type { ReflectSceneNode } from "@design-sdk/core";
-import { mapGrandchildren } from "@design-sdk/core/utils";
-import { NodeRepository } from "@design-sdk/figma";
+import type { ReflectSceneNode } from "@design-sdk/figma-node";
+import { mapGrandchildren } from "@design-sdk/figma-utils";
+import { NodeRepository } from "@design-sdk/figma-node-repository";
 import type { ComponentNode } from "@design-sdk/figma";
 import { RawNodeResponse } from "@design-sdk/figma-remote";
 

@@ -1,6 +1,9 @@
-import { ReflectSceneNode } from "@design-sdk/core";
+import { ReflectSceneNode } from "@design-sdk/figma-node";
 import { Icons, IconData } from "@flutter-builder/flutter";
-import { repo_assets } from "@design-sdk/core";
+import {
+  TemporaryImageAsset,
+  MainImageRepository,
+} from "@design-sdk/asset-repository";
 import {
   IconManifest,
   MdiConfig,
@@ -26,19 +29,17 @@ export function interpretFlutterMaterialIconData(
 
 export function interpretFlutterImageIcon(
   node: ReflectSceneNode
-): repo_assets.TemporaryImageAsset {
-  const asset = repo_assets.MainImageRepository.instance
-    .get("fill-later-assets")
-    .addImage({
-      key: node.id,
-      hash: null,
-    });
+): TemporaryImageAsset {
+  const asset = MainImageRepository.instance.get("fill-later-assets").addImage({
+    key: node.id,
+    hash: null,
+  });
   return asset;
 }
 
 export function interpretIcon(
   node: ReflectSceneNode
-): IconData | repo_assets.TemporaryImageAsset {
+): IconData | TemporaryImageAsset {
   try {
     return findFlutterMaterialIcon(node.name);
   } catch (e) {

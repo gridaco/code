@@ -1,9 +1,10 @@
 import * as flutter from "@flutter-builder/flutter";
-import { utils, nodes } from "@design-sdk/core";
+import { ReflectSceneNode } from "@design-sdk/figma-node";
+import * as utils from "@design-sdk/core/dist/utils";
 import { roundNumber } from "@reflect-ui/uiutils";
 import { makeSaflyAsSingle } from "../_utils";
 export function wrapWithPositioned(
-  node: nodes.ReflectSceneNode,
+  node: ReflectSceneNode,
   child: flutter.Widget,
   parentId: string = ""
 ): flutter.Widget {
@@ -43,7 +44,7 @@ export function wrapWithPositioned(
 
 type Absolute = "Absolute";
 function retrieveAbsolutePosOrMakeWidget(
-  node: nodes.ReflectSceneNode,
+  node: ReflectSceneNode,
   child: flutter.Widget
 ): flutter.Widget | Absolute {
   const positionedAlign = (align: string): flutter.Positioned => {

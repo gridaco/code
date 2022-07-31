@@ -1,6 +1,6 @@
-import { ReflectFrameNode } from "@design-sdk/core";
+import { ReflectFrameNode } from "@design-sdk/figma-node";
 import * as flutter from "@flutter-builder/flutter";
-import { Axis as ReflectAxis } from "@reflect-ui/core/lib";
+import { Axis as ReflectAxis } from "@reflect-ui/core";
 import * as dartui from "../dart-ui";
 import * as rendering from "../rendering";
 import { makeSafelyAsList } from "../utils";

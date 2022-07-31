@@ -1,4 +1,4 @@
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
 import { react as react_config } from "@designto/config";
 import type { JsxWidget } from "@web-builder/core";
 import {

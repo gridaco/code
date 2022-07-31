@@ -7,7 +7,7 @@ import {
 import { makeColorFromRGBO } from "../make";
 import { interpretBorderRadius } from "./border-radius.interpret";
 import { roundNumber } from "@reflect-ui/uiutils";
-import { ReflectRectangleNode } from "@design-sdk/core";
+import { ReflectRectangleNode } from "@design-sdk/figma-node";
 import {
   GradientPaint,
   ImagePaint,

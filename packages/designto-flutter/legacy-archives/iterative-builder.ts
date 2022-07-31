@@ -9,7 +9,7 @@ import { makeDetectedIcon } from "../make/make-flutter-icon";
 import { makeIllustImage } from "../make/make-flutter-image";
 import { makeRowColumn } from "../make/make-flutter-column-row";
 import { makeStack } from "../make/make-flutter-stack";
-import { Axis as ReflectAxis } from "@reflect-ui/core/lib";
+import { Axis as ReflectAxis } from "@reflect-ui/core";
 import { makeChip } from "../make/make-flutter-chip";
 import { array, roundNumber } from "@reflect-ui/uiutils";
 import { output } from "@designto/config";

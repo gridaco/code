@@ -1,11 +1,8 @@
-import { nodes } from "@design-sdk/core";
+import type { ReflectSceneNode } from "@design-sdk/figma-node";
 import { Stretched } from "../tokens";
 import { Widget, WidgetKey } from "@reflect-ui/core";
 
-export function wrap_with_stretched(
-  node: nodes.ReflectSceneNode,
-  widget: Widget
-) {
+export function wrap_with_stretched(node: ReflectSceneNode, widget: Widget) {
   return new Stretched({
     key: new WidgetKey({
       ...widget.key,

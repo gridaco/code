@@ -1,8 +1,5 @@
 import { CSSProperties } from "@coli.codes/css";
-import {
-  Background,
-  BackgroundPaintLike,
-} from "@reflect-ui/core/lib/background";
+import { Background, BackgroundPaintLike } from "@reflect-ui/core";
 import { color } from "../color";
 import { array } from "@reflect-ui/uiutils";
 import { Color, GradientType } from "@reflect-ui/core";

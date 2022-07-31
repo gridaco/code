@@ -1,4 +1,5 @@
 import {
+  SyntaxKind,
   SourceFile,
   BlockStatement,
   FunctionDeclaration,
@@ -6,7 +7,6 @@ import {
   Declaration,
   MultilineCommentTrivia,
 } from "coli";
-import { SyntaxKind } from "@coli.codes/core-syntax-kind";
 import { EsComponentExportingCofnig } from "@designto/config/module-es";
 import {
   add_export_keyword_modifier_to_declaration,
