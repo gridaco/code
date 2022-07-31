@@ -1,5 +1,5 @@
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
-import { solid as solid_config } from "@designto/config";
+import { solid as solid_config } from "@grida/builder-config";
 import type { JsxWidget } from "@web-builder/core";
 import { solid_js_imports } from "@web-builder/solid-js";
 import {

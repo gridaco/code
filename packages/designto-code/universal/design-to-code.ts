@@ -16,7 +16,10 @@ import {
   default_tokenizer_config,
   TokenizerConfig,
 } from "@designto/token/config";
-import { default_build_configuration, FrameworkConfig } from "@designto/config";
+import {
+  default_build_configuration,
+  FrameworkConfig,
+} from "@grida/builder-config";
 // import { reusable } from "@code-features/component";
 import assert from "assert";
 import { debug, debugIf } from "@designto/debugger";

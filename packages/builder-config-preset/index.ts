@@ -1,4 +1,4 @@
-import { config, react } from "@designto/config";
+import { config, react } from "@grida/builder-config";
 import { Framework, Language } from "@grida/builder-platform-types";
 
 const _jsx_component_declaration_style = {

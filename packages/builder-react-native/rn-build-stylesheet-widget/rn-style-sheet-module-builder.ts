@@ -23,7 +23,7 @@ import {
 import {
   react as react_config,
   reactnative as rn_config,
-} from "@designto/config";
+} from "@grida/builder-config";
 import { reactnative_imports } from "../rn-import-specifications";
 import { StyleSheetDeclaration } from "../rn-style-sheet";
 import { create_duplication_reduction_map } from "@web-builder/styled";

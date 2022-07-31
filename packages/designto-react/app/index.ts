@@ -7,7 +7,7 @@ import {
   finalizeReactReusable_StyledComponents__Experimental,
   JsxWidget,
 } from "@web-builder/react";
-import { react as config, react } from "@designto/config";
+import { react as config, react } from "@grida/builder-config";
 import assert from "assert";
 export function buildReactApp(
   entry: JsxWidget,

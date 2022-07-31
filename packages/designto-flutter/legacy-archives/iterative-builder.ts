@@ -12,7 +12,7 @@ import { makeStack } from "../make/make-flutter-stack";
 import { Axis as ReflectAxis } from "@reflect-ui/core";
 import { makeChip } from "../make/make-flutter-chip";
 import { array, roundNumber } from "@reflect-ui/uiutils";
-import { output } from "@designto/config";
+import { output } from "@grida/builder-config";
 import { tokenizeDivider } from "@designto/token";
 
 type FlutterScreenOutput = output.ScreenOutput<flutter.Widget>;

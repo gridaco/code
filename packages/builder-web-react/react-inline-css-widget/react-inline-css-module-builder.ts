@@ -1,5 +1,5 @@
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
-import { react as react_config } from "@designto/config";
+import { react as react_config } from "@grida/builder-config";
 import type { JsxWidget } from "@web-builder/core";
 import {
   react_imports,

@@ -7,7 +7,7 @@ import {
   Declaration,
   MultilineCommentTrivia,
 } from "coli";
-import { EsComponentExportingCofnig } from "@designto/config/module-es";
+import { EsComponentExportingCofnig } from "@grida/builder-config/module-es";
 import {
   add_export_keyword_modifier_to_declaration,
   wrap_with_export_assignment_jsx_component_identifier,

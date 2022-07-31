@@ -1,6 +1,6 @@
 import { Widget } from "@reflect-ui/core";
 import { buildFlutterWidgetFromTokens } from "./tokens-to-flutter-widget";
-import { flutter as config } from "@designto/config";
+import { flutter as config } from "@grida/builder-config";
 import * as flutter from "@flutter-builder/flutter";
 import { composeAppWithHome } from "@flutter-builder/flutter";
 import { makeApp } from "./make/make-flutter-material-app";

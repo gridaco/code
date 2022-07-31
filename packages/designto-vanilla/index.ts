@@ -1,5 +1,5 @@
 import { buildWebWidgetFromTokens } from "@designto/web/tokens-to-web-widget";
-import { vanilla as config, preview as prvconfig } from "@designto/config";
+import { vanilla as config, preview as prvconfig } from "@grida/builder-config";
 import { Widget } from "@reflect-ui/core";
 import {
   export_inlined_css_html_file,

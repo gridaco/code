@@ -16,7 +16,7 @@ import {
 import {
   react as react_config,
   reactnative as rn_config,
-} from "@designto/config";
+} from "@grida/builder-config";
 import { reactnative_imports } from "../rn-import-specifications";
 import {
   NoStyleJSXElementConfig,

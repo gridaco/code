@@ -16,7 +16,7 @@ import {
   StylesConfigMapBuilder,
   StylesRepository,
 } from "@web-builder/core/builders";
-import { react as react_config } from "@designto/config";
+import { react as react_config } from "@grida/builder-config";
 import {
   StyledComponentDeclaration,
   create_duplication_reduction_map,

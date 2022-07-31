@@ -2,7 +2,7 @@ import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
 import {
   react as react_config,
   reactnative as reactnative_config,
-} from "@designto/config";
+} from "@grida/builder-config";
 import type { JsxWidget } from "@web-builder/core";
 import { Framework } from "@grida/builder-platform-types";
 import {
