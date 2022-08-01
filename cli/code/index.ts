@@ -11,6 +11,7 @@ import { RemoteImageRepositories } from "@design-sdk/figma-remote/asset-reposito
 import type { FrameworkConfig } from "@grida/builder-config";
 import fs from "fs";
 import path from "path";
+import { log } from "../logger";
 
 export async function code(
   cwd = process.cwd(),
@@ -35,6 +36,7 @@ export async function code(
   const res = parseFileAndNodeId(uri as string);
   if (res) {
     const { file: filekey, node } = res;
+    log(`filekey: ${filekey}`, `node: ${node}`);
     const target = await fetchTargetAsReflect({
       file: filekey,
       node,

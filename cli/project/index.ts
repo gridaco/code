@@ -1,5 +1,6 @@
 import { BuilderConfig, FrameworkConfig } from "@grida/builder-config";
 import path from "path";
+import type { GridaConfig } from "../config";
 import {
   analyzeFramework as analyzeJsFramework,
   locateNodePackage,
@@ -12,7 +13,7 @@ const _GRIDA_CONFIG_JS = "grida.config.js";
 interface GridaProjectSearchResult {
   base_dir: string;
   config_file: string;
-  config: BuilderConfig;
+  config: GridaConfig;
 }
 
 /**

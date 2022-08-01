@@ -235,3 +235,28 @@ export const react_styles: {
     },
   ],
 };
+
+export function defaultConfigByFramework(
+  framework: config.FrameworkConfig["framework"]
+) {
+  switch (framework) {
+    case "react": {
+      return react_presets.react_default;
+    }
+    case "flutter": {
+      return flutter_presets.flutter_default;
+    }
+    case "react-native": {
+      return reactnative_presets.reactnative_default;
+    }
+    case "solid-js": {
+      return solid_presets.solid_default;
+    }
+    case "vanilla": {
+      return vanilla_presets.vanilla_default;
+    }
+    case "preview": {
+      return preview_presets.default;
+    }
+  }
+}

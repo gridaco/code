@@ -4,6 +4,7 @@ import { indexDesignSource } from "../indexing";
 import { locateGridaProject } from "../project";
 import { parseFileAndNodeId } from "@design-sdk/figma-url";
 import type { DesignSourceConfig } from "@grida/builder-config";
+import path from "path";
 
 interface ModuleInfo {
   uri?: string;
@@ -28,7 +29,7 @@ export async function add(cwd = process.cwd(), module: ModuleInfo) {
     auth: {
       personalAccessToken: process.env.FIGMA_PERSONAL_ACCESS_TOKEN,
     },
-    baseUrl: fallbackDir,
+    baseUrl: path.join(cwd, fallbackDir),
     uri: module.uri,
     framework: grida.config.framework,
   });
@@ -80,7 +81,7 @@ async function prompt_project_design_source_module(
   });
 
   if (uri.length >= 3 && uri.length <= 10) {
-    return `https://www.figma.com/file/${config.file}?node-id=${uri}`;
+    return `https://www.figma.com/file/${config.file}/?node-id=${uri}`;
     //
   } else {
     try {
