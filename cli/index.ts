@@ -2,7 +2,7 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
 import { designToCode } from "@designto/code";
-import { DesignInput } from "@designto/config/input";
+import { DesignInput } from "@grida/builder-config/input";
 import { Language } from "@grida/builder-platform-types";
 import { parseFileAndNodeId } from "@design-sdk/figma-url";
 import { fetchTargetAsReflect } from "@design-sdk/figma-remote";
@@ -15,10 +15,18 @@ import { RemoteImageRepositories } from "@design-sdk/figma-remote/asset-reposito
 
 import fs from "fs";
 import path from "path";
-
+import { init } from "./init";
 yargs(hideBin(process.argv))
   .command(
-    "react <url>",
+    "init",
+    "init grida project",
+    () => {},
+    () => {
+      init();
+    }
+  )
+  .command(
+    "react <uri>",
     "input design url to react code",
     () => {},
     async (argv) => {
@@ -30,7 +38,7 @@ yargs(hideBin(process.argv))
         ? _outpath
         : path.resolve(process.cwd(), _outpath);
 
-      const res = parseFileAndNodeId(argv.url as string);
+      const res = parseFileAndNodeId(argv.uri as string);
       if (res) {
         const { file, node } = res;
         const target = await fetchTargetAsReflect({
@@ -100,5 +108,11 @@ yargs(hideBin(process.argv))
     type: "string",
     requiresArg: true,
   })
-  .demandCommand(1)
+  .command(
+    "flutter <uri>",
+    "",
+    () => {},
+    () => {}
+  )
+  .demandCommand(0)
   .parse();

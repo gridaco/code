@@ -6,6 +6,7 @@ inits the grida.config.js with code related user prompts
 
 - `grida code init`
 
+  - No project root is found. [package.json or pubspec.y(a)ml] Do you want to continue anyway? (y/n)
   - what's the name of the project?
   - which design tool are you using?
     - figma
@@ -13,7 +14,6 @@ inits the grida.config.js with code related user prompts
     - sketch
     - xd
     - other
-  - No project root is found. [package.json or pubspec.y(a)ml] Do you want to continue anyway? (y/n)
   - Which frontend framework are you using?
 
     - react
