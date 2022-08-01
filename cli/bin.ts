@@ -9,6 +9,7 @@ import path from "path";
 import dotenv from "dotenv";
 import fs from "fs";
 import Enquirer from "enquirer";
+import { checkForUpdate } from "./update";
 
 export default async function cli() {
   // Load .env file
@@ -16,6 +17,8 @@ export default async function cli() {
     dotenv.config({ path: ".env" });
     console.log("Loaded .env file");
   }
+
+  checkForUpdate();
 
   yargs(hideBin(process.argv))
     .option("cwd", {
