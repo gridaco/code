@@ -25,6 +25,11 @@ const designSourceConfig = {
   },
 };
 
+/**
+ * @type {import('grida').GridaConfig}
+ */
+const config = {};
+
 module.exports = {
   name: "react-example",
   designsource: designSourceConfig,
