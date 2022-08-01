@@ -3,10 +3,12 @@
     "version": "0.0.0",
     "dependencies": {
         "@base-sdk-fp/auth": "^0.1.4",
+        "dotenv": "^16.0.1",
         "enquirer": "^2.3.6",
         "glob": "^8.0.3",
         "json5": "^2.2.1",
         "keytar": "^7.9.0",
+        "ora": "^5.4.0",
         "ts-node": "^10.9.1",
         "yaml": "^2.1.1",
         "yargs": "^17.2.1"
