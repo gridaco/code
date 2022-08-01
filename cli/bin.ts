@@ -1,27 +1,34 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-
-import { designToCode } from "@designto/code";
-import { DesignInput } from "@grida/builder-config/input";
-import { Language } from "@grida/builder-platform-types";
-import { parseFileAndNodeId } from "@design-sdk/figma-url";
-import { fetchTargetAsReflect } from "@design-sdk/figma-remote";
-import {
-  ImageRepository,
-  MainImageRepository,
-} from "@design-sdk/asset-repository";
-import { RemoteImageRepositories } from "@design-sdk/figma-remote/asset-repository";
-
-import fs from "fs";
-import path from "path";
+import { defaultConfigByFramework } from "@grida/builder-config-preset";
 import { init } from "./init";
+import { add } from "./add";
+import { code } from "./code";
+import { Framework } from "@grida/builder-platform-types";
+import path from "path";
+import dotenv from "dotenv";
+import fs from "fs";
+import Enquirer from "enquirer";
 
 export default async function cli() {
+  // Load .env file
+  if (fs.existsSync(".env")) {
+    dotenv.config({ path: ".env" });
+    console.log("Loaded .env file");
+  }
+
   yargs(hideBin(process.argv))
     .option("cwd", {
       type: "string",
+      default: process.cwd(),
+      requiresArg: false,
     })
-    .global("cwd")
+    .option("dry-run", {
+      type: "boolean",
+      default: false,
+      requiresArg: false,
+    })
+    .global(["cwd", "dry-run"])
     .command(
       "init",
       "init grida project",
@@ -31,94 +38,60 @@ export default async function cli() {
       }
     )
     .command(
-      "react <uri>",
-      "input design url to react code",
+      "add [uri]",
+      "add grida module",
       () => {},
-      async (argv) => {
-        const _personal_access_token = argv["personal-access-token"] as string;
-
-        // make this path absolute if relative path is given.
-        const _outpath = argv["out"] as string;
-        const _outpath_abs = path.isAbsolute(_outpath)
-          ? _outpath
-          : path.resolve(process.cwd(), _outpath);
-
-        const res = parseFileAndNodeId(argv.uri as string);
-        if (res) {
-          const { file, node } = res;
-          const target = await fetchTargetAsReflect({
-            file,
-            node,
-            auth: {
-              personalAccessToken: _personal_access_token,
-            },
-          });
-
-          MainImageRepository.instance = new RemoteImageRepositories(
-            target.file,
-            {
-              authentication: {
-                personalAccessToken: _personal_access_token,
-              },
-            }
-          );
-          MainImageRepository.instance.register(
-            new ImageRepository(
-              "fill-later-assets",
-              "grida://assets-reservation/images/"
-            )
-          );
-
-          const code = await designToCode({
-            input: DesignInput.fromApiResponse({
-              raw: target.raw,
-              entry: target.reflect!,
-            }),
-            framework: {
-              framework: "react",
-              language: Language.tsx,
-              styling: {
-                type: "styled-components",
-                module: "@emotion/styled",
-              },
-              component_declaration_style: {
-                exporting_style: {
-                  type: "export-default-anonymous-functional-component",
-                  exporting_position: "with-declaration",
-                  declaration_syntax_choice: "inlinefunction",
-                  export_declaration_syntax_choice: "export-default",
-                },
-              },
-            },
-            asset_config: { skip_asset_replacement: true },
-          });
-
-          fs.writeFile(_outpath_abs, code.scaffold.raw, (err) => {
-            if (err) {
-              console.error(err);
-            } else {
-              console.log("The file was saved!", _outpath_abs);
-            }
-          });
-        }
+      async ({ cwd, uri }) => {
+        add(cwd, { uri: uri as string, version: "latest" });
       }
     )
-    .option("personal-access-token", {
+    .command(
+      "code <framework> <uri>",
+      "generate code from input uri",
+      (argv) => {
+        // return;
+      },
+      async ({ cwd, framework, uri, out, ...argv }) => {
+        //
+        const _personal_access_token = argv[
+          "figma-personal-access-token"
+        ] as string;
+
+        // make this path absolute if relative path is given.
+        const _outpath_abs: string = path.isAbsolute(out as string)
+          ? (out as string)
+          : path.resolve(cwd, out as string);
+
+        const config_framework = defaultConfigByFramework(
+          framework as Framework
+        );
+        if (!config_framework) {
+          throw new Error(`Unknown framework:  "${framework}"`);
+        }
+
+        code(cwd, {
+          framework: config_framework,
+          uri: uri as string,
+          auth: {
+            personalAccessToken: _personal_access_token,
+          },
+          baseUrl: _outpath_abs,
+        });
+      }
+    )
+    .option("figma-personal-access-token", {
       description: "figma personal access token",
+      alias: ["fpat", "figma-pat"],
       type: "string",
-      requiresArg: true,
+      default: process.env.FIGMA_PERSONAL_ACCESS_TOKEN,
+      requiresArg: false,
     })
     .option("out", {
       alias: ["o", "output"],
       type: "string",
+      default: ".",
       requiresArg: true,
     })
-    .command(
-      "flutter <uri>",
-      "",
-      () => {},
-      () => {}
-    )
     .demandCommand(0)
     .parse();
 }
