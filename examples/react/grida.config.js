@@ -13,11 +13,20 @@ const frameworkConfig = {
   },
 };
 
+/**
+ * @type {import('@grida/builder-config').DesignSourceConfig}
+ */
+const designSourceConfig = {
+  provider: "figma",
+  file: "x7RRK6RwWtZuNakmbMLTVH",
+  client: "api.figma.com",
+  auth: {
+    personalAccessToken: process.env.FIGMA_PERSONAL_ACCESS_TOKEN,
+  },
+};
+
 module.exports = {
   name: "react-example",
-  designsource: {
-    provider: "figma",
-    url: "https://www.figma.com/file/xxx",
-  },
-  generator: frameworkConfig,
+  designsource: designSourceConfig,
+  framework: frameworkConfig,
 };
