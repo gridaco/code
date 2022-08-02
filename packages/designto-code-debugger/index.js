@@ -27,7 +27,7 @@ export function debug(...messages) {
   }
 }
 
-export function debugIf(condition: boolean | (() => boolean), ...messages) {
+export function debugIf(condition, ...messages) {
   const _continue = typeof condition === "function" ? condition() : condition;
   if (_continue) {
     debug(...messages);

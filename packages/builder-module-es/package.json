@@ -1,4 +1,7 @@
 {
   "name": "@web-builder/module-es",
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "scripts": {
+    "build": "tsc"
+  }
 }

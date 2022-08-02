@@ -5,6 +5,9 @@
   "license": "Apache 2.0",
   "homepage": "https://coli.codes/react",
   "author": "Grida Authors",
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "@web-builder/styled": "0.0.0"
   }

@@ -3,8 +3,11 @@
   "version": "0.0.1",
   "description": "design to flutter",
   "main": "dist/index.js",
-  "repository": "https://github.com/bridgedxyz/design-to-code",
-  "author": "Bridged authors",
+  "repository": "https://github.com/gridaco/design-to-code",
+  "author": "Grida Authors",
   "license": "Apache 2.0",
+  "scripts": {
+    "build": "tsc"
+  },
   "private": false
 }

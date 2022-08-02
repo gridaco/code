@@ -1,6 +1,9 @@
 {
     "name": "@grida/builder-config-preset",
     "authors": "Grida.co",
-    "version": "1.0.0",
+    "version": "0.0.0",
+    "scripts": {
+        "build": "tsc"
+    },
     "dependencies": {}
 }

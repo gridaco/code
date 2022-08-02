@@ -1,6 +1,9 @@
 {
     "name": "@web-builder/styles",
     "version": "0.0.0",
+    "scripts": {
+        "build": "tsc"
+    },
     "dependencies": {
         "camelcase-css": "^2.0.1"
     },

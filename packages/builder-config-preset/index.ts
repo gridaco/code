@@ -69,8 +69,8 @@ export const reactnative_presets = {
   reactnative_default: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
     language: Language.tsx,
-    svg: null, // TODO:
-    gradient: null, // TODO:
+    svg: null as unknown, // TODO:
+    gradient: null as unknown, // TODO:
     styling: {
       type: "react-native-stylesheet",
       module: "react-native",
@@ -80,8 +80,8 @@ export const reactnative_presets = {
   reactnative_with_style_sheet: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
     language: Language.tsx,
-    svg: null, // TODO:
-    gradient: null, // TODO:
+    svg: null as unknown, // TODO:
+    gradient: null as unknown, // TODO:
     styling: {
       type: "react-native-stylesheet",
       module: "react-native",
@@ -91,8 +91,8 @@ export const reactnative_presets = {
   reactnative_with_styled_components: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
     language: Language.tsx,
-    svg: null, // TODO:
-    gradient: null, // TODO:
+    svg: null as unknown, // TODO:
+    gradient: null as unknown, // TODO:
     styling: {
       type: "styled-components",
       module: "styled-components/native",
@@ -102,8 +102,8 @@ export const reactnative_presets = {
   reactnative_with_inline_style: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
     language: Language.tsx,
-    svg: null, // TODO:
-    gradient: null, // TODO:
+    svg: null as unknown, // TODO:
+    gradient: null as unknown, // TODO:
     styling: {
       type: "inline-style",
     },

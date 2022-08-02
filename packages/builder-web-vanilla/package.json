@@ -1,5 +1,8 @@
 {
     "name": "@web-builder/vanilla",
     "version": "0.0.0",
+    "scripts": {
+        "build": "tsc"
+    },
     "dependencies": {}
 }

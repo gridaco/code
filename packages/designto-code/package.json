@@ -4,6 +4,7 @@
   "license": "Apache-2.0",
   "main": "lib/index.js",
   "homepage": "https://designto.codes",
+  "scripts": {},
   "dependencies": {
     "@coli.codes/escape-string": "^0.0.24",
     "@design-sdk/asset-repository": "^0.0.33",

@@ -7,8 +7,17 @@
   "author": "Grida authors",
   "license": "Apache 2.0",
   "private": false,
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "@web-builder/react": "17.0.2",
     "@web-builder/react-native": "0.67.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

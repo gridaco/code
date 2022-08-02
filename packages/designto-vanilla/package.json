@@ -2,5 +2,10 @@
     "name": "@designto/vanilla",
     "description": "design to vanilla html css js vanilla",
     "version": "0.0.0",
-    "author": "Grida.co"
+    "author": "Grida.co",
+    "private": false,
+    "license": "Apache-2.0",
+    "scripts": {
+        "build": "tsc"
+    }
 }

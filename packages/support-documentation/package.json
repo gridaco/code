@@ -1,4 +1,7 @@
 {
   "name": "@code-features/documentation",
+  "scripts": {
+    "build": "tsc"
+  },
   "version": "0.0.0"
 }

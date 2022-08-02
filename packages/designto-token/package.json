@@ -7,6 +7,9 @@
   "author": "Bridged authors",
   "license": "Apache 2.0",
   "private": false,
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "@reflect-ui/core": "^0.0.8",
     "@reflect-ui/detection": "0.1.6"
