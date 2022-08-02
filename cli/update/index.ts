@@ -24,6 +24,11 @@ function makeUpdateMessage({ latest }: { latest: string }): string {
   return boxen(
     `${name} ${chalk.green(`v${latest}`)} is now available!
 Run \`${chalk.green(`npm i -g ${name}`)}\` to update.`,
-    { padding: 1, margin: 1, borderStyle: "classic" }
+    {
+      padding: 1,
+      margin: 1,
+      borderStyle: "classic",
+      textAlignment: "center",
+    }
   );
 }

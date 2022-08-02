@@ -49,6 +49,7 @@ export function analyzeFramework(manifest: IPackageManifest): {
   const alldeps = new Set([...deps, ...devdeps]);
 
   // framework
+  const isnextjs = alldeps.has("next");
   const isreact = alldeps.has("react");
   const isreactnative = alldeps.has("react-native");
   const isvue3 = alldeps.has("vue");
@@ -71,6 +72,13 @@ export function analyzeFramework(manifest: IPackageManifest): {
     .filter(Boolean);
 
   if (isreact) {
+    if (isnextjs) {
+      return {
+        // TODO: add nextjs support
+        framework: "react",
+        packages: packages,
+      };
+    }
     if (isreactnative) {
       return { framework: "react-native", packages: packages };
     }

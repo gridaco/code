@@ -2,16 +2,17 @@ import fs from "fs";
 import path from "path";
 import { locateGridaProject, locateBaseProject } from "../project";
 import { prompt } from "enquirer";
-import { parseFileId } from "@design-sdk/figma-url";
 import type { GridaConfig } from "../config";
-import type {
-  DesignSourceConfig,
-  FrameworkConfig,
-} from "@grida/builder-config";
+import type { FrameworkConfig } from "@grida/builder-config";
 import JSON5 from "json5";
 import { Language } from "@grida/builder-platform-types";
+import { prompt_designsource_config } from "./init-config-designsource";
+import { addDotEnv } from "./init-.env";
+import chalk from "chalk";
+import { init_base_project_with_template } from "./init-base-project-with-teplate";
+import { exit } from "process";
 
-export async function init(cwd = process.cwd()) {
+export async function init(cwd = process.cwd(), initials?: { name?: string }) {
   const baseproj = locateBaseProject(cwd);
   const proj = locateGridaProject(cwd);
   if (proj) {
@@ -28,17 +29,30 @@ export async function init(cwd = process.cwd()) {
         "No project root is found (package.json or pubspec.yml) with framework configuration. Do you want to continue without creating a project?",
     });
     if (!continue_witout_existing_project) {
-      console.log("Please run `init` again after creating a project.");
-      throw new Error("Cancelled");
+      const _ = await init_base_project_with_template(cwd, {
+        create_cwd_if_not_exists,
+      });
+      if (_ == "exit") {
+        exit(0);
+      } else {
+        const { created, cwd: newcwd, name } = _;
+        if (created) return init(newcwd, { name });
+      }
+      return;
     }
   }
 
-  const { name } = await prompt<{ name: string }>({
-    name: "name",
-    message: "What is your project name?",
-    initial: baseproj?.name ?? "my-project",
-    type: "input",
-  });
+  let name: string = "untitled";
+  if (!initials.name) {
+    // the name can be passed via previous init operation, -- create base project with template
+    const { name: _name } = await prompt<{ name: string }>({
+      name: "name",
+      message: "What is your project name?",
+      initial: baseproj?.name ?? "my-project",
+      type: "input",
+    });
+    name = _name;
+  }
 
   const config_designsource = await prompt_designsource_config();
   const config_framework = await prompt_framework_config(cwd, baseproj);
@@ -48,10 +62,35 @@ export async function init(cwd = process.cwd()) {
   const { name: fallbackdir } = create_grida_fallback_dir(cwd, {
     framework: config_framework.framework,
   });
+
+  // create & seed .env if required.
+  if (
+    config_designsource.auth &&
+    "personalAccessToken" in config_designsource.auth
+  ) {
+    const { filecreated } = addDotEnv(
+      cwd,
+      "FIGMA_PERSONAL_ACCESS_TOKEN",
+      config_designsource.auth?.personalAccessToken
+    );
+    if (filecreated) {
+      // TODO: add .env to .gitignore
+    }
+
+    if (filecreated) {
+      console.log(chalk.dim(".env file created by grida CLI"));
+    }
+  }
+
   // create grida.config.js file
   create_grida_config_js(cwd, {
     name: name,
-    designsource: config_designsource,
+    type: "project",
+    designsource: {
+      ...config_designsource,
+      // this should not be written to grida.config.js - it's written to .env
+      auth: undefined,
+    },
     fallbackDir: fallbackdir,
     framework: config_framework,
   });
@@ -158,58 +197,6 @@ async function prompt_framework_config(
       } as FrameworkConfig;
     }
   }
-}
-
-async function prompt_designsource_config(): Promise<DesignSourceConfig> {
-  const { provider } = await prompt<{
-    provider: DesignSourceConfig["provider"];
-  }>({
-    name: "provider",
-    message: "Where from to import your design?",
-    type: "select",
-    choices: ["figma", "sketch", "xd"],
-  });
-
-  switch (provider) {
-    case "figma": {
-      const filekey = await prompt_figma_filekey();
-      return {
-        provider: provider as "figma",
-        file: filekey,
-        client: "api.figma.com",
-      };
-    }
-    default: {
-      throw new Error(`Sorry, ${provider} is not supported yet.`);
-    }
-  }
-}
-
-async function prompt_figma_filekey() {
-  const { url } = await prompt<{ url: string }>({
-    name: "url",
-    message: "Please enter your figma file url",
-    type: "input",
-    hint: "https://www.figma.com/file/xxxx",
-    required: true,
-    validate(value) {
-      if (!value) {
-        return "Please enter your figma file url. (copy & paste the link on the browser)";
-      }
-      try {
-        const filekey = parseFileId(value);
-        if (!filekey) {
-          return false;
-        }
-        return true;
-      } catch (e) {
-        return e.message;
-      }
-    },
-  });
-
-  const filekey = parseFileId(url);
-  return filekey;
 }
 
 function create_cwd_if_not_exists(cwd = process.cwd()) {

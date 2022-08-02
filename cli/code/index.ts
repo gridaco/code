@@ -1,6 +1,5 @@
 import { designToCode } from "@designto/code";
 import { DesignInput } from "@grida/builder-config/input";
-import { Language } from "@grida/builder-platform-types";
 import { parseFileAndNodeId } from "@design-sdk/figma-url";
 import { fetchTargetAsReflect } from "@design-sdk/figma-remote";
 import {
@@ -11,7 +10,10 @@ import { RemoteImageRepositories } from "@design-sdk/figma-remote/asset-reposito
 import type { FrameworkConfig } from "@grida/builder-config";
 import fs from "fs";
 import path from "path";
+import chalk from "chalk";
 import { log } from "../logger";
+import ora from "ora";
+import { defaultConfigByFramework } from "@grida/builder-config-preset";
 
 export async function code(
   cwd = process.cwd(),
@@ -37,11 +39,16 @@ export async function code(
   if (res) {
     const { file: filekey, node } = res;
     log(`filekey: ${filekey}`, `node: ${node}`);
+
+    //
+    const spnr_fetching = ora("Fetching design...");
+    spnr_fetching.start();
     const target = await fetchTargetAsReflect({
       file: filekey,
       node,
       auth: auth,
     });
+    spnr_fetching.succeed();
 
     MainImageRepository.instance = new RemoteImageRepositories(target.file, {
       authentication: auth,
@@ -53,36 +60,34 @@ export async function code(
       )
     );
 
+    const spnr_gen = ora("Generating code...");
+    spnr_gen.start();
     const code = await designToCode({
       input: DesignInput.fromApiResponse({
         raw: target.raw,
         entry: target.reflect!,
       }),
       framework: {
-        framework: "react",
-        language: Language.tsx,
-        styling: {
-          type: "styled-components",
-          module: "@emotion/styled",
-        },
-        component_declaration_style: {
-          exporting_style: {
-            type: "export-default-anonymous-functional-component",
-            exporting_position: "with-declaration",
-            declaration_syntax_choice: "inlinefunction",
-            export_declaration_syntax_choice: "export-default",
-          },
-        },
+        // fill missing configurations.
+        ...defaultConfigByFramework(framework.framework),
+        ...framework,
       },
       asset_config: { skip_asset_replacement: true },
     });
+    spnr_gen.succeed();
 
-    const file = path.join(baseUrl, "index.tsx"); // TODO:
+    // TODO: - update name
+    const file = path.join(baseUrl, `${code.name}.${framework.language}`);
+    const relpath = "./" + path.relative(cwd, file);
     fs.writeFile(file, code.scaffold.raw, (err) => {
       if (err) {
-        console.error(err);
+        throw err;
       } else {
-        console.log("The file was saved!", file);
+        console.log(
+          `${chalk.green("✔")} Module '${code.name}' added to ${chalk.blue(
+            relpath
+          )}`
+        );
       }
     });
   }

@@ -1,5 +1,4 @@
-import { BuilderConfig, FrameworkConfig } from "@grida/builder-config";
-import path from "path";
+import type { FrameworkConfig } from "@grida/builder-config";
 import type { GridaConfig } from "../config";
 import {
   analyzeFramework as analyzeJsFramework,
@@ -7,6 +6,7 @@ import {
 } from "../npm";
 import { analyzeFramework as analyzePubFramework, locatePubspec } from "../pub";
 import { find_in_cwd, find_in_parent } from "../_utils/path";
+import path from "path";
 
 const _GRIDA_CONFIG_JS = "grida.config.js";
 
@@ -21,8 +21,8 @@ interface GridaProjectSearchResult {
  * @param path
  * @returns
  */
-export function read(path): BuilderConfig {
-  return require(path) as BuilderConfig;
+export function read(path): GridaConfig {
+  return require(path) as GridaConfig;
 }
 
 /**

@@ -18,7 +18,7 @@ export default async function cli() {
     console.log("Loaded .env file");
   }
 
-  checkForUpdate();
+  await checkForUpdate();
 
   yargs(hideBin(process.argv))
     .option("cwd", {
