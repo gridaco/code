@@ -76,7 +76,7 @@ async function prompt_project_design_source_module(
     hint: "xxx:xxx | https://www.figma.com/file/xxx?node-id=xxx:xxx",
     type: choices.length ? "autocomplete" : "input",
     // @ts-ignore
-    limit: 10,
+    limit: 20,
     choices: choices,
   });
 

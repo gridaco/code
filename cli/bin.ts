@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import fs from "fs";
 import Enquirer from "enquirer";
 import { checkForUpdate } from "./update";
+import { login, logout } from "./auth";
 
 export default async function cli() {
   // Load .env file
@@ -46,6 +47,22 @@ export default async function cli() {
       () => {},
       async ({ cwd, uri }) => {
         add(cwd, { uri: uri as string, version: "latest" });
+      }
+    )
+    .command(
+      "login",
+      "login to grida services",
+      () => {},
+      async () => {
+        login();
+      }
+    )
+    .command(
+      "logout",
+      "logout to grida services",
+      () => {},
+      async () => {
+        logout();
       }
     )
     .command(
