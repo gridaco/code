@@ -107,6 +107,9 @@ dist
 .DS_Store
 
 
+# turbo
+.turbo
+
 # ------- docs related -------
 ## Learn more at scripts/docs-copy/flags-api-docs.js
 # flags api docs
