@@ -97,7 +97,7 @@ export class DesignInput implements IDesignInput {
     return new DesignInput({ entry: entry, repository: repository });
   }
 
-  private static _flat_all(entry) {
+  private static _flat_all(entry: any) {
     return mapGrandchildren(entry, 0, {
       includeThis: true,
       ignoreGroup: false,
