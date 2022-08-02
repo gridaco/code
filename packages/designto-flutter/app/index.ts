@@ -1,6 +1,6 @@
 import { MaterialApp, Widget } from "@flutter-builder/flutter";
-import { makeScreen } from "./make-flutter-scaffold";
-import { makeTheme } from "./make-flutter-theme-data";
+import { makeScaffold } from "./flutter-scaffold";
+import { makeTheme } from "./flutter-theme";
 
 export function makeApp(home: {
   widget: Widget;
@@ -11,7 +11,7 @@ export function makeApp(home: {
     debugShowCheckedModeBanner: false,
     home: Widget.prebuilt(
       wrapWithBuilder(
-        makeScreen(home.widget, home.scrollable).build().finalize()
+        makeScaffold(home.widget, home.scrollable).build().finalize()
       )
     ),
     theme: makeTheme(),

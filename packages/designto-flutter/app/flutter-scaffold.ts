@@ -1,6 +1,6 @@
 import * as flutter from "@flutter-builder/flutter";
 
-export function makeScreen(
+export function makeScaffold(
   child: flutter.Widget,
   scrollable?: boolean
 ): flutter.Scaffold {

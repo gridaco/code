@@ -3,7 +3,7 @@ import { buildFlutterWidgetFromTokens } from "./tokens-to-flutter-widget";
 import { flutter as config } from "@grida/builder-config";
 import * as flutter from "@flutter-builder/flutter";
 import { composeAppWithHome } from "@flutter-builder/flutter";
-import { makeApp } from "./make/make-flutter-material-app";
+import { makeApp } from "./app";
 
 export function buildFlutterApp(
   widget: flutter.Widget,
