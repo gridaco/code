@@ -24,6 +24,8 @@ export type SolidStylingStrategy =
   | "styled-components"
   | "inline-css";
 
+export type PreactStylingStrategy = ReactStylingStrategy;
+
 export interface FlutterOption {
   framework: Framework.flutter;
   language: Language.dart;
@@ -47,6 +49,12 @@ export interface SolidOption {
   styling: SolidStylingStrategy;
 }
 
+export interface PreactOption {
+  framework: Framework.preact;
+  language: Language.jsx | Language.tsx;
+  styling: PreactStylingStrategy;
+}
+
 export interface VanillaOption {
   framework: Framework.vanilla;
   language: Language.html;
@@ -55,8 +63,9 @@ export interface VanillaOption {
 export type FrameworkOption =
   | ReactOption
   | ReactNativeOption
-  | FlutterOption
+  | PreactOption
   | SolidOption
+  | FlutterOption
   | VanillaOption;
 
 export const react_presets = {
@@ -130,6 +139,34 @@ export const solid_presets = {
   },
 };
 
+export const preact_presets = {
+  default: <PreactOption>{
+    framework: Framework.preact,
+    language: Language.tsx,
+    styling: "styled-components",
+  },
+  with_styled_components: <PreactOption>{
+    framework: Framework.preact,
+    language: Language.tsx,
+    styling: "styled-components",
+  },
+  with_inline_css: <PreactOption>{
+    framework: Framework.preact,
+    language: Language.tsx,
+    styling: "inline-css",
+  },
+  with_css_module: <PreactOption>{
+    framework: Framework.preact,
+    language: Language.tsx,
+    styling: "css-module",
+  },
+  with_css: <PreactOption>{
+    framework: Framework.preact,
+    language: Language.tsx,
+    styling: "css",
+  },
+};
+
 export const vanilla_presets = {
   vanilla_default: <VanillaOption>{
     framework: Framework.vanilla,
@@ -166,6 +203,11 @@ export const all_preset_options_map__prod = {
   react_with_styled_components: react_presets.react_with_styled_components,
   react_with_inline_css: react_presets.react_with_inline_css,
   react_with_css_module: react_presets.react_with_css_module,
+  preact: preact_presets.default,
+  preact_default: preact_presets.default,
+  preact_with_styled_components: preact_presets.with_styled_components,
+  preact_with_inline_css: preact_presets.with_inline_css,
+  preact_with_css_module: preact_presets.with_css_module,
   "react-native": reactnative_presets.reactnative_default,
   reactnative: reactnative_presets.reactnative_default,
   reactnative_default: reactnative_presets.reactnative_default,
@@ -186,6 +228,7 @@ export const lang_by_framework = {
   flutter: [Language.dart],
   react: [Language.jsx, Language.tsx],
   "react-native": [Language.jsx, Language.tsx],
+  preact: [Language.jsx, Language.tsx],
   "solid-js": [Language.jsx, Language.tsx],
   vanilla: [Language.html],
 };
@@ -196,6 +239,8 @@ export const react_styles: ReactStylingStrategy[] = [
   "css-module",
   "css",
 ];
+
+export const preact_styles: PreactStylingStrategy[] = react_styles;
 
 export const getpreset = (preset_name: string): FrameworkOption => {
   const _p = all_preset_options_map__prod[preset_name];
@@ -213,6 +258,10 @@ export const getDefaultPresetNameByFramework = (frameowrk: Framework) => {
       return "react_default";
     case Framework.reactnative:
       return "reactnative_default";
+    case Framework.solid:
+      return "solid_default";
+    case Framework.preact:
+      return "default";
     case Framework.vanilla:
       return "vanilla_default";
   }

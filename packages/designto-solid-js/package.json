@@ -1,7 +1,7 @@
 {
   "name": "@designto/solid-js",
   "version": "0.0.0",
-  "description": "design to solidjs",
+  "description": "design to solid-js",
   "main": "dist/index.js",
   "private": false,
   "license": "Apache-2.0",
@@ -15,7 +15,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@web-builder/react": "17.0.2"
+    "@web-builder/react": "18.2.0"
   },
   "files": [
     "dist"

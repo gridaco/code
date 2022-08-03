@@ -93,6 +93,11 @@ export function CodeOptionsControl(props: CodeOptionsControlProps) {
         description: "flutter",
       },
       {
+        name: "Preact",
+        value: "preact_default",
+        description: "preact",
+      },
+      {
         name: "Vanilla",
         value: "vanilla_default",
         description: "vanilla Html",
@@ -171,6 +176,11 @@ export function CodeOptionsControl(props: CodeOptionsControlProps) {
 
   const fields_config = {
     react: [platform_field_config, lang_field_config, react_style_field_config],
+    preact: [
+      platform_field_config,
+      lang_field_config,
+      react_style_field_config,
+    ],
     "react-native": [platform_field_config, lang_field_config],
     "solid-js": [platform_field_config, lang_field_config],
     flutter: [platform_field_config, lang_field_config],

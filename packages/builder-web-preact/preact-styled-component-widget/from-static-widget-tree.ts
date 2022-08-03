@@ -1,12 +1,7 @@
 import { JsxWidget, StylableJsxWidget } from "@web-builder/core";
 import { ReactComponentExportResult } from "@web-builder/react-core";
 import { react as react_config } from "@grida/builder-config";
-import { ReactStyledComponentsModuleBuilder } from "./react-styled-components-module-builder";
-
-interface Config {
-  styling: react_config.ReactStyledComponentsConfig;
-  exporting: react_config.ReactComponentExportingCofnig;
-}
+import { PreactStyledComponentsBuilder } from "./preact-styled-components-module-builder";
 
 /**
  * styled components pattern with either emotion or styled-component
@@ -14,13 +9,16 @@ interface Config {
  * @param entry
  * @returns
  */
-export function finalizeReactWidget_StyledComponents(
+export function finalizePreactWidget_StyledComponents(
   entry: JsxWidget,
-  { styling, exporting }: Config
+  {
+    styling,
+    exporting,
+  }: {
+    styling: react_config.ReactStyledComponentsConfig;
+    exporting: react_config.ReactComponentExportingCofnig;
+  }
 ): ReactComponentExportResult {
-  const builder = new ReactStyledComponentsModuleBuilder({
-    entry,
-    config: styling,
-  });
+  const builder = new PreactStyledComponentsBuilder({ entry, config: styling });
   return builder.asExportableModule().finalize(exporting);
 }

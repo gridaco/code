@@ -59,24 +59,24 @@ const T_REACT_DOM: StandardLibraryManifest = {
 };
 
 /**
- * last-update: May 2021
+ * last-update: Jul 2022
  * https://www.npmjs.com/package/react
  */
 const REACT: StandardLibraryManifest = {
   id: "react",
   name: "react",
-  version: "17.0.2",
+  version: "18.2.0",
   website: "https://reactjs.org",
 };
 
 /**
- * last-update: May 2021
+ * last-update: Jul 2022
  * https://www.npmjs.com/package/react-dom
  */
 const REACT_DOM: StandardLibraryManifest = {
   id: "react-dom",
   name: "react-dom",
-  version: "17.0.2",
+  version: "18.2.0",
   website: "https://reactjs.org",
 };
 
@@ -243,6 +243,25 @@ const MATERIAL_UI_STYLES: StandardLibraryManifest = {
 ///
 
 ///
+/// region preact
+///
+
+/**
+ * last-update: Jul 2022
+ * https://www.npmjs.com/package/preact
+ */
+const PREACT: StandardLibraryManifest = {
+  id: "preact",
+  name: "preact",
+  version: "10.8.2",
+  website: "https://preactjs.com/",
+};
+
+///
+/// endregion preact
+///
+
+///
 /// region solidjs
 ///
 
@@ -291,6 +310,9 @@ export const standard_libraries = {
 
   // react-native
   react_native: REACT_NATIVE,
+
+  // preact
+  preact: PREACT,
 
   // emotion
   emotion_css: EMOTION_CSS,

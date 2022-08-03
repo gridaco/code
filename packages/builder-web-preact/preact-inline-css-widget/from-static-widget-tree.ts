@@ -1,8 +1,8 @@
 import { JsxWidget } from "@web-builder/core";
 import { react as react_config } from "@grida/builder-config";
-import { ReactInlineCssBuilder } from "./react-inline-css-module-builder";
+import { PreactInlineCssBuilder } from "./preact-inline-css-module-builder";
 
-export function finalizeReactWidget_InlineCss(
+export function finalizePreactWidget_InlineCss(
   entry: JsxWidget,
   {
     styling,
@@ -12,7 +12,7 @@ export function finalizeReactWidget_InlineCss(
     exporting: react_config.ReactComponentExportingCofnig;
   }
 ) {
-  const builder = new ReactInlineCssBuilder({
+  const builder = new PreactInlineCssBuilder({
     entry,
     config: styling,
   });

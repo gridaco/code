@@ -3,6 +3,7 @@ import {
   reactnative_presets,
   flutter_presets,
   vanilla_presets,
+  preact_presets,
   solid_presets,
 } from "@grida/builder-config-preset";
 import { ParsedUrlQuery } from "querystring";
@@ -26,6 +27,7 @@ export function get_framework_config_from_query(query: ParsedUrlQuery) {
 
 export function get_framework_config(framework: string) {
   switch (framework) {
+    // react
     case "react":
     case "react_default":
     case "react-default":
@@ -42,6 +44,7 @@ export function get_framework_config(framework: string) {
     case "react_with_css_module":
     case "react-with-css-module":
       return react_presets.react_with_css_module;
+    // react-native
     case "react-native":
       return reactnative_presets.reactnative_default;
     case "react-native-with-style-sheet":
@@ -50,16 +53,36 @@ export function get_framework_config(framework: string) {
       return reactnative_presets.reactnative_with_styled_components;
     case "react-native-with-inline-style":
       return reactnative_presets.reactnative_with_inline_style;
+    // preact
+    case "preact":
+    case "preact_default":
+    case "preact-default":
+    case "preact.default":
+      return preact_presets.default;
+    case "preact-with-styled-components":
+    case "preact_with_styled_components":
+      return preact_presets.with_styled_components;
+    case "preact-with-emotion-styled":
+      return preact_presets.with_emotion_styled;
+    case "preact_with_inline_css":
+    case "preact-with-inline-css":
+      return preact_presets.with_inline_css;
+    case "preact_with_css_module":
+    case "preact-with-css-module":
+      return preact_presets.with_css_module;
+    // solid-js
     case "solid_with_styled_components":
     case "solid-with-styled-components":
       return solid_presets.solid_with_styled_components;
     case "solid_with_inline_css":
     case "solid-with-inline-css":
       return solid_presets.solid_with_inline_css;
+    // flutter
     case "flutter_default":
     case "flutter-default":
     case "flutter.default":
       return flutter_presets.flutter_default;
+    // vanilla
     case "vanilla":
     case "vanilla-default":
     case "vanilla.default":

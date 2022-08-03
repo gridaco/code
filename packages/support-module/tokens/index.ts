@@ -1,1 +1,1 @@
-export { DeclarationWidgetToken } from "./token-exportable-widget";
+export { WidgetDeclarationToken } from "./token-exportable-widget";

@@ -2,7 +2,7 @@ import {
   NoStyleJSXElementConfig,
   StyledComponentJSXElementConfig,
 } from "@web-builder/styled";
-import { JSXChildLike } from "coli";
+import { JSX, JSXChildLike, Snippet } from "coli";
 import { StylesRepository } from "@web-builder/core/builders";
 import { create_duplication_reduction_map } from "@web-builder/styled";
 import { buildCSSStyleData, CSSProperties } from "@coli.codes/css";
@@ -174,14 +174,9 @@ export class HtmlIdCssModuleBuilder {
    * @returns merged final html file src
    */
   render(): string {
-    const strfied_body = stringfy(this.partBody(), {
-      language: "jsx",
-      indentation: "\t",
-    });
-
     const final = html_render({
       css: this.partStyles(),
-      body: strfied_body,
+      body: this.partBody(),
     });
 
     return final;
@@ -223,20 +218,24 @@ function injectIdToJsx(jsx: JSXElementLike, id: string) {
   }
 }
 
-const html_render = ({ css, body }: { css: string; body: string }) => {
+const html_render = ({ css, body }: { css: string; body: JSXChildLike }) => {
   const indenter = (s: string, tabs: number = 0) =>
     s.replace(/\n/g, "\n" + "\t".repeat(tabs));
-  return `<!DOCTYPE html>
-<html>
-  <head>
-    <style>
-${indenter(css, 3)}
-    </style>
-  </head>
-  <body>
-${indenter(body, 2)}
-  </body>
-</html>`;
+
+  const html = JSX.html({
+    children: [
+      JSX.head(
+        // style
+        JSX.style(Snippet.fromStatic(indenter(css, 3)) as any)
+      ),
+      // body
+      JSX.body(body),
+    ],
+  });
+
+  return stringfy(html.make(), {
+    language: "jsx", // use jsx for html also.
+  });
 };
 
 /**

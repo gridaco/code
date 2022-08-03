@@ -2,6 +2,7 @@ import { input, output, config, build } from "../proc";
 import { tokenize, wrap } from "@designto/token";
 import { Widget } from "@reflect-ui/core";
 import * as toReact from "@designto/react";
+import * as toPreact from "@designto/preact";
 import * as toSolid from "@designto/solid-js";
 import * as toReactNative from "@designto/react-native";
 import * as toVanilla from "@designto/vanilla";
@@ -154,6 +155,17 @@ export async function designToCode({
         })),
         ..._extend_result,
       };
+    case "preact": {
+      return {
+        ...(await designToPreact({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          preact_config: framework_config,
+          asset_config: asset_config,
+        })),
+        ..._extend_result,
+      };
+    }
     case "flutter":
       return {
         ...(await designToFlutter({
@@ -185,6 +197,8 @@ export async function designToCode({
 export const designTo = {
   react: designToReact,
   reactnative: designToReactNative,
+  preact: designToPreact,
+  solid: designToSolid,
   vue: designToVue,
   flutter: designToFlutter,
 };
@@ -264,6 +278,25 @@ export async function designToReactNative({
   //   name: "rn app",
   //   id: input.widget.key.id,
   // };
+}
+
+export async function designToPreact({
+  input,
+  preact_config,
+  build_config,
+  asset_config,
+}: {
+  input: { widget: Widget; reusable_widget_tree? };
+  preact_config: config.PreactFrameworkConfig;
+  /**
+   * TODO: pass this to tokenizer +@
+   */
+  build_config: config.BuildConfiguration;
+  asset_config?: AssetsConfig;
+}): Promise<output.ICodeOutput> {
+  const preactWidget = toPreact.buildPreactWidget(input.widget);
+  const res = toPreact.buildPreactApp(preactWidget, preact_config);
+  return res;
 }
 
 export async function designToFlutter({
