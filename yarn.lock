@@ -10085,7 +10085,7 @@
   "resolved" "https://registry.npmjs.org/dargs/-/dargs-7.0.0.tgz"
   "version" "7.0.0"
 
-"dart-services@^0.2.3":
+"dart-services@^0.2.3", "dart-services@^0.2.5":
   "integrity" "sha512-cdnnF3fZZbqXaL8tfkCnm5o6SpGkwiz5Yfjkpxv6jUy4FOpE45VN/e+6f7rId3b03t7zZTVq3DBTyCE+oV8ynw=="
   "resolved" "https://registry.npmjs.org/dart-services/-/dart-services-0.2.5.tgz"
   "version" "0.2.5"
@@ -10596,6 +10596,7 @@
     "@visx/shape" "^1.8.0"
     "codesandbox" "^2.2.3"
     "cuid" "^2.1.8"
+    "dart-services" "^0.2.5"
     "firebase" "^9.6.0"
     "framer-motion" "^5.3.1"
     "idb" "^6.1.2"
