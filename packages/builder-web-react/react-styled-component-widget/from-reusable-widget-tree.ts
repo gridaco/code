@@ -1,9 +1,13 @@
+////
+//// LEGACY
+////
+
 import {
   InstanceMetaToken,
   InstanceWidget,
 } from "@code-features/component/tokens/token-instance";
 import { MasterComponentWidget } from "@code-features/component/tokens/token-master-component";
-import { buildWebWidgetFromTokens } from "@designto/web/tokens-to-web-widget";
+import { buildWebWidgetFromTokens } from "@designto/web";
 import { ReactStyledComponentsModuleBuilder } from "./react-styled-components-module-builder";
 
 /**
