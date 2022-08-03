@@ -16,6 +16,7 @@ import {
 import { rd } from "../_utils";
 import assert from "assert";
 import { WrappingContainer } from "@designto/token/tokens";
+import { compose_flutter_wrap } from "./compose-flutter-wrap";
 
 export function compose(widget: core.DefaultStyleWidget): flutter.Widget {
   const composed = _compose(widget, {
@@ -60,53 +61,34 @@ function _compose(
   //   const _key = keyFromWidget(widget);
   let thisFlutterWidget: flutter.Widget;
 
-  const flex_props = (f: core.Flex) => {
-    return {
-      mainAxisAlignment: rendering.mainAxisAlignment(f.mainAxisAlignment),
-      crossAxisAlignment: rendering.crossAxisAlignment(f.crossAxisAlignment),
-      mainAxisSize: rendering.mainAxisSize(f.mainAxisSize),
-      verticalDirection: painting.verticalDirection(f.verticalDirection),
-    };
-  };
-
+  // ------------------------------------
+  // region layouts
+  // ------------------------------------
   if (widget instanceof core.Column) {
-    const children = compose_item_spacing_children(widget.children, {
-      itemspacing: widget.itemSpacing,
-      axis: widget.direction,
-    });
     thisFlutterWidget = new flutter.Column({
       ...default_props_for_layout,
       ...flex_props(widget),
-      children: children,
+      children: compose_children_with_item_spacing(widget.children, {
+        itemspacing: widget.itemSpacing,
+        axis: widget.direction,
+      }),
       //   key: _key,
     });
   } else if (widget instanceof core.Row) {
-    const children = compose_item_spacing_children(widget.children, {
-      itemspacing: widget.itemSpacing,
-      axis: widget.direction,
-    });
     thisFlutterWidget = new flutter.Row({
       ...default_props_for_layout,
       ...flex_props(widget),
-      children: children,
+      children: compose_children_with_item_spacing(widget.children, {
+        itemspacing: widget.itemSpacing,
+        axis: widget.direction,
+      }),
       //   key: _key,
     });
   } else if (widget instanceof core.Wrap) {
-    thisFlutterWidget = new flutter.Wrap({
-      ...default_props_for_layout,
-      direction: painting.axis(widget.direction),
-      alignment: rendering.wrapAlignment(widget.alignment),
-      spacing: widget.spacing,
-      runAlignment: rendering.wrapAlignment(widget.runAlignment),
-      runSpacing: widget.runSpacing,
-      crossAxisAlignment: rendering.wrapCrossAxisAlignment(
-        widget.crossAxisAlignment
-      ),
-      verticalDirection: painting.verticalDirection(widget.verticalDirection),
-      clipBehavior: dartui.clip(widget.clipBehavior),
-      children: handleChildren(widget.children),
-      key: undefined,
-    });
+    thisFlutterWidget = compose_flutter_wrap(
+      widget,
+      handleChildren(widget.children)
+    );
   } else if (widget instanceof core.Flex) {
     // FIXME: FLEX not supported yet.
     thisFlutterWidget = new flutter.Flex({
@@ -169,8 +151,10 @@ function _compose(
       // -------------------------------------
     }
   } else if (widget instanceof core.SizedBox) {
+    // TODO:
     //
   } else if (widget instanceof core.OverflowBox) {
+    // TODO:
     //
   } else if (widget instanceof core.Opacity) {
     thisFlutterWidget = new flutter.Opacity({
@@ -270,12 +254,25 @@ function _compose(
     // TODO: widget.icon - not supported
     // thisFlutterWidget = compose_unwrapped_button(_key, widget);
   }
+  // checkbox
+  else if (widget instanceof core.Checkbox) {
+    // TODO:
+  }
   // textfield
   else if (widget instanceof core.TextField) {
+    // TODO:
     // thisFlutterWidget = compose_unwrapped_text_input(_key, widget);
-  } else if (widget instanceof core.Slider) {
+  }
+  // slider
+  else if (widget instanceof core.Slider) {
+    // TODO:
     // thisFlutterWidget = compose_unwrapped_slider(_key, widget);
   }
+  // progress
+  else if (widget instanceof core.ProgressIndicator) {
+    // TODO:
+  }
+
   // wrapping container
   else if (widget instanceof WrappingContainer) {
     // #region
@@ -381,7 +378,7 @@ function _compose(
  * | 1 | s | 2 | s | 3 | s | 4
  * ```
  */
-function compose_item_spacing_children(
+function compose_children_with_item_spacing(
   children: core.DefaultStyleWidget[],
   args: {
     itemspacing: number;
@@ -450,3 +447,12 @@ function wrap_with_sized_and_inject_size(
     });
   }
 }
+
+const flex_props = (f: core.Flex) => {
+  return {
+    mainAxisAlignment: rendering.mainAxisAlignment(f.mainAxisAlignment),
+    crossAxisAlignment: rendering.crossAxisAlignment(f.crossAxisAlignment),
+    mainAxisSize: rendering.mainAxisSize(f.mainAxisSize),
+    verticalDirection: painting.verticalDirection(f.verticalDirection),
+  };
+};
