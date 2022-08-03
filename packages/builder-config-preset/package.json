@@ -1,6 +1,16 @@
 {
     "name": "@grida/builder-config-preset",
     "authors": "Grida.co",
-    "version": "1.0.0",
-    "dependencies": {}
+    "version": "0.0.0",
+    "private": false,
+    "scripts": {
+        "build": "tsc"
+    },
+    "dependencies": {},
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "access": "public"
+    }
 }

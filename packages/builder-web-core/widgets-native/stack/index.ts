@@ -94,7 +94,7 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
   }
 }
 
-function clip(clip: Clip): CSSProperty.Overflow {
+function clip(clip: Clip | undefined): CSSProperty.Overflow | undefined {
   switch (clip) {
     case Clip.antiAlias:
     case Clip.antiAliasWithSaveLayer:

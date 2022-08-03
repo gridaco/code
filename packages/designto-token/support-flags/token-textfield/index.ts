@@ -16,7 +16,7 @@ import { keyFromNode } from "../../key";
 import assert from "assert";
 import { tokenizeText } from "../../token-text";
 import { detectIf } from "@reflect-ui/detection";
-import { paintToColor } from "@design-sdk/core/utils/colors";
+import { paintToColor } from "@design-sdk/figma-utils";
 import { tokenizeLayout } from "../../token-layout";
 import { unwrappedChild } from "../../wrappings";
 import { WrappingContainer } from "../../tokens";

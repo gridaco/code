@@ -1,11 +1,11 @@
 import { CSSProperties } from "@coli.codes/css";
-import { WidgetTree } from "../../widget-tree";
+import { JsxWidget } from "widget-core";
 
 /**
  * A base html element containing all possible styles & attributes.
  * @deprecated - not ready
  */
-export abstract class HtmlElement extends WidgetTree {
+export abstract class HtmlElement extends JsxWidget {
   abstract jsxConfig();
 
   styleData(): CSSProperties {

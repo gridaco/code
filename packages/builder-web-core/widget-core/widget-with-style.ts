@@ -9,8 +9,8 @@ import {
   IPositionedWidget,
   IWHStyleWidget,
 } from "@reflect-ui/core";
-import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
-import { Background } from "@reflect-ui/core/lib/background";
+import { BoxShadowManifest } from "@reflect-ui/core";
+import { Background } from "@reflect-ui/core";
 import { WidgetKey } from "../widget-key";
 import { positionAbsolute } from "@web-builder/styles";
 

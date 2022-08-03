@@ -1,4 +1,4 @@
-import type { FigmaFileKey } from "@design-sdk/figma";
+import type { FigmaFileKey } from "@design-sdk/figma-core";
 import { WidgetKey } from "@reflect-ui/core";
 
 export class FigmaWidgetKey extends WidgetKey {

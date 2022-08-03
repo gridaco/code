@@ -1,6 +1,6 @@
 import { license, version } from "@designto/code";
 import { WidgetDeclarationDocBuilder } from "./widget-declaration-doc-builder";
-import { MainImageRepository } from "@design-sdk/core/assets-repository";
+import { MainImageRepository } from "@design-sdk/asset-repository";
 import { GridaTSDocWidgetDeclarationMetaManager } from "../doc-meta";
 import type { WidgetModuleInfo, WidgetDeclarationInfo } from "./types";
 import { BlockStatement, ImportDeclaration, JSX, Return } from "coli";

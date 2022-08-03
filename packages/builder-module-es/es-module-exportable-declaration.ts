@@ -1,7 +1,7 @@
 import { BlockStatement, ImportDeclaration } from "coli";
 import { stringfy } from "@coli.codes/export-string";
 import { EsWidgetModuleFile } from "@web-builder/module-es";
-import { react as react_config } from "@designto/config";
+import { react as react_config } from "@grida/builder-config";
 import type { WidgetDeclarationDocumentation } from "@code-features/documentation";
 
 export abstract class EsWidgetModuleExportable {

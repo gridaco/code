@@ -2,7 +2,7 @@ import type { ModuleFlag } from "@code-features/flags/--module";
 import { keyFromNode } from "../../key";
 import { tokenize } from "../..";
 import { default_tokenizer_config } from "../../config";
-import { handleChildren } from "../../main";
+import { handleChildren } from "../../tokenizer";
 import type { ReflectSceneNode } from "@design-sdk/figma-node";
 
 export function tokenize_flagged_module(

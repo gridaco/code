@@ -10,7 +10,7 @@ import { keyFromNode } from "../../key";
 import assert from "assert";
 import { tokenizeLayout } from "../../token-layout";
 import { unwrappedChild } from "../../wrappings";
-import { RoundSliderThumbShape } from "@reflect-ui/core/lib/slider.thumb";
+import { RoundSliderThumbShape } from "@reflect-ui/core";
 import { WrappingContainer } from "../../tokens";
 
 /**

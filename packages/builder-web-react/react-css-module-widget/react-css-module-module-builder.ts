@@ -1,5 +1,5 @@
 import { ScopedVariableNamer } from "@coli.codes/naming";
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
 import {
   BlockStatement,
   Identifier,
@@ -20,7 +20,7 @@ import {
   StylesConfigMapBuilder,
   StylesRepository,
 } from "@web-builder/core/builders";
-import { react as react_config } from "@designto/config";
+import { react as react_config } from "@grida/builder-config";
 import { create_duplication_reduction_map } from "@web-builder/styled";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";

@@ -1,7 +1,7 @@
 import { Widget } from "@reflect-ui/core";
 import { buildWebWidgetFromTokens } from "@designto/web/tokens-to-web-widget";
 import { JsxWidget } from "@web-builder/core";
-import { solid as config } from "@designto/config";
+import { solid as config } from "@grida/builder-config";
 import {
   finalizeSolidWidget_StyledComponents,
   finalizeSolidWidget_InlineCSS,
