@@ -2,10 +2,24 @@
   "name": "@web-builder/solid-js",
   "description": "Grida's Solid code builder for development automation built uppon coli",
   "version": "1.4.3",
-  "license": "Apache 2.0",
   "homepage": "https://coli.codes/solid-js",
-  "author": "Grida Authors",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": "https://github.com/gridaco/designto-code",
+  "authors": [
+    "grida.co <hello@grida.co>",
+    "softmarshmallow <universe@grida.co>"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "@web-builder/react-core": "17.0.2"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

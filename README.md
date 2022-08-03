@@ -1,41 +1,58 @@
-# Design to code
+<center>
 
-https://user-images.githubusercontent.com/16307013/145498355-58fb2cf3-a6a0-44a3-8515-3859b048c3a4.mov
+</center>
 
-Design to code engine. A design ✌️ code standard.
+<p align="center">
+  <a href="https://code.grida.co">
+  <image src="./branding/gh-artwork.png" />
+    <h3 align="center">Design to Code</h3>
+  </a>
+</p>
+
+<p align="center">
+  Design to code engine. A design ✌️ code standard.
+</p>
 
 > Grida's Design to code core library. Convert your figma, sketch and adobe xd design to flutter, react, vue and more.
 
-## Demo
-
-for the demo, please visit [assistant](https://github.com/gridaco/assistant)
-
-For the fully integrated working demo, visit [grida.co](https://grida.co)
-
-### Run it your own
-
 ```
-git clone https://github.com/gridaco/designto-code.git
-
-cd designto-code
-yarn
-yarn editor
-# visit http://localhost:6626
+npx designto react https://www.figma.com/files/XXX
 ```
 
-update pulling - `git submodule update --init --recursive`
+**Or.. [👩‍💻 Try designto-code from browser IDE](https://code.grida.co)**
+
+## Usage
+
+```bash
+npm i -g @designto/cli
+
+# react + figma example
+designto react https://www.figma.com/files/XXX -o mypage.tsx
+```
+
+Integrated usage
+
+- Assistant (Figma plugin) - visit [assistant](https://github.com/gridaco/assistant)
+- [code.grida.co](https://code.grida.co) (Web IDE for frontend development)
+- [grida CLI](https://github.com/gridaco/cli)
+- [@designto/cli](./cli)
 
 ## Platforms / Frameworks
 
-| **Frameworks**     |       |
-| ------------------ | :---: |
-| ReactJS            |  ✅   |
-| Flutter            |  ✅   |
-| React Native       |  ✅   |
-| SolidJS            |  ✅   |
-| Vanilla (html/css) |  ✅   |
-| Svelte             |  ✅   |
-| Vue                | (wip) |
+| **Frameworks**     |       | channel  | bundler         | reflect-ui | material-ui  | tailwind | packager               |
+| ------------------ | :---: | -------- | --------------- | ---------- | ------------ | -------- | ---------------------- |
+| ReactJS            |  ✅   | `stable` | `esbuild`       | (wip)      | (wip)        | (wip)    | `npm`, `local`, `git`  |
+| Flutter            |  ✅   | `beta`   | `dart-services` | (wip)      | Yes (native) | No       | `pub`, `local`, `git`  |
+| React Native       |  ✅   | `beta`   | `expo`          | (wip)      | No           | No       | `expo`, `local`, `git` |
+| SolidJS            |  ✅   | `beta`   | `esbuild`       | (wip)      | No           | (wip)    | `npm`, `local`, `git`  |
+| Vanilla (html/css) |  ✅   | `stable` | `vanilla`       | (wip)      | No           | (wip)    | `local`, `cdn`         |
+| Svelte             |  ✅   | `beta`   | `svelte`        | (wip)      | No           | (wip)    | `npm`, `local`, `git`  |
+| Vue                | (wip) | `dev`    | `vue`           | (wip)      | No           | (wip)    | `npm`, `local`, `git`  |
+| Android (Jetpack)  | (wip) | `dev`    | Not supported   | (wip)      | Yes (native) | No       | `local`, `git`         |
+| iOS (SwiftUI)      | (wip) | `dev`    | Not supported   | (wip)      | No           | No       | `local`, `git`         |
+
+<details>
+<summary>React</summary>
 
 | **ReactJS**         |       |
 | ------------------- | :---: |
@@ -47,6 +64,11 @@ update pulling - `git submodule update --init --recursive`
 | breakpoints         | (wip) |
 | components          | (wip) |
 
+</details>
+
+<details>
+<summary>ReactNative</summary>
+
 | **ReactNative**                |       |
 | ------------------------------ | :---: |
 | `StyleSheet`                   |  ✅   |
@@ -56,11 +78,21 @@ update pulling - `git submodule update --init --recursive`
 | `react-native-svg`             | (wip) |
 | `expo`                         | (wip) |
 
+</details>
+
+<details>
+<summary>Vanilla (html/css)</summary>
+
 | **Vanilla** |               |
 | ----------- | :-----------: |
 | reflect-ui  | right-aligned |
 | css         |      ✅       |
 | scss        |   are neat    |
+
+</details>
+
+<details>
+<summary>Flutter</summary>
 
 | **Flutter** |       |
 | ----------- | :---: |
@@ -68,50 +100,128 @@ update pulling - `git submodule update --init --recursive`
 | cupertino   | (wip) |
 | reflect-ui  | (wip) |
 
+</details>
+
+<details>
+<summary>Svelte</summary>
+
 | **Svelte**          |       |
 | ------------------- | :---: |
 | `styled-components` |  ✅   |
 | `@mui/material`     | (wip) |
+
+</details>
+
+<details>
+<summary>Vue3</summary>
 
 | **Vue**             |       |
 | ------------------- | :---: |
 | `styled-components` |  ✅   |
 | `@mui/material`     | (wip) |
 
+</details>
+
+<details>
+<summary>SolidJS</summary>
+
 | **Solid**                 |     |
 | ------------------------- | :-: |
 | `solid-styled-components` | ✅  |
 | `inline-css`              | ✅  |
 
+</details>
+
+<details>
+<summary>iOS Native</summary>
+
 | **iOS** |       |
 | ------- | :---: |
 | SwiftUI | (wip) |
+
+</details>
+
+<details>
+<summary>Android Native</summary>
 
 | **Android**     |       |
 | --------------- | :---: |
 | Jetpack Compose | (wip) |
 
-## What does it mean?
+</details>
 
-### By "design". What does it mean?
+## Usage
 
-The term `design` here stands for the UI/UX design source file made by human designers. There are various tools currently available such like Figma, Sketch, XD, and Upcomming [Grida Studio](https://github.com/gridaco/grida)
+Linting
+Custom Tokenizer
+Custom Assets Repository
+Custom Cache
+Custom Cursor
+Plugins
 
-Taking more deeper look, the design data tree is represented with Reflect -- A design standard that grida developed / adopted. (Yes, this is that Reflect that also provided as a UI Library)
+### Local development
 
-TL;DR -- You can convert your design to code from Figma, Sketch, and XD.
+```
+git clone https://github.com/gridaco/designto-code.git
+cd designto-code
 
-### By "code". What does it mean?
+yarn
+yarn editor
+# visit http://localhost:6626
+```
 
-The term `code` here stands for some language or syntax tree that is adoptable for standard development environment. We supprort Flutter, React, HTML/CSS, Vuew, Svelte.
+<details>
+<summary>Trouble shooting</summary>
 
-Taking more deeper look, Reflect Core DSL represents the layout, component, data, styling as a single tree.
+- update pulling - `git submodule update --init --recursive`
 
-### How does it work?
+</details>
 
-Read [how-it-all-works.md](./how-it-all-works.md)
+## Features
 
-### Visualization
+- preprocessing
+  - lint
+    - layout lint
+    - naming lint
+- design
+  - layouts
+  - animations
+  - constraints
+  - breakpoints
+- code
+  - documentation
+    - tsdoc
+  - single-file module
+  - multi-file module
+
+<details>
+<summary>Layouts</summary>
+
+</details>
+
+<details>
+<summary>Animations (motions)</summary>
+
+</details>
+
+<details>
+<summary>Constraints</summary>
+
+</details>
+
+<details>
+<summary>Breakpoints</summary>
+
+</details>
+
+### Editor (web IDE)
+
+https://user-images.githubusercontent.com/16307013/145498355-58fb2cf3-a6a0-44a3-8515-3859b048c3a4.mov
+
+Visit project ([`./editor`](./editor/))
+
+<details>
+<summary>Visualization</summary>
 
 ![](./branding/shot-1.png)
 
@@ -126,3 +236,9 @@ Read [how-it-all-works.md](./how-it-all-works.md)
 ![](./branding/shot-5.png)
 
 ![Grida's design to code. design node visualization snapshot](./branding/example-visualization-design-nodes.png)
+
+</details>
+
+## Architecture
+
+Read [architecture.md](./architecture.md)

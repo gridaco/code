@@ -1,7 +1,24 @@
 {
     "name": "@code-features/component",
     "version": "0.0.0",
+    "private": false,
+    "license": "Apache-2.0",
+    "repository": "https://github.com/gridaco/designto-code",
+    "homepage": "https://grida.co",
+    "authors": [
+        "grida.co <hello@grida.co>",
+        "softmarshmallow <universe@grida.co>"
+    ],
+    "scripts": {
+        "build": "tsc"
+    },
     "dependencies": {
         "tree-visit": "^0.1.0"
+    },
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "access": "public"
     }
 }

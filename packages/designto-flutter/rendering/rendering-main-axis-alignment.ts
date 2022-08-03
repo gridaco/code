@@ -1,5 +1,5 @@
 import { MainAxisAlignment, Snippet } from "@flutter-builder/flutter";
-import { MainAxisAlignment as ReflectMainAxisAlignment } from "@reflect-ui/core/lib";
+import { MainAxisAlignment as ReflectMainAxisAlignment } from "@reflect-ui/core";
 import { do_explicitly_specify, FlutterPropConversionConfig } from "../_";
 
 export function mainAxisAlignment(

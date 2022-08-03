@@ -13,7 +13,7 @@ import {
   StringLiteral,
 } from "coli";
 import { Color, GradientType } from "@reflect-ui/core";
-import { Background } from "@reflect-ui/core/lib/background";
+import { Background } from "@reflect-ui/core";
 import { UnstylableJSXElementConfig } from "..";
 
 /**

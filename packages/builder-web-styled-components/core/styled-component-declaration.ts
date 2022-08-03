@@ -1,4 +1,5 @@
 import {
+  SyntaxKind,
   CallExpression,
   HTML5IDENTIFIERNAMES,
   Html5IdentifierNames,
@@ -9,7 +10,6 @@ import {
   TemplateLiteral,
   VariableDeclaration,
 } from "coli";
-import { SyntaxKind } from "@coli.codes/core-syntax-kind";
 import { CSSProperties, buildCSSStyleData } from "@coli.codes/css";
 import { formatStyledTempplateString } from "../formatter";
 

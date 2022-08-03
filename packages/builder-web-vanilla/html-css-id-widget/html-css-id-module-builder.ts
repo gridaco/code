@@ -6,7 +6,7 @@ import { JSXChildLike } from "coli";
 import { StylesRepository } from "@web-builder/core/builders";
 import { create_duplication_reduction_map } from "@web-builder/styled";
 import { buildCSSStyleData, CSSProperties } from "@coli.codes/css";
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
 import { k, JsxWidget } from "@web-builder/core";
 import {
   buildJsx,

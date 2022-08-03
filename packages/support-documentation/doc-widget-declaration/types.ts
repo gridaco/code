@@ -1,4 +1,4 @@
-import type { EsComponentExportingCofnig } from "@designto/config/module-es";
+import type { EsComponentExportingCofnig } from "@grida/builder-config/module-es";
 import type { FunctionDeclaration, Literal, Parameter } from "coli";
 
 export interface WidgetModuleInfo {

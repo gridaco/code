@@ -6,8 +6,11 @@ import { TVersion } from "./version";
 import { SingleDependency, Dependencies } from "./dependency";
 
 export interface IPackageManifest {
-  name: string;
-  version: string;
+  readonly name: string;
+  readonly description?: string;
+  readonly version?: string;
+  readonly dependencies?: Dependencies;
+  readonly devDependencies?: Dependencies;
 }
 
 /**

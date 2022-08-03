@@ -10,7 +10,7 @@ import { is_matching_name, NameMatchStrategy } from "./name-matcher";
 /// 2. based on pre-build style comparison
 /// - suggesting the merged style name
 
-interface MinimalCssStyleRepresenation {
+export interface MinimalCssStyleRepresenationForCssPostOptimization {
   id: string;
   name: string;
   style: ElementCssStyleData;
@@ -45,8 +45,8 @@ export function find_duplication_in<T, Opt = any>(
  * @returns
  */
 export function is_duplicate_by_name_and_style(
-  a: MinimalCssStyleRepresenation,
-  b: MinimalCssStyleRepresenation,
+  a: MinimalCssStyleRepresenationForCssPostOptimization,
+  b: MinimalCssStyleRepresenationForCssPostOptimization,
   options: {
     name_match: NameMatchStrategy | NameMatchStrategy[];
   }
@@ -112,7 +112,7 @@ export abstract class DuplicationChecker<T extends { id: string }> {
   isProxied(a: T): MatchResult<T> | false {
     const proxied_id = this.proxies.get(a.id);
     if (proxied_id) {
-      const proxied_results = this.memory.get(proxied_id);
+      const proxied_results = this.memory.get(proxied_id)!;
       if (proxied_results) {
         return {
           id: proxied_id,

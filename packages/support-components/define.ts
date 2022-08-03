@@ -1,4 +1,5 @@
-import { ComponentNode, Figma, ReflectSceneNode } from "@design-sdk/figma";
+import { ComponentNode, Figma } from "@design-sdk/figma";
+import { ReflectSceneNode } from "@design-sdk/figma-node";
 import {
   compare_instance_with_master,
   InstanceDiff_1on1,
@@ -13,7 +14,7 @@ import {
 import { InstanceMetaToken } from "./tokens/token-instance";
 import { keyFromNode } from "@designto/token/key";
 import { NameCases, nameit, ScopedVariableNamer } from "coli";
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
 import { visit } from "tree-visit";
 type IDMappable<T> =
   | {

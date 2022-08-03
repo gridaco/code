@@ -1,10 +1,10 @@
-import { nodes } from "@design-sdk/core";
+import { ReflectSceneNode } from "@design-sdk/figma-node";
 import { Expanded, WidgetKey } from "@reflect-ui/core";
 import type { Widget } from "@reflect-ui/core";
 import assert from "assert";
 
 export function wrap_with_expanded(
-  node: nodes.ReflectSceneNode,
+  node: ReflectSceneNode,
   widget: Widget
 ): Expanded {
   assert(

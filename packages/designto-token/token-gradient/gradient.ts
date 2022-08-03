@@ -5,7 +5,7 @@ import {
   Gradient,
   RadialGradient,
 } from "@reflect-ui/core";
-import { color_utils } from "@design-sdk/core";
+import { gradientAngle } from "@design-sdk/core/utils";
 import { tokenize_gradient_direction_from_angle } from "../token-gradient";
 import { roundNumber } from "@reflect-ui/uiutils";
 
@@ -14,7 +14,7 @@ export function tokenize_gradient(gradient: Figma.GradientPaint): Gradient {
   // https://www.figma.com/plugin-docs/api/Transform/
   // https://www.mathworks.com/discovery/affine-transformation.html
   const direction = tokenize_gradient_direction_from_angle(
-    color_utils.gradientAngle(gradient)
+    gradientAngle(gradient)
   );
   // console.log("start making gradient with", gradient.gradientStops);
 

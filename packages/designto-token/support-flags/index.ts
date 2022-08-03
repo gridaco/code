@@ -5,7 +5,7 @@ import {
   WHDeclarationFlag,
   FixWHFlag,
 } from "@code-features/flags";
-import type { ReflectSceneNode } from "@design-sdk/figma";
+import type { ReflectSceneNode } from "@design-sdk/figma-node";
 import { tokenize_flagged_artwork } from "./token-artwork";
 import { tokenize_flagged_heading } from "./token-heading";
 import { tokenize_flagged_paragraph } from "./token-p";

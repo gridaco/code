@@ -1,6 +1,21 @@
 {
     "name": "@code-features/assets",
     "version": "0.0.0",
-    "author": "Grida.co",
-    "private": false
+    "private": false,
+    "license": "Apache-2.0",
+    "repository": "https://github.com/gridaco/designto-code",
+    "homepage": "https://grida.co",
+    "authors": [
+        "grida.co <hello@grida.co>",
+        "softmarshmallow <universe@grida.co>"
+    ],
+    "scripts": {
+        "build": "tsc"
+    },
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "access": "public"
+    }
 }

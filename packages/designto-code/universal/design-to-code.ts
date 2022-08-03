@@ -10,13 +10,16 @@ import {
   fetch_all_assets,
   finalize_temporary_assets_with_prefixed_static_string_keys__dangerously,
 } from "@code-features/assets";
-import { BaseImageRepositories } from "@design-sdk/core/assets-repository";
+import { BaseImageRepositories } from "@design-sdk/asset-repository";
 import { k } from "@web-builder/core";
 import {
   default_tokenizer_config,
   TokenizerConfig,
 } from "@designto/token/config";
-import { default_build_configuration, FrameworkConfig } from "@designto/config";
+import {
+  default_build_configuration,
+  FrameworkConfig,
+} from "@grida/builder-config";
 // import { reusable } from "@code-features/component";
 import assert from "assert";
 import { debug, debugIf } from "@designto/debugger";

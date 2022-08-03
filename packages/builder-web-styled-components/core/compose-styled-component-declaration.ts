@@ -12,12 +12,12 @@ export function composeStyledComponentVariableDeclaration(
     name?: NamePreference;
     framework?: Framework;
   }
-): StyledComponentDeclaration {
+): StyledComponentDeclaration | undefined {
   const jsxconfg = widgetConfig.jsxConfig() as StylableJSXElementConfig;
 
   /// region name
   let varname: string;
-  const namePref = preferences.name;
+  const namePref = preferences.name!;
   if (namePref.overrideFinalName) {
     varname = namePref.overrideFinalName;
   } else if (namePref.overrideKeyName) {

@@ -1,4 +1,4 @@
-import { retrievePrimaryColor } from "@design-sdk/core/utils";
+import { retrievePrimaryColor } from "@design-sdk/figma-utils";
 import type {
   ReflectSceneNode,
   ReflectLineNode,
