@@ -1,5 +1,5 @@
 import { Widget } from "@reflect-ui/core";
-import { buildWebWidgetFromTokens } from "@designto/web/tokens-to-web-widget";
+import { compose } from "@designto/web";
 import {
   finalizeReactWidget_StyledComponents,
   finalizeReactWidget_InlineCss,
@@ -65,7 +65,7 @@ export function buildReactWidget(widget: Widget) {
     "A valid reflect widget manifest should be passed as an input. none was passed."
   );
 
-  return buildWebWidgetFromTokens(widget, {});
+  return compose(widget, {});
 }
 
 /**

@@ -35,11 +35,11 @@ interface WebWidgetComposerConfig {
   img_no_alt?: boolean;
 }
 
-export function buildWebWidgetFromTokens(
+export function compose(
   widget: core.Widget,
   config: WebWidgetComposerConfig
 ): JsxWidget {
-  const composed = compose(
+  const composed = _compose(
     widget,
     {
       is_root: true,
@@ -56,7 +56,7 @@ export type Composer = (
   config?: WebWidgetComposerConfig
 ) => StylableJsxWidget;
 
-function compose<T extends JsxWidget>(
+function _compose<T extends JsxWidget>(
   widget: core.Widget,
   context: { is_root: boolean },
   config: WebWidgetComposerConfig
@@ -71,7 +71,7 @@ function compose<T extends JsxWidget>(
   };
 
   const handleChild = <T extends JsxWidget>(child: core.Widget): T => {
-    return compose(child, { ...context, is_root: false }, config);
+    return _compose(child, { ...context, is_root: false }, config);
   };
 
   const _remove_width_height_if_root_wh = {

@@ -17,10 +17,8 @@ import { rd } from "../_utils";
 import assert from "assert";
 import { WrappingContainer } from "@designto/token/tokens";
 
-export function buildFlutterWidgetFromTokens(
-  widget: core.DefaultStyleWidget
-): flutter.Widget {
-  const composed = compose(widget, {
+export function compose(widget: core.DefaultStyleWidget): flutter.Widget {
+  const composed = _compose(widget, {
     is_root: true,
   });
 
@@ -31,7 +29,7 @@ export function buildFlutterWidgetFromTokens(
   return composed;
 }
 
-function compose(
+function _compose(
   widget: core.DefaultStyleWidget,
   context: { is_root: boolean }
 ) {
@@ -46,7 +44,7 @@ function compose(
   };
 
   const handleChild = (child: core.DefaultStyleWidget): flutter.Widget => {
-    return compose(child, { ...context, is_root: false });
+    return _compose(child, { ...context, is_root: false });
   };
 
   const _remove_width_height_if_root_wh = {
@@ -193,6 +191,7 @@ function compose(
       child: handleChild(widget.child),
     });
   } else if (widget instanceof core.Expanded) {
+    console.log("Expanded", widget);
     thisFlutterWidget = new flutter.Expanded({
       flex: widget.flex,
       child: handleChild(widget.child),
@@ -280,22 +279,7 @@ function compose(
   // wrapping container
   else if (widget instanceof WrappingContainer) {
     // #region
-    // mergable widgets for web
-    // if (widget.child instanceof core.TextField) {
-    //   thisFlutterWidget = compose_unwrapped_text_input(
-    //     _key,
-    //     widget.child,
-    //     widget
-    //   );
-    // } else if (widget.child instanceof core.ButtonStyleButton) {
-    //   thisFlutterWidget = compose_unwrapped_button(_key, widget.child, widget);
-    // } else if (widget.child instanceof core.Slider) {
-    //   thisFlutterWidget = compose_unwrapped_slider(_key, widget.child, widget);
-    // } else {
-    //   throw new Error(
-    //     `Unsupported widget type: ${widget.child.constructor.name}`
-    //   );
-    // }
+    // TODO: mergable widgets @see - designto/web/tokens-to-web-widget.ts
     // #endregion
   }
   // #endregion
@@ -426,7 +410,7 @@ function compoes_children_with_injection(
   between?: flutter.Widget
 ): flutter.Widget[] {
   const composedchildren = children.map((c) => {
-    return compose(c, {
+    return _compose(c, {
       is_root: false,
     });
   });
