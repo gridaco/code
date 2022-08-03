@@ -1,6 +1,7 @@
 {
     "name": "grida",
-    "version": "0.0.2",
+    "version": "0.0.4",
+    "private": false,
     "dependencies": {
         "@base-sdk-fp/auth": "^0.1.4",
         "dotenv": "^16.0.1",
@@ -36,5 +37,13 @@
     },
     "bin": {
         "grida": "./dist/index.js"
+    },
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
+    "publishConfig": {
+        "access": "public"
     }
 }
