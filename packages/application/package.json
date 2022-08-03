@@ -1,7 +1,14 @@
 {
     "name": "@designto/application-kit",
     "version": "0.0.0",
+    "private": false,
     "scripts": {
         "build": "tsc"
+    },
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "access": "public"
     }
 }

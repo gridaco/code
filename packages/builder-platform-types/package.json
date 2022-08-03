@@ -2,8 +2,15 @@
     "name": "@grida/builder-platform-types",
     "authors": "Grida.co",
     "version": "1.0.0",
+    "private": false,
     "scripts": {
         "build": "tsc"
     },
-    "dependencies": {}
+    "dependencies": {},
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "access": "public"
+    }
 }

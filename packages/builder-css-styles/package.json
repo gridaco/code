@@ -1,6 +1,7 @@
 {
     "name": "@web-builder/styles",
     "version": "0.0.0",
+    "private": false,
     "scripts": {
         "build": "tsc"
     },
@@ -9,5 +10,11 @@
     },
     "devDependencies": {
         "@types/camelcase-css": "^2.0.0"
+    },
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "access": "public"
     }
 }

@@ -2,13 +2,23 @@
   "name": "@web-builder/react-core",
   "description": "Grida's React Core code builder for development automation built uppon coli",
   "version": "17.0.2",
-  "license": "Apache 2.0",
+  "private": false,
+  "license": "Apache-2.0",
   "homepage": "https://coli.codes/react",
-  "author": "Grida Authors",
+  "authors": [
+    "grida.co <hello@grida.co>",
+    "softmarshmallow <universe@grida.co>"
+  ],
   "scripts": {
     "build": "tsc"
   },
   "dependencies": {
     "@web-builder/styled": "0.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

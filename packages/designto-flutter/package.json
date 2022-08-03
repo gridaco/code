@@ -3,11 +3,21 @@
   "version": "0.0.1",
   "description": "design to flutter",
   "main": "dist/index.js",
-  "repository": "https://github.com/gridaco/design-to-code",
-  "author": "Grida Authors",
-  "license": "Apache 2.0",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": "https://github.com/gridaco/designto-code",
+  "homepage": "https://grida.co",
+  "authors": [
+    "grida.co <hello@grida.co>",
+    "softmarshmallow <universe@grida.co>"
+  ],
   "scripts": {
     "build": "tsc"
   },
-  "private": false
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
