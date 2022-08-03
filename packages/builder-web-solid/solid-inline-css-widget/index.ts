@@ -1,5 +1,5 @@
 import type { JsxWidget } from "@web-builder/core";
-import { solid as solid_config } from "@designto/config";
+import { solid as solid_config } from "@grida/builder-config";
 import {
   SolidInlineCssBuilder,
   SolidInlineCssWidgetModuleExportable,

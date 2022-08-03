@@ -2,7 +2,7 @@ export * from "./from-reusable-widget-tree";
 
 import { JsxWidget } from "@web-builder/core";
 import { ReactComponentExportResult } from "@web-builder/react-core";
-import { react as react_config } from "@designto/config";
+import { react as react_config } from "@grida/builder-config";
 import {
   ReactStyledComponentsModuleBuilder,
   ReactStyledComponentWidgetModuleExportable,

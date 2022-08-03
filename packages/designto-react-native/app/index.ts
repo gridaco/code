@@ -1,5 +1,5 @@
 import { Widget } from "@reflect-ui/core";
-import { reactnative as config } from "@designto/config";
+import { reactnative as config } from "@grida/builder-config";
 import { JsxWidget } from "@web-builder/react";
 import assert from "assert";
 import build from "@web-builder/react-native";

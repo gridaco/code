@@ -10,7 +10,7 @@ import { WidgetKey } from "../../widget-key";
 import { Container } from "../container";
 import { JSX, JSXAttribute, StringLiteral } from "coli";
 import * as css from "@web-builder/styles";
-import { RoundSliderThumbShape } from "@reflect-ui/core/lib/slider.thumb";
+import { RoundSliderThumbShape } from "@reflect-ui/core";
 
 /**
  * A jsx attibute to indicate input type as range

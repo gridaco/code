@@ -1,8 +1,8 @@
-import { nodes } from "@design-sdk/core";
+import type { ReflectSceneNode } from "@design-sdk/figma-node";
 import { Widget, WidgetKey, Opacity } from "@reflect-ui/core";
 
 export function wrap_with_opacity(
-  node: nodes.ReflectSceneNode,
+  node: ReflectSceneNode,
   widget: Widget
 ): Opacity {
   return new Opacity({

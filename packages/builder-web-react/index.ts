@@ -8,7 +8,7 @@ import type {
   ReactInlineCssConfig,
   ReactCssModuleConfig,
   ReactStylingStrategy,
-} from "@designto/config/framework-react";
+} from "@grida/builder-config/framework-react";
 import type { ReactComponentExportResult } from "@web-builder/react-core";
 
 const finilize = {

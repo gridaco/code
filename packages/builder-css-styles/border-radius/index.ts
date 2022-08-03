@@ -50,7 +50,9 @@ border-radius: unset;
  * @param r
  * @returns
  */
-export function borderRadius(r: BorderRadiusManifest): CSSProperties {
+export function borderRadius(
+  r: BorderRadiusManifest | undefined
+): CSSProperties {
   if (!r) {
     return;
   }

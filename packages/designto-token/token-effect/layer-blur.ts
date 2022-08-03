@@ -1,9 +1,9 @@
-import { nodes } from "@design-sdk/core";
+import type { ReflectSceneNode } from "@design-sdk/figma-node";
 import { Widget, WidgetKey, Blurred } from "@reflect-ui/core";
-import { BlurEffect } from "@reflect-ui/core/lib/cgr/effects";
+import { BlurEffect } from "@reflect-ui/core/cgr";
 
 export function wrap_with_layer_blur(
-  node: nodes.ReflectSceneNode,
+  node: ReflectSceneNode,
   widget: Widget
 ): Blurred {
   const _blur: BlurEffect | any = node.effects.find((d) => {

@@ -13,8 +13,8 @@ import {
   TextFieldDecoration,
   TextStyle,
 } from "@reflect-ui/core";
-import { SystemMouseCursors } from "@reflect-ui/core/lib/mouse-cursor";
-import { TextInputType } from "@reflect-ui/core/lib/text-input-type";
+import { SystemMouseCursors } from "@reflect-ui/core";
+import { TextInputType } from "@reflect-ui/core";
 
 /**
  * A Html input element dedicated to text related inputs.

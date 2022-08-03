@@ -1,7 +1,7 @@
 import { Widget } from "@reflect-ui/core";
 import { buildWebWidgetFromTokens } from "@designto/web";
 import build, { BuilderFunc, JsxWidget } from "@web-builder/react";
-import { react as config, react } from "@designto/config";
+import { react as config, react } from "@grida/builder-config";
 import assert from "assert";
 
 const builders: {

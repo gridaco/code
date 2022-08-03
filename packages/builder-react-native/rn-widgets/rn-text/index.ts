@@ -9,7 +9,7 @@ import { TextOverflow, WebTextElement } from "@reflect-ui/core";
 import { JSX } from "coli";
 import { RGBA } from "@reflect-ui/core";
 import * as css from "@web-builder/styles";
-import { Dynamic } from "@reflect-ui/core/lib/_utility-types";
+import { Dynamic } from "@reflect-ui/core/reflection";
 import type { TextStyle, ViewStyle } from "react-native";
 import * as styles from "../../rn-styles";
 

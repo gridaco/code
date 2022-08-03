@@ -2,7 +2,7 @@ import { JsxWidget } from "@web-builder/core";
 import {
   react as react_config,
   reactnative as reactnative_config,
-} from "@designto/config";
+} from "@grida/builder-config";
 import {
   ReactNativeInlineStyleBuilder,
   ReactNativeInlineStyleWidgetModuleExportable,

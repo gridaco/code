@@ -1,7 +1,7 @@
 import {
   BaseImageRepositories,
   ImageRepository,
-} from "@design-sdk/core/assets-repository";
+} from "@design-sdk/asset-repository";
 
 /**
  *

@@ -3,7 +3,7 @@ import { tokens as special } from "@designto/token";
 import * as web from "@web-builder/core";
 import { JsxWidget, StylableJsxWidget } from "@web-builder/core";
 import { keyFromWidget } from "@web-builder/core";
-import { MainImageRepository } from "@design-sdk/core/assets-repository";
+import { MainImageRepository } from "@design-sdk/asset-repository";
 import * as css from "@web-builder/styles";
 import { compose_wrap } from "./compose-wrap";
 import { compose_wrapped_with_clip_rrect } from "./compose-wrapped-with-clip-rrect";

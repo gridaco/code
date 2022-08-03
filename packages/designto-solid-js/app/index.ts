@@ -1,5 +1,5 @@
 import { JsxWidget } from "@web-builder/core";
-import { solid as config } from "@designto/config";
+import { solid as config } from "@grida/builder-config";
 import build from "@web-builder/solid-js";
 
 const builders = {

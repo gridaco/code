@@ -3,8 +3,21 @@
   "version": "0.0.0",
   "description": "design to web (styles and html/jsx)",
   "main": "dist/index.js",
-  "repository": "https://github.com/bridgedxyz/design-to-code",
-  "author": "Grida authors",
-  "license": "Apache 2.0",
-  "private": false
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": "https://github.com/gridaco/designto-code",
+  "homepage": "https://grida.co",
+  "authors": [
+    "grida.co <hello@grida.co>",
+    "softmarshmallow <universe@grida.co>"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

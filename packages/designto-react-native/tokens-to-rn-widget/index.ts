@@ -2,7 +2,7 @@ import * as core from "@reflect-ui/core";
 import { tokens as special } from "@designto/token";
 import * as rn from "@web-builder/react-native";
 import { JsxWidget, StylableJsxWidget, keyFromWidget } from "@web-builder/core";
-import { MainImageRepository } from "@design-sdk/core/assets-repository";
+import { MainImageRepository } from "@design-sdk/asset-repository";
 import { compose_wrap } from "./compose-wrap";
 import { compose_wrapped_with_clip_rrect } from "./compose-wrapped-with-clip-rrect";
 import { compose_wrapped_with_rotation } from "./compose-wrapped-with-rotation";

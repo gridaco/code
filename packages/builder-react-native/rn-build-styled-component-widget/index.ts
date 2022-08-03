@@ -3,7 +3,7 @@ import { ReactComponentExportResult } from "@web-builder/react-core";
 import {
   reactnative as rn_config,
   react as react_config,
-} from "@designto/config";
+} from "@grida/builder-config";
 import {
   ReactNativeStyledComponentsModuleBuilder,
   ReactNativeStyledComponentWidgetModuleExportable,
