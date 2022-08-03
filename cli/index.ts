@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import cli from "./bin";
 export type { GridaConfig } from "./config";
 
