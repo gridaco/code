@@ -6,6 +6,7 @@
     "private": true,
     "scripts": {
         "checkout:all": "git submodule update --init --recursive",
+        "clean": "yarn lerna clean -y && yarn lerna bootstrap && yarn lerna exec 'rm -rf ./dist'",
         "editor": "turbo run editor#dev",
         "build": "turbo run build",
         "lerna": "lerna"
@@ -19,6 +20,8 @@
     "resolutions": {
         "@design-sdk/figma-node": "0.0.25",
         "@reflect-ui/core": "0.0.8",
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0",
         "csstype": "3.1.0"
     },
     "devDependencies": {
