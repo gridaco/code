@@ -8,17 +8,20 @@ import { Framework } from "@grida/builder-platform-types";
 import path from "path";
 import dotenv from "dotenv";
 import fs from "fs";
-import Enquirer from "enquirer";
 import { checkForUpdate } from "./update";
 import { login, logout } from "./auth";
 
-export default async function cli() {
+function loadenv(argv) {
+  const { cwd } = argv;
   // Load .env file
-  if (fs.existsSync(".env")) {
-    dotenv.config({ path: ".env" });
+  const dotenvpath = path.join(cwd, ".env");
+  if (fs.existsSync(dotenvpath)) {
+    dotenv.config({ path: dotenvpath });
     console.log("Loaded .env file");
   }
+}
 
+export default async function cli() {
   await checkForUpdate();
 
   yargs(hideBin(process.argv))
@@ -47,7 +50,8 @@ export default async function cli() {
       () => {},
       async ({ cwd, uri }) => {
         add(cwd, { uri: uri as string, version: "latest" });
-      }
+      },
+      [loadenv]
     )
     .command(
       "login",
@@ -55,7 +59,8 @@ export default async function cli() {
       () => {},
       async () => {
         login();
-      }
+      },
+      [loadenv]
     )
     .command(
       "logout",
@@ -63,7 +68,8 @@ export default async function cli() {
       () => {},
       async () => {
         logout();
-      }
+      },
+      [loadenv]
     )
     .command(
       "code <framework> <uri>",
@@ -97,7 +103,8 @@ export default async function cli() {
           },
           baseUrl: _outpath_abs,
         });
-      }
+      },
+      [loadenv]
     )
     .option("figma-personal-access-token", {
       description: "figma personal access token",
