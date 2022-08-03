@@ -2,12 +2,12 @@ import type { DeclareSpecificationFlag } from "@code-features/flags/--declare";
 import { tokenize } from "../..";
 import { default_tokenizer_config } from "../../config";
 import type { ReflectSceneNode } from "@design-sdk/figma-node";
-import { DeclarationWidgetToken } from "@code-features/module";
+import { WidgetDeclarationToken } from "@code-features/module";
 
 export function tokenize_flagged_declare(
   node: ReflectSceneNode,
   flag: DeclareSpecificationFlag
-): DeclarationWidgetToken | undefined {
+): WidgetDeclarationToken | undefined {
   const { export: _export, identifier, value } = flag;
 
   if (!value) return; // return if flag is silenced.
@@ -21,7 +21,7 @@ export function tokenize_flagged_declare(
 
   const _key = child.key!;
 
-  return new DeclarationWidgetToken({
+  return new WidgetDeclarationToken({
     key: _key.copyWith({ id: _key.id + "--declare" }),
     child: child,
   });

@@ -50,7 +50,7 @@ import { SingleChildRenderObjectWidget } from "@reflect-ui/core";
  *
  * ```
  */
-export class DeclarationWidgetToken extends SingleChildRenderObjectWidget {
-  readonly _type = "DeclarationWidgetToken";
+export class WidgetDeclarationToken extends SingleChildRenderObjectWidget {
+  readonly _type = "widget-declaration";
   //
 }
