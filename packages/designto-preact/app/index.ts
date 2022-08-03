@@ -5,7 +5,7 @@ import {
   finalizePreactWidget_InlineCss,
   finalizePreactWidget_CssModule,
 } from "@web-builder/preact";
-import { preact as config, preact } from "@designto/config";
+import { preact as config, preact } from "@grida/builder-config";
 import type { JsxWidget } from "@web-builder/core";
 import assert from "assert";
 export function buildPreactApp(
