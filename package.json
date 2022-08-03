@@ -6,16 +6,28 @@
     "private": true,
     "scripts": {
         "checkout:all": "git submodule update --init --recursive",
-        "editor": "yarn workspace editor dev"
+        "clean": "yarn lerna clean -y && yarn lerna bootstrap && yarn lerna exec 'rm -rf ./dist'",
+        "editor": "turbo run editor#dev",
+        "build": "turbo run build",
+        "lerna": "lerna"
     },
     "workspaces": [
         "editor",
         "editor-packages/*",
-        "editor-packages/base-sdk/_firstparty/*",
         "packages/*",
-        "ui/editor-ui/packages/*",
-        "externals/reflect-core/packages/*",
-        "externals/design-sdk/*",
-        "externals/coli/packages/*"
-    ]
+        "ui/editor-ui/packages/*"
+    ],
+    "resolutions": {
+        "@design-sdk/figma-node": "0.0.25",
+        "@reflect-ui/core": "0.0.8",
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0",
+        "csstype": "3.1.0"
+    },
+    "devDependencies": {
+        "@types/node": "^18.6.3",
+        "lerna": "^4.0.0",
+        "turbo": "^1.4.2",
+        "typescript": "^4.7.4"
+    }
 }

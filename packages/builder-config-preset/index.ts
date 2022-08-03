@@ -1,4 +1,4 @@
-import { config, react } from "@designto/config";
+import { config, react } from "@grida/builder-config";
 import { Framework, Language } from "@grida/builder-platform-types";
 
 const _jsx_component_declaration_style = {
@@ -69,8 +69,8 @@ export const reactnative_presets = {
   reactnative_default: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
     language: Language.tsx,
-    svg: null, // TODO:
-    gradient: null, // TODO:
+    svg: null as unknown, // TODO:
+    gradient: null as unknown, // TODO:
     styling: {
       type: "react-native-stylesheet",
       module: "react-native",
@@ -80,8 +80,8 @@ export const reactnative_presets = {
   reactnative_with_style_sheet: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
     language: Language.tsx,
-    svg: null, // TODO:
-    gradient: null, // TODO:
+    svg: null as unknown, // TODO:
+    gradient: null as unknown, // TODO:
     styling: {
       type: "react-native-stylesheet",
       module: "react-native",
@@ -91,8 +91,8 @@ export const reactnative_presets = {
   reactnative_with_styled_components: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
     language: Language.tsx,
-    svg: null, // TODO:
-    gradient: null, // TODO:
+    svg: null as unknown, // TODO:
+    gradient: null as unknown, // TODO:
     styling: {
       type: "styled-components",
       module: "styled-components/native",
@@ -102,8 +102,8 @@ export const reactnative_presets = {
   reactnative_with_inline_style: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
     language: Language.tsx,
-    svg: null, // TODO:
-    gradient: null, // TODO:
+    svg: null as unknown, // TODO:
+    gradient: null as unknown, // TODO:
     styling: {
       type: "inline-style",
     },
@@ -291,3 +291,28 @@ export const react_styles: {
     },
   ],
 };
+
+export function defaultConfigByFramework(
+  framework: config.FrameworkConfig["framework"]
+) {
+  switch (framework) {
+    case "react": {
+      return react_presets.react_default;
+    }
+    case "flutter": {
+      return flutter_presets.flutter_default;
+    }
+    case "react-native": {
+      return reactnative_presets.reactnative_default;
+    }
+    case "solid-js": {
+      return solid_presets.solid_default;
+    }
+    case "vanilla": {
+      return vanilla_presets.vanilla_default;
+    }
+    case "preview": {
+      return preview_presets.default;
+    }
+  }
+}

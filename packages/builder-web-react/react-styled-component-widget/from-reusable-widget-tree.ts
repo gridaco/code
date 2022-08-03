@@ -4,12 +4,13 @@ import {
 } from "@code-features/component/tokens/token-instance";
 import { MasterComponentWidget } from "@code-features/component/tokens/token-master-component";
 import { buildWebWidgetFromTokens } from "@designto/web/tokens-to-web-widget";
-import { ReactStyledComponentsBuilder } from "./react-styled-components-module-builder";
+import { ReactStyledComponentsModuleBuilder } from "./react-styled-components-module-builder";
 
 /**
  * @deprecated wip
  * @param param0
  * @returns
+ * @experimental
  */
 export function finalizeReactReusable_StyledComponents__Experimental({
   tree,
@@ -32,7 +33,7 @@ export function finalizeReactReusable_StyledComponents__Experimental({
 
   const token = hanlde(tree);
   const webwi = buildWebWidgetFromTokens(token, {});
-  const builder = new ReactStyledComponentsBuilder({
+  const builder = new ReactStyledComponentsModuleBuilder({
     entry: webwi,
     config: {
       type: "styled-components",

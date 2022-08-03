@@ -1,4 +1,4 @@
-import { ReflectSceneNode } from "@design-sdk/core";
+import { ReflectSceneNode } from "@design-sdk/figma-node";
 import * as core from "@reflect-ui/core";
 import { keyFromNode } from "../key";
 import { manifests } from "@reflect-ui/detection";
@@ -76,7 +76,7 @@ function button(
   }
 
   return new WrappingContainer({
-    key: WidgetKey.copyWith(_key, { id: _key.id + ".sizedbox" }),
+    key: _key.copyWith({ id: _key.id + ".sizedbox" }),
     width: sizing.width,
     height: sizing.height,
     child: button,

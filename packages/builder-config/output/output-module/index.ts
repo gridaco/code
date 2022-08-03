@@ -1,6 +1,18 @@
-export interface Module extends File {
+type SupportedLanguagesExt =
+  | "ts"
+  | "tsx"
+  | "js"
+  | "jsx"
+  | "vue"
+  | "dart"
+  | "svelte";
+
+/**
+ * a
+ */
+export interface ModuleFile extends File {
   _type: "module";
-  language: "ts" | "tsx" | "js" | "jsx" | "vue" | "dart" | "svelte";
+  language: SupportedLanguagesExt;
 
   /**
    * list of exporting member identifiers

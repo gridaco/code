@@ -8,7 +8,7 @@ import { px } from "../dimensions";
  * @param border;
  * @returns
  */
-export function border(border: Border): CSSProperties {
+export function border(border: Border | undefined): CSSProperties {
   if (!border) {
     return;
   }

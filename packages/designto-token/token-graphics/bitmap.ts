@@ -1,11 +1,11 @@
-import { MainImageRepository } from "@design-sdk/core/assets-repository";
+import { MainImageRepository } from "@design-sdk/asset-repository";
 import type {
   ReflectBooleanOperationNode,
   ReflectEllipseNode,
   ReflectSceneNode,
 } from "@design-sdk/figma-node";
 import { BoxFit, ImageWidget } from "@reflect-ui/core";
-import { ImagePaint } from "@reflect-ui/core/lib/cgr";
+import { ImagePaint } from "@reflect-ui/core/cgr";
 import { keyFromNode } from "../key";
 
 /**

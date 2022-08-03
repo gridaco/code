@@ -1,8 +1,8 @@
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
 import {
   react as react_config,
   reactnative as reactnative_config,
-} from "@designto/config";
+} from "@grida/builder-config";
 import type { JsxWidget } from "@web-builder/core";
 import { Framework } from "@grida/builder-platform-types";
 import {
@@ -30,7 +30,12 @@ import { cssToJson } from "@web-builder/styles/_utils";
 import { CSSProperties } from "@coli.codes/css";
 import { reactnative_imports } from "..";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
+import {
+  ReactNativeWidgetDeclarationDocBuilder,
+  WidgetDeclarationDocumentation,
+} from "@code-features/documentation";
 
 /**
  * CSS In JS Style builder for React Framework
@@ -44,7 +49,7 @@ import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
  * ```
  *
  */
-export class ReactNativeInlineStyleBuilder extends JsxComponentModuleBuilder<reactnative_config.ReactNativeInlineStyleConfig> {
+export class ReactNativeInlineStyleBuilder extends JSXWidgetModuleBuilder<reactnative_config.ReactNativeInlineStyleConfig> {
   constructor({
     entry,
     config,
@@ -142,7 +147,7 @@ export class ReactNativeInlineStyleBuilder extends JsxComponentModuleBuilder<rea
   protected partImports() {
     return [
       react_imports.import_react_from_react,
-      reactnative_imports.import_react_prepacked,
+      reactnative_imports.import_react_native_prepacked,
     ];
   }
 
@@ -151,12 +156,30 @@ export class ReactNativeInlineStyleBuilder extends JsxComponentModuleBuilder<rea
     return new BlockStatement(new Return(jsxTree));
   }
 
+  protected partDocumentation() {
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new ReactNativeWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
+  }
+
   asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     return new ReactNativeInlineStyleWidgetModuleExportable(this.widgetName, {
       body,
       imports,
+      documentation: doc,
     });
   }
 }
@@ -167,15 +190,18 @@ export class ReactNativeInlineStyleWidgetModuleExportable extends ReactWidgetMod
     {
       body,
       imports,
+      documentation,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
+      documentation: WidgetDeclarationDocumentation;
     }
   ) {
     super({
       name,
       body,
       imports,
+      documentation: documentation,
     });
   }
 
@@ -190,6 +216,7 @@ export class ReactNativeInlineStyleWidgetModuleExportable extends ReactWidgetMod
       imports: this.imports,
       declarations: [],
       body: this.body,
+      documentation: this.documentation,
       config: {
         exporting: exporting,
       },

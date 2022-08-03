@@ -1,4 +1,4 @@
-import { MainImageRepository } from "@design-sdk/core/assets-repository";
+import { MainImageRepository } from "@design-sdk/asset-repository";
 import { ImageWidget, VectorWidget } from "@reflect-ui/core";
 
 /**

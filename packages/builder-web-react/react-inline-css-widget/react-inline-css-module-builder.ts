@@ -1,5 +1,5 @@
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
-import { react as react_config } from "@designto/config";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
+import { react as react_config } from "@grida/builder-config";
 import type { JsxWidget } from "@web-builder/core";
 import {
   react_imports,
@@ -26,7 +26,12 @@ import { cssToJson } from "@web-builder/styles/_utils";
 import { CSSProperties } from "@coli.codes/css";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
+import {
+  ReactWidgetDeclarationDocBuilder,
+  WidgetDeclarationDocumentation,
+} from "@code-features/documentation";
 
 /**
  * InlineCss Style builder for React Framework
@@ -40,7 +45,7 @@ import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
  * ```
  *
  */
-export class ReactInlineCssBuilder extends JsxComponentModuleBuilder<react_config.ReactInlineCssConfig> {
+export class ReactInlineCssBuilder extends JSXWidgetModuleBuilder<react_config.ReactInlineCssConfig> {
   constructor({
     entry,
     config,
@@ -150,12 +155,30 @@ export class ReactInlineCssBuilder extends JsxComponentModuleBuilder<react_confi
     return new BlockStatement(new Return(jsxTree));
   }
 
+  protected partDocumentation() {
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new ReactWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
+  }
+
   asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     return new ReactInlineCssWidgetModuleExportable(this.widgetName, {
       body,
       imports,
+      documentation: doc,
     });
   }
 }
@@ -166,15 +189,18 @@ export class ReactInlineCssWidgetModuleExportable extends ReactWidgetModuleExpor
     {
       body,
       imports,
+      documentation,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
+      documentation: WidgetDeclarationDocumentation;
     }
   ) {
     super({
       name,
       body,
       imports,
+      documentation,
     });
   }
 
@@ -189,6 +215,7 @@ export class ReactInlineCssWidgetModuleExportable extends ReactWidgetModuleExpor
       imports: this.imports,
       declarations: [],
       body: this.body,
+      documentation: this.documentation,
       config: {
         exporting: exporting,
       },

@@ -8,14 +8,14 @@ import {
   convertLayoutModeToAxis,
   convertPrimaryAxisAlignItemsToMainAxisAlignment,
   convertCounterAxisAlignItemsToCrossAxisAlignment,
-} from "@design-sdk/figma-node-conversion/converters";
-import { Axis, EdgeInsets, EdgeInsetsManifest } from "@reflect-ui/core/lib";
+} from "@design-sdk/figma-node-conversion";
+import { Axis, EdgeInsets, EdgeInsetsManifest } from "@reflect-ui/core";
 import {
   ReflectFrameNode,
   ReflectGroupNode,
   ReflectSceneNodeType,
-} from "@design-sdk/core";
-import type { ReflectSceneNode } from "@design-sdk/core";
+} from "@design-sdk/figma-node";
+import type { ReflectSceneNode } from "@design-sdk/figma-node";
 
 /**
  * Add AutoLayout attributes if layout has items aligned (either vertically or horizontally).
@@ -108,12 +108,13 @@ export function convert_frame_to_autolayout_if_possible(
     }
 
     if (frame.crossAxisAlignment == undefined) {
-      frame.crossAxisAlignment = convertCounterAxisAlignItemsToCrossAxisAlignment(
-        mostFrequent(
-          counterDirection,
-          _priorityOrders
-        ) as FigmaCrossAxisAligment
-      );
+      frame.crossAxisAlignment =
+        convertCounterAxisAlignItemsToCrossAxisAlignment(
+          mostFrequent(
+            counterDirection,
+            _priorityOrders
+          ) as FigmaCrossAxisAligment
+        );
     }
 
     // TODO inspect this. is this required?
