@@ -1,10 +1,10 @@
-import { ReactStyledComponentsBuilder } from "@web-builder/react/react-styled-component-widget";
+import { ReactStyledComponentsModuleBuilder } from "@web-builder/react";
 import { preact_imports } from "../preact-import-specifications";
 
 /**
  * Preact styled-components builder. extends from react styled-components builder, overrides only main module imports (from "preact").
  */
-export class PreactStyledComponentsBuilder extends ReactStyledComponentsBuilder {
+export class PreactStyledComponentsBuilder extends ReactStyledComponentsModuleBuilder {
   protected partImports() {
     return [this.partImportPreact(), this.partImportStyled()];
   }

@@ -1,6 +1,6 @@
 import { JsxWidget, StylableJsxWidget } from "@web-builder/core";
 import { ReactComponentExportResult } from "@web-builder/react-core";
-import { react as react_config } from "@designto/config";
+import { react as react_config } from "@grida/builder-config";
 import { PreactStyledComponentsBuilder } from "./preact-styled-components-module-builder";
 
 /**

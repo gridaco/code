@@ -30,3 +30,6 @@ export default finilize;
 export type { BuilderFunc };
 export * from "./widgets-native";
 export * from "./widgets-reflect-react";
+export { ReactCssModuleBuilder } from "./react-css-module-widget";
+export { ReactInlineCssBuilder } from "./react-inline-css-widget";
+export { ReactStyledComponentsModuleBuilder } from "./react-styled-component-widget";
