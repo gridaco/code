@@ -1,5 +1,5 @@
 import { JsxWidget, StylableJsxWidget } from "@web-builder/core";
-import { solid as solid_config } from "@designto/config";
+import { solid as solid_config } from "@grida/builder-config";
 import { SolidStyledComponentsBuilder } from "./solid-styled-components-module-builder";
 
 export function finalizeSolidWidget_StyledComponents(

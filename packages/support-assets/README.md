@@ -33,4 +33,4 @@ this is only valid withoyt extra asset detection, using only pre-defined pure im
 
 ## Related
 
-- `@design-sdk/core/assets-repository`
+- `@design-sdk/asset-repository`

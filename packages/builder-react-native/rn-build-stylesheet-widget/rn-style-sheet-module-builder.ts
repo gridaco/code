@@ -1,5 +1,5 @@
 import { ScopedVariableNamer } from "@coli.codes/naming";
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
 import {
   BlockStatement,
   Declaration,
@@ -23,14 +23,19 @@ import {
 import {
   react as react_config,
   reactnative as rn_config,
-} from "@designto/config";
+} from "@grida/builder-config";
 import { reactnative_imports } from "../rn-import-specifications";
 import { StyleSheetDeclaration } from "../rn-style-sheet";
 import { create_duplication_reduction_map } from "@web-builder/styled";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
-export class ReactNativeStyleSheetModuleBuilder extends JsxComponentModuleBuilder<rn_config.ReactNativeStyleSheetConfig> {
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
+import {
+  ReactNativeWidgetDeclarationDocBuilder,
+  WidgetDeclarationDocumentation,
+} from "@code-features/documentation";
+export class ReactNativeStyleSheetModuleBuilder extends JSXWidgetModuleBuilder<rn_config.ReactNativeStyleSheetConfig> {
   constructor({
     entry,
     config,
@@ -131,12 +136,28 @@ export class ReactNativeStyleSheetModuleBuilder extends JsxComponentModuleBuilde
   }
 
   protected partImportReactNative(): ImportDeclaration {
-    return reactnative_imports.import_react_prepacked;
+    return reactnative_imports.import_react_native_prepacked;
   }
 
   protected partBody(): BlockStatement {
     let jsxTree = this.jsxBuilder(this.entry);
     return new BlockStatement(new Return(jsxTree));
+  }
+
+  protected partDocumentation() {
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new ReactNativeWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
   }
 
   protected partStyleSheetDeclaration(): StyleSheetDeclaration<any> {
@@ -157,28 +178,32 @@ export class ReactNativeStyleSheetModuleBuilder extends JsxComponentModuleBuilde
   }
 
   public asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     const declarations = this.partStyleSheetDeclaration();
-    return new ReactStyleSheeteWidgetModuleExportable(this.widgetName, {
+    return new ReactNativeStyleSheeteWidgetModuleExportable(this.widgetName, {
       body,
       imports,
+      documentation: doc,
       stylesheetDeclaraion: declarations,
     });
   }
 }
 
-export class ReactStyleSheeteWidgetModuleExportable extends ReactWidgetModuleExportable {
+export class ReactNativeStyleSheeteWidgetModuleExportable extends ReactWidgetModuleExportable {
   readonly declarations: Declaration[];
   constructor(
     name,
     {
       body,
       imports,
+      documentation,
       stylesheetDeclaraion,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
+      documentation: WidgetDeclarationDocumentation;
       stylesheetDeclaraion: StyleSheetDeclaration<any>;
     }
   ) {
@@ -186,6 +211,7 @@ export class ReactStyleSheeteWidgetModuleExportable extends ReactWidgetModuleExp
       name,
       body,
       imports,
+      documentation,
     });
 
     this.declarations = [stylesheetDeclaraion];
@@ -201,6 +227,7 @@ export class ReactStyleSheeteWidgetModuleExportable extends ReactWidgetModuleExp
       path: "src/components",
       imports: this.imports,
       declarations: this.declarations,
+      documentation: this.documentation,
       body: this.body,
       config: {
         exporting: exporting,

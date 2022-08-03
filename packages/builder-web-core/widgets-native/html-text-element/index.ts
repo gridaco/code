@@ -6,7 +6,7 @@ import { CSSProperties } from "@coli.codes/css";
 import { JSX } from "coli";
 import { RGBA } from "@reflect-ui/core";
 import * as css from "@web-builder/styles";
-import { Dynamic } from "@reflect-ui/core/lib/_utility-types";
+import { Dynamic } from "@reflect-ui/core/reflection";
 
 /**
  * Html Text Representative.
@@ -53,7 +53,7 @@ export class Text extends TextChildWidget {
 
   textData() {
     return new TextDataWidget({
-      key: { ...this.key, id: this.key.id + ".text-data" },
+      key: this.key.copyWith({ id: this.key.id + ".text-data" }),
       data: this.data,
     });
   }

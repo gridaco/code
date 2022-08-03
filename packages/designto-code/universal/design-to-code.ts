@@ -10,15 +10,19 @@ import {
   fetch_all_assets,
   finalize_temporary_assets_with_prefixed_static_string_keys__dangerously,
 } from "@code-features/assets";
-import { BaseImageRepositories } from "@design-sdk/core/assets-repository";
+import { BaseImageRepositories } from "@design-sdk/asset-repository";
 import { k } from "@web-builder/core";
 import {
   default_tokenizer_config,
   TokenizerConfig,
 } from "@designto/token/config";
-import { default_build_configuration, FrameworkConfig } from "@designto/config";
+import {
+  default_build_configuration,
+  FrameworkConfig,
+} from "@grida/builder-config";
 // import { reusable } from "@code-features/component";
 import assert from "assert";
+import { debug, debugIf } from "@designto/debugger";
 
 interface AssetsConfig {
   asset_repository?: BaseImageRepositories<string>;
@@ -47,18 +51,14 @@ export async function designToCode({
   build_config = config.default_build_configuration,
 }: DesignToCodeInput): Promise<Result> {
   assert(input, "input is required");
-  if (process.env.NODE_ENV === "development") {
-    if (framework_config.framework == "vanilla") {
-    } else {
-      console.info(
-        "dev: starting designtocode with user input",
-        input,
-        framework_config,
-        build_config,
-        asset_config
-      );
-    }
-  }
+  debugIf(
+    framework_config.framework !== "vanilla",
+    "dev: starting designtocode with user input",
+    input,
+    framework_config,
+    build_config,
+    asset_config
+  );
 
   // post token processing
   let tokenizer_config: TokenizerConfig = {
@@ -209,12 +209,10 @@ export async function designToReact({
     !input.reusable_widget_tree
   ) {
     const reactwidget = toReact.buildReactWidget(input.widget);
-    if (process.env.NODE_ENV === "development") {
-      console.info("dev::", "final web token composed", {
-        input: input.widget,
-        reactwidget,
-      });
-    }
+    debug("dev::", "final web token composed", {
+      input: input.widget,
+      reactwidget,
+    });
 
     const res = toReact.buildReactApp(reactwidget, react_config);
     // ------------------------------------------------------------------------
@@ -332,12 +330,11 @@ export async function designToSolid({
     !input.reusable_widget_tree
   ) {
     const reactwidget = toReact.buildReactWidget(input.widget);
-    if (process.env.NODE_ENV === "development") {
-      console.info("dev::", "final web token composed", {
-        input: input.widget,
-        reactwidget,
-      });
-    }
+
+    debug("dev::", "final web token composed", {
+      input: input.widget,
+      reactwidget,
+    });
 
     const res = toSolid.buildSolidApp(reactwidget, solid_config);
     // ------------------------------------------------------------------------

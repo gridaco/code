@@ -1,1 +1,1 @@
-export { JsxComponentModuleBuilder } from "./jsx-component-module-builder";
+export { JSXWidgetModuleBuilder } from "./jsx-component-module-builder";

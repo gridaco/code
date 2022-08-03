@@ -11,7 +11,7 @@ import type { AsWrapFlag } from "@code-features/flags/--as-wrap";
 import { keyFromNode } from "../../key";
 import { tokenize } from "../..";
 import { default_tokenizer_config } from "../../config";
-import { handleChildren } from "../../main";
+import { handleChildren } from "../../tokenizer";
 import { unwrappedChild } from "../../wrappings";
 
 // type InputLayout = Array<Column> | Array<Row>;
@@ -35,7 +35,7 @@ import { unwrappedChild } from "../../wrappings";
 export function tokenize_flagged_wrap(
   node: ReflectSceneNode,
   flag: AsWrapFlag
-): Wrap {
+): Wrap | undefined {
   if (flag.value === false) return;
 
   const validated = validate_input(node as any);

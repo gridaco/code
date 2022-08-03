@@ -1,5 +1,5 @@
-import { SyntaxKind } from "@coli.codes/core-syntax-kind";
 import {
+  SyntaxKind,
   ExportAssignment,
   FunctionDeclaration,
   Identifier,

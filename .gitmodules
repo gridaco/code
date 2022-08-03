@@ -1,18 +1,3 @@
-[submodule "packages/reflect-detection"]
-	path = packages/reflect-detection
-	url = https://github.com/bridgedxyz/reflect-detection
 [submodule "ui/editor-ui"]
 	path = ui/editor-ui
-	url = https://github.com/bridgedxyz/reflect-editor-ui
-[submodule "editor-packages/base-sdk"]
-	path = editor-packages/base-sdk
-	url = https://github.com/gridaco/base-sdk
-[submodule "externals/coli"]
-	path = externals/coli
-	url = https://github.com/gridaco/coli
-[submodule "externals/design-sdk"]
-	path = externals/design-sdk
-	url = https://github.com/gridaco/design-sdk
-[submodule "externals/reflect-core"]
-	path = externals/reflect-core
-	url = https://github.com/reflect-ui/reflect-core-ts
+	url = https://github.com/reflect-ui/reflect-editor-ui

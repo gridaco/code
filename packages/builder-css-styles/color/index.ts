@@ -1,5 +1,5 @@
-import { CssNamedColor, ICssRGBA } from "@coli.codes/css/css-color";
-import { Color, RGB } from "@reflect-ui/core/lib/color";
+import { CssNamedColor, ICssRGBA } from "@coli.codes/css";
+import { Color, RGB } from "@reflect-ui/core";
 
 type HexColor = string;
 
@@ -17,7 +17,7 @@ export function color(input: CssColorInputLike | Color): string {
     // interpret as hex color or named color
     return input;
   } else if (input instanceof CssNamedColor) {
-    return input.name;
+    return input.colorname;
   } else if (typeof input == "object") {
     // with alpha  (if alpha is 1, use rgb format instead)
     if ("r" in input && "a" in input && input.a !== 1) {

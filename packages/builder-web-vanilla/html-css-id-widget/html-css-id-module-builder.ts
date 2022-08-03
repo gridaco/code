@@ -6,7 +6,7 @@ import { JSX, JSXChildLike, Snippet } from "coli";
 import { StylesRepository } from "@web-builder/core/builders";
 import { create_duplication_reduction_map } from "@web-builder/styled";
 import { buildCSSStyleData, CSSProperties } from "@coli.codes/css";
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
 import { k, JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
@@ -174,6 +174,11 @@ export class HtmlIdCssModuleBuilder {
    * @returns merged final html file src
    */
   render(): string {
+    const strfied_body = stringfy(this.partBody(), {
+      language: "jsx",
+      indentation: "\t",
+    });
+
     const final = html_render({
       css: this.partStyles(),
       body: this.partBody(),

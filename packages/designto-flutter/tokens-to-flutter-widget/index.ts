@@ -4,7 +4,7 @@ import * as painting from "../painting";
 import * as rendering from "../rendering";
 import * as dartui from "../dart-ui";
 import { tokens as special, t2t } from "@designto/token";
-import { MainImageRepository } from "@design-sdk/core/assets-repository";
+import { MainImageRepository } from "@design-sdk/asset-repository";
 import { Axis, BoxShape } from "@reflect-ui/core";
 import { escapeDartString } from "@coli.codes/escape-string";
 import { boxDecorationPart } from "../painting";

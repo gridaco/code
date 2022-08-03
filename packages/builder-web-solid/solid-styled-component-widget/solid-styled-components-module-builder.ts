@@ -11,7 +11,7 @@ import {
   StylesConfigMapBuilder,
   StylesRepository,
 } from "@web-builder/core/builders";
-import { solid as solid_config } from "@designto/config";
+import { solid as solid_config } from "@grida/builder-config";
 import {
   StyledComponentDeclaration,
   create_duplication_reduction_map,
@@ -22,9 +22,14 @@ import {
   makeEsWidgetModuleFile,
 } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
+import {
+  SolidJSWidgetDeclarationDocBuilder,
+  WidgetDeclarationDocumentation,
+} from "@code-features/documentation";
 
-export class SolidStyledComponentsBuilder extends JsxComponentModuleBuilder<solid_config.SolidStyledComponentsConfig> {
+export class SolidStyledComponentsBuilder extends JSXWidgetModuleBuilder<solid_config.SolidStyledComponentsConfig> {
   constructor({
     entry,
     config,
@@ -97,6 +102,22 @@ export class SolidStyledComponentsBuilder extends JsxComponentModuleBuilder<soli
     return new BlockStatement(new Return(jsxTree));
   }
 
+  protected partDocumentation() {
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new SolidJSWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
+  }
+
   protected partDeclarations() {
     return Array.from(this.stylesRepository.uniques())
       .map((k) => {
@@ -107,6 +128,7 @@ export class SolidStyledComponentsBuilder extends JsxComponentModuleBuilder<soli
   }
 
   public asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     const styled_declarations = this.partDeclarations();
@@ -115,6 +137,7 @@ export class SolidStyledComponentsBuilder extends JsxComponentModuleBuilder<soli
       {
         body,
         imports,
+        documentation: doc,
         declarations: styled_declarations,
       },
       {
@@ -132,10 +155,12 @@ export class SolidStyledComponentWidgetModuleExportable extends EsWidgetModuleEx
     {
       body,
       imports,
+      documentation,
       declarations,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
+      documentation: WidgetDeclarationDocumentation;
       declarations: StyledComponentDeclaration[];
     },
     {
@@ -148,6 +173,7 @@ export class SolidStyledComponentWidgetModuleExportable extends EsWidgetModuleEx
       name,
       body,
       imports,
+      documentation,
     });
 
     this.declarations = declarations;
@@ -163,6 +189,7 @@ export class SolidStyledComponentWidgetModuleExportable extends EsWidgetModuleEx
       path: "src/components",
       imports: this.imports,
       declarations: this.declarations,
+      documentation: this.documentation,
       body: this.body,
       config: {
         exporting: exporting,

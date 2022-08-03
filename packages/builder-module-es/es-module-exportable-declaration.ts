@@ -1,11 +1,16 @@
 import { BlockStatement, ImportDeclaration } from "coli";
 import { stringfy } from "@coli.codes/export-string";
 import { EsWidgetModuleFile } from "@web-builder/module-es";
-import { react as react_config } from "@designto/config";
+import { react as react_config } from "@grida/builder-config";
+import type { WidgetDeclarationDocumentation } from "@code-features/documentation";
 
 export abstract class EsWidgetModuleExportable {
   readonly name: string;
   readonly dependencies: string[];
+  /**
+   * main widget documentation
+   */
+  readonly documentation?: WidgetDeclarationDocumentation | undefined;
   readonly body: BlockStatement;
   readonly imports: ImportDeclaration[];
 
@@ -13,15 +18,18 @@ export abstract class EsWidgetModuleExportable {
     name,
     body,
     imports,
+    documentation,
     dependencies = [],
   }: {
-    name;
-    body;
-    imports;
+    name: string;
+    body: BlockStatement;
+    imports: ImportDeclaration[];
+    documentation?: WidgetDeclarationDocumentation;
     dependencies?: string[];
   }) {
     this.name = name;
     this.body = body;
+    this.documentation = documentation;
     this.imports = imports;
     this.dependencies = dependencies;
   }
@@ -36,6 +44,7 @@ export abstract class EsWidgetModuleExportable {
     const file = this.asFile({ exporting: config });
     const final = stringfy(file.blocks, {
       language: "tsx",
+      indentation: 2,
     });
     return {
       code: final,

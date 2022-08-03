@@ -10,7 +10,7 @@ import { keyFromNode } from "../../key";
 import assert from "assert";
 import { tokenizeLayout } from "../../token-layout";
 import { unwrappedChild } from "../../wrappings";
-import { RoundSliderThumbShape } from "@reflect-ui/core/lib/slider.thumb";
+import { RoundSliderThumbShape } from "@reflect-ui/core";
 import { WrappingContainer } from "../../tokens";
 
 /**
@@ -19,7 +19,7 @@ import { WrappingContainer } from "../../tokens";
 export function tokenize_flagged_slider(
   node: ReflectSceneNode,
   flag: AsSliderFlag
-): Slider | WrappingContainer {
+): Slider | WrappingContainer | undefined {
   if (flag.value === false) return;
 
   const validated = validate_slider(node);

@@ -6,7 +6,7 @@ import { tokenizeText } from "../../token-text";
 export function tokenize_flagged_span(
   node: ReflectSceneNode,
   flag: AsTextSpanFlag
-): Text {
+): Text | undefined {
   if (flag.value === false) return;
   if (node.type !== "TEXT") return;
 

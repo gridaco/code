@@ -1,5 +1,5 @@
 import { ScopedVariableNamer } from "@coli.codes/naming";
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
 import { BlockStatement, ImportDeclaration, Return } from "coli";
 import {
   react_imports,
@@ -16,7 +16,7 @@ import {
 import {
   react as react_config,
   reactnative as rn_config,
-} from "@designto/config";
+} from "@grida/builder-config";
 import { reactnative_imports } from "../rn-import-specifications";
 import {
   NoStyleJSXElementConfig,
@@ -26,9 +26,14 @@ import {
 } from "@web-builder/styled";
 import { makeEsWidgetModuleFile } from "@web-builder/module-es";
 import { Framework } from "@grida/builder-platform-types";
-import { JsxComponentModuleBuilder } from "@web-builder/module-jsx";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
+import {
+  ReactNativeWidgetDeclarationDocBuilder,
+  WidgetDeclarationDocumentation,
+} from "@code-features/documentation";
 
-export class ReactNativeStyledComponentsModuleBuilder extends JsxComponentModuleBuilder<rn_config.ReactNativeStyledComponentsConfig> {
+export class ReactNativeStyledComponentsModuleBuilder extends JSXWidgetModuleBuilder<rn_config.ReactNativeStyledComponentsConfig> {
   constructor({
     entry,
     config,
@@ -99,12 +104,28 @@ export class ReactNativeStyledComponentsModuleBuilder extends JsxComponentModule
   }
 
   protected partImportReactNative() {
-    return reactnative_imports.import_react_prepacked;
+    return reactnative_imports.import_react_native_prepacked;
   }
 
   protected partBody(): BlockStatement {
     let jsxTree = this.jsxBuilder(this.entry);
     return new BlockStatement(new Return(jsxTree));
+  }
+
+  protected partDocumentation() {
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new ReactNativeWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
   }
 
   protected partDeclarations() {
@@ -117,6 +138,7 @@ export class ReactNativeStyledComponentsModuleBuilder extends JsxComponentModule
   }
 
   public asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     const styled_declarations = this.partDeclarations();
@@ -125,6 +147,7 @@ export class ReactNativeStyledComponentsModuleBuilder extends JsxComponentModule
       {
         body,
         imports,
+        documentation: doc,
         declarations: styled_declarations,
       },
       {
@@ -142,10 +165,12 @@ export class ReactNativeStyledComponentWidgetModuleExportable extends ReactWidge
     {
       body,
       imports,
+      documentation,
       declarations,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
+      documentation: WidgetDeclarationDocumentation;
       declarations: StyledComponentDeclaration[];
     },
     {
@@ -158,6 +183,7 @@ export class ReactNativeStyledComponentWidgetModuleExportable extends ReactWidge
       name,
       body,
       imports,
+      documentation,
     });
 
     this.declarations = declarations;
@@ -174,6 +200,7 @@ export class ReactNativeStyledComponentWidgetModuleExportable extends ReactWidge
       imports: this.imports,
       declarations: this.declarations,
       body: this.body,
+      documentation: this.documentation,
       config: {
         exporting: exporting,
       },
