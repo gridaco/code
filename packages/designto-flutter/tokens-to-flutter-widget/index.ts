@@ -58,7 +58,7 @@ function _compose(
     ..._remove_width_height_if_root_wh,
   };
 
-  //   const _key = keyFromWidget(widget);
+  const _key = new flutter.Key(widget.key.id);
   let thisFlutterWidget: flutter.Widget;
 
   // ------------------------------------
@@ -72,7 +72,7 @@ function _compose(
         itemspacing: widget.itemSpacing,
         axis: widget.direction,
       }),
-      //   key: _key,
+      key: _key,
     });
   } else if (widget instanceof core.Row) {
     thisFlutterWidget = new flutter.Row({
@@ -82,7 +82,7 @@ function _compose(
         itemspacing: widget.itemSpacing,
         axis: widget.direction,
       }),
-      //   key: _key,
+      key: _key,
     });
   } else if (widget instanceof core.Wrap) {
     thisFlutterWidget = compose_flutter_wrap(
@@ -98,7 +98,7 @@ function _compose(
       clipBehavior: null,
       direction: painting.axis(widget.direction),
       children: handleChildren(widget.children),
-      //   key: _key,
+      key: _key,
     });
   } else if (widget instanceof core.Stack) {
     const _remove_overflow_if_root_overflow = {
@@ -114,7 +114,7 @@ function _compose(
       ...default_props_for_layout,
       ..._remove_overflow_if_root_overflow,
       children: children,
-      //   key: _key,
+      key: _key,
     });
     if (!context.is_root) {
       thisFlutterWidget = handle_flutter_case_nested_positioned_stack(stack);
@@ -198,7 +198,7 @@ function _compose(
       textAlign: dartui.textAlign(widget.textAlign),
       style: painting.textStyle(widget.style),
       /** explicit assignment - field name is different */
-      //   key: _key,
+      key: _key,
     });
   } else if (widget instanceof core.VectorWidget) {
     const id = widget.key.id;
@@ -211,7 +211,7 @@ function _compose(
       width: rd(widget.width),
       height: rd(widget.height),
       // fit?: BoxFit;
-      //   key: _key,
+      key: _key,
     });
   } else if (widget instanceof core.IconWidget) {
     // TODO: not ready - svg & named icon not supported
@@ -231,7 +231,7 @@ function _compose(
             width: rd(widget.width),
             height: rd(widget.height),
             // fit?: BoxFit;
-            //   key: _key,
+            key: _key,
           }
         );
         break;
@@ -241,7 +241,7 @@ function _compose(
           width: rd(widget.size),
           height: rd(widget.size),
           semanticLabel: "icon",
-          //   key: _key,
+          key: _key,
         });
         break;
       }
@@ -311,7 +311,7 @@ function _compose(
         // TODO: background list
         // background: painting.linearGradient(widget.background.gradient),
       }),
-      //   key: _key,
+      key: _key,
     });
     // thisFlutterWidget.x = widget.x;
     // thisFlutterWidget.y = widget.y;
