@@ -72,7 +72,7 @@ export async function code(
         ...defaultConfigByFramework(framework.framework),
         ...framework,
       },
-      asset_config: { skip_asset_replacement: true },
+      asset_config: { asset_repository: MainImageRepository.instance },
     });
     spnr_gen.succeed();
 
