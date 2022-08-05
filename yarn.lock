@@ -2460,10 +2460,10 @@
   resolved "https://registry.yarnpkg.com/@flutter-builder/flutter-material-icons/-/flutter-material-icons-0.0.6.tgz#1850673dd32fc8797e414217096ff7b8039be33c"
   integrity sha512-VR5PRD6Em4Zr/B4aHQWHqqQ5B6k+6RYjUKZ/piVXVQ87a6ViKvTMMFz2ltDRpbiEdN8aBFfZ0KjB2v7D4PvkfQ==
 
-"@flutter-builder/flutter@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@flutter-builder/flutter/-/flutter-3.0.5.tgz#92264ca6a3caa83ba16b2f8274ddd67bb18e4cff"
-  integrity sha512-sTyg/7ZpSI4oJocCj6HIwERITf4JMoSc7MyFVtUp68enjdLhKFM6vdciJEPVAjqDt6fhzBKQHbdWFmJS96kV5g==
+"@flutter-builder/flutter@^3.0.5-rc.4":
+  version "3.0.5-rc.4"
+  resolved "https://registry.yarnpkg.com/@flutter-builder/flutter/-/flutter-3.0.5-rc.4.tgz#026e544e85e07924832c7b1d494677f4b61503d4"
+  integrity sha512-f0RJ0NaSb0ybofa8fxSUa+KJzLIJwQ9ScQtKoo7qPxlxxtcfI6rwNY89zRo5ejTjdJ+4vTiIRwPH/i0vBoPsbg==
   dependencies:
     "@abraham/reflection" "^0.10.0"
     "@flutter-builder/flutter-material-icons" "0.0.6"
