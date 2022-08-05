@@ -7,13 +7,14 @@ import { ColorFormat, converters } from "@reflect-ui/core";
  * @param color : Reflect#Color;
  * @returns
  */
-export function color(color: Color): flutter.Color {
+export function color(color: Color | undefined): flutter.Color | undefined {
+  if (!color) {
+    return color as undefined | null;
+  }
   const hex = converters.color.convertReflectColorToUniversal(
     color,
     ColorFormat.hex
   );
-
-  console.log(color, hex);
 
   // named colors
   // add more named colors here
