@@ -17,7 +17,10 @@ export function buildFlutterApp(
     });
 
   const widgetCode = widget?.build()?.finalize();
-  const rootAppCode = composeAppWithHome(app);
+  const rootAppCode =
+    "// ignore_for_file: sort_child_properties_last, prefer_const_constructors, prefer_const_literals_to_create_immutables" +
+    "\n" +
+    composeAppWithHome(app);
 
   return {
     id: p.id,
