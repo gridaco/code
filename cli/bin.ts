@@ -48,8 +48,14 @@ export default async function cli() {
       "add [uri]",
       "add grida module",
       () => {},
-      async ({ cwd, uri }) => {
-        add(cwd, { uri: uri as string, version: "latest" });
+      async ({ cwd, uri, out }) => {
+        add(
+          cwd,
+          { uri: uri as string, version: "latest" },
+          {
+            out: _map_out(out as string),
+          }
+        );
       },
       [loadenv]
     )
@@ -102,6 +108,7 @@ export default async function cli() {
             personalAccessToken: _personal_access_token,
           },
           baseUrl: _outpath_abs,
+          out: _map_out(out as string) as any,
         });
       },
       [loadenv]
@@ -121,4 +128,21 @@ export default async function cli() {
     })
     .demandCommand(0)
     .parse();
+}
+
+function _map_out(out: string) {
+  if (path.isAbsolute(out)) {
+    return {
+      type: "absolute",
+      path: out,
+    };
+  }
+  if (out === ".") {
+    return out;
+  } else {
+    return {
+      type: "file-name",
+      name: out,
+    };
+  }
 }

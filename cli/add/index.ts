@@ -11,7 +11,14 @@ interface ModuleInfo {
   version?: string;
 }
 
-export async function add(cwd = process.cwd(), module: ModuleInfo) {
+export async function add(
+  cwd = process.cwd(),
+  module: ModuleInfo,
+  flags: {
+    out: any;
+  }
+) {
+  const { out } = flags;
   const grida = locateGridaProject(cwd);
   if (!grida) {
     throw new Error("No grida project found. run `grida init` first.");
@@ -32,6 +39,7 @@ export async function add(cwd = process.cwd(), module: ModuleInfo) {
     baseUrl: path.join(cwd, fallbackDir),
     uri: module.uri,
     framework: grida.config.framework,
+    out: out,
   });
 }
 
