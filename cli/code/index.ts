@@ -15,6 +15,7 @@ import { log } from "../logger";
 import ora from "ora";
 import { defaultConfigByFramework } from "@grida/builder-config-preset";
 import { Language } from "@grida/builder-platform-types";
+import { formatCode } from "dart-style";
 
 type OutPathInput =
   | { type: "file-name"; name: string }
@@ -93,18 +94,35 @@ export async function code(
       language: framework.language,
     });
     const _log_relpath = "./" + path.relative(cwd, file);
-    fs.writeFile(file, code.scaffold.raw, (err) => {
-      if (err) {
-        throw err;
-      } else {
-        console.log(
-          `${chalk.green("✔")} Module '${code.name}' added to ${chalk.blue(
-            _log_relpath
-          )}`
-        );
+
+    fs.writeFile(
+      file,
+      postproc_src(code.scaffold.raw, framework.language),
+      (err) => {
+        if (err) {
+          throw err;
+        } else {
+          console.log(
+            `${chalk.green("✔")} Module '${code.name}' added to ${chalk.blue(
+              _log_relpath
+            )}`
+          );
+        }
       }
-    });
+    );
   }
+}
+
+function postproc_src(src: string, language: Language) {
+  if (language === Language.dart) {
+    const { code, error } = formatCode(src);
+    if (error) {
+      return src;
+    }
+    return code;
+  }
+
+  return src;
 }
 
 function make_final_path({
