@@ -35,6 +35,7 @@ import { wrap_with_background_blur } from "./token-effect/background-blur";
 import { wrap_with_rotation } from "./token-rotation";
 import { wrap_with_expanded } from "./token-expanded";
 import flags_handling_gate from "./support-flags";
+import { SnapshotWidget } from "./types";
 
 export type { Widget };
 
@@ -49,7 +50,7 @@ let __dangerous_current_config: TokenizerConfig | null = null;
 export function tokenize(
   node: ReflectSceneNode,
   config: TokenizerConfig = default_tokenizer_config
-): Widget {
+): SnapshotWidget<Widget> {
   if (!node) {
     throw "A valid design node should be passed in order to tokenize it into a reflect widget.";
   }
@@ -64,7 +65,7 @@ function independantTokenizer(
   node: SingleOrArray<ReflectSceneNode>,
   config: TokenizerConfig
 ) {
-  return dynamicGenerator(node, config) as Widget;
+  return dynamicGenerator(node, config) as SnapshotWidget<Widget>;
 }
 
 /**
@@ -75,9 +76,12 @@ function independantTokenizer(
 function dynamicGenerator(
   node: SingleOrArray<ReflectSceneNode>,
   config: TokenizerConfig
-): SingleOrArray<Widget> {
-  const node_handler = (node, config) => {
-    return handle_with_custom_wrapping_provider(
+): SingleOrArray<SnapshotWidget<Widget>> {
+  const node_handler = (
+    node: ReflectSceneNode,
+    config
+  ): SnapshotWidget<Widget> => {
+    const widget = handle_with_custom_wrapping_provider(
       config.custom_wrapping_provider,
       {
         token: handleNode(node, config),
@@ -85,10 +89,11 @@ function dynamicGenerator(
         depth: undefined, // TODO:
       }
     );
+    return _extend_snapshot(widget, node);
   };
 
   if (isNotEmptyArray(node)) {
-    const widgets: Array<Widget> = [];
+    const widgets: Array<SnapshotWidget<Widget>> = [];
     node = node as Array<ReflectSceneNode>;
     node
       // .sort(byY)
@@ -101,7 +106,7 @@ function dynamicGenerator(
     const finalWidgets = widgets.filter((w) => array.filters.notEmpty(w));
     return finalWidgets;
   } else {
-    return node_handler(node, config);
+    return node_handler(node as ReflectSceneNode, config);
   }
 }
 
@@ -323,6 +328,8 @@ function handle_by_types(
         },
         config
       );
+
+      _extend_snapshot(tokenizedTarget, node);
       break;
 
     case ReflectSceneNodeType.vector:
@@ -374,4 +381,13 @@ function handle_by_types(
       break;
   }
   return tokenizedTarget;
+}
+
+function _extend_snapshot<T extends Widget = Widget>(
+  widget: T,
+  node: ReflectSceneNode
+): SnapshotWidget<T> {
+  return Object.assign(widget, {
+    snapshot: node,
+  }) as SnapshotWidget<T>;
 }
