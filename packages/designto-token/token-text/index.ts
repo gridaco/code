@@ -43,7 +43,7 @@ export function fromText(node: ReflectTextNode): RenderedText {
       decoration: node.textDecoration,
       fontFamily: node.fontName?.family,
       fontSize: node.fontSize,
-      fontWeight: node.fontWeight,
+      fontWeight: node.textStyle.fontWeight,
       color: node.primaryColor,
       lineHeight: node.lineHeight,
       letterSpacing: node.letterSpacing,
