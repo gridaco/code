@@ -75,7 +75,7 @@ inits the grida.config.js with code related user prompts
     - download to project’s assets folder
     - cancel
 
-- `grida code`
+- `grida add`
 
   - generate all components for source https://www.figma.com/file/XXX ? (y/n)
   - Fetching data from api.figma.com… Caching data to api.figma.grida.co…
@@ -95,6 +95,16 @@ inits the grida.config.js with code related user prompts
       - yes (add all with ignoring all issues)
       - no (add each individually)
       - cancel
+
+- `grida add <uri...>`
+
+  - (if uri points page)
+    - This uri is a page. Add all x frames (x found) & components (x found) under page "`<page-name>`"?
+      - yes (add all x frames & components)
+      - add only components (n components)
+      - add only frames (n frames)
+      - manually choose from list
+  - (if uri points entire file)
 
 - `grida code <framework> https://...`
 
