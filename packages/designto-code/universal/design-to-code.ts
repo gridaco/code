@@ -26,6 +26,9 @@ import { debug, debugIf } from "@designto/debugger";
 
 interface AssetsConfig {
   asset_repository?: BaseImageRepositories<string>;
+  /**
+   * if set to true, skips the asset replacement, preserve unknown url scheme grida://asset-reservation ...
+   */
   skip_asset_replacement?: boolean;
   /**
    * this is currently only supported on vanilla framework - for preview.
