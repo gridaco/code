@@ -1,10 +1,8 @@
-import { ReflectSceneNode } from "@design-sdk/figma";
-import { retrieveFill } from "@design-sdk/core/utils";
-import { paintToColor } from "@design-sdk/core/utils/colors";
+import type { Background, Color, ObjectColor } from "@reflect-ui/core";
+import type { ReflectSceneNode } from "@design-sdk/figma-node";
+import { paintToColor, retrieveFill } from "@design-sdk/figma-utils";
 import { Figma } from "@design-sdk/figma-types";
-import { Color, ObjectColor } from "@reflect-ui/core";
 import { tokenize_gradient } from "..";
-import { Background } from "@reflect-ui/core/lib/background";
 
 function fromFills(fills: ReflectSceneNode["fills"]): Background {
   fills = fills && fills.filter((f) => f.visible);

@@ -18,7 +18,10 @@ import { WrappingContainer } from "../../tokens";
 export function tokenize_flagged_progress(
   node: ReflectSceneNode,
   flag: AsProgressFlag
-): LinearProgressIndicator | WrappingContainer<LinearProgressIndicator> {
+):
+  | LinearProgressIndicator
+  | WrappingContainer<LinearProgressIndicator>
+  | undefined {
   if (flag.value === false) return;
 
   const validated = validate_progress(node);
@@ -38,7 +41,7 @@ export function tokenize_flagged_progress(
         // calculate percentage of value by its width, round to 2 decimal point
         const _initial_value =
           // if the value node is floating, it means it is indeterminate, -0
-          value.x <= 1
+          value?.x ?? 0 <= 1
             ? Math.round((v_w / p_w + Number.EPSILON) * 100) / 100
             : -0;
         // -------------------------------------------

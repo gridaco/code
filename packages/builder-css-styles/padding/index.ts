@@ -9,11 +9,15 @@ import { px } from "../dimensions";
 type PaddingValue = number | "auto";
 
 export function padding(
-  p: EdgeInsets,
+  p: EdgeInsets | undefined,
   options?: {
     explicit?: boolean;
   }
 ): CSSProperties {
+  if (p === undefined) {
+    return {};
+  }
+
   switch (edgeInsetsShorthandMode(p, options)) {
     case EdgeInsetsShorthandMode.empty: {
       return {};

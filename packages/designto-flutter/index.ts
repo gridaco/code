@@ -1,9 +1,9 @@
 import { Widget } from "@reflect-ui/core";
-import { buildFlutterWidgetFromTokens } from "./tokens-to-flutter-widget";
-import { flutter as config } from "@designto/config";
+import { compose } from "./tokens-to-flutter-widget";
+import { flutter as config } from "@grida/builder-config";
 import * as flutter from "@flutter-builder/flutter";
 import { composeAppWithHome } from "@flutter-builder/flutter";
-import { makeApp } from "./make/make-flutter-material-app";
+import { makeApp } from "./app";
 
 export function buildFlutterApp(
   widget: flutter.Widget,
@@ -17,7 +17,10 @@ export function buildFlutterApp(
     });
 
   const widgetCode = widget?.build()?.finalize();
-  const rootAppCode = composeAppWithHome(app);
+  const rootAppCode =
+    "// ignore_for_file: sort_child_properties_last, prefer_const_constructors, prefer_const_literals_to_create_immutables" +
+    "\n" +
+    composeAppWithHome(app);
 
   return {
     id: p.id,
@@ -31,5 +34,5 @@ export function buildFlutterWidget(widget: Widget) {
   if (!widget) {
     throw "A valid reflect widget manifest should be passed as an input. none was passed.";
   }
-  return buildFlutterWidgetFromTokens(widget);
+  return compose(widget);
 }

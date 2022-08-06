@@ -3,4 +3,5 @@ export enum Framework {
   reactnative = "react-native",
   flutter = "flutter",
   vanilla = "vanilla",
+  solid = "solid-js",
 }

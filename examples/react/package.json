@@ -1,0 +1,9 @@
+{
+  "name": "my-react-app",
+  "version": "0.0.0",
+  "dependencies": {
+    "react": "18.2.0",
+    "@emotion/react": "11.9.3",
+    "@emotion/styled": "^11.10.0"
+  }
+}

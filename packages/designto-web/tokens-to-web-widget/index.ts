@@ -3,7 +3,7 @@ import { tokens as special } from "@designto/token";
 import * as web from "@web-builder/core";
 import { JsxWidget, StylableJsxWidget } from "@web-builder/core";
 import { keyFromWidget } from "@web-builder/core";
-import { MainImageRepository } from "@design-sdk/core/assets-repository";
+import { MainImageRepository } from "@design-sdk/asset-repository";
 import * as css from "@web-builder/styles";
 import { compose_wrap } from "./compose-wrap";
 import { compose_wrapped_with_clip_rrect } from "./compose-wrapped-with-clip-rrect";
@@ -21,6 +21,7 @@ import { compose_unwrapped_checkbox } from "./compose-unwrapped-checkbox";
 import { compose_unwrapped_slider } from "./compose-unwrapped-slider";
 import { compose_unwrapped_progress } from "./compose-unwrapped-progress";
 import { compose_instanciation } from "./compose-instanciation";
+import { compose_declaration } from "./compose-declaration";
 import { compose_xtended_views } from "./compose-xtended-views";
 import { IWHStyleWidget } from "@reflect-ui/core";
 import * as reusable from "@code-features/component/tokens";
@@ -34,11 +35,11 @@ interface WebWidgetComposerConfig {
   img_no_alt?: boolean;
 }
 
-export function buildWebWidgetFromTokens(
+export function compose(
   widget: core.Widget,
   config: WebWidgetComposerConfig
 ): JsxWidget {
-  const composed = compose(
+  const composed = _compose(
     widget,
     {
       is_root: true,
@@ -55,7 +56,7 @@ export type Composer = (
   config?: WebWidgetComposerConfig
 ) => StylableJsxWidget;
 
-function compose<T extends JsxWidget>(
+function _compose<T extends JsxWidget>(
   widget: core.Widget,
   context: { is_root: boolean },
   config: WebWidgetComposerConfig
@@ -70,7 +71,7 @@ function compose<T extends JsxWidget>(
   };
 
   const handleChild = <T extends JsxWidget>(child: core.Widget): T => {
-    return compose(child, { ...context, is_root: false }, config);
+    return _compose(child, { ...context, is_root: false }, config);
   };
 
   const _remove_width_height_if_root_wh = {
@@ -86,6 +87,7 @@ function compose<T extends JsxWidget>(
   const _key = keyFromWidget(widget);
 
   let thisWebWidget: JsxWidget;
+
   // ------------------------------------
   // region layouts
   // ------------------------------------
@@ -155,7 +157,7 @@ function compose<T extends JsxWidget>(
   else if (widget instanceof core.ClipRRect) {
     thisWebWidget = compose_wrapped_with_clip_rrect(widget, handleChild);
   } else if (widget instanceof core.ClipPath) {
-    const child = handleChild<StylableJsxWidget>(widget.child);
+    const child = handleChild<StylableJsxWidget>(widget.child!);
     child.extendStyle({
       ...css.clipPath(widget),
       top: undefined,
@@ -295,7 +297,7 @@ function compose<T extends JsxWidget>(
         widget.child
       );
       throw new Error(
-        `Unsupported web widget type: ${widget.child.constructor.name}`
+        `\`@designto/web\`:: Unsupported web widget type: ${widget.child.constructor.name}`
       );
     }
   }
@@ -322,6 +324,14 @@ function compose<T extends JsxWidget>(
   // -------------------------------------
   else if (widget instanceof special.Stretched) {
     thisWebWidget = compose_wrapped_with_clip_stretched(widget, handleChild);
+  }
+  // -------------------------------------
+  // -------------------------------------
+  // module related
+  else if (widget instanceof special.DeclarationWidgetToken) {
+    throw "explicit declaration not supported yet";
+    // @ts-ignore
+    thisWebWidget = compose_declaration(widget, handleChild);
   }
   // -------------------------------------
   // -------------------------------------
