@@ -43,7 +43,7 @@ export async function init(cwd = process.cwd(), initials?: { name?: string }) {
   }
 
   let name: string = "untitled";
-  if (!initials.name) {
+  if (!initials?.name) {
     // the name can be passed via previous init operation, -- create base project with template
     const { name: _name } = await prompt<{ name: string }>({
       name: "name",
