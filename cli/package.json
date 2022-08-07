@@ -1,6 +1,6 @@
 {
     "name": "grida",
-    "version": "0.0.9",
+    "version": "0.0.10",
     "private": false,
     "dependencies": {
         "@base-sdk-fp/auth": "^0.1.4",
