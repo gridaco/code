@@ -26,7 +26,7 @@
     "@designto/token": "0.0.0",
     "@designto/web": "0.0.0",
     "@flutter-builder/flutter": "^3.0.5-rc.4",
-    "coli": "^0.0.27"
+    "coli": "^0.0.28"
   },
   "files": [
     "README.md",
