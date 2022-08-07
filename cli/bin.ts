@@ -45,7 +45,7 @@ export default async function cli() {
       }
     )
     .command(
-      "add <uri...>",
+      "add [uri...]",
       "add grida module",
       () => {},
       async ({ cwd, uri, out }) => {
