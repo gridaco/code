@@ -1,5 +1,5 @@
-import { buildWebWidgetFromTokens } from "@designto/web/tokens-to-web-widget";
-import { vanilla as config, preview as prvconfig } from "@designto/config";
+import { compose } from "@designto/web";
+import { vanilla as config, preview as prvconfig } from "@grida/builder-config";
 import { Widget } from "@reflect-ui/core";
 import {
   export_inlined_css_html_file,
@@ -65,7 +65,7 @@ export function buildVanillaWidget(
     throw "A valid reflect widget manifest should be passed as an input. none was passed.";
   }
 
-  return buildWebWidgetFromTokens(widget, {
+  return compose(widget, {
     img_no_alt: config.imgage_alt.no_alt,
   });
 }

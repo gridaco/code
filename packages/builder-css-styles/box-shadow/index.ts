@@ -1,4 +1,4 @@
-import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
+import { BoxShadowManifest } from "@reflect-ui/core";
 import { color } from "../color";
 import { px } from "../dimensions";
 

@@ -1,12 +1,16 @@
-import { nodes } from "@design-sdk/core";
+import type {
+  ReflectRectangleNode,
+  ReflectLineNode,
+  ReflectEllipseNode,
+} from "@design-sdk/figma-node";
 import * as core from "@reflect-ui/core";
 import { tokenizeBackground } from "../token-background";
-import { BoxShape } from "@reflect-ui/core/lib/box-shape";
+import { BoxShape } from "@reflect-ui/core";
 import { keyFromNode } from "../key";
 import { tokenizeBorder } from "../token-border";
 import { BorderRadius, BoxShadowManifest } from "@reflect-ui/core";
 
-function fromRectangle(rect: nodes.ReflectRectangleNode): core.Container {
+function fromRectangle(rect: ReflectRectangleNode): core.Container {
   const container = new core.Container({
     key: keyFromNode(rect),
     width: rect.width,
@@ -23,7 +27,7 @@ function fromRectangle(rect: nodes.ReflectRectangleNode): core.Container {
   return container;
 }
 
-function fromLine(line: nodes.ReflectLineNode): core.Container {
+function fromLine(line: ReflectLineNode): core.Container {
   const container = new core.Container({
     key: keyFromNode(line),
     width: line.width,
@@ -37,7 +41,7 @@ function fromLine(line: nodes.ReflectLineNode): core.Container {
   return container;
 }
 
-function fromEllipse(ellipse: nodes.ReflectEllipseNode): core.Container {
+function fromEllipse(ellipse: ReflectEllipseNode): core.Container {
   const container = new core.Container({
     key: keyFromNode(ellipse),
     width: ellipse.width,

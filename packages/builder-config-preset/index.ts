@@ -1,7 +1,7 @@
-import { config, react } from "@designto/config";
+import { config, react } from "@grida/builder-config";
 import { Framework, Language } from "@grida/builder-platform-types";
 
-const _react_component_declaration_style = {
+const _jsx_component_declaration_style = {
   exporting_style: {
     type: "export-named-functional-component",
     exporting_position: "with-declaration",
@@ -18,7 +18,7 @@ export const react_presets = {
       type: "styled-components",
       module: "@emotion/styled",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   react_with_styled_components: <config.ReactFrameworkConfig>{
     framework: Framework.react,
@@ -27,7 +27,7 @@ export const react_presets = {
       type: "styled-components",
       module: "styled-components",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   react_with_emotion_styled: <config.ReactFrameworkConfig>{
     framework: Framework.react,
@@ -36,7 +36,7 @@ export const react_presets = {
       type: "styled-components",
       module: "@emotion/styled",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   react_with_inline_css: <config.ReactFrameworkConfig>{
     framework: Framework.react,
@@ -44,7 +44,7 @@ export const react_presets = {
     styling: {
       type: "inline-css",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   react_with_css_module: <config.ReactFrameworkConfig>{
     framework: Framework.react,
@@ -55,59 +55,88 @@ export const react_presets = {
       importDefault: "styles",
       loader: "css-loader",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   react_with_css: <config.ReactFrameworkConfig>{
     framework: Framework.react,
     language: Language.tsx,
     styling: { type: "css" },
   },
-  component_declaration_style: _react_component_declaration_style,
+  component_declaration_style: _jsx_component_declaration_style,
 };
 
 export const reactnative_presets = {
   reactnative_default: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
     language: Language.tsx,
-    svg: null, // TODO:
-    gradient: null, // TODO:
+    svg: null as unknown, // TODO:
+    gradient: null as unknown, // TODO:
     styling: {
       type: "react-native-stylesheet",
       module: "react-native",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   reactnative_with_style_sheet: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
     language: Language.tsx,
-    svg: null, // TODO:
-    gradient: null, // TODO:
+    svg: null as unknown, // TODO:
+    gradient: null as unknown, // TODO:
     styling: {
       type: "react-native-stylesheet",
       module: "react-native",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   reactnative_with_styled_components: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
     language: Language.tsx,
-    svg: null, // TODO:
-    gradient: null, // TODO:
+    svg: null as unknown, // TODO:
+    gradient: null as unknown, // TODO:
     styling: {
       type: "styled-components",
       module: "styled-components/native",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
   },
   reactnative_with_inline_style: <config.ReactNativeFrameworkConfig>{
     framework: Framework.reactnative,
     language: Language.tsx,
-    svg: null, // TODO:
-    gradient: null, // TODO:
+    svg: null as unknown, // TODO:
+    gradient: null as unknown, // TODO:
     styling: {
       type: "inline-style",
     },
-    component_declaration_style: _react_component_declaration_style,
+    component_declaration_style: _jsx_component_declaration_style,
+  },
+};
+
+export const solid_presets = {
+  solid_with_styled_components: <config.SolidFrameworkConfig>{
+    framework: Framework.solid,
+    language: Language.tsx,
+    styling: {
+      type: "styled-components",
+      module: "solid-styled-components",
+    },
+    component_declaration_style: _jsx_component_declaration_style,
+  },
+  solid_default: <config.SolidFrameworkConfig>{
+    framework: Framework.solid,
+    language: Language.tsx,
+    styling: {
+      type: "styled-components",
+      module: "solid-styled-components",
+    },
+    component_declaration_style: _jsx_component_declaration_style,
+  },
+  solid_with_inline_css: <config.SolidFrameworkConfig>{
+    framework: Framework.solid,
+    language: Language.tsx,
+    styling: {
+      type: "inline-css",
+    },
+    component_declaration_style: _jsx_component_declaration_style,
   },
 };
 
@@ -206,3 +235,28 @@ export const react_styles: {
     },
   ],
 };
+
+export function defaultConfigByFramework(
+  framework: config.FrameworkConfig["framework"]
+) {
+  switch (framework) {
+    case "react": {
+      return react_presets.react_default;
+    }
+    case "flutter": {
+      return flutter_presets.flutter_default;
+    }
+    case "react-native": {
+      return reactnative_presets.reactnative_default;
+    }
+    case "solid-js": {
+      return solid_presets.solid_default;
+    }
+    case "vanilla": {
+      return vanilla_presets.vanilla_default;
+    }
+    case "preview": {
+      return preview_presets.default;
+    }
+  }
+}

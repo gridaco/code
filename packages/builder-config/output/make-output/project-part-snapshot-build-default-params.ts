@@ -1,6 +1,6 @@
 import type { ProjectPart } from "../output-part-project";
 import type { File } from "../output-file";
-import type { Module } from "../output-module";
+import type { ModuleFile } from "../output-module";
 import * as k from "../../k";
 
 export function make_project_part_output({
@@ -16,7 +16,7 @@ export function make_project_part_output({
   version?: string;
   main: string;
   files: File[];
-  modules: Module[];
+  modules: ModuleFile[];
   os?: string[];
   engines?: {
     [key: string]: string;

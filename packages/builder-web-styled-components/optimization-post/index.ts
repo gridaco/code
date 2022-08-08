@@ -2,6 +2,7 @@ import type { WidgetStyleConfigMap } from "@web-builder/core/builders";
 import {
   is_duplicate_by_name_and_style,
   find_duplication_in,
+  MinimalCssStyleRepresenationForCssPostOptimization,
 } from "./duplicated-style-optimization";
 import type { DuplicationReductionMap } from "@web-builder/core/builders/styles-repository";
 
@@ -15,18 +16,22 @@ export function create_duplication_reduction_map(
 ): DuplicationReductionMap {
   const duplication_proxy_map = new Map<string, string>();
 
-  const items = Array.from(map.keys())
-    .map((id) => {
-      const r = map.get(id);
-      if ("style" in r) {
-        return {
-          id: id,
-          name: r.tag.name,
-          style: r.style,
-        };
-      }
-    })
-    .filter(Boolean); // remove empty (without style)
+  const items: Array<MinimalCssStyleRepresenationForCssPostOptimization> =
+    Array.from(map.keys())
+      .map((id) => {
+        const r = map.get(id)!;
+        if ("style" in r) {
+          return {
+            id: id,
+            name: r.tag.name,
+            style: r.style,
+          };
+        }
+      })
+      // remove empty (without style)
+      .filter(
+        Boolean
+      ) as Array<MinimalCssStyleRepresenationForCssPostOptimization>;
 
   //
   for (const [id, config] of map) {

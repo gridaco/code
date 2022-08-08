@@ -6,7 +6,7 @@ import { JSXChildLike } from "coli";
 import { StylesRepository } from "@web-builder/core/builders";
 import { create_duplication_reduction_map } from "@web-builder/styled";
 import { buildCSSStyleData, CSSProperties } from "@coli.codes/css";
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
 import { k, JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
@@ -22,6 +22,7 @@ import {
   stringfy,
   StringLiteral,
 } from "coli";
+import { Framework } from "@grida/builder-platform-types";
 
 interface CssDeclaration {
   key: {
@@ -59,10 +60,14 @@ export class HtmlIdCssModuleBuilder {
       ReservedKeywordPlatformPresets.html
     );
 
-    this.stylesMapper = new StylesConfigMapBuilder(entry, {
-      namer: this.namer,
-      rename_tag: false, // vanilla html tag will be preserved.
-    });
+    this.stylesMapper = new StylesConfigMapBuilder(
+      entry,
+      {
+        namer: this.namer,
+        rename_tag: false, // vanilla html tag will be preserved.
+      },
+      Framework.vanilla
+    );
 
     this.stylesRepository = new StylesRepository(
       this.stylesMapper.map,
@@ -93,7 +98,7 @@ export class HtmlIdCssModuleBuilder {
   }
 
   partStyles(): string {
-    const css_declarations = [];
+    const css_declarations: CssDeclaration[] = [];
 
     // global vanilla default injected style
     css_declarations.push({
@@ -112,7 +117,7 @@ export class HtmlIdCssModuleBuilder {
           const item = this.stylesRepository.get(
             k
           ) as JSXWithStyleElementConfig;
-          return {
+          return <CssDeclaration>{
             key: {
               name: item.id,
               selector: "id",
@@ -171,6 +176,7 @@ export class HtmlIdCssModuleBuilder {
   render(): string {
     const strfied_body = stringfy(this.partBody(), {
       language: "jsx",
+      indentation: "\t",
     });
 
     const final = html_render({
@@ -251,7 +257,7 @@ ${indenter(body, 2)}
  * ```
  */
 function formatCssBodyString(styleString: string): string {
-  const lines = [];
+  const lines: string[] = [];
   let declarationLines = 0;
   styleString.split("\n").map((l) => {
     if (l.length <= 1) {

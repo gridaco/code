@@ -1,4 +1,4 @@
-import { nodes } from "@design-sdk/core";
+import type { ReflectTextNode } from "@design-sdk/figma-node";
 import { RenderedText, TextStyle, TextShadowManifest } from "@reflect-ui/core";
 import { keyFromNode } from "../key";
 
@@ -7,7 +7,7 @@ import { keyFromNode } from "../key";
  * @param node
  * @returns
  */
-export function fromText(node: nodes.ReflectTextNode): RenderedText {
+export function fromText(node: ReflectTextNode): RenderedText {
   // 1. check if text is rich text
   // if () //
 
@@ -43,7 +43,7 @@ export function fromText(node: nodes.ReflectTextNode): RenderedText {
       decoration: node.textDecoration,
       fontFamily: node.fontName?.family,
       fontSize: node.fontSize,
-      fontWeight: node.fontWeight,
+      fontWeight: node.textStyle.fontWeight,
       color: node.primaryColor,
       lineHeight: node.lineHeight,
       letterSpacing: node.letterSpacing,

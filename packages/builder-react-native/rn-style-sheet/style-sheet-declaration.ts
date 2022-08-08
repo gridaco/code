@@ -1,5 +1,4 @@
-import { BlockStatement, VariableDeclaration } from "coli";
-import { SyntaxKind } from "@coli.codes/core-syntax-kind";
+import { SyntaxKind, BlockStatement, VariableDeclaration } from "coli";
 import { StyleSheet, _RNStyleSheetStyle } from "./style-sheet-builder";
 import type { ViewStyle, TextStyle, ImageStyle } from "react-native";
 

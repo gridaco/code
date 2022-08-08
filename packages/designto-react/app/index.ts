@@ -1,5 +1,5 @@
 import { Widget } from "@reflect-ui/core";
-import { buildWebWidgetFromTokens } from "@designto/web/tokens-to-web-widget";
+import { compose } from "@designto/web";
 import {
   finalizeReactWidget_StyledComponents,
   finalizeReactWidget_InlineCss,
@@ -7,8 +7,9 @@ import {
   finalizeReactReusable_StyledComponents__Experimental,
   JsxWidget,
 } from "@web-builder/react";
-import { react as config, react } from "@designto/config";
+import { react as config, react } from "@grida/builder-config";
 import assert from "assert";
+
 export function buildReactApp(
   entry: JsxWidget,
   config: react.ReactFrameworkConfig
@@ -64,7 +65,7 @@ export function buildReactWidget(widget: Widget) {
     "A valid reflect widget manifest should be passed as an input. none was passed."
   );
 
-  return buildWebWidgetFromTokens(widget, {});
+  return compose(widget, {});
 }
 
 /**
