@@ -43,7 +43,7 @@ export async function init(cwd = process.cwd(), initials?: { name?: string }) {
     }
   }
 
-  let name: string = "untitled";
+  let name: string = initials?.name ?? "untitled";
   if (!initials?.name) {
     // the name can be passed via previous init operation, -- create base project with template
     const { name: _name } = await prompt<{ name: string }>({
@@ -91,6 +91,8 @@ export async function init(cwd = process.cwd(), initials?: { name?: string }) {
   create_grida_config_js(cwd, {
     name: name,
     type: "project",
+    // TODO: better approach to manage schema version?
+    $schema: "node_modules/@grida/grida-config-schema/v1.json",
     designsource: {
       ...config_designsource,
       // this should not be written to grida.config.js - it's written to .env
