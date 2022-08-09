@@ -1,6 +1,6 @@
 {
     "name": "grida",
-    "version": "0.0.10-rc.1",
+    "version": "0.0.11",
     "private": false,
     "dependencies": {
         "@base-sdk-fp/auth": "^0.1.4",
@@ -24,7 +24,7 @@
         "dev": "ts-node index.ts",
         "dev:watch": "ts-node-dev index.ts --watch",
         "test": "jest",
-        "build": "ncc build index.ts -o dist",
+        "build": "ncc build index.ts -o dist -e keytar",
         "prepack": "yarn test && yarn clean && yarn build"
     },
     "devDependencies": {
