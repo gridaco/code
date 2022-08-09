@@ -1,14 +1,16 @@
-# A `grida code` CLI member of [`grida cli`](https://github.com/gridaco/cli)
+# grida CLI
+
+Visit https://grida.co/cli for more information.
 
 ## Installation
 
 ```
-npm install -g @designto/cli
+npm install -g grida
 ```
 
 ## Commands
 
-| Commands             |                                         |
+| Commands             |                                         |                                                      |
 | -------------------- | --------------------------------------- | ---------------------------------------------------- |
 | `grida code react`   | convert input uri (file or url) to code | `designto react https://www.figma.com/files/XXX`     |
 | `grida code rn`      | convert input uri (file or url) to code | `designto rn https://www.figma.com/files/XXX`        |
