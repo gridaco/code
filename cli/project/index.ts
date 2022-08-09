@@ -56,13 +56,22 @@ export function locateGridaProject(
   return null;
 }
 
-export interface BaseProjectInfo {
-  base_dir: string;
-  name: string;
-  config_file: string;
-  framework: FrameworkConfig["framework"] | "unknown";
-  packages?: string[];
-}
+export type BaseProjectInfo =
+  | {
+      base_dir: string;
+      name: string;
+      config_file: string;
+      framework: FrameworkConfig["framework"];
+      packages?: string[];
+    }
+  | {
+      base_dir: string;
+      name: string;
+      config_file: string;
+      framework: "unknown";
+      allowed_frameworks: FrameworkConfig["framework"][];
+      packages?: string[];
+    };
 
 export function locateBaseProject(cwd = process.cwd()): BaseProjectInfo {
   const pubspec = locatePubspec(cwd);
@@ -88,6 +97,12 @@ export function locateBaseProject(cwd = process.cwd()): BaseProjectInfo {
             config_file: npm.package_json,
             framework: "unknown",
             packages: res.packages,
+            allowed_frameworks: [
+              "react",
+              "react-native",
+              "solid-js",
+              "vanilla",
+            ],
           };
         }
         default: {

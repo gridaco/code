@@ -110,6 +110,8 @@ export async function init(cwd = process.cwd(), initials?: { name?: string }) {
 }
 
 const framework_gitignore_templates = {
+  pub: "dart",
+  node: "node",
   flutter: "dart",
   react: "node",
   svelte: "node",
@@ -118,7 +120,7 @@ const framework_gitignore_templates = {
 
 async function prompt_framework_config(
   cwd,
-  baseproj: BaseProjectInfo
+  baseproj?: BaseProjectInfo | undefined
 ): Promise<FrameworkConfig> {
   let framework: BaseProjectInfo["framework"] = baseproj?.framework;
   if (framework && framework !== "unknown") {
@@ -127,6 +129,19 @@ async function prompt_framework_config(
       `${framework} configuration found in ${_rel_path_to_config_file}`
     );
   } else {
+    let choices: Array<FrameworkConfig["framework"]> = [
+      "flutter",
+      "react",
+      "react-native",
+      "vanilla",
+      "solid-js",
+      // "vue",
+    ];
+
+    if (baseproj?.framework == "unknown") {
+      choices = choices.filter((f) => baseproj.allowed_frameworks.includes(f));
+    }
+
     const { framework: _framework } = await prompt<{
       framework: FrameworkConfig["framework"];
     }>({
@@ -134,14 +149,7 @@ async function prompt_framework_config(
       type: "select",
       message: "Select framework",
       // initial: baseproj?.framework,
-      choices: <Array<FrameworkConfig["framework"]>>[
-        "flutter",
-        "react",
-        "react-native",
-        "vue",
-        "vanilla",
-        "solid-js",
-      ],
+      choices: choices,
     });
     framework = _framework;
   }
