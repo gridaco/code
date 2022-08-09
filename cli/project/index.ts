@@ -56,13 +56,15 @@ export function locateGridaProject(
   return null;
 }
 
-export function locateBaseProject(cwd = process.cwd()): {
+export interface BaseProjectInfo {
   base_dir: string;
   name: string;
   config_file: string;
-  framework: FrameworkConfig["framework"];
+  framework: FrameworkConfig["framework"] | "unknown";
   packages?: string[];
-} {
+}
+
+export function locateBaseProject(cwd = process.cwd()): BaseProjectInfo {
   const pubspec = locatePubspec(cwd);
   const npm = locateNodePackage(cwd);
 
@@ -75,18 +77,28 @@ export function locateBaseProject(cwd = process.cwd()): {
   if (npm) {
     const res = analyzeJsFramework(npm.manifest);
     if (res) {
-      if (res.framework === "vue") {
-        throw new Error("Vue is not supported yet");
+      switch (res.framework) {
+        case "svelte":
+        case "vue":
+          throw new Error(`${res.framework} is not supported yet`);
+        case "unknown": {
+          return {
+            base_dir: npm.base_dir,
+            name: npm.manifest.name,
+            config_file: npm.package_json,
+            framework: "unknown",
+            packages: res.packages,
+          };
+        }
+        default: {
+          return {
+            base_dir: npm.base_dir,
+            name: npm.manifest.name,
+            config_file: npm.package_json,
+            ...(res as any),
+          };
+        }
       }
-      if (res.framework === "svelte") {
-        throw new Error("Svelte is not supported yet");
-      }
-      return {
-        base_dir: npm.base_dir,
-        name: npm.manifest.name,
-        config_file: npm.package_json,
-        ...(res as any),
-      };
     }
   }
 

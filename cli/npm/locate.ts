@@ -41,7 +41,13 @@ export function read(path): IPackageManifest {
 }
 
 export function analyzeFramework(manifest: IPackageManifest): {
-  framework: "react" | "react-native" | "solid-js" | "svelte" | "vue";
+  framework:
+    | "react"
+    | "react-native"
+    | "solid-js"
+    | "svelte"
+    | "vue"
+    | "unknown";
   packages?: string[];
 } {
   const deps = new Set(Object.keys(manifest.dependencies || {}));
@@ -105,4 +111,9 @@ export function analyzeFramework(manifest: IPackageManifest): {
       packages: packages,
     };
   }
+
+  return {
+    framework: "unknown",
+    packages: packages,
+  };
 }

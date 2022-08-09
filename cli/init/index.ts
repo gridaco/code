@@ -1,6 +1,10 @@
 import fs from "fs";
 import path from "path";
-import { locateGridaProject, locateBaseProject } from "../project";
+import {
+  locateGridaProject,
+  locateBaseProject,
+  BaseProjectInfo,
+} from "../project";
 import { prompt } from "enquirer";
 import type { FrameworkConfig } from "@grida/builder-config";
 import { Framework, Language } from "@grida/builder-platform-types";
@@ -114,10 +118,10 @@ const framework_gitignore_templates = {
 
 async function prompt_framework_config(
   cwd,
-  baseproj
+  baseproj: BaseProjectInfo
 ): Promise<FrameworkConfig> {
-  let framework: FrameworkConfig["framework"] = baseproj?.framework;
-  if (framework) {
+  let framework: BaseProjectInfo["framework"] = baseproj?.framework;
+  if (framework && framework !== "unknown") {
     const _rel_path_to_config_file = path.relative(cwd, baseproj.config_file);
     console.log(
       `${framework} configuration found in ${_rel_path_to_config_file}`
