@@ -103,7 +103,7 @@ function _compose(
       key: _key,
     });
   } else if (widget instanceof core.Wrap) {
-    final = compose_flutter_wrap(widget, handleChildren(widget.children));
+    final = compose_flutter_wrap(_key, widget, handleChildren(widget.children));
   } else if (widget instanceof core.Flex) {
     // FIXME: FLEX not supported yet.
     final = new flutter.Flex({
