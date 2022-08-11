@@ -320,10 +320,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@flutter-daemon/server@^0.0.0":
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/@flutter-daemon/server/-/server-0.0.0.tgz#98a56fc3f343e3f46268f7ef3dc93ddd6fb7eaa3"
-  integrity sha512-J9UlHSK3tvW6iGnwRdZkDEeHizl9NAigWQhQEQS297FvbBV6hgowmJqpFDaXvSoTYdYnLXnwqUKtUnZqf/rtDw==
+"@flutter-daemon/server@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@flutter-daemon/server/-/server-0.0.1.tgz#b01f2b2742490fe21c2de2a4a82fae409263131a"
+  integrity sha512-eGnGOzhLr5jtSek9ynyQmFO46lXrH/C9AS9vyO8h8mhn1lNUXk8qChnL3i0Z2R3iED4lMnOk8uqel6aif5/OQQ==
   dependencies:
     ws "^8.8.1"
 
