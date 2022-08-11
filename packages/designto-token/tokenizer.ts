@@ -25,7 +25,7 @@ import {
   hasLayerBlurType,
   hasRotation,
   hasStretching,
-  hasFlexible,
+  hasFlexGrow,
 } from "./detection";
 import { MaskingItemContainingNode, tokenizeMasking } from "./token-masking";
 import { wrap_with_opacity } from "./token-opacity";
@@ -264,7 +264,7 @@ export function post_wrap(
     wrapped = wrap_with_stretched(node, wrapped);
   }
 
-  if (hasFlexible(node)) {
+  if (hasFlexGrow(node)) {
     wrapped = wrap_with_expanded(node, wrapped);
   }
 

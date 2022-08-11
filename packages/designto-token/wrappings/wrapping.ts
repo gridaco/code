@@ -8,6 +8,7 @@ import {
   Widget,
   OverflowBox,
   SingleChildScrollView,
+  Expanded,
 } from "@reflect-ui/core";
 import { Stretched, WrappingContainer } from "../tokens";
 
@@ -42,6 +43,7 @@ export function unwrappedChild<T extends Widget>(maybeWrapped: Widget): T {
     maybeWrapped instanceof OverflowBox ||
     maybeWrapped instanceof SingleChildScrollView ||
     maybeWrapped instanceof Rotation ||
+    maybeWrapped instanceof Expanded ||
     maybeWrapped instanceof Opacity ||
     maybeWrapped instanceof Blurred ||
     maybeWrapped instanceof ClipRRect ||
