@@ -8,6 +8,7 @@
     "repository": "https://github.com/gridaco/code",
     "dependencies": {
         "@base-sdk-fp/auth": "^0.1.4",
+        "@flutter-daemon/server": "^0.0.0",
         "dotenv": "^16.0.1",
         "enquirer": "^2.3.6",
         "glob": "^8.0.3",
