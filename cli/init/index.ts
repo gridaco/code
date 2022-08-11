@@ -17,7 +17,10 @@ import { create_grida_config_js } from "./init-grida.config.js";
 import { init_dotgrida } from "./init-.grida";
 import { init_gitignore } from "./init-.gitignore";
 
-export async function init(cwd = process.cwd(), initials?: { name?: string }) {
+export async function init(
+  cwd = process.cwd(),
+  initials?: { name?: string; initialized_with_template?: boolean }
+) {
   const baseproj = locateBaseProject(cwd);
   const proj = locateGridaProject(cwd);
   if (proj) {
@@ -41,7 +44,8 @@ export async function init(cwd = process.cwd(), initials?: { name?: string }) {
         exit(0);
       } else {
         const { created, cwd: newcwd, name } = _;
-        if (created) return init(newcwd, { name });
+        if (created)
+          return init(newcwd, { name, initialized_with_template: true });
       }
       return;
     }
@@ -52,7 +56,7 @@ export async function init(cwd = process.cwd(), initials?: { name?: string }) {
     // the name can be passed via previous init operation, -- create base project with template
     const { name: _name } = await prompt<{ name: string }>({
       name: "name",
-      message: "What is your project name?",
+      message: "What is your project named?",
       initial: baseproj?.name ?? "my-project",
       type: "input",
     });
@@ -120,38 +124,43 @@ const framework_gitignore_templates = {
 
 async function prompt_framework_config(
   cwd,
-  baseproj?: BaseProjectInfo | undefined
+  baseproj?: BaseProjectInfo | undefined,
+  initialized_with_template?: boolean
 ): Promise<FrameworkConfig> {
   let framework: BaseProjectInfo["framework"] = baseproj?.framework;
-  if (framework && framework !== "unknown") {
-    const _rel_path_to_config_file = path.relative(cwd, baseproj.config_file);
-    console.log(
-      `${framework} configuration found in ${_rel_path_to_config_file}`
-    );
-  } else {
-    let choices: Array<FrameworkConfig["framework"]> = [
-      "flutter",
-      "react",
-      "react-native",
-      "vanilla",
-      "solid-js",
-      // "vue",
-    ];
+  if (!initialized_with_template) {
+    if (framework && framework !== "unknown") {
+      const _rel_path_to_config_file = path.relative(cwd, baseproj.config_file);
+      console.log(
+        `${framework} configuration found in ${_rel_path_to_config_file}`
+      );
+    } else {
+      let choices: Array<FrameworkConfig["framework"]> = [
+        "flutter",
+        "react",
+        "react-native",
+        "vanilla",
+        "solid-js",
+        // "vue",
+      ];
 
-    if (baseproj?.framework == "unknown") {
-      choices = choices.filter((f) => baseproj.allowed_frameworks.includes(f));
+      if (baseproj?.framework == "unknown") {
+        choices = choices.filter((f) =>
+          baseproj.allowed_frameworks.includes(f)
+        );
+      }
+
+      const { framework: _framework } = await prompt<{
+        framework: FrameworkConfig["framework"];
+      }>({
+        name: "framework",
+        type: "select",
+        message: "Select framework",
+        // initial: baseproj?.framework,
+        choices: choices,
+      });
+      framework = _framework;
     }
-
-    const { framework: _framework } = await prompt<{
-      framework: FrameworkConfig["framework"];
-    }>({
-      name: "framework",
-      type: "select",
-      message: "Select framework",
-      // initial: baseproj?.framework,
-      choices: choices,
-    });
-    framework = _framework;
   }
 
   const _selection_ux_guide_msg = "(press space to select, enter to confirm)";
