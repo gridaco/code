@@ -35,7 +35,6 @@ export function compose(widget: core.DefaultStyleWidget): flutter.Widget {
   if (process.env.NODE_ENV === "development") {
     console.info("dev::", "final flutter token composed", composed);
   }
-
   return composed;
 }
 
@@ -211,7 +210,15 @@ function _compose(
     final = handleChild(widget.child);
   }
   // ----- endregion clip path ------
-  else if (widget instanceof core.RenderedText) {
+  else if (widget instanceof special.SizedText) {
+    const text = handleChild(widget.child);
+    console.log(widget);
+    final = new flutter.SizedBox({
+      width: rd(widget.width),
+      height: rd(widget.height),
+      child: text,
+    });
+  } else if (widget instanceof core.RenderedText) {
     const _escaped_dart_string = escapeDartString(widget.data);
     final = new flutter.Text(_escaped_dart_string, {
       ...widget,
@@ -369,7 +376,7 @@ function _compose(
     final = handleChild(widget.child);
     // TODO: don't use snapshot's value. use Stretched.preserved_width (TODO: << add this to tokenizer)
     const { snapshot } = unwrappedChild(widget.child) as SnapshotWidget;
-    final = wrap_with_sized_and_inject_size(final, {
+    final = size(final, {
       width: snapshot?.width,
       height: snapshot?.height,
       [remove_size]: undefined, // Double.infinity,
@@ -474,7 +481,15 @@ function compoes_children_with_injection(
   // const result = array.reduce((r, a) => r.concat(a, 0), [0]);
 }
 
-function wrap_with_sized_and_inject_size(
+/**
+ * size the widget with width and height.
+ * if the widget is a container or sizedbox (or other w, h containing widget), alt the property.
+ * if not, wrap with SizeBox with givven size.
+ * @param widget
+ * @param size
+ * @returns
+ */
+function size(
   widget: flutter.Widget,
   size: {
     width?: flutter.double;
@@ -485,8 +500,9 @@ function wrap_with_sized_and_inject_size(
     widget instanceof flutter.Container ||
     widget instanceof flutter.SizedBox
   ) {
-    size.width && (widget.width = size.width);
-    size.height && (widget.height = size.height);
+    // remove or assign the size
+    widget.width = size.width;
+    widget.height = size.height;
     return widget;
   } else {
     return new flutter.SizedBox({
