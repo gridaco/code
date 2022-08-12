@@ -1,7 +1,11 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { defaultConfigByFramework } from "@grida/builder-config-preset";
-import { init, prompt_figma_personal_access_token } from "./init";
+import {
+  init,
+  prompt_figma_personal_access_token,
+  prompt_framework_config,
+} from "./init";
 import { add } from "./add";
 import { code } from "./code";
 import { Framework } from "@grida/builder-platform-types";
@@ -80,7 +84,7 @@ export default async function cli() {
       [loadenv]
     )
     .command(
-      "code <framework> <uri>",
+      "code [framework] <uri>",
       "generate code from input uri",
       (argv) => {
         // return;
@@ -100,9 +104,9 @@ export default async function cli() {
           ? (out as string)
           : path.resolve(cwd, out as string);
 
-        const config_framework = defaultConfigByFramework(
-          framework as Framework
-        );
+        const config_framework = framework
+          ? defaultConfigByFramework(framework as Framework)
+          : await prompt_framework_config(cwd, undefined, false);
 
         if (!config_framework) {
           throw new Error(`Unknown framework:  "${framework}"`);
