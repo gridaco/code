@@ -25,7 +25,7 @@ import {
   hasLayerBlurType,
   hasRotation,
   hasStretching,
-  hasFlexible,
+  hasFlexGrow,
 } from "./detection";
 import { MaskingItemContainingNode, tokenizeMasking } from "./token-masking";
 import { wrap_with_opacity } from "./token-opacity";
@@ -36,6 +36,7 @@ import { wrap_with_rotation } from "./token-rotation";
 import { wrap_with_expanded } from "./token-expanded";
 import flags_handling_gate from "./support-flags";
 import { SnapshotWidget } from "./types";
+import { unwrappedChild } from "./wrappings";
 
 export type { Widget };
 
@@ -89,7 +90,8 @@ function dynamicGenerator(
         depth: undefined, // TODO:
       }
     );
-    return _extend_snapshot(widget, node);
+    _extend_snapshot(widget, node);
+    return widget as SnapshotWidget;
   };
 
   if (isNotEmptyArray(node)) {
@@ -264,7 +266,7 @@ export function post_wrap(
     wrapped = wrap_with_stretched(node, wrapped);
   }
 
-  if (hasFlexible(node)) {
+  if (hasFlexGrow(node)) {
     wrapped = wrap_with_expanded(node, wrapped);
   }
 
@@ -386,8 +388,10 @@ function handle_by_types(
 function _extend_snapshot<T extends Widget = Widget>(
   widget: T,
   node: ReflectSceneNode
-): SnapshotWidget<T> {
-  return Object.assign(widget, {
+) {
+  // we need to unwrap first, because the level1 tokenizer might have a wrapping. e.g. the SizedText or Stretched
+  const unwrapped = unwrappedChild(widget);
+  Object.assign(unwrapped, {
     snapshot: node,
   }) as SnapshotWidget<T>;
 }

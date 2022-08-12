@@ -286,9 +286,13 @@ export async function designToFlutter({
   await Promise.resolve();
 
   const flutterwidget = toFlutter.buildFlutterWidget(input.widget);
-  const flutterapp = toFlutter.buildFlutterApp(flutterwidget, {
-    id: input.widget.key.id,
-  });
+  const flutterapp = toFlutter.buildFlutterApp(
+    input.widget.key,
+    flutterwidget,
+    {
+      id: input.widget.key.id,
+    }
+  );
 
   // ------------------------------------------------------------------------
   // finilize temporary assets

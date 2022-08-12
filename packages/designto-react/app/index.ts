@@ -25,6 +25,7 @@ export function buildReactApp(
         name: entry.key.name,
         code: { raw: res.code },
         scaffold: { raw: res.code },
+        main: { raw: res.code },
       };
     }
     case "inline-css": {
@@ -37,6 +38,7 @@ export function buildReactApp(
         name: entry.key.name,
         code: { raw: res.code },
         scaffold: { raw: res.code },
+        main: { raw: res.code },
       };
     }
     case "css-module": {
@@ -49,6 +51,7 @@ export function buildReactApp(
         name: entry.key.name,
         code: { raw: res.code },
         scaffold: { raw: res.code },
+        main: { raw: res.code },
       };
     }
     case "css":
