@@ -22,6 +22,7 @@ export function buildSolidApp(
         name: entry.key.name,
         code: { raw: res.code },
         scaffold: { raw: res.code },
+        main: { raw: res.code },
       };
       break;
     }
@@ -35,6 +36,7 @@ export function buildSolidApp(
         name: entry.key.name,
         code: { raw: res.code },
         scaffold: { raw: res.code },
+        main: { raw: res.code },
       };
     }
     default: {
