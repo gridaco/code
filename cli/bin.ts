@@ -1,7 +1,7 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { defaultConfigByFramework } from "@grida/builder-config-preset";
-import { init } from "./init";
+import { init, prompt_figma_personal_access_token } from "./init";
 import { add } from "./add";
 import { code } from "./code";
 import { Framework } from "@grida/builder-platform-types";
@@ -11,6 +11,7 @@ import fs from "fs";
 import { checkForUpdate } from "./update";
 import { login, logout } from "./auth";
 import { startFlutterDaemonServer } from "./flutter/daemon";
+import { parseFileId } from "@design-sdk/figma-url";
 
 function loadenv(argv) {
   const { cwd } = argv;
@@ -86,9 +87,13 @@ export default async function cli() {
       },
       async ({ cwd, framework, uri, out, ...argv }) => {
         //
-        const _personal_access_token = argv[
-          "figma-personal-access-token"
-        ] as string;
+
+        const filekey = parseFileId(uri as string);
+
+        // promp if not set
+        const _personal_access_token: string =
+          (argv["figma-personal-access-token"] as string) ??
+          (await prompt_figma_personal_access_token(filekey));
 
         // make this path absolute if relative path is given.
         const _outpath_abs: string = path.isAbsolute(out as string)
@@ -98,6 +103,7 @@ export default async function cli() {
         const config_framework = defaultConfigByFramework(
           framework as Framework
         );
+
         if (!config_framework) {
           throw new Error(`Unknown framework:  "${framework}"`);
         }
