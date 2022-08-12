@@ -3,13 +3,26 @@ import { roundNumber } from "@reflect-ui/uiutils";
 import * as dartui from "../dart-ui";
 import { BorderRadius, BorderRadiusManifest } from "@reflect-ui/core";
 
+export function borderRadiusRequired(br: BorderRadius) {
+  if (
+    br === undefined ||
+    br.all === 0 ||
+    (br.bl === 0 && br.br === 0 && br.tl === 0 && br.tr === 0)
+  ) {
+    return false;
+  }
+  return true;
+}
+
 export function borderRadius(br: BorderRadius): flutter.BorderRadiusGeometry {
-  if (br === undefined || br.all === 0) {
+  if (!borderRadiusRequired(br)) {
     return undefined;
   }
 
   return br.all !== undefined
-    ? flutter.BorderRadius.circular(roundNumber(br.all as number))
+    ? typeof br.all == "number"
+      ? flutter.BorderRadius.circular(roundNumber(br.all))
+      : undefined
     : _partialBorderRadius(br);
 }
 

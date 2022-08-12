@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import fs from "fs";
 import { checkForUpdate } from "./update";
 import { login, logout } from "./auth";
+import { startFlutterDaemonServer } from "./flutter/daemon";
 
 function loadenv(argv) {
   const { cwd } = argv;
@@ -113,6 +114,17 @@ export default async function cli() {
       },
       [loadenv]
     )
+    .command(
+      "flutter daemon",
+      "Starts local flutter daemon server for grida services",
+      () => {},
+      () => {
+        startFlutterDaemonServer();
+      }
+    )
+    .option("port", {
+      requiresArg: false,
+    })
     .option("figma-personal-access-token", {
       description: "figma personal access token",
       alias: ["fpat", "figma-pat"],

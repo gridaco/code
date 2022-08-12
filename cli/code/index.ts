@@ -1,4 +1,4 @@
-import { designToCode } from "@designto/code";
+import { designToCode, Result } from "@designto/code";
 import { DesignInput } from "@grida/builder-config/input";
 import { parseFileAndNodeId } from "@design-sdk/figma-url";
 import { fetchTargetAsReflect } from "@design-sdk/figma-remote";
@@ -97,7 +97,7 @@ export async function code(
 
     fs.writeFile(
       file,
-      postproc_src(code.scaffold.raw, framework.language),
+      postproc_src(filesrc(code, framework.framework), framework.language),
       (err) => {
         if (err) {
           throw err;
@@ -110,6 +110,19 @@ export async function code(
         }
       }
     );
+  }
+}
+
+function filesrc(
+  code: Result,
+  framework: FrameworkConfig["framework"]
+): string {
+  switch (framework) {
+    case "flutter": {
+      return code.code.raw;
+    }
+    default:
+      return code.scaffold.raw;
   }
 }
 

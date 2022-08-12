@@ -25,6 +25,7 @@ import { compose_flutter_unwrapped_button } from "./compose-flutter-unwrapped-bu
 import { compose_flutter_unwrapped_progress_indicator } from "./compose-flutter-unwrapped-progress-indicator";
 import { compose_flutter_unwrapped_checkbox } from "./compose-flutter-unwrapped-checkbox";
 import { compose_flutter_unwrapped_slider } from "./compose-flutter-unwrapped-slider";
+import { compose_wrapped_with_blurred } from "./compose-wrapped-with-blurred";
 import { unwrappedChild } from "@designto/token/wrappings";
 
 export function compose(widget: core.DefaultStyleWidget): flutter.Widget {
@@ -35,7 +36,6 @@ export function compose(widget: core.DefaultStyleWidget): flutter.Widget {
   if (process.env.NODE_ENV === "development") {
     console.info("dev::", "final flutter token composed", composed);
   }
-
   return composed;
 }
 
@@ -103,7 +103,7 @@ function _compose(
       key: _key,
     });
   } else if (widget instanceof core.Wrap) {
-    final = compose_flutter_wrap(widget, handleChildren(widget.children));
+    final = compose_flutter_wrap(_key, widget, handleChildren(widget.children));
   } else if (widget instanceof core.Flex) {
     // FIXME: FLEX not supported yet.
     final = new flutter.Flex({
@@ -116,30 +116,35 @@ function _compose(
       key: _key,
     });
   } else if (widget instanceof core.Stack) {
-    const _remove_overflow_if_root_overflow = {
-      clipBehavior: context.is_root
-        ? undefined
-        : dartui.clip((widget as core.Stack).clipBehavior),
-    };
+    // TODO: is this ok? - ignoring stack if single child.
+    if (widget.children.length > 1) {
+      const _remove_overflow_if_root_overflow = {
+        clipBehavior: context.is_root
+          ? undefined
+          : dartui.clip((widget as core.Stack).clipBehavior),
+      };
 
-    const children = handle_flutter_case_no_size_stack_children(
-      handleChildren(widget.children as [])
-    );
-    const stack = new flutter.Stack({
-      ...default_props_for_layout,
-      ..._remove_overflow_if_root_overflow,
-      children: children,
-      key: _key,
-    });
-    if (!context.is_root) {
-      const wh = _nested_stack_wh_by_parent(context.parent);
-      console.log("wh", wh);
-      final = handle_flutter_case_nested_positioned_stack(stack, {
-        widget: widget as SnapshotWidget<core.Stack>,
-        ...wh,
+      const children = handle_flutter_case_no_size_stack_children(
+        handleChildren(widget.children as [])
+      );
+      const stack = new flutter.Stack({
+        ...default_props_for_layout,
+        ..._remove_overflow_if_root_overflow,
+        children: children,
+        key: _key,
       });
+      if (!context.is_root) {
+        const wh = _nested_stack_wh_by_parent(context.parent);
+        console.log("wh", wh);
+        final = handle_flutter_case_nested_positioned_stack(stack, {
+          widget: widget as SnapshotWidget<core.Stack>,
+          ...wh,
+        });
+      } else {
+        final = stack;
+      }
     } else {
-      final = stack;
+      final = handleChild(widget.children[0]);
     }
   } else if (widget instanceof core.SingleChildScrollView) {
     const _child = handleChild(widget.child);
@@ -183,13 +188,11 @@ function _compose(
       child: handleChild(widget.child),
     });
   } else if (widget instanceof core.Blurred) {
-    // FIXME: blur flutter control
-    //   const isBlurVisibile = widget.blur.visible;
-    //   if (isBlurVisibile) {
-    //     if (widget.blur.type === "LAYER_BLUR") {
-    //     } else if (widget.blur.type === "BACKGROUND_BLUR") {
-    //     }
-    //   }
+    if (widget.blur.visible) {
+      final = compose_wrapped_with_blurred(widget, handleChild);
+    } else {
+      final = handleChild(widget.child);
+    }
   } else if (widget instanceof core.Rotation) {
     final = flutter.Transform.rotate({
       angle: widget.rotation,
@@ -211,7 +214,15 @@ function _compose(
     final = handleChild(widget.child);
   }
   // ----- endregion clip path ------
-  else if (widget instanceof core.RenderedText) {
+  else if (widget instanceof special.SizedText) {
+    const text = handleChild(widget.child);
+    console.log(widget);
+    final = new flutter.SizedBox({
+      width: rd(widget.width),
+      height: rd(widget.height),
+      child: text,
+    });
+  } else if (widget instanceof core.RenderedText) {
     const _escaped_dart_string = escapeDartString(widget.data);
     final = new flutter.Text(_escaped_dart_string, {
       ...widget,
@@ -369,7 +380,7 @@ function _compose(
     final = handleChild(widget.child);
     // TODO: don't use snapshot's value. use Stretched.preserved_width (TODO: << add this to tokenizer)
     const { snapshot } = unwrappedChild(widget.child) as SnapshotWidget;
-    final = wrap_with_sized_and_inject_size(final, {
+    final = size(final, {
       width: snapshot?.width,
       height: snapshot?.height,
       [remove_size]: undefined, // Double.infinity,
@@ -474,7 +485,15 @@ function compoes_children_with_injection(
   // const result = array.reduce((r, a) => r.concat(a, 0), [0]);
 }
 
-function wrap_with_sized_and_inject_size(
+/**
+ * size the widget with width and height.
+ * if the widget is a container or sizedbox (or other w, h containing widget), alt the property.
+ * if not, wrap with SizeBox with givven size.
+ * @param widget
+ * @param size
+ * @returns
+ */
+function size(
   widget: flutter.Widget,
   size: {
     width?: flutter.double;
@@ -485,8 +504,9 @@ function wrap_with_sized_and_inject_size(
     widget instanceof flutter.Container ||
     widget instanceof flutter.SizedBox
   ) {
-    size.width && (widget.width = size.width);
-    size.height && (widget.height = size.height);
+    // remove or assign the size
+    widget.width = size.width;
+    widget.height = size.height;
     return widget;
   } else {
     return new flutter.SizedBox({

@@ -1420,7 +1420,7 @@
 
 "@design-sdk/figma-core@^0.0.25":
   version "0.0.25"
-  resolved "https://registry.npmjs.org/@design-sdk/figma-core/-/figma-core-0.0.25.tgz"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-core/-/figma-core-0.0.25.tgz#7fa28cc7d6e45cd713c5f268d42e4dd4f2b41590"
   integrity sha512-6OF7eUbDOlR4/BFtd2FRyDvvUf777OGNbVbNScUOv3Fk/kUXBzMTXX6ZdoRlTx887v/vo3+Lh0D31SG1sm80aA==
 
 "@design-sdk/figma-node-conversion@^0.0.35":
@@ -2468,6 +2468,13 @@
     "@abraham/reflection" "^0.10.0"
     "@flutter-builder/flutter-material-icons" "0.0.6"
     dart-style "^1.3.2-dev"
+
+"@flutter-daemon/client@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@flutter-daemon/client/-/client-0.0.2.tgz#039ce0a372779c9bfbffb77556a971509d8692b3"
+  integrity sha512-Jja/JRs1M5w20NSwZtauUrxDq0hMOAgdEbi2gDaT7YVIziKhEimrmYPASGWyLd+sTVHFXv9nl49Wfhva/DImaQ==
+  dependencies:
+    ws "^8.8.1"
 
 "@gar/promisify@^1.0.1":
   version "1.1.3"
@@ -19571,7 +19578,7 @@ write-pkg@^4.0.0:
     type-fest "^0.4.1"
     write-json-file "^3.2.0"
 
-ws@>=7.4.6, ws@^8.2.3:
+ws@>=7.4.6, ws@^8.2.3, ws@^8.8.1:
   version "8.8.1"
   resolved "https://registry.npmjs.org/ws/-/ws-8.8.1.tgz"
   integrity sha512-bGy2JzvzkPowEJV++hF07hAD6niYSr0JzBNo/J29WsB57A2r7Wlc1UFcTR9IzrPvuNVO4B8LGqF8qcpsVOhJCA==

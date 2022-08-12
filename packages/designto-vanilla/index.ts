@@ -29,6 +29,9 @@ export function buildVanillaFile(
     scaffold: {
       raw: html.code,
     },
+    main: {
+      raw: html.code,
+    },
   };
 }
 
@@ -52,6 +55,9 @@ export function buildVanillaPreviewFile(
       raw: html.code,
     },
     scaffold: {
+      raw: html.code,
+    },
+    main: {
       raw: html.code,
     },
   };

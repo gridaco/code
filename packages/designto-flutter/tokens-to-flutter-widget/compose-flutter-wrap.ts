@@ -5,11 +5,12 @@ import * as rendering from "../rendering";
 import * as dartui from "../dart-ui";
 
 export function compose_flutter_wrap(
+  key: flutter.Key,
   wrap: core.Wrap,
   children: flutter.Widget[]
 ): flutter.Wrap {
   return new flutter.Wrap({
-    ...wrap,
+    // ...wrap,
     direction: painting.axis(wrap.direction),
     alignment: rendering.wrapAlignment(wrap.alignment),
     spacing: wrap.spacing,
@@ -21,7 +22,6 @@ export function compose_flutter_wrap(
     verticalDirection: painting.verticalDirection(wrap.verticalDirection),
     clipBehavior: dartui.clip(wrap.clipBehavior),
     children: children,
-    // TODO:
-    key: undefined,
+    key: key,
   });
 }
