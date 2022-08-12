@@ -55,16 +55,70 @@ export function handle_default_style_multichild_render_object_widget(
     return apply_padding(target, padding);
   }
 
+  let flutter_boxshadow: Array<flutter.BoxShadow>;
   if (boxShadow) {
-    //
+    flutter_boxshadow = boxShadow.map(
+      (b) =>
+        new flutter.BoxShadow({
+          color: dartui.color(b.color),
+          blurRadius: b.blurRadius,
+          offset: dartui.offset(b.offset),
+          spreadRadius: b.spreadRadius,
+        })
+    );
   }
 
-  if (padding || margin || background) {
+  let flutter_background;
+  if (background) {
+    // only supports single background
+    const pbg = Array.isArray(background) ? background[0] : background;
+    switch (pbg.type) {
+      case "solid-color": {
+        flutter_background = {
+          color: dartui.color(pbg),
+        };
+        break;
+      }
+      case "gradient": {
+        flutter_background = {
+          gradient: painting.gradient(pbg),
+        };
+        break;
+      }
+      case "graphics": {
+        // flutter_background = {
+        //   image: painting.image(pbg),
+        // };
+        console.error("flutter graphics background not supported yet");
+      }
+    }
+  }
+
+  const borderRadiusRequired = painting.borderRadiusRequired(borderRadius);
+
+  if (
+    padding ||
+    margin ||
+    flutter_background ||
+    boxShadow ||
+    borderRadiusRequired
+  ) {
+    const requires_decoration =
+      flutter_background || boxShadow || borderRadiusRequired || border;
     return new flutter.Container({
       child: target,
       padding: padding && painting.edgeinsets(padding),
       margin: margin && painting.edgeinsets(margin),
-      // decoration
+      decoration: requires_decoration
+        ? new flutter.BoxDecoration({
+            boxShadow: flutter_boxshadow,
+            border: painting.border(border),
+            borderRadius: borderRadiusRequired
+              ? painting.borderRadius(borderRadius)
+              : undefined,
+            ...(flutter_background ?? {}), // color or gradient or image
+          })
+        : undefined,
     });
   }
 
