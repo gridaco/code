@@ -25,6 +25,7 @@ import { compose_flutter_unwrapped_button } from "./compose-flutter-unwrapped-bu
 import { compose_flutter_unwrapped_progress_indicator } from "./compose-flutter-unwrapped-progress-indicator";
 import { compose_flutter_unwrapped_checkbox } from "./compose-flutter-unwrapped-checkbox";
 import { compose_flutter_unwrapped_slider } from "./compose-flutter-unwrapped-slider";
+import { compose_wrapped_with_blurred } from "./compose-wrapped-with-blurred";
 import { unwrappedChild } from "@designto/token/wrappings";
 
 export function compose(widget: core.DefaultStyleWidget): flutter.Widget {
@@ -182,13 +183,11 @@ function _compose(
       child: handleChild(widget.child),
     });
   } else if (widget instanceof core.Blurred) {
-    // FIXME: blur flutter control
-    //   const isBlurVisibile = widget.blur.visible;
-    //   if (isBlurVisibile) {
-    //     if (widget.blur.type === "LAYER_BLUR") {
-    //     } else if (widget.blur.type === "BACKGROUND_BLUR") {
-    //     }
-    //   }
+    if (widget.blur.visible) {
+      final = compose_wrapped_with_blurred(widget, handleChild);
+    } else {
+      final = handleChild(widget.child);
+    }
   } else if (widget instanceof core.Rotation) {
     final = flutter.Transform.rotate({
       angle: widget.rotation,
