@@ -57,15 +57,18 @@ export function handle_default_style_multichild_render_object_widget(
 
   let flutter_boxshadow: Array<flutter.BoxShadow>;
   if (boxShadow) {
-    flutter_boxshadow = boxShadow.map(
-      (b) =>
-        new flutter.BoxShadow({
-          color: dartui.color(b.color),
-          blurRadius: b.blurRadius,
-          offset: dartui.offset(b.offset),
-          spreadRadius: b.spreadRadius,
-        })
-    );
+    flutter_boxshadow =
+      boxShadow.length > 0
+        ? boxShadow.map(
+            (b) =>
+              new flutter.BoxShadow({
+                color: dartui.color(b.color),
+                blurRadius: b.blurRadius,
+                offset: dartui.offset(b.offset),
+                spreadRadius: b.spreadRadius,
+              })
+          )
+        : undefined;
   }
 
   let flutter_background;

@@ -116,30 +116,35 @@ function _compose(
       key: _key,
     });
   } else if (widget instanceof core.Stack) {
-    const _remove_overflow_if_root_overflow = {
-      clipBehavior: context.is_root
-        ? undefined
-        : dartui.clip((widget as core.Stack).clipBehavior),
-    };
+    // TODO: is this ok? - ignoring stack if single child.
+    if (widget.children.length > 1) {
+      const _remove_overflow_if_root_overflow = {
+        clipBehavior: context.is_root
+          ? undefined
+          : dartui.clip((widget as core.Stack).clipBehavior),
+      };
 
-    const children = handle_flutter_case_no_size_stack_children(
-      handleChildren(widget.children as [])
-    );
-    const stack = new flutter.Stack({
-      ...default_props_for_layout,
-      ..._remove_overflow_if_root_overflow,
-      children: children,
-      key: _key,
-    });
-    if (!context.is_root) {
-      const wh = _nested_stack_wh_by_parent(context.parent);
-      console.log("wh", wh);
-      final = handle_flutter_case_nested_positioned_stack(stack, {
-        widget: widget as SnapshotWidget<core.Stack>,
-        ...wh,
+      const children = handle_flutter_case_no_size_stack_children(
+        handleChildren(widget.children as [])
+      );
+      const stack = new flutter.Stack({
+        ...default_props_for_layout,
+        ..._remove_overflow_if_root_overflow,
+        children: children,
+        key: _key,
       });
+      if (!context.is_root) {
+        const wh = _nested_stack_wh_by_parent(context.parent);
+        console.log("wh", wh);
+        final = handle_flutter_case_nested_positioned_stack(stack, {
+          widget: widget as SnapshotWidget<core.Stack>,
+          ...wh,
+        });
+      } else {
+        final = stack;
+      }
     } else {
-      final = stack;
+      final = handleChild(widget.children[0]);
     }
   } else if (widget instanceof core.SingleChildScrollView) {
     const _child = handleChild(widget.child);
