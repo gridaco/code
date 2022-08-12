@@ -31,7 +31,7 @@ export async function init(
     const { continue_with_new_project_using_template } = await prompt<{
       continue_with_new_project_using_template: boolean;
     }>({
-      name: "continue_witout_existing_project",
+      name: "continue_with_new_project_using_template",
       initial: true,
       type: "confirm",
       message:
@@ -42,6 +42,9 @@ export async function init(
         create_cwd_if_not_exists,
       });
       if (_ == "exit") {
+        console.log(
+          "Cancelled. You can run `grida init` again after creating a project."
+        );
         exit(0);
       } else {
         const { created, cwd: newcwd, name } = _;
