@@ -28,15 +28,16 @@ export async function init(
   }
 
   if (!baseproj) {
-    const { continue_witout_existing_project } = await prompt<{
-      continue_witout_existing_project: boolean;
+    const { continue_with_new_project_using_template } = await prompt<{
+      continue_with_new_project_using_template: boolean;
     }>({
       name: "continue_witout_existing_project",
+      initial: true,
       type: "confirm",
       message:
-        "No project root is found (package.json or pubspec.yml) with framework configuration. Do you want to continue without creating a project?",
+        "No project is found (package.json or pubspec.yml) with framework configuration. Do you want to create new project with template?",
     });
-    if (!continue_witout_existing_project) {
+    if (continue_with_new_project_using_template) {
       const _ = await init_base_project_with_template(cwd, {
         create_cwd_if_not_exists,
       });
