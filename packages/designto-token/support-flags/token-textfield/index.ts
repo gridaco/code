@@ -4,6 +4,7 @@ import {
   InputBorder,
   OutlineInputBorder,
   Container,
+  Text,
 } from "@reflect-ui/core";
 import type { TextStyle } from "@reflect-ui/core";
 import type { AsInputFlag } from "@code-features/flags/types";
@@ -53,10 +54,13 @@ export function tokenize_flagged_textfield(
         const { input_root, value, placeholder } = validated;
 
         const style =
-          value && (tokenizeText.fromText(value).style as TextStyle);
+          value &&
+          (unwrappedChild<Text>(tokenizeText.fromText(value))
+            .style as TextStyle);
         const placeholderStyle =
           placeholder &&
-          (tokenizeText.fromText(placeholder).style as TextStyle);
+          (unwrappedChild<Text>(tokenizeText.fromText(placeholder))
+            .style as TextStyle);
 
         // if value only contains '●' or '·' - e.g. ● ● ● ● ● ● it is safe to be casted as a password input.
         const obscureText = /^[·\|●\s]+$/.test(
@@ -103,7 +107,9 @@ export function tokenize_flagged_textfield(
       }
 
       case "text-as-input": {
-        const { style } = tokenizeText.fromText(validated.input_root);
+        const { style } = unwrappedChild<Text>(
+          tokenizeText.fromText(validated.input_root)
+        );
         return new TextField({
           key: _key,
           style: style as TextStyle,
