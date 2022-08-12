@@ -115,7 +115,7 @@ export default async function cli() {
       [loadenv]
     )
     .command(
-      "flutter daemon start",
+      "flutter daemon",
       "Starts local flutter daemon server for grida services",
       () => {},
       () => {
