@@ -16,6 +16,7 @@ import { checkForUpdate } from "./update";
 import { login, logout } from "./auth";
 import { startFlutterDaemonServer } from "./flutter/daemon";
 import { parseFileId } from "@design-sdk/figma-url";
+import chalk from "chalk";
 
 function loadenv(argv) {
   const { cwd } = argv;
@@ -23,7 +24,7 @@ function loadenv(argv) {
   const dotenvpath = path.join(cwd, ".env");
   if (fs.existsSync(dotenvpath)) {
     dotenv.config({ path: dotenvpath });
-    console.log("Loaded .env file");
+    console.info(chalk.dim("Loaded .env file"));
   }
 }
 
