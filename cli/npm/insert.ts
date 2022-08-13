@@ -117,9 +117,7 @@ export async function add_dependencies(
     }
     case "write-and-install": {
       await write_file();
-      await npmInsatll(cwd, [], {
-        cache: true,
-      });
+      await npmInsatll(cwd, [], {});
       installed = true;
       break;
     }
