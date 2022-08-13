@@ -29,7 +29,10 @@ export async function prompt_designsource_config(): Promise<DesignSourceConfig> 
       };
     }
     default: {
-      throw new Error(`Sorry, ${provider} is not supported yet.`);
+      console.log(
+        `grida for ${provider} is in private beta. If you want to try it out, please submit this form - https://forms.gle/BNtCCVBUSAYaTtSb7`
+      );
+      process.exit(0);
     }
   }
 }

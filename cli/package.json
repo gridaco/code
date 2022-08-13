@@ -26,6 +26,7 @@
     "scripts": {
         "clean": "rimraf dist",
         "dev": "ts-node index.ts",
+        "grida": "yarn dev",
         "dev:watch": "ts-node-dev index.ts --watch",
         "test": "jest",
         "build": "ncc build index.ts -o dist -e keytar -e glob -e dotenv",
