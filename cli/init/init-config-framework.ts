@@ -2,13 +2,18 @@ import path from "path";
 import { BaseProjectInfo } from "../project";
 import { prompt } from "enquirer";
 import type { FrameworkConfig } from "@grida/builder-config";
-import { Framework, Language } from "@grida/builder-platform-types";
+import { Language } from "@grida/builder-platform-types";
+import { ReactStylingStrategy } from "@grida/builder-config/framework-react";
+
+type FrameworkConfigResult = FrameworkConfig & {
+  packages: string[];
+};
 
 export async function prompt_framework_config(
   cwd,
   baseproj?: BaseProjectInfo | undefined,
   initialized_with_template?: boolean
-): Promise<FrameworkConfig> {
+): Promise<FrameworkConfigResult> {
   let framework: BaseProjectInfo["framework"] = baseproj?.framework;
   if (!initialized_with_template) {
     if (framework && framework !== "unknown") {
@@ -59,12 +64,12 @@ export async function prompt_framework_config(
         choices: [
           {
             name: "css",
-            value: "css",
+            message: "css",
           },
           ...packages.map((p) => {
             return {
+              message: p,
               name: p,
-              value: p,
               hint: baseproj?.packages?.includes(p)
                 ? " (found from package.json)"
                 : undefined,
@@ -72,7 +77,7 @@ export async function prompt_framework_config(
           }),
           {
             name: "inline-style",
-            value: "inline-style",
+            message: "inline-style",
             hint: `<div style={{…}}/>`,
           },
           {
@@ -82,19 +87,60 @@ export async function prompt_framework_config(
           // "less",
         ],
       });
-    }
-  }
 
-  switch (framework) {
-    case "react-native":
-    case "react": {
+      // TODO: add multi styling config sypport
+      let default_style: ReactStylingStrategy = {
+        type: "styled-components",
+        module: "@emotion/styled",
+      };
+      let required_packages = ["@emotion/styled", "@emotion/react"];
+      if (styles.includes("@emotion/styled")) {
+        default_style = {
+          type: "styled-components",
+          module: "@emotion/styled",
+        };
+        required_packages = ["@emotion/styled", "@emotion/react"];
+      } else if (styles.includes("styled-components")) {
+        default_style = {
+          type: "styled-components",
+          module: "styled-components",
+        };
+        required_packages = ["styled-components"];
+      } else if (styles.includes("inline-css")) {
+        default_style = {
+          type: "inline-css",
+        };
+        required_packages = [];
+      }
+
       return {
         framework: framework as "react",
         language: Language.tsx,
         // TODO:
+        styling: default_style,
+        component_declaration_style: {
+          // TODO:
+          exporting_style: {
+            type: "export-named-functional-component",
+            declaration_syntax_choice: "function",
+            export_declaration_syntax_choice: "export",
+            exporting_position: "with-declaration",
+          },
+        },
+        packages: required_packages,
+      };
+    }
+  }
+
+  switch (framework) {
+    case "react-native": {
+      return {
+        framework: framework,
+        language: Language.tsx,
+        // TODO:
         styling: {
           type: "styled-components",
-          module: "@emotion/styled",
+          module: "@emotion/native",
         },
         component_declaration_style: {
           // TODO:
@@ -105,15 +151,40 @@ export async function prompt_framework_config(
             exporting_position: "with-declaration",
           },
         },
+        shadow: {
+          type: "react-native",
+          module: "react-native",
+        },
+        gradient_text: {
+          linear: {
+            module: "react-native-text-gradient",
+          },
+          radial: ["fallback-to-svg"],
+        },
+        gradient: {
+          linear: {
+            module: "react-native-linear-gradient",
+          },
+          radial: {
+            module: "react-native-radial-gradient",
+          },
+        },
+        svg: {
+          module: "react-native-svg",
+          prefer_mode: "svg-with-path",
+        },
+        packages: ["@emotion/styled", "@emotion/react"],
       };
+      break;
     }
     case "flutter": {
-      return { framework: "flutter", language: Language.dart };
+      return { framework: "flutter", language: Language.dart, packages: [] };
     }
     default: {
       return {
         framework: framework as FrameworkConfig["framework"],
-      } as FrameworkConfig;
+        package: [],
+      } as any as FrameworkConfigResult;
     }
   }
 }

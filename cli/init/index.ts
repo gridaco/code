@@ -17,6 +17,7 @@ import { create_grida_config_js } from "./init-grida.config.js";
 import { init_dotgrida } from "./init-.grida";
 import { init_gitignore } from "./init-.gitignore";
 import { prompt_framework_config } from "./init-config-framework";
+import { init_package_json } from "./init-package.json";
 
 export async function init(
   cwd = process.cwd(),
@@ -49,8 +50,16 @@ export async function init(
         exit(0);
       } else {
         const { created, cwd: newcwd, name } = _;
-        if (created)
+        if (created) {
+          console.log("\n\n\n");
+          console.info(
+            chalk.bgGreen(
+              "Fresh project created. Resuming `grida init` process."
+            )
+          );
+          console.log(`\n`);
           return init(newcwd, { name, initialized_with_template: true });
+        }
       }
       return;
     }
@@ -100,6 +109,16 @@ export async function init(
   init_gitignore(cwd, {
     template: framework_gitignore_templates[config_framework.framework],
   }); // init .gitignore first (why? cause we're dealing with user's local directory here. we don't want to mass things up. .gitignore first.)
+
+  if (is_node_project(config_framework.framework)) {
+    await init_package_json(cwd, {
+      dependencies: config_framework.packages.map((p) => ({
+        name: p,
+        version: "latest",
+      })),
+    });
+  }
+
   // creates grida.config.js
   create_grida_config_js(cwd, {
     name: name,
@@ -173,6 +192,21 @@ function create_grida_fallback_dir(
     name: dirname,
     path: dir,
   };
+}
+
+function is_node_project(framework: FrameworkConfig["framework"]) {
+  switch (framework) {
+    case "flutter":
+      return false;
+    case "react":
+    case "react-native":
+    case "solid-js":
+      return true;
+    case "vanilla":
+    case "preview":
+    default:
+      return false;
+  }
 }
 
 export * from "./init-.env";
