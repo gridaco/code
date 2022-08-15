@@ -8,11 +8,12 @@ import type {
 } from "@web-builder/core/builders";
 import type { WidgetDeclarationDocumentation } from "@code-features/documentation";
 import type { EsWidgetModuleExportable } from "@web-builder/module-es";
-import type {
+import {
   BlockStatement,
   ImportDeclaration,
   JSXChildLike,
   ScopedVariableNamer,
+  NameCases,
 } from "coli";
 
 export abstract class JSXWidgetModuleBuilder<CONFIG> {
@@ -37,6 +38,14 @@ export abstract class JSXWidgetModuleBuilder<CONFIG> {
     this.widgetName = entry.key.name;
     this.config = config;
     this.namer = namer;
+    // add module name as reserved keyword to namer (call this before styles initialization)
+    this.namer
+      .nameit(this.widgetName, {
+        case: NameCases.pascal,
+      })
+      .register();
+    //
+
     this.stylesMapper = this.initStylesConfigMapBuilder();
     const _stylesRepository = this.initStylesRepository();
     if (_stylesRepository) {
