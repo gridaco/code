@@ -38,13 +38,14 @@ export async function prompt_figma_personal_access_token(
 ): Promise<string> {
   const _ = await prompt({
     name: "figma-personal-access-token",
-    message: "Please enter your figma personal access token.",
+    message:
+      "Please enter your figma personal access token. (🤔 https://bit.ly/figma-personal-access-token)",
     type: "password",
     // @ts-ignore
     async validate(value) {
       // it's usually 43 chars long e.g "xxxxxx-xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx"
       if (!value || value.length < 40 || value.trim().includes(" ")) {
-        return "Please enter your figma personal access token. How to 👉 https://grida.co/docs/with-figma/guides/how-to-get-personal-access-token";
+        return "Please enter your figma personal access token. How to 👉 https://bit.ly/figma-personal-access-token";
       }
 
       const validationClient = FigmaApiClient({
