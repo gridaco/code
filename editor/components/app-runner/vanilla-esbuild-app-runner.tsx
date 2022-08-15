@@ -92,7 +92,7 @@ const _html = `
 </head>
 
 <body>
-    <div id="root"></div>
+    <div id="root" style="height:100vh;"></div>
 </body>
 
 <script type="module">

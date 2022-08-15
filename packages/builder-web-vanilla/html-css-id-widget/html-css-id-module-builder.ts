@@ -233,7 +233,7 @@ const html_render = ({ css, body }: { css: string; body: string }) => {
 ${indenter(css, 3)}
     </style>
   </head>
-  <body>
+  <body style="height: 100vh;">
 ${indenter(body, 2)}
   </body>
 </html>`;

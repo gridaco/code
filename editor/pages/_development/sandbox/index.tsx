@@ -21,7 +21,7 @@ const App = () => <>Hi</>
 ReactDOM.render(<App />, document.querySelector('#root'));`;
 
 export default function SandboxPage() {
-  const html_code = `<div id="root"></div>`;
+  const html_code = `<div id="root" style="height: 100vh;"></div>`;
 
   const [isbuilding, setIsbuilding] = useState(false);
   const [jsout, setJsOut] = useState<string>();

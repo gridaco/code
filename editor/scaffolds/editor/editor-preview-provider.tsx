@@ -13,8 +13,7 @@ import { supportsPreview } from "config";
 import { stable as dartservices } from "dart-services";
 import Client, { FlutterProject } from "@flutter-daemon/client";
 
-const esbuild_base_html_code = `<div id="root"></div>`;
-
+const esbuild_base_html_code = `<div id="root" style="height: 100vh;"></div>`;
 const flutter_bundler: "dart-services" | "flutter-daemon" = "flutter-daemon";
 
 /**

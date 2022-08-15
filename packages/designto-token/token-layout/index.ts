@@ -63,7 +63,7 @@ function fromFrame(
 
   if (context.is_root) {
     // add height size to root frame
-    innerlayout.minHeight = "100vh";
+    innerlayout.minHeight = "100%";
     return innerlayout;
   }
 
