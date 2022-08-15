@@ -73,7 +73,7 @@ export default async function cli() {
       async () => {
         login();
       },
-      [loadenv]
+      []
     )
     .command(
       "logout",
@@ -82,7 +82,7 @@ export default async function cli() {
       async () => {
         logout();
       },
-      [loadenv]
+      []
     )
     .command(
       "code [framework] <uri>",

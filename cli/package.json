@@ -29,7 +29,8 @@
         "grida": "yarn dev",
         "dev:watch": "ts-node-dev index.ts --watch",
         "test": "jest",
-        "build": "ncc build index.ts -o dist -e keytar -e glob -e dotenv",
+        "copy-env": "node scripts/copy-env.js",
+        "build": "ncc build index.ts -o dist -e keytar -e glob -e dotenv && yarn copy-env",
         "prepack": "yarn test && yarn clean && yarn build"
     },
     "devDependencies": {
@@ -39,6 +40,7 @@
         "@types/which": "^2.0.1",
         "@types/yargs": "^17.0.3",
         "@vercel/ncc": "^0.34.0",
+        "fs-extra": "^10.1.0",
         "jest": "^28.1.3",
         "ts-jest": "^28.0.7",
         "ts-node": "^10.9.1",
@@ -49,9 +51,9 @@
         "grida": "./dist/index.js"
     },
     "files": [
-        "dist",
         "README.md",
-        "LICENSE"
+        "LICENSE",
+        "dist"
     ],
     "publishConfig": {
         "access": "public"

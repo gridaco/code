@@ -9,8 +9,9 @@ import Axios from "axios";
 import { machineIdSync } from "node-machine-id";
 import { AuthStore } from "./store";
 
-const PROXY_AUTH_REQUEST_SECRET =
-  process.env.GRIDA_FIRST_PARTY_PROXY_AUTH_REQUEST_TOTP_SECRET;
+// it is ok to load dynamically since its cli env.
+const PROXY_AUTH_REQUEST_SECRET = () =>
+  process.env.PUBLIC_GRIDA_FIRST_PARTY_PROXY_AUTH_REQUEST_TOTP_SECRET;
 
 function _termenv(): "vscode" | "terminal" | "unknown" {
   switch (process.env.TERM_PROGRAM) {
@@ -33,7 +34,7 @@ function _make_request(): AuthProxySessionStartRequest {
 
 export async function startAuthenticationSession(): Promise<AuthProxySessionStartResult> {
   return __auth_proxy.openProxyAuthSession(
-    PROXY_AUTH_REQUEST_SECRET,
+    PROXY_AUTH_REQUEST_SECRET(),
     _make_request()
   );
 }
@@ -42,7 +43,7 @@ export async function startAuthenticationWithSession(
   session: AuthProxySessionStartResult
 ) {
   const result = await __auth_proxy.requesetProxyAuthWithSession(
-    PROXY_AUTH_REQUEST_SECRET,
+    PROXY_AUTH_REQUEST_SECRET(),
     session,
     _make_request()
   );
@@ -69,7 +70,7 @@ export async function getAccessToken(): Promise<string> {
 export async function checkAuthSession(session: string): Promise<boolean> {
   // TODO:
   const res = await __auth_proxy.checkProxyAuthResult(
-    PROXY_AUTH_REQUEST_SECRET,
+    PROXY_AUTH_REQUEST_SECRET(),
     session
   );
 
@@ -88,7 +89,7 @@ const secure_axios = async () => {
     },
   });
   cors.useAxiosCors(axios, {
-    apikey: process.env.GRIDA_FIRST_PARTY_CORS_API_KEY,
+    apikey: process.env.PUBLIC_GRIDA_FIRST_PARTY_CORS_API_KEY,
   });
   return axios;
 };
