@@ -1302,10 +1302,10 @@
   dependencies:
     "@tippyjs/react" "^4.2.5"
 
-"@coli.codes/ast-formatter@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@coli.codes/ast-formatter/-/ast-formatter-0.0.29.tgz#74add43196f95a56235a42f0ef673137915983d1"
-  integrity sha512-x6M140lwhFeEJNhqWs9k7qU36zQB1REKqKXLMihZZYinozXGwX8yAhPCxG95Eb2XPWP1+BTGwpyyPENeKCjVEA==
+"@coli.codes/ast-formatter@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@coli.codes/ast-formatter/-/ast-formatter-0.0.31.tgz#163e0c1066d0b78dbf752adb810e7859fc4fe067"
+  integrity sha512-fBXX1rFkZWrMHr8Rn/sspAoKOgLQTMSrGSvMnPsP2DpTUymQCvfZpnHE9hf68uMI6MwfkSFfDn+IfE5ZslboFw==
 
 "@coli.codes/builder-annotations@^0.0.20":
   version "0.0.20"
@@ -1314,30 +1314,30 @@
   dependencies:
     "@abraham/reflection" "^0.7.0"
 
-"@coli.codes/builder@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@coli.codes/builder/-/builder-0.0.29.tgz#e96fde9bdd1d4cf00f9138043202d2afc269a728"
-  integrity sha512-8VnaOj0rNw691KCrcPQvodXzhBDbi0JIpZYf3j/GX84GYxO+JzHgtwT2I1BZD12EuWPL5o4pkQFmPuf1cfKPSA==
+"@coli.codes/builder@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@coli.codes/builder/-/builder-0.0.31.tgz#2ac65c6d96d8ece943b3ad480a43e3e9d505f831"
+  integrity sha512-NaDcOFe9WGA/E9xaRLIFBsQ0dPEU84GdwAhjQE3FlIxj+0v3CMPwj75z+rLEcmEEAB0mHwb91SzDAecbw8xjXg==
   dependencies:
     "@coli.codes/builder-annotations" "^0.0.20"
-    "@coli.codes/core" "^0.0.29"
+    "@coli.codes/core" "^0.0.31"
 
-"@coli.codes/core-syntax-kind@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@coli.codes/core-syntax-kind/-/core-syntax-kind-0.0.29.tgz#160e7b813a26b4042417d97736fc20e393cade99"
-  integrity sha512-Ji6VugkL2EZjQ7NvA3vII+q55sqgL5vNFJo/kDon+n4gdeNDk9ekrLbEV8DSKuVraCFt4ONXPp3pWdXBLCuvSA==
+"@coli.codes/core-syntax-kind@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@coli.codes/core-syntax-kind/-/core-syntax-kind-0.0.31.tgz#348915056b8e96f37e6a15ab35c689f60b354f13"
+  integrity sha512-vJ7u2YOE6zTWHf2AjJCAQ/bPwxJKkutkmUYt5GdqA8GNe6vVMbTAFXXJeGcO8fVMX4W/dNIeycguWN3ZzPW6QQ==
 
-"@coli.codes/core@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@coli.codes/core/-/core-0.0.29.tgz#bad05fe851c9aa66dac8b46e9277be36e52ae813"
-  integrity sha512-ZJcFPd8s/uJSM45D9NlfNS7no2EulHdLYB2xPaCboVWLKKIGudfsF6xUGZu5NYXXdG6sqIXZO9yqFNxI+yPtCg==
+"@coli.codes/core@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@coli.codes/core/-/core-0.0.31.tgz#04d755feee810052d9e796929ba254482e00a629"
+  integrity sha512-/n9pjQk9h8oOQgoByFN7a0pV/yPJzsUiFYUFsFXKamugl8F182hJFoUJbFRIGpIF3HgJkzGX5kPHqhuS2zHFEw==
   dependencies:
-    "@coli.codes/core-syntax-kind" "^0.0.29"
+    "@coli.codes/core-syntax-kind" "^0.0.31"
 
-"@coli.codes/css@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@coli.codes/css/-/css-0.0.29.tgz#2a843e840ab949163d90605b29e7447b59f17faf"
-  integrity sha512-Z3/7GCxCYbgmBgACWiI671Bg6T1YoQfQaLw5O4aJq/hrouUmEtM1/zlI7PBTTl0JxBPLuDATQIWTVUxxUwL0RQ==
+"@coli.codes/css@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@coli.codes/css/-/css-0.0.31.tgz#7c92d944cb625ee0d5fe3455ae8a8b307a0764c5"
+  integrity sha512-wIzcHWutYm5JeZNkr2nkitdKYHhetmu6lrZKQAHiNhQDLA7vqQ0ynwID3+XVrfZVDliKLqr7CIxnJi6sOr0kYQ==
   dependencies:
     csstype "^3.0.8"
 
@@ -1346,34 +1346,34 @@
   resolved "https://registry.npmjs.org/@coli.codes/escape-string/-/escape-string-0.0.24.tgz"
   integrity sha512-S1Fs83Puv322S5kHJsujezWjFJP5o/o/kxeQqk2lAg1/AKWOiaeI2hjpKVSTTxfNQXYJR+V1y0qp9jU3EAVb1g==
 
-"@coli.codes/escape-string@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@coli.codes/escape-string/-/escape-string-0.0.29.tgz#2daf0541cc36ee603b6c5a8b66dcd08af1c06a5e"
-  integrity sha512-UHEY+AhkhCNpr8EF8ZKvEi8EGlB3QPbP6eGQISid8vdTxpZ4xC228F8mCyZy6xBj3URIwGcu5jkm5HlMci5Lzg==
+"@coli.codes/escape-string@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@coli.codes/escape-string/-/escape-string-0.0.31.tgz#b1f3fc7ced9e8104d258c4a43b11a4e7f43d4da2"
+  integrity sha512-p6JkEdwiczwezZbDU8dVgJaq6Jd8rgc67RjLhpuupPkKFGrIo5+uungwKDOEFdGrdjVOiyg8fqKmdo+kOtE4aA==
 
-"@coli.codes/export-string-core@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@coli.codes/export-string-core/-/export-string-core-0.0.29.tgz#77f2c8eaf33810e5dba5f920c71fbf215d2bd60d"
-  integrity sha512-X0zKMWpoAOuT5PtDrS8kPBCZDoTKZ4HklnoVjlk1nzz8QcAnkIQWbTSLTIjx2F35b9f5oR2KLEc5+wDnSaRWsA==
+"@coli.codes/export-string-core@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@coli.codes/export-string-core/-/export-string-core-0.0.31.tgz#0b42fe39a85fbbc08e9492b014eea190fa218cea"
+  integrity sha512-D7gNxmgne9fofsW3ECn6/jPK3EFNk7jaLXOsgEinO5nGh6xVQBpeF5G6FGlKrxZiqm9vB7+22I1nLuWF5e3Fmw==
 
-"@coli.codes/export-string@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@coli.codes/export-string/-/export-string-0.0.29.tgz#a7a79797da1f9f46ff934f6c4eda9aaa90c0961d"
-  integrity sha512-RJuaI+kq33Xf/5Q4nXwHSaKwp0F3wzHM5F6LcK0fV4eEvv5U00qJm2JiRv37fIvZA21w9GfcLEdJSV2uOfGxuw==
+"@coli.codes/export-string@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@coli.codes/export-string/-/export-string-0.0.31.tgz#19b0da5ae528777fddae3518e4d62fa3ff9a1397"
+  integrity sha512-L66Vx0H8aQoYaQT5ijqR3xzUTAoX2UYf9Ctvcz+rpuFlKQbbUHvWiyumC24ocP/QFOtV8HDVxq6zvGtoViPrHA==
   dependencies:
-    "@coli.codes/ast-formatter" "^0.0.29"
-    "@coli.codes/escape-string" "^0.0.29"
-    "@coli.codes/export-string-core" "^0.0.29"
+    "@coli.codes/ast-formatter" "^0.0.31"
+    "@coli.codes/escape-string" "^0.0.31"
+    "@coli.codes/export-string-core" "^0.0.31"
 
-"@coli.codes/jsx-core@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@coli.codes/jsx-core/-/jsx-core-0.0.29.tgz#e36bfad2d12143453962abd919f9505b2a1c4c02"
-  integrity sha512-n5BCwc7KxxsHdV5ssk2pexlQm2BHMPp7FfiWBUezYuv8gxY8zK/T6mmdmuEvaaBNeSbhFv1K60YOAXB7W0WVDg==
+"@coli.codes/jsx-core@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@coli.codes/jsx-core/-/jsx-core-0.0.31.tgz#660802e69c3d50c0643737bf65b5b0da74f7353d"
+  integrity sha512-LkAn3ZdDfWpcRA7cn15VcJ3tsBPGnIr3C16a/H4dv3qrX8jPUk4SLsLIwlOCLwwm2MiILwMg6d1R9V6eyO5MqQ==
 
-"@coli.codes/naming@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@coli.codes/naming/-/naming-0.0.29.tgz#f122adbef89a2d4e567852b0f90e00d5b1cdb008"
-  integrity sha512-A89biyRgI4uwfA83WhjA9kYb1yocKN66iwRZj4NCPOkxeLrEWDh50VXgcQrBTdArLbm8orP/y/3rtRToMsLyDg==
+"@coli.codes/naming@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@coli.codes/naming/-/naming-0.0.31.tgz#26efd44649e2f942b44f58f1db626ead718b36f5"
+  integrity sha512-WhG5QCY8/6r6S65Ru+H/5jxdVywnO6oEcDVF5bMS+t5hAIfZkCr/2QadBHSs1jhegb8XtCE508/ZWJzpRkc1MA==
 
 "@colors/colors@1.5.0":
   version "1.5.0"
@@ -8899,17 +8899,17 @@ codesandbox@^2.2.3:
     shortid "^2.2.8"
     update-notifier "^2.2.0"
 
-coli@^0.0.29:
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/coli/-/coli-0.0.29.tgz#3b1ea3210c1f9383e1e57696edd57a8fbfd18c63"
-  integrity sha512-wjy26XvxsAwOKsHsa/jlbSjlNpD1tOCg1XDTkibyeFKl90BmZfPbuNTGNAzgHMsTfRTsJAEzN7CC2WjIgrWGZg==
+coli@^0.0.31:
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/coli/-/coli-0.0.31.tgz#d5ac15debaf8aebad11d7df9eced60ee6b055ecd"
+  integrity sha512-ygjxF3XMiMaSq4u2dm0cxXPbhBOlg58bhiKfFoN1siUhn4zOgYu+tg+mRwhljGeigdWv7dqcKofHQ1ZNQ+uORA==
   dependencies:
-    "@coli.codes/builder" "^0.0.29"
-    "@coli.codes/core" "^0.0.29"
-    "@coli.codes/css" "^0.0.29"
-    "@coli.codes/export-string" "^0.0.29"
-    "@coli.codes/jsx-core" "^0.0.29"
-    "@coli.codes/naming" "^0.0.29"
+    "@coli.codes/builder" "^0.0.31"
+    "@coli.codes/core" "^0.0.31"
+    "@coli.codes/css" "^0.0.31"
+    "@coli.codes/export-string" "^0.0.31"
+    "@coli.codes/jsx-core" "^0.0.31"
+    "@coli.codes/naming" "^0.0.31"
 
 collapse-white-space@^1.0.2:
   version "1.0.6"
