@@ -26,5 +26,12 @@ if (require.main === module) {
     path: path.join(__dirname, ".public-credentials", ".env"),
   });
 
+  /**
+   * load env for production @see {@link /cli/.runtime-env/readme.md}
+   */
+  dotenv.config({
+    path: path.join(__dirname, ".runtime-env", ".env"),
+  });
+
   cli();
 }
