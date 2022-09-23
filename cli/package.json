@@ -4,6 +4,20 @@
     "private": false,
     "license": "Apache-2.0",
     "description": "grida CLI",
+    "keywords": [
+        "grida",
+        "cli",
+        "figma",
+        "design ci",
+        "figma cli",
+        "design tokens",
+        "design system",
+        "export",
+        "icons",
+        "typography",
+        "components",
+        "variants"
+    ],
     "homepage": "https://grida.co/cli",
     "repository": "https://github.com/gridaco/code",
     "dependencies": {
