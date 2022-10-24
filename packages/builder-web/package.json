@@ -2,6 +2,8 @@
   "name": "coli-web-builder",
   "version": "0.0.1",
   "description": "jsx syntex tree builder for web applications. react, vue, svelte, etc..",
+  "private": true,
+  "license": "Apache-2.0",
   "workspaces": [
     "core",
     "nodejs",
@@ -19,10 +21,14 @@
   ],
   "main": "index.js",
   "repository": "https://github.com/bridgedxyz/web-builder.git",
-  "author": "bridged.xyz, softmarshmallow <woojoo@softmarshmallow.com>",
-  "license": "MIT",
-  "dependencies": {
-    "typescript": "^4.0.5"
-  },
-  "private": true
+  "authors": [
+    "grida.co <hello@grida.co>",
+    "softmarshmallow <universe@grida.co>"
+  ],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -1,9 +1,8 @@
 import { ScopedVariableNamer } from "@coli.codes/naming";
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
 import { BlockStatement, ImportDeclaration, Return } from "coli";
 import {
   react_imports,
-  makeReactModuleFile,
   ReactWidgetModuleExportable,
   emotion_styled_imports,
   styled_components_imports,
@@ -17,7 +16,7 @@ import {
 import {
   react as react_config,
   reactnative as rn_config,
-} from "@designto/config";
+} from "@grida/builder-config";
 import { reactnative_imports } from "../rn-import-specifications";
 import {
   NoStyleJSXElementConfig,
@@ -25,15 +24,16 @@ import {
   StyledComponentDeclaration,
   create_duplication_reduction_map,
 } from "@web-builder/styled";
+import { makeEsWidgetModuleFile } from "@web-builder/module-es";
+import { Framework } from "@grida/builder-platform-types";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
+import {
+  ReactNativeWidgetDeclarationDocBuilder,
+  WidgetDeclarationDocumentation,
+} from "@code-features/documentation";
 
-export class ReactNativeStyledComponentsModuleBuilder {
-  private readonly entry: JsxWidget;
-  private readonly widgetName: string;
-  private readonly stylesMapper: StylesConfigMapBuilder;
-  private readonly stylesRepository: StylesRepository;
-  private readonly namer: ScopedVariableNamer;
-  readonly config: rn_config.ReactNativeStyledComponentsConfig;
-
+export class ReactNativeStyledComponentsModuleBuilder extends JSXWidgetModuleBuilder<rn_config.ReactNativeStyledComponentsConfig> {
   constructor({
     entry,
     config,
@@ -41,37 +41,40 @@ export class ReactNativeStyledComponentsModuleBuilder {
     entry: JsxWidget;
     config: rn_config.ReactNativeStyledComponentsConfig;
   }) {
-    this.entry = entry;
-    this.widgetName = entry.key.name;
-    this.namer = new ScopedVariableNamer(
-      entry.key.id,
-      ReservedKeywordPlatformPresets.react
-    );
-
-    this.stylesMapper = new StylesConfigMapBuilder(entry, {
-      namer: this.namer,
-      rename_tag: true /** styled component tag shoule be renamed */,
+    super({
+      entry,
+      config,
+      framework: Framework.solid,
+      namer: new ScopedVariableNamer(
+        entry.key.id,
+        ReservedKeywordPlatformPresets.react
+      ),
     });
+  }
 
-    this.stylesRepository = new StylesRepository(
+  protected initStylesConfigMapBuilder(): StylesConfigMapBuilder {
+    return new StylesConfigMapBuilder(
+      this.entry,
+      {
+        namer: this.namer,
+        rename_tag: true /** styled component tag shoule be renamed */,
+      },
+      Framework.reactnative
+    );
+  }
+
+  protected initStylesRepository(): false | StylesRepository {
+    return new StylesRepository(
       this.stylesMapper.map,
       create_duplication_reduction_map
     );
-
-    this.config = config;
   }
 
-  private styledConfig(
-    id: string
-  ): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
-    return this.stylesRepository.get(id);
-  }
-
-  private jsxBuilder(widget: JsxWidget) {
+  protected jsxBuilder(widget: JsxWidget) {
     return buildJsx(
       widget,
       {
-        styledConfig: (id) => this.styledConfig(id),
+        styledConfig: (id) => this.stylesConfig(id),
       },
       {
         self_closing_if_possible: true,
@@ -79,7 +82,7 @@ export class ReactNativeStyledComponentsModuleBuilder {
     );
   }
 
-  partImports() {
+  protected partImports() {
     return [
       this.partImportReact(),
       this.partImportReactNative(),
@@ -87,7 +90,7 @@ export class ReactNativeStyledComponentsModuleBuilder {
     ];
   }
 
-  partImportStyled() {
+  protected partImportStyled() {
     switch (this.config.module) {
       case "@emotion/native":
         return emotion_styled_imports.import_styled_from_emotion_native;
@@ -96,29 +99,46 @@ export class ReactNativeStyledComponentsModuleBuilder {
     }
   }
 
-  partImportReact() {
+  protected partImportReact() {
     return react_imports.import_react_from_react;
   }
 
-  partImportReactNative() {
-    return reactnative_imports.import_react_prepacked;
+  protected partImportReactNative() {
+    return reactnative_imports.import_react_native_prepacked;
   }
 
-  partBody(): BlockStatement {
+  protected partBody(): BlockStatement {
     let jsxTree = this.jsxBuilder(this.entry);
     return new BlockStatement(new Return(jsxTree));
   }
 
-  partDeclarations() {
+  protected partDocumentation() {
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new ReactNativeWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
+  }
+
+  protected partDeclarations() {
     return Array.from(this.stylesRepository.uniques())
       .map((k) => {
-        return (this.styledConfig(k) as StyledComponentJSXElementConfig)
+        return (this.stylesConfig(k) as StyledComponentJSXElementConfig)
           .styledComponent;
       })
       .filter((s) => s);
   }
 
-  asExportableModule() {
+  public asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     const styled_declarations = this.partDeclarations();
@@ -127,6 +147,7 @@ export class ReactNativeStyledComponentsModuleBuilder {
       {
         body,
         imports,
+        documentation: doc,
         declarations: styled_declarations,
       },
       {
@@ -144,10 +165,12 @@ export class ReactNativeStyledComponentWidgetModuleExportable extends ReactWidge
     {
       body,
       imports,
+      documentation,
       declarations,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
+      documentation: WidgetDeclarationDocumentation;
       declarations: StyledComponentDeclaration[];
     },
     {
@@ -160,6 +183,7 @@ export class ReactNativeStyledComponentWidgetModuleExportable extends ReactWidge
       name,
       body,
       imports,
+      documentation,
     });
 
     this.declarations = declarations;
@@ -170,12 +194,13 @@ export class ReactNativeStyledComponentWidgetModuleExportable extends ReactWidge
   }: {
     exporting: react_config.ReactComponentExportingCofnig;
   }) {
-    return makeReactModuleFile({
+    return makeEsWidgetModuleFile({
       name: this.name,
       path: "src/components",
       imports: this.imports,
       declarations: this.declarations,
       body: this.body,
+      documentation: this.documentation,
       config: {
         exporting: exporting,
       },

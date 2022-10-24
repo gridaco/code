@@ -1,5 +1,5 @@
 import { WrapAlignment } from "@flutter-builder/flutter";
-import { WrapAlignment as ReflectWrapAlignment } from "@reflect-ui/core/lib";
+import { WrapAlignment as ReflectWrapAlignment } from "@reflect-ui/core";
 import { do_explicitly_specify, FlutterPropConversionConfig } from "../_";
 
 export function wrapAlignment(

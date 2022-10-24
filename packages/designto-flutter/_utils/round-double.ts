@@ -6,7 +6,7 @@ import { roundNumber } from "@reflect-ui/uiutils";
  * @param double
  * @returns
  */
-export function rd(double: double): double {
+export function rd(double?: double): double | undefined {
   if (typeof double === "number") {
     return roundNumber(double);
   } else {

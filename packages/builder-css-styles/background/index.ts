@@ -1,8 +1,5 @@
 import { CSSProperties } from "@coli.codes/css";
-import {
-  Background,
-  BackgroundPaintLike,
-} from "@reflect-ui/core/lib/background";
+import { Background, BackgroundPaintLike } from "@reflect-ui/core";
 import { color } from "../color";
 import { array } from "@reflect-ui/uiutils";
 import { Color, GradientType } from "@reflect-ui/core";
@@ -13,7 +10,7 @@ import { radialGradient } from "../radial-gradient";
  * @todo - not implemented
  * @returns
  */
-export function background(bg: Background): CSSProperties {
+export function background(bg: Background | undefined): CSSProperties {
   let _primary: BackgroundPaintLike;
   if (Array.isArray(bg)) {
     const safebg = bg?.filter(array.filters.notEmpty);

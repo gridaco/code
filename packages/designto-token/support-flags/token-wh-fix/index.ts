@@ -1,13 +1,13 @@
 import { FixWHFlag } from "@code-features/flags";
 import { ReflectSceneNode } from "@design-sdk/figma-node";
 import { IWHStyleWidget, Widget } from "@reflect-ui/core";
-import { tokenize } from "../../main";
+import { tokenize } from "../../tokenizer";
 import { unwrappedChild } from "../../wrappings";
 
 export function tokenize_flagged_fix_wh(
   node: ReflectSceneNode,
   flag: FixWHFlag[]
-): Widget {
+): Widget | undefined {
   if (!flag.length) return;
   const widget = tokenize(node, {
     should_ignore_flag: (n) => {

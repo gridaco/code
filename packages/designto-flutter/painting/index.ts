@@ -10,6 +10,7 @@ export * from "./painting-radial-gradient";
 export * from "./painting-text-style";
 export * from "./painting-text-decoration";
 export * from "./painting-font-style";
+export * from "./painting-gradient";
 export * from "./painting-linear-gradient";
 export * from "./painting-vertical-direction";
 export * from "./painting-box-decoration";
