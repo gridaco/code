@@ -6,7 +6,7 @@ import { CSSProperties } from "@coli.codes/css";
 import { JSX } from "coli";
 import { RGBA } from "@reflect-ui/core";
 import * as css from "@web-builder/styles";
-import { Dynamic } from "@reflect-ui/core/lib/_utility-types";
+import { Dynamic } from "@reflect-ui/core/reflection";
 
 /**
  * Html Text Representative.
@@ -21,8 +21,8 @@ export class Text extends TextChildWidget {
   overflow: TextOverflow;
   textStyle: core.ITextStyle;
   textAlign: core.TextAlign;
-  width?: number;
-  height?: number;
+  width?: core.DimensionLength;
+  height?: core.DimensionLength;
 
   // experimental
   elementPreference?: WebTextElement;
@@ -33,8 +33,6 @@ export class Text extends TextChildWidget {
     overflow: TextOverflow;
     textStyle: core.ITextStyle;
     textAlign: core.TextAlign;
-    width?: number;
-    height?: number;
     elementPreference?: WebTextElement;
   }) {
     super(p);
@@ -44,8 +42,6 @@ export class Text extends TextChildWidget {
     this.overflow = p.overflow;
     this.textStyle = p.textStyle;
     this.textAlign = p.textAlign;
-    this.width = p.width;
-    this.height = p.height;
 
     // experimental
     this.elementPreference = p.elementPreference;
@@ -53,7 +49,7 @@ export class Text extends TextChildWidget {
 
   textData() {
     return new TextDataWidget({
-      key: { ...this.key, id: this.key.id + ".text-data" },
+      key: this.key.copyWith({ id: this.key.id + ".text-data" }),
       data: this.data,
     });
   }
@@ -102,6 +98,17 @@ export class Text extends TextChildWidget {
       tag: JSX.identifier(__get_dedicated_element_tag(this.elementPreference)),
     };
   }
+
+  fixSize({
+    width,
+    height,
+  }: {
+    width: core.DimensionLength;
+    height: core.DimensionLength;
+  }) {
+    this.width = width;
+    this.height = height;
+  }
 }
 
 const __default_element_tag = "span";
@@ -113,11 +120,17 @@ const __get_dedicated_element_tag = (t?: WebTextElement | undefined) => {
   }
 };
 
-function textWH({ width, height }: { width: number; height: number }) {
+function textWH({
+  width,
+  height,
+}: {
+  width: core.DimensionLength;
+  height: core.DimensionLength;
+}) {
   return {
     // TODO: do not specify width when parent is a flex container. (set as 100%)
     // Also flex-grow: 1 is required to make the text wrap.
-    width: css.px(width),
-    "min-height": css.px(height),
+    width: css.px(width as number),
+    "min-height": css.px(height as number),
   };
 }

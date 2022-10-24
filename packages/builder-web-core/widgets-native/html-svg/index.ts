@@ -13,7 +13,7 @@ import {
   StringLiteral,
 } from "coli";
 import { Color, GradientType } from "@reflect-ui/core";
-import { Background } from "@reflect-ui/core/lib/background";
+import { Background } from "@reflect-ui/core";
 import { UnstylableJSXElementConfig } from "..";
 
 /**
@@ -83,7 +83,7 @@ export class SvgElement extends StylableJsxWidget {
 
   path({ fill }: { fill: string | false }) {
     return <StylableJsxWidget>{
-      key: new WidgetKey(`${this.key.id}.svg-path`, "svg-path"),
+      key: new WidgetKey({ id: `${this.key.id}.svg-path`, name: "svg-path" }),
       styleData: () => null,
       jsxConfig: () => {
         const _tag = JSX.identifier("path");
@@ -156,10 +156,10 @@ export class SvgElement extends StylableJsxWidget {
               });
 
               const fill = <StylableJsxWidget>{
-                key: new WidgetKey(
-                  `${this.key.id}.linear-gradient-fill`,
-                  "linear-gradient-fill"
-                ),
+                key: new WidgetKey({
+                  id: `${this.key.id}.linear-gradient-fill`,
+                  name: "linear-gradient-fill",
+                }),
                 styleData: () => null,
                 jsxConfig: (): UnstylableJSXElementConfig => {
                   return {

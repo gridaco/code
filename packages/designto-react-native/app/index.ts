@@ -1,5 +1,5 @@
 import { Widget } from "@reflect-ui/core";
-import { reactnative as config } from "@designto/config";
+import { reactnative as config } from "@grida/builder-config";
 import { JsxWidget } from "@web-builder/react";
 import assert from "assert";
 import {
@@ -27,6 +27,7 @@ export function buildReactNativeApp(
         name: entry.key.name,
         code: { raw: res.code },
         scaffold: { raw: res.code },
+        main: { raw: res.code },
       };
     }
     case "styled-components": {
@@ -39,6 +40,7 @@ export function buildReactNativeApp(
         name: entry.key.name,
         code: { raw: res.code },
         scaffold: { raw: res.code },
+        main: { raw: res.code },
       };
     }
     case "inline-style": {
@@ -51,6 +53,7 @@ export function buildReactNativeApp(
         name: entry.key.name,
         code: { raw: res.code },
         scaffold: { raw: res.code },
+        main: { raw: res.code },
       };
     }
   }

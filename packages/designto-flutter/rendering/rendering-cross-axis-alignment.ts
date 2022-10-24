@@ -1,5 +1,5 @@
 import { CrossAxisAlignment } from "@flutter-builder/flutter";
-import * as core from "@reflect-ui/core/lib";
+import * as core from "@reflect-ui/core";
 import { do_explicitly_specify, FlutterPropConversionConfig } from "../_";
 /**
  * returns CrossAxisAlignment by counterAxisAlignItems

@@ -9,7 +9,7 @@ import { JSX, JSXAttribute, StringLiteral } from "coli";
 export class SvgWithPathElement extends SvgElement {
   path({ fill }: { fill: string | false }) {
     return <StylableJsxWidget>{
-      key: new WidgetKey(`${this.key.id}.svg-path`, "svg-path"),
+      key: new WidgetKey({ id: `${this.key.id}.svg-path`, name: "svg-path" }),
       styleData: () => null,
       jsxConfig: () => {
         // from `import Svg, { Path } from "react-native-svg";`

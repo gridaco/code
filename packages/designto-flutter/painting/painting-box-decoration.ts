@@ -1,6 +1,6 @@
 import { BoxDecoration } from "@flutter-builder/flutter";
 import { Color, Gradient, GradientType } from "@reflect-ui/core";
-import { Background } from "@reflect-ui/core/lib/background";
+import { Background } from "@reflect-ui/core";
 import * as dartui from "../dart-ui";
 import { linearGradient } from "./painting-linear-gradient";
 import { radialGradient } from "./painting-radial-gradient";

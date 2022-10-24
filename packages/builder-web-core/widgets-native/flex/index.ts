@@ -12,13 +12,13 @@ import {
   VerticalDirection,
   IFlexManifest,
 } from "@reflect-ui/core";
-import { MainAxisSize } from "@reflect-ui/core/lib/main-axis-size";
+import { MainAxisSize } from "@reflect-ui/core";
 import { JSX } from "coli";
 import {
   MultiChildWidget,
   StylableJsxWidget,
 } from "@web-builder/core/widget-tree/widget";
-import { Background } from "@reflect-ui/core/lib/background";
+import { Background } from "@reflect-ui/core";
 import * as css from "@web-builder/styles";
 import { tricks } from "@web-builder/styles";
 import { CssMinHeightMixin } from "../../widgets";

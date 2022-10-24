@@ -1,4 +1,4 @@
-import { ReflectSceneNode } from "@design-sdk/core";
+import type { ReflectSceneNode } from "@design-sdk/figma-node";
 import * as core from "@reflect-ui/core";
 import { keyFromNode } from "../key";
 

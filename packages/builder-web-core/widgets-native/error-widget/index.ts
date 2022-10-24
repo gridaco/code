@@ -18,7 +18,7 @@ export class ErrorWidget extends TextChildWidget {
 
   textData() {
     return new TextDataWidget({
-      key: { ...this.key, id: this.key.id + ".text-data" },
+      key: this.key.copyWith({ id: this.key.id + ".text-data" }),
       data: this.errorMessage,
     });
   }

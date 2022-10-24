@@ -9,11 +9,16 @@
 };
  * ```
  */
-export interface StandardLibraryManifest {
+export interface StandardLibraryManifest<
+  ALIAS extends {
+    [key: string]: { name: string };
+  } = any
+> {
   id: string;
   name: string;
   version: string;
   website: string;
+  alias?: ALIAS;
 }
 
 /**
@@ -237,6 +242,42 @@ const MATERIAL_UI_STYLES: StandardLibraryManifest = {
 /// endregion material-ui (react)
 ///
 
+///
+/// region solidjs
+///
+
+/**
+ * last-update: Jun 2022
+ * https://www.npmjs.com/package/solid-js
+ */
+const SOLIDJS: StandardLibraryManifest<{
+  web: { name: string };
+  store: { name: string };
+}> = {
+  id: "solid-js",
+  name: "solid-js",
+  version: "1.4.4",
+  website: "https://www.solidjs.com/",
+  alias: {
+    web: { name: "solid-js/web" },
+    store: { name: "solid-js/store" },
+  },
+};
+
+/**
+ * https://www.npmjs.com/package/solid-styled-components
+ */
+const SOLID_STYLED_COMPONENTS: StandardLibraryManifest = {
+  id: "solid-styled-components",
+  name: "solid-styled-components",
+  version: "0.28.3",
+  website: "https://github.com/solidjs/solid-styled-components",
+};
+
+///
+/// endregion solidjs
+///
+
 export const standard_libraries = {
   // ts
   typescript: TYPESCRIPT,
@@ -266,4 +307,8 @@ export const standard_libraries = {
   material_ui_core: MATERIAL_UI_CORE,
   material_ui_icons: MATERIAL_UI_ICONS,
   material_ui_styles: MATERIAL_UI_STYLES,
+
+  // solidjs
+  solid_js: SOLIDJS,
+  solud_styled_components: SOLID_STYLED_COMPONENTS,
 };

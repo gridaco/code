@@ -1,4 +1,3 @@
-import { Proxied } from "@reflect-ui/core/lib/_utility-types";
 import { ArgumentProxy, ParameterProxy } from "../types";
 export type TextDataProxied = TextDataParameter | TextDataArgument;
 

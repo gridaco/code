@@ -1,6 +1,7 @@
 import { HeadingFlag } from "@code-features/flags";
 import { ReflectSceneNode } from "@design-sdk/figma-node";
 import type { Text } from "@reflect-ui/core";
+import { unwrappedChild } from "../../wrappings";
 import { tokenizeText } from "../../token-text";
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
@@ -8,14 +9,14 @@ type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 export function tokenize_flagged_heading(
   node: ReflectSceneNode,
   flag: HeadingFlag
-): Text {
+): Text | undefined {
   if (flag.value === false) return;
   if (node.type !== "TEXT") return;
 
   const level = get_level(flag);
   if (level === undefined) return; // this won't be happening
 
-  const text = tokenizeText.fromText(node);
+  const text = unwrappedChild(tokenizeText.fromText(node)) as Text;
   text.element_preference_experimental = `h${level}`;
   return text;
 }

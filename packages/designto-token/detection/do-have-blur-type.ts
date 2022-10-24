@@ -1,5 +1,5 @@
 import { Effect } from "@design-sdk/figma-types";
-import { BlurEffect } from "@reflect-ui/core/lib/cgr/effects";
+import { BlurEffect } from "@reflect-ui/core/cgr";
 
 export function hasBlurType(effect: Effect): BlurEffect {
   if (effect.type === "LAYER_BLUR" || effect.type === "BACKGROUND_BLUR") {

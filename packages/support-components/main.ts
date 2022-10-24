@@ -1,4 +1,5 @@
-import { ComponentNode, InstanceNode, NodeRepository } from "@design-sdk/figma";
+import { ComponentNode, InstanceNode } from "@design-sdk/figma";
+import { NodeRepository } from "@design-sdk/figma-node-repository";
 import { unwrappedChild } from "@designto/token/wrappings";
 import {
   RenderObjectWidget,

@@ -1,0 +1,21 @@
+import type {
+  EsComponentExportingConfig_ExportDefaultAnonymousClassComponent,
+  EsComponentExportingConfig_ExportDefaultAnonymousFunctionalComponent,
+  EsComponentExportingConfig_ExportNamedClassComponent,
+  EsComponentExportingConfig_ExportNamedFunction,
+} from "../module-es";
+
+export type SolidComponentExportingCofnig =
+  | SolidComponentExportingConfig_ExportDefaultAnonymousFunctionalComponent
+  | SolidComponentExportingConfig_ExportNamedFunction
+  | SolidComponentExportingConfig_ExportDefaultAnonymousClassComponent
+  | SolidComponentExportingConfig_ExportNamedClassComponent;
+
+type SolidComponentExportingConfig_ExportDefaultAnonymousFunctionalComponent =
+  EsComponentExportingConfig_ExportDefaultAnonymousFunctionalComponent;
+type SolidComponentExportingConfig_ExportNamedFunction =
+  EsComponentExportingConfig_ExportNamedFunction;
+type SolidComponentExportingConfig_ExportDefaultAnonymousClassComponent =
+  EsComponentExportingConfig_ExportDefaultAnonymousClassComponent;
+type SolidComponentExportingConfig_ExportNamedClassComponent =
+  EsComponentExportingConfig_ExportNamedClassComponent;
