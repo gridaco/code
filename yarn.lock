@@ -1564,10 +1564,10 @@
   resolved "https://registry.yarnpkg.com/@design-sdk/figma-auth-store/-/figma-auth-store-0.0.37.tgz#02149d452ca65e0ab390518d98f4b887345a11fb"
   integrity sha512-ghv33tV24EO13H2BZhY99krB0Mb4tFyAsKGRhGQGIMWD+Y/JLjknx6M5uIrEPwSW6dQ5JqRI84cAcUwC/jCAfA==
 
-"@design-sdk/figma-core@^0.0.37":
-  version "0.0.37"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-core/-/figma-core-0.0.37.tgz#3934d7d49ec048476d2693f18a7ee85964359794"
-  integrity sha512-hYD1DKXnNVb0xP4MyaoAQcQVY0Cb/MTBmn9EbWpoSSoNmxpEGHGPdU0ETV5A+nFdBU6L3BN+RIP7wRjNPCrvpA==
+"@design-sdk/figma-core@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-core/-/figma-core-0.0.25.tgz#7fa28cc7d6e45cd713c5f268d42e4dd4f2b41590"
+  integrity sha512-6OF7eUbDOlR4/BFtd2FRyDvvUf777OGNbVbNScUOv3Fk/kUXBzMTXX6ZdoRlTx887v/vo3+Lh0D31SG1sm80aA==
 
 "@design-sdk/figma-node-conversion@^0.0.37":
   version "0.0.37"
@@ -1590,13 +1590,13 @@
     "@design-sdk/figma-node" "^0.0.37"
     "@design-sdk/figma-types" "^0.0.37"
 
-"@design-sdk/figma-node@^0.0.37":
-  version "0.0.37"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-node/-/figma-node-0.0.37.tgz#906ccf274c4ae227fab6881a679aee973fe1a038"
-  integrity sha512-X66YaFpkro1LK/9L93UIxodQv29cJxauoHuWZUIB60nj7Wt57i4GLE/sV4j1laUYHt/751mvjFBMibZzxPcIyw==
+"@design-sdk/figma-node@0.0.25", "@design-sdk/figma-node@^0.0.37":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-node/-/figma-node-0.0.25.tgz#c95484cc4b003667ae93e95fa3b585b9fa0b740a"
+  integrity sha512-GCA5cGDXhvGUQddmSIZgPMhH0eGip9S0yDSQiys1XiKnXsB/CM8/5C+JVosHR1WFMHSlJfU+ytA4IH2yhfysUQ==
   dependencies:
-    "@design-sdk/figma-core" "^0.0.37"
-    "@design-sdk/figma-utils" "^0.0.37"
+    "@design-sdk/figma-core" "^0.0.25"
+    "@design-sdk/figma-utils" "^0.0.25"
     "@reflect-ui/font-utils" "^0.0.1"
 
 "@design-sdk/figma-remote-api@^0.0.37":
@@ -1634,6 +1634,11 @@
   version "0.0.4"
   resolved "https://registry.npmjs.org/@design-sdk/figma-url/-/figma-url-0.0.4.tgz"
   integrity sha512-9wvaecM9vVxI97CNfnckv0S9yi/ES3zuwQBa0ZfM5eQNbZlAgqTwBIi/Q/xsx7d+aePeGs+nEo2UhR52Rd+xNg==
+
+"@design-sdk/figma-utils@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-utils/-/figma-utils-0.0.25.tgz#7b7f6632fd8689ef713b27b34a61257accc2052e"
+  integrity sha512-HarFMa14L9zqg8rhLaCTXhTKFd6tlBno1mnSc/vl8ZVilmdq32OFFlmqS4MjyvrTfyAvbwlEMAhxV1SUQhFhRg==
 
 "@design-sdk/figma-utils@^0.0.37":
   version "0.0.37"
@@ -5932,19 +5937,7 @@
   resolved "https://registry.npmjs.org/@reflect-ui/cg/-/cg-0.0.5.tgz"
   integrity sha512-rqqaumLDgk9dGtPgkYy9h5PLlNv8ZVEz/+ktOcJpJE6v9fAQOSH1Wh5WAehpiZTQtKe944GzrFMsb/g8pTabWg==
 
-"@reflect-ui/core@0.0.2-rc.7":
-  version "0.0.2-rc.7"
-  resolved "https://registry.yarnpkg.com/@reflect-ui/core/-/core-0.0.2-rc.7.tgz#9d531f5a0b9caab31e7563020044b753700e2bbc"
-  integrity sha512-EqF4SRU57bfa5DOPET1rv5lROFyMVHLv1xTEIlN6N2gDpXt71QceImWfQp3z3Khqnb4R/p9OhNK6DXGUpozWKw==
-
-"@reflect-ui/core@0.0.5", "@reflect-ui/core@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@reflect-ui/core/-/core-0.0.5.tgz#f50ae00e64300c4b698ab5c5374c6ac3bb5de873"
-  integrity sha512-lA6AYHCF8aSyOvGXbJZcmlB5ccxCaznhxvD8Hg1UjVdhcbLhMWDbzoYqbrkqh+R4im3KnYw5n6pWSSdoWioYhA==
-  dependencies:
-    "@reflect-ui/uiutils" "^0.1.2-1"
-
-"@reflect-ui/core@^0.0.9":
+"@reflect-ui/core@0.0.2-rc.7", "@reflect-ui/core@0.0.5", "@reflect-ui/core@0.0.9", "@reflect-ui/core@^0.0.5", "@reflect-ui/core@^0.0.9":
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/@reflect-ui/core/-/core-0.0.9.tgz#7283a2a3a1edde16282559d11f02e23d3bceda36"
   integrity sha512-MNJq+Pc45qZ0IvTYuvzCW2nxupVRfMtmin9vepABo2h1sTKdAmCK2kPfVLea6TNiF1baJDeQg7IyAN45JMuFdA==
@@ -10206,7 +10199,7 @@ cssesc@^3.0.0:
   resolved "https://registry.npmjs.org/cssesc/-/cssesc-3.0.0.tgz"
   integrity sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==
 
-csstype@^3.0.10, csstype@^3.0.2, csstype@^3.0.4, csstype@^3.0.8, csstype@^3.1.0:
+csstype@3.1.0, csstype@^3.0.10, csstype@^3.0.2, csstype@^3.0.4, csstype@^3.0.8, csstype@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.0.tgz#4ddcac3718d787cf9df0d1b7d15033925c8f29f2"
   integrity sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==
