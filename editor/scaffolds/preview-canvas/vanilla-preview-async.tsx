@@ -9,9 +9,6 @@ import { blurred_bg_fill } from "./util";
 import { PreviewContent } from "./preview-content";
 import type { VanillaPreviewProps } from "./prop-type";
 
-const DEV_ONLY_FIGMA_PAT =
-  process.env.NEXT_PUBLIC_DEVELOPER_FIGMA_PERSONAL_ACCESS_TOKEN;
-
 const build_config: config.BuildConfiguration = {
   ...config.default_build_configuration,
   disable_components: true,
