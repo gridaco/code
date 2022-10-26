@@ -8,8 +8,9 @@ import {
   Widget,
   OverflowBox,
   SingleChildScrollView,
+  Expanded,
 } from "@reflect-ui/core";
-import { Stretched, WrappingContainer } from "../tokens";
+import { SizedText, Stretched, WrappingContainer } from "../tokens";
 
 export type WrappingToken =
   // layout / positioning / sizing wrappers
@@ -37,11 +38,13 @@ export type WrappingToken =
 export function unwrappedChild<T extends Widget>(maybeWrapped: Widget): T {
   const isWrappingWidget =
     maybeWrapped instanceof SizedBox ||
+    maybeWrapped instanceof SizedText ||
     maybeWrapped instanceof Stretched ||
     maybeWrapped instanceof Positioned ||
     maybeWrapped instanceof OverflowBox ||
     maybeWrapped instanceof SingleChildScrollView ||
     maybeWrapped instanceof Rotation ||
+    maybeWrapped instanceof Expanded ||
     maybeWrapped instanceof Opacity ||
     maybeWrapped instanceof Blurred ||
     maybeWrapped instanceof ClipRRect ||

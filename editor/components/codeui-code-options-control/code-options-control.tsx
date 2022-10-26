@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { IField, LanguageType, Option } from "@code-ui/docstring/dist/lib/type";
 import { Docstring as DocstringView } from "@code-ui/docstring";
 import {
@@ -32,12 +32,12 @@ export function CodeOptionsControl(props: CodeOptionsControlProps) {
     all_preset_options_map__prod[__presetname]
   );
 
-  assert(useroption, "option must be specified");
-
   useEffect(() => {
     // trigger initial value
     props.onUseroptionChange(useroption);
   }, []);
+
+  assert(useroption, "option must be specified");
 
   // FIXME: this should be fixed on https://github.com/gridaco/code-like-ui (view CURSOR)
   const __dirty_sort_framework = (): Option<string>[] => {
@@ -78,6 +78,16 @@ export function CodeOptionsControl(props: CodeOptionsControlProps) {
         description: "with inline-style",
       },
       {
+        name: "Solid",
+        value: "solid_default",
+        description: "solid-js",
+      },
+      {
+        name: "Solid",
+        value: "solid_with_inline_css",
+        description: "with inline-css",
+      },
+      {
         name: "Flutter",
         value: "flutter_default",
         description: "flutter",
@@ -90,8 +100,13 @@ export function CodeOptionsControl(props: CodeOptionsControlProps) {
     ];
 
     /* !CURSOR! */
+    const _lw_presetname = presetname.toLowerCase();
     const sorted_plats: Option<string>[] = presets.sort((o) => {
-      if (o.value == presetname) {
+      const _lw_preset = o.value.toLowerCase();
+      if (
+        _lw_preset == _lw_presetname ||
+        _lw_preset == _lw_presetname + "_default"
+      ) {
         return -1;
       }
       return 1;
@@ -99,9 +114,6 @@ export function CodeOptionsControl(props: CodeOptionsControlProps) {
     return sorted_plats;
   };
 
-  /**
-   * actually platform preset
-   */
   const platform_field_config: IField = {
     tag: "@",
     name: "platform", // actually platform preset
@@ -162,6 +174,7 @@ export function CodeOptionsControl(props: CodeOptionsControlProps) {
   const fields_config = {
     react: [platform_field_config, lang_field_config, react_style_field_config],
     "react-native": [platform_field_config, lang_field_config],
+    "solid-js": [platform_field_config, lang_field_config],
     flutter: [platform_field_config, lang_field_config],
     vanilla: [platform_field_config, lang_field_config],
   };

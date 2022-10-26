@@ -20,7 +20,7 @@
  * styled.span`
  *   color: white;
  *   width: 24px;
- *  ::placeholder {
+ *   ::placeholder {
  *    color: red;
  *   }
  * `

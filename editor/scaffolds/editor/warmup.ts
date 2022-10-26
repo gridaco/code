@@ -8,7 +8,7 @@ import { createInitialWorkspaceState } from "core/states";
 import { workspaceReducer } from "core/reducers";
 import { PendingState } from "core/utility-types";
 import { WorkspaceAction } from "core/actions";
-import { FileResponse } from "@design-sdk/figma-remote-types";
+import type { Canvas, FileResponse } from "@design-sdk/figma-remote-types";
 import { convert } from "@design-sdk/figma-node-conversion";
 import { mapper } from "@design-sdk/figma-remote";
 import { visit } from "tree-visit";
@@ -41,14 +41,19 @@ export function initialReducer(
   }
 }
 
-export function pagesFrom(file: FileResponse): FigmaReflectRepository["pages"] {
-  return file.document.children.map((page) => ({
+export function pagesFrom(
+  filekey: string,
+  file: FileResponse
+): FigmaReflectRepository["pages"] {
+  return (file.document.children as Array<Canvas>).map((page) => ({
     id: page.id,
     name: page.name,
     children: page["children"]?.map((child) => {
       const _mapped = mapper.mapFigmaRemoteToFigma(child);
-      return convert.intoReflectNode(_mapped);
+      return convert.intoReflectNode(_mapped, null, "rest", filekey);
     }),
+    flowStartingPoints: page.flowStartingPoints,
+    backgroundColor: page.backgroundColor,
     type: "design",
   }));
 }

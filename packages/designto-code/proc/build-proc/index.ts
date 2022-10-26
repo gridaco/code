@@ -1,9 +1,9 @@
-import { repo_assets } from "@design-sdk/core";
+import type { ImageRepository } from "@design-sdk/asset-repository";
 
 export abstract class BuildProcess {
   readonly id: string;
   readonly processes: Array<BuildProcess> = [];
-  imageAssetRepository: repo_assets.ImageRepository;
+  imageAssetRepository: ImageRepository;
 
   constructor() {
     this.id = Date.now().toString();

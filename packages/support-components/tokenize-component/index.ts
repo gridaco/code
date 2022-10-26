@@ -4,11 +4,14 @@ import { tokenize as normalTokenize, tokenizeText } from "@designto/token";
 import { TextDataParameter, ProxiedText } from "../proxied";
 import assert from "assert";
 import { ReflectSceneNode } from "@design-sdk/figma-node";
+import { unwrappedChild } from "@designto/token/wrappings";
+import { RenderedText } from "@reflect-ui/core";
 
 function fromComponentNode(component: ComponentNode) {
   assert(component);
 
-  const reflect = convert.intoReflectNode(component);
+  // FIXME: setting "rest" temporarily. this should be set to match the environment. (currently development is done with web editor, so rest is set to true)
+  const reflect = convert.intoReflectNode(component, null, "rest"); // TODO: pass filekey
 
   return handleNode(reflect);
 }
@@ -19,7 +22,9 @@ function handleNode(node: ReflectSceneNode) {
       //
       // TODO: check overrided data, then process it.
       //
-      const _normal_text_token = tokenizeText.fromText(node);
+      const _normal_text_token = unwrappedChild<RenderedText>(
+        tokenizeText.fromText(node)
+      );
       return new ProxiedText({
         ..._normal_text_token,
         data: new TextDataParameter({

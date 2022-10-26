@@ -50,7 +50,9 @@ border-radius: unset;
  * @param r
  * @returns
  */
-export function borderRadius(r: BorderRadiusManifest): CSSProperties {
+export function borderRadius(
+  r: BorderRadiusManifest | undefined
+): CSSProperties {
   if (!r) {
     return;
   }
@@ -67,11 +69,21 @@ export function borderRadius(r: BorderRadiusManifest): CSSProperties {
       // TODO: support short handed version - `50%`
     }
   } else {
+    if (equal(r.tl, r.tl, r.br, r.bl)) {
+      return {
+        "border-radius": nonzero(r.tl) && px(r.tl as number),
+      };
+    }
+    // TODO: support other short versions
     return {
-      "border-top-left-radius": px(r.tl as number),
-      "border-top-right-radius": px(r.tr as number),
-      "border-bottom-right-radius": px(r.br as number),
-      "border-bottom-left-radius": px(r.bl as number),
+      "border-top-left-radius": nonzero(r.tl) && px(r.tl as number),
+      "border-top-right-radius": nonzero(r.tr) && px(r.tr as number),
+      "border-bottom-right-radius": nonzero(r.br) && px(r.br as number),
+      "border-bottom-left-radius": nonzero(r.bl) && px(r.bl as number),
     };
   }
 }
+
+const nonzero = (n: any) => typeof n == "number" && n > 0;
+
+const equal = (...n: any[]) => n.every((v) => v === n[0]);

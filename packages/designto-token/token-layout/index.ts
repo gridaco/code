@@ -1,4 +1,9 @@
-import { nodes, ReflectSceneNodeType } from "@design-sdk/core";
+import {
+  ReflectSceneNodeType,
+  ReflectSceneNode,
+  ReflectFrameNode,
+  ReflectGroupNode,
+} from "@design-sdk/figma-node";
 import { layoutAlignToReflectMainAxisSize } from "@design-sdk/figma-node-conversion";
 import type { Constraints } from "@design-sdk/figma-types";
 import * as core from "@reflect-ui/core";
@@ -22,29 +27,28 @@ import {
   IWHStyleWidget,
   Operation,
 } from "@reflect-ui/core";
-
-import { Background } from "@reflect-ui/core/lib/background";
-import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
+import { Background } from "@reflect-ui/core";
+import { IFlexManifest } from "@reflect-ui/core";
 import { TokenizerConfig } from "../config";
 import { keyFromNode } from "../key";
-import { handleChildren, RuntimeChildrenInput } from "../main";
+import { handleChildren, RuntimeChildrenInput } from "../tokenizer";
 import { tokenizeBackground } from "../token-background";
 import { tokenizeBorder } from "../token-border";
 import { Stretched } from "../tokens";
 import { unwrappedChild } from "../wrappings";
 
 // type ChildrenTransformer
-// type LayoutBuilder<N extends nodes.ReflectSceneNode> = (node: N, ) =>
+// type LayoutBuilder<N extends ReflectSceneNode> = (node: N, ) =>
 
 type RuntimeLayoutContext = {
   is_root: boolean;
   references?: OriginalChildrenReference;
 };
 
-type OriginalChildrenReference = Array<nodes.ReflectSceneNode>;
+type OriginalChildrenReference = Array<ReflectSceneNode>;
 
 function fromFrame(
-  frame: nodes.ReflectFrameNode,
+  frame: ReflectFrameNode,
   children: RuntimeChildrenInput,
   context: RuntimeLayoutContext,
   config: TokenizerConfig
@@ -81,7 +85,7 @@ function fromFrame(
 }
 
 function flex_or_stack_from_frame(
-  frame: nodes.ReflectFrameNode,
+  frame: ReflectFrameNode,
   children: RuntimeChildrenInput,
   references: OriginalChildrenReference,
   config: TokenizerConfig
@@ -125,7 +129,7 @@ function flex_or_stack_from_frame(
 
   if (frame.isAutoLayout) {
     // const __is_this_autolayout_frame_under_autolayout_parent =
-    //   frame.parent instanceof nodes.ReflectFrameNode &&
+    //   frame.parent instanceof ReflectFrameNode &&
     //   frame.parent.isAutoLayout;
 
     /// > From the docs: https://www.figma.com/plugin-docs/api/properties/nodes-layoutalign
@@ -220,8 +224,8 @@ function stackChildren({
   wchildren,
   ogchildren,
 }: {
-  ogchildren: Array<nodes.ReflectSceneNode>;
-  container: nodes.ReflectSceneNode;
+  ogchildren: Array<ReflectSceneNode>;
+  container: ReflectSceneNode;
   wchildren: core.Widget[];
 }): core.Widget[] {
   return wchildren
@@ -236,9 +240,9 @@ function stackChildren({
     .filter((c) => c);
 }
 
-function find_original(ogchildren: Array<nodes.ReflectSceneNode>, of: Widget) {
+function find_original(ogchildren: Array<ReflectSceneNode>, of: Widget) {
   if (!of) {
-    throw `cannot find original if "of" widget is not provided. provided was - ${of}`;
+    `cannot find original if "of" widget is not provided. provided was - ${of}`;
   }
   const _unwrappedChild = unwrappedChild(of);
   const ogchild = ogchildren.find(
@@ -247,7 +251,8 @@ function find_original(ogchildren: Array<nodes.ReflectSceneNode>, of: Widget) {
       c.id === (_unwrappedChild && _unwrappedChild.key.id) ||
       // target the widget itself - some widgets are not wrapped, yet being converted to a container-like (e.g. maskier)
       c.id === of.key.id ||
-      c.id === of.key.id.split(".")[0] // {id}.positioned or {id}.scroll-wrap TODO: this logic can cause problem later on.
+      c.id === of.key.id.split(".")[0] || // {id}.positioned or {id}.scroll-wrap TODO: this logic can cause problem later on.
+      of.key.id.includes(c.id) // other cases
   );
   if (!ogchild) {
     console.error(
@@ -272,8 +277,8 @@ function stackChild({
   wchild: child,
   ogchild,
 }: {
-  ogchild: nodes.ReflectSceneNode;
-  container: nodes.ReflectSceneNode;
+  ogchild: ReflectSceneNode;
+  container: ReflectSceneNode;
   wchild: core.Widget;
 }) {
   let constraint = {
@@ -482,7 +487,7 @@ function handlePositioning({
 }
 
 function fromGroup(
-  group: nodes.ReflectGroupNode,
+  group: ReflectGroupNode,
   children: RuntimeChildrenInput,
   references: OriginalChildrenReference,
   config: TokenizerConfig
@@ -495,7 +500,7 @@ function fromGroup(
       return c;
     } else {
       const ogchild = find_original(
-        only_original(children).concat(references || []),
+        only_original(children).concat(references),
         c
       );
       return stackChild({
@@ -527,7 +532,7 @@ function fromGroup(
  * @param frame
  * @returns
  */
-function isOverflowingAndShouldBeScrollable(frame: nodes.ReflectFrameNode) {
+function isOverflowingAndShouldBeScrollable(frame: ReflectFrameNode) {
   const children_container_size = frame.children.reduce((i, c) => c.width, 0);
   return (
     frame.isAutoLayout &&
@@ -538,17 +543,17 @@ function isOverflowingAndShouldBeScrollable(frame: nodes.ReflectFrameNode) {
 }
 
 function fromFrameOrGroup(
-  node: nodes.ReflectFrameNode | nodes.ReflectGroupNode,
+  node: ReflectFrameNode | ReflectGroupNode,
   children: RuntimeChildrenInput,
   context: RuntimeLayoutContext,
   config: TokenizerConfig
 ) {
   if (node.type === ReflectSceneNodeType.frame) {
-    return fromFrame(node as nodes.ReflectFrameNode, children, context, config);
+    return fromFrame(node as ReflectFrameNode, children, context, config);
   }
   if (node.type === ReflectSceneNodeType.group) {
     return fromGroup(
-      node as nodes.ReflectGroupNode,
+      node as ReflectGroupNode,
       children,
       context.references,
       config

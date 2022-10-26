@@ -8,7 +8,7 @@ import {
 } from "@reflect-ui/core";
 import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
 import { Flex } from "../flex";
-import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
+import { IFlexManifest } from "@reflect-ui/core";
 
 export class Column extends Flex {
   readonly _type = "column";

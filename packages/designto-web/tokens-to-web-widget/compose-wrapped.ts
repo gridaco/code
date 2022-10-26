@@ -11,10 +11,7 @@ import {
   Widget,
 } from "@reflect-ui/core";
 
-export function compose_wrappings(
-  wrap: WrappingToken,
-  children: web.WidgetTree[]
-) {
+export function compose_wrappings(wrap: WrappingToken) {
   // ------------
   // region layout / positioning / sizing wrappers
   // SizedBox

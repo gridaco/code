@@ -1,4 +1,4 @@
-import { config } from "@designto/config";
+import { config } from "@grida/builder-config";
 import { HistoryState } from "core/states/history-state";
 
 export interface WorkspaceState {
@@ -8,6 +8,16 @@ export interface WorkspaceState {
    */
   highlightedLayer?: string;
   preferences: WorkspacePreferences;
+
+  /**
+   * figma authentication data store state
+   * @deprecated - not implemented
+   */
+  authenticationFigma?: {
+    name?: string;
+    accessToken?: string;
+    personalAccessToken?: string;
+  };
 }
 
 export interface WorkspacePreferences {

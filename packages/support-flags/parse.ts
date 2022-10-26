@@ -314,9 +314,11 @@ function handle_single_boolean_flag_alias<T extends SimpleBooleanValueFlag>(
   return handle_single_typed_value_flag_alias<T>(raw, alias);
 }
 
-function transform_heading_alias_from_raw(raw: { [key: string]: boolean }): {
-  [key: string]: HeadingFlag;
-} {
+function transform_heading_alias_from_raw(raw: { [key: string]: boolean }):
+  | {
+      [key: string]: HeadingFlag;
+    }
+  | undefined {
   const _h1_alias = handle_single_boolean_flag_alias<HeadingFlag>(
     raw,
     keys.alias.as_h1

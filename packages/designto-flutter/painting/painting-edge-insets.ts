@@ -33,17 +33,23 @@ export function edgeinsets(ei: EdgeInsets): flutter.EdgeInsets {
     return undefined;
   }
 
+  if (equal(ei.left, ei.right, ei.top, ei.bottom)) {
+    return flutter.EdgeInsets.all(ei.left);
+  }
+
   return flutter.EdgeInsets.only({
-    left: getOnlyIfNotZero(ei.left || ei.horizontal),
-    right: getOnlyIfNotZero(ei.right || ei.horizontal),
-    top: getOnlyIfNotZero(ei.top || ei.vertical),
-    bottom: getOnlyIfNotZero(ei.bottom || ei.vertical),
+    left: nonzero(ei.left || ei.horizontal),
+    right: nonzero(ei.right || ei.horizontal),
+    top: nonzero(ei.top || ei.vertical),
+    bottom: nonzero(ei.bottom || ei.vertical),
   });
 }
 
-function getOnlyIfNotZero(value): number {
+function nonzero(value): number {
   if (value === 0) {
-    return;
+    return undefined;
   }
   return value;
 }
+
+const equal = (...n: any[]) => n.every((v) => v === n[0]);

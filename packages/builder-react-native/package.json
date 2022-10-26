@@ -5,6 +5,9 @@
     "license": "Apache 2.0",
     "homepage": "https://coli.codes/react-native",
     "author": "Grida Authors",
+    "scripts": {
+        "build": "tsc"
+    },
     "dependencies": {
         "@web-builder/react-core": "17.0.2"
     },

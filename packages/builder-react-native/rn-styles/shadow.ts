@@ -1,7 +1,7 @@
 import type { BoxShadowManifest } from "@reflect-ui/core";
 import type { ViewStyle, ColorValue } from "react-native";
 import * as css from "@web-builder/styles";
-import { reactnative } from "@designto/config";
+import { reactnative } from "@grida/builder-config";
 
 export function shadow(
   p: BoxShadowManifest,

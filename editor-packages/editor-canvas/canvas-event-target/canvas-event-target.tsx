@@ -25,6 +25,7 @@ export type OnPointerDownHandler = (
 const ZOOM_WITH_SCROLL_SENSITIVITY = 0.001;
 
 export function CanvasEventTarget({
+  onZoomToFit,
   onPanning,
   onPanningStart,
   onPanningEnd,
@@ -40,6 +41,7 @@ export function CanvasEventTarget({
   onDragEnd,
   children,
 }: {
+  onZoomToFit?: () => void;
   onPanning: OnPanningHandler;
   onPanningStart: OnPanningHandler;
   onPanningEnd: OnPanningHandler;
@@ -69,6 +71,10 @@ export function CanvasEventTarget({
       if (e.code === "Space") {
         setIsSpacebarPressed(true);
       }
+      // if shift + 0
+      else if (e.code === "Digit0" && e.shiftKey) {
+        onZoomToFit?.();
+      }
     };
     const ku = (e) => {
       if (e.code === "Space") {
@@ -95,6 +101,9 @@ export function CanvasEventTarget({
 
   const [first_wheel_event, set_first_wheel_event] =
     useState<FullGestureState<"wheel">>();
+
+  // this is a hack to prevent from onDragStart being called even when no movement is detected.
+  const [drag_start_emitted, set_drag_start_emitted] = useState(false);
 
   useGesture(
     {
@@ -150,7 +159,10 @@ export function CanvasEventTarget({
           return;
         }
 
-        onDragStart(s);
+        if (s.delta[0] || s.delta[1]) {
+          onDragStart(s);
+          set_drag_start_emitted(true);
+        }
       },
       onDrag: (s) => {
         if (isSpacebarPressed) {
@@ -161,6 +173,10 @@ export function CanvasEventTarget({
           return;
         }
 
+        if ((s.delta[0] || s.delta[1]) && !drag_start_emitted) {
+          set_drag_start_emitted(true);
+          onDragStart(s);
+        }
         onDrag(s);
       },
       onDragEnd: (s) => {
@@ -169,8 +185,10 @@ export function CanvasEventTarget({
           return;
         }
 
+        set_drag_start_emitted(false);
         onDragEnd(s);
       },
+      // @ts-ignore
       onMouseDown: onPointerDown,
       onMoveStart: onPointerMoveStart,
       onMoveEnd: onPointerMoveEnd,
@@ -190,7 +208,6 @@ export function CanvasEventTarget({
       style={{
         position: "absolute",
         inset: 0,
-        background: "transparent",
         overflow: "hidden",
         touchAction: "none",
         cursor: isSpacebarPressed ? "grab" : "default",
@@ -198,6 +215,7 @@ export function CanvasEventTarget({
         WebkitUserSelect: "none",
       }}
       id="gesture-event-listener"
+      // @ts-ignore
       ref={interactionEventTargetRef}
     >
       {children}

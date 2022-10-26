@@ -3,6 +3,7 @@ import { IsolatedCanvas } from "components/canvas";
 import { PreviewAndRunPanel } from "components/preview-and-run";
 import { useEditorState } from "core/states";
 import { VanillaDedicatedPreviewRenderer } from "components/app-runner";
+import { Devtools } from "scaffolds/devtools";
 
 export function IsolateModeCanvas({
   hidden = false,
@@ -14,6 +15,7 @@ export function IsolateModeCanvas({
   onEnterFullscreen: () => void;
 }) {
   const [state] = useEditorState();
+  const [renderkey, setRenderkey] = useState(0);
 
   const {
     fallbackSource,
@@ -34,6 +36,9 @@ export function IsolateModeCanvas({
         building={isBuilding}
         onExit={onClose}
         onFullscreen={onEnterFullscreen}
+        onReload={() => {
+          setRenderkey(renderkey + 1);
+        }}
         defaultSize={{
           width: initialSize?.width ?? 375,
           height: initialSize?.height ?? 812,
@@ -42,6 +47,7 @@ export function IsolateModeCanvas({
         <>
           {source ? (
             <VanillaDedicatedPreviewRenderer
+              key={renderkey + ""}
               {...state.currentPreview}
               enableIspector
             />
@@ -50,6 +56,7 @@ export function IsolateModeCanvas({
           )}
         </>
       </IsolatedCanvas>
+      <Devtools />
     </div>
   );
 }
