@@ -52,3 +52,14 @@ export function EditorImageRepositoryProvider({
 
   return <>{children}</>;
 }
+
+// cache provider.
+// consumers
+// - d2c
+//    - preview canvas
+// - grid view
+//
+
+// bottle necks
+// 1. when fetching image as url from figma api
+// 2. when loading the image - browser's cache - can we explocitly specify cache policy?
