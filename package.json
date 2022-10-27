@@ -9,10 +9,12 @@
         "clean": "yarn lerna clean -y && yarn lerna bootstrap && yarn lerna exec 'rm -rf ./dist'",
         "editor": "turbo run editor#dev",
         "build": "turbo run build",
-        "lerna": "lerna"
+        "lerna": "lerna",
+        "tauri": "tauri"
     },
     "workspaces": [
         "editor",
+        "desktop",
         "editor-packages/*",
         "packages/*",
         "ui/editor-ui/packages/*"
