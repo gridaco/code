@@ -45,7 +45,7 @@ export function fromText(node: ReflectTextNode): RenderedText | SizedText {
       decoration: node.textDecoration,
       fontFamily: node.fontName?.family,
       fontSize: node.fontSize,
-      fontWeight: node.textStyle.fontWeight,
+      fontWeight: node.textStyle?.fontWeight,
       color: node.primaryColor,
       lineHeight: node.lineHeight,
       letterSpacing: node.letterSpacing,
