@@ -1526,71 +1526,71 @@
   resolved "https://registry.npmjs.org/@colors/colors/-/colors-1.5.0.tgz"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@design-sdk/asset-repository@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/asset-repository/-/asset-repository-0.0.38.tgz#150a07450c49285ec6f538591785656f28cc20f4"
-  integrity sha512-uhr7nFrG+UWHo0xs8MdZORbydIlnstROoDv4iz5Evdnt0bFc+hbMJa0SMHULWGBY/oT61vyYE4QQk2hyyVIFZg==
+"@design-sdk/asset-repository@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/asset-repository/-/asset-repository-0.0.41.tgz#20e6a3df0832351a96f7afcaa6dbce2a3803a0e2"
+  integrity sha512-phb61AifEErtMC3/JW5hRBjU79ULQJ1Oe7ELLVhXRAGdSNhyEDcG05/Hm6xOHzFlUyvr+xwynkd2Ao70oaPbCQ==
   dependencies:
     "@base-sdk/hosting" "^0.1.2"
 
-"@design-sdk/core-flags-dashdash@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/core-flags-dashdash/-/core-flags-dashdash-0.0.38.tgz#e239292de5177210df7a59a327c9e4ea6d9a3ed3"
-  integrity sha512-TKbX/wMcaqYxO1m9XkHQnGvcdfUqIaRE86RK49C1G9YPBCUZgodryQniwWNy2MjX5ghOXNrXTZi7F9pDQOTqoQ==
+"@design-sdk/core-flags-dashdash@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/core-flags-dashdash/-/core-flags-dashdash-0.0.41.tgz#4c65ef06b8bc09caffb7b500f520861479c3a9e5"
+  integrity sha512-6CaOgaHczI4qb9i6aNPoTEXs0tsyTvZzbm92hCCs1cgi3gGE2VRWycOIy9uCMpi75wU4+XS2P1PlontOBU29pw==
 
-"@design-sdk/core@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/core/-/core-0.0.38.tgz#5f6d526d737eb945e188a297fd2853f6e33cfca5"
-  integrity sha512-nxwEhAlZUhCzWEnZpWz5hkjVysrK/Nzh/ZobzeF13Hnyo6ZUm+uupFXcqu+rNLkxplf5rh5U9LgeDBj+HAf07w==
+"@design-sdk/core@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/core/-/core-0.0.41.tgz#b1e8fff36c4d737b1511ba591bc5d6c060847daa"
+  integrity sha512-P3WTpGOPn0l3sUfKzZg1IKE348GTgSsY4C9QgS+vrf2eJ6BNxdfQ041ybGRwBsh4yvwc2XJ+PgRIauTpHl94MQ==
   dependencies:
     "@base-sdk/base" "0.1.4"
-    "@design-sdk/figma-node" "^0.0.38"
-    "@design-sdk/figma-types" "^0.0.38"
-    "@design-sdk/figma-utils" "^0.0.38"
+    "@design-sdk/figma-node" "^0.0.41"
+    "@design-sdk/figma-types" "^0.0.41"
+    "@design-sdk/figma-utils" "^0.0.41"
     "@design-sdk/flags" "^0.0.17"
     "@reflect-ui/core" "0.0.5"
     "@reflect-ui/namings" "0.0.3"
 
-"@design-sdk/diff@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/diff/-/diff-0.0.38.tgz#409d8e91fcc42fb4ec8c6b2e640e623443024f71"
-  integrity sha512-PQK6Ndi02bJHI3bU5E2vgRGeOONqQ4u95fvw253uKDDBjHMGUcFBsEgTbmvsnHcYWGHgswS6qMv/hmXN2m/zaw==
+"@design-sdk/diff@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/diff/-/diff-0.0.41.tgz#b23c00dd14b40e47b718c9282c0c966791f3e0b3"
+  integrity sha512-wMPcsMJ3UR6QyVxKz+bChxPj0AiHl3Kkici049ZQD/3qaSL26vkIy7O6xJGHYvY5uB31f4ytq8qa3MYmvOFFdA==
   dependencies:
-    "@design-sdk/figma-types" "^0.0.38"
-    "@design-sdk/figma-xpath" "^0.0.38"
+    "@design-sdk/figma-types" "^0.0.41"
+    "@design-sdk/figma-xpath" "^0.0.41"
 
-"@design-sdk/figma-auth-store@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-auth-store/-/figma-auth-store-0.0.38.tgz#6f0f73744b37c5979b776fde2afc338f29bda818"
-  integrity sha512-Apl2mAOIQGjqd2MJEUy6Ra0DYppTm+6mTVotSOGp5wlZatpuUXREA6mytnM2jjU4YH0CRSQ9dkoo+ML37/FqwQ==
+"@design-sdk/figma-auth-store@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-auth-store/-/figma-auth-store-0.0.41.tgz#5293923220d730a19ad01ff034321a5048794059"
+  integrity sha512-p7dIVsa5luI2tkQa3INBoDLfooS8JeW4ycgdBOhKrBjIPzgp6CwWDuzQrJcUIUMan832sjsFoHsyj8bQzWicyQ==
 
 "@design-sdk/figma-core@^0.0.25":
   version "0.0.25"
   resolved "https://registry.yarnpkg.com/@design-sdk/figma-core/-/figma-core-0.0.25.tgz#7fa28cc7d6e45cd713c5f268d42e4dd4f2b41590"
   integrity sha512-6OF7eUbDOlR4/BFtd2FRyDvvUf777OGNbVbNScUOv3Fk/kUXBzMTXX6ZdoRlTx887v/vo3+Lh0D31SG1sm80aA==
 
-"@design-sdk/figma-node-conversion@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-node-conversion/-/figma-node-conversion-0.0.38.tgz#f889772123f55b6b14a5151457088810fe2ab03e"
-  integrity sha512-1Wj/CqyDTRpMUvsoOu4oZgc2+ofwA+HAjxq1d99G4loMeAFTourqJ4ry8d6sG7zUIPy46n9FkJGLuH6PY34+fg==
+"@design-sdk/figma-node-conversion@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-node-conversion/-/figma-node-conversion-0.0.41.tgz#21c6cdd40cd1c6b95b4becee013e66179b58e072"
+  integrity sha512-rVHvnlMAlBTySTLV2iULOAkhBUAYAK4yR2gFs0GQC9k184lYP8WF5zgXwGPqMrB6Hc6G07eChXJSXx4G/p8Cmg==
   dependencies:
-    "@design-sdk/figma-node" "^0.0.38"
-    "@design-sdk/figma-types" "^0.0.38"
-    "@design-sdk/figma-utils" "^0.0.38"
-    "@design-sdk/flags" "^0.0.38"
+    "@design-sdk/figma-node" "^0.0.41"
+    "@design-sdk/figma-types" "^0.0.41"
+    "@design-sdk/figma-utils" "^0.0.41"
+    "@design-sdk/flags" "^0.0.41"
     "@reflect-ui/cg" "^0.0.5"
     "@reflect-ui/core" "^0.0.5"
     "@reflect-ui/font-utils" "^0.0.5"
 
-"@design-sdk/figma-node-repository@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-node-repository/-/figma-node-repository-0.0.38.tgz#1c627b9cb81bf3e1ad4bcf4dfbfa249901e91baa"
-  integrity sha512-fZwAm07dTbJsLA7IC7K1FFe5ZjjlKxwv6uFf3OzCz4OX2FEIc6pca7Sa8bOb+vwC49pPD7pgjhC8PK+KBgsQQw==
+"@design-sdk/figma-node-repository@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-node-repository/-/figma-node-repository-0.0.41.tgz#36df57eee154ff34bede2e799919d8cd013e26a3"
+  integrity sha512-Rod5hvqXAYsjB99sbvPnmkKqlpjF4WG2SbHKO3Ky7whEi7LXlOHiWxSCnATHE6+o5MlnDXGcRKVSCIkecgIRgA==
   dependencies:
-    "@design-sdk/figma-node" "^0.0.38"
-    "@design-sdk/figma-types" "^0.0.38"
+    "@design-sdk/figma-node" "^0.0.41"
+    "@design-sdk/figma-types" "^0.0.41"
 
-"@design-sdk/figma-node@0.0.25", "@design-sdk/figma-node@^0.0.38":
+"@design-sdk/figma-node@0.0.25", "@design-sdk/figma-node@^0.0.41":
   version "0.0.25"
   resolved "https://registry.yarnpkg.com/@design-sdk/figma-node/-/figma-node-0.0.25.tgz#c95484cc4b003667ae93e95fa3b585b9fa0b740a"
   integrity sha512-GCA5cGDXhvGUQddmSIZgPMhH0eGip9S0yDSQiys1XiKnXsB/CM8/5C+JVosHR1WFMHSlJfU+ytA4IH2yhfysUQ==
@@ -1599,68 +1599,68 @@
     "@design-sdk/figma-utils" "^0.0.25"
     "@reflect-ui/font-utils" "^0.0.1"
 
-"@design-sdk/figma-remote-api@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-remote-api/-/figma-remote-api-0.0.38.tgz#ab1a283a9d41eb2298d04b6788e1b9e3168159b2"
-  integrity sha512-+IeGLmIh4oBpNHy5MyYIUAWY7JDCauoF8/sedgkAvKHE9CBX87M1YMwbAxfgcZzehvT0Eo3RFXLCMb27DYO3jA==
+"@design-sdk/figma-remote-api@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-remote-api/-/figma-remote-api-0.0.41.tgz#27710aadc50b475e958aff9b71c46b5a409ca56f"
+  integrity sha512-nhG2mHes2u158A+PPdpEot7/lLMxRUblzGk9inuEDZj2WIRSeLB7PzaZ4hj7f3iSchieQyH8vF60nSD9EiNPrw==
 
-"@design-sdk/figma-remote-types@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-remote-types/-/figma-remote-types-0.0.38.tgz#7d215561b0cf69c4d422c187c174f10862426280"
-  integrity sha512-hMgY6lTDzf7ti7gsehKUMyFXw1MGfHmWlA4ESdjwzWwk1fGVsD8x9ervcLERQxWYMKey4CltktkhhVivjhVx+Q==
+"@design-sdk/figma-remote-types@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-remote-types/-/figma-remote-types-0.0.41.tgz#9ef89c2efea4ccf197bc688508f1bfdb747dd667"
+  integrity sha512-2GTuREPa0LmMG0mN7Mmic1dihvcEzR+we+6WZF3VGnmeCW5gmzxhBF4NL4HaEc+yQRw2AWh6rzMdv2e5/20Tfg==
 
-"@design-sdk/figma-remote@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-remote/-/figma-remote-0.0.38.tgz#c7fa1b579ab06edb101a9bec92f08f8a2367d8db"
-  integrity sha512-KNID2Joq1vJelfpR01XEvhCYWpeXUG+Yr3B4mbgLscbwxliMuYAS8bX50kfIKwOGlACIIjPKVpg5bEddD/xd5A==
+"@design-sdk/figma-remote@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-remote/-/figma-remote-0.0.41.tgz#8aa75ef00421561ba8550ee2ccd2a27c4f8402d0"
+  integrity sha512-3zPAXjSpP2KfdmRS8/5bJp+GoGp68Y5t/l/sDf+04gMzF2CC1p/USuRIvn/wESEVeVkUwotXY24v8C9ud2/xLA==
   dependencies:
-    "@design-sdk/asset-repository" "^0.0.38"
-    "@design-sdk/figma-node" "^0.0.38"
-    "@design-sdk/figma-node-conversion" "^0.0.38"
-    "@design-sdk/figma-remote-api" "^0.0.38"
-    "@design-sdk/figma-utils" "^0.0.38"
+    "@design-sdk/asset-repository" "^0.0.41"
+    "@design-sdk/figma-node" "^0.0.41"
+    "@design-sdk/figma-node-conversion" "^0.0.41"
+    "@design-sdk/figma-remote-api" "^0.0.41"
+    "@design-sdk/figma-utils" "^0.0.41"
 
-"@design-sdk/figma-types@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-types/-/figma-types-0.0.38.tgz#8a23cfa2edf4c9d834a2cfe5cb6d483d3a615327"
-  integrity sha512-nO9dYiop26oFiFAE6Ad2wNMZ0hGzL9OMPDWpLrh5AfF5ZjZWG2ELKDS7AOQmGvu2nojaiLAt13wo5UXNFc1rcA==
-
-"@design-sdk/figma-url@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-url/-/figma-url-0.0.38.tgz#8eb37636626f7ec4a0bf87c265a890f996729bf1"
-  integrity sha512-P6rb+cqvnqfER9NTVyjXCE4MGxSNTALWCyZh67oFzHfXRX+mjKV7DFYqJLG6/PFLb2Dj0i+GKeN97UXR/4r0/Q==
+"@design-sdk/figma-types@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-types/-/figma-types-0.0.41.tgz#0f7824be862e610f46d6afb96fe3dbc961fc1db8"
+  integrity sha512-8Zn7ks5ehvuJzsCK3pRG8Ao4yqKA9voX0Ma+5xJDTmYXRUY7ieMDLQesrSlIzPvPbJb0xfUAzA8UalgeBPGGYQ==
 
 "@design-sdk/figma-url@^0.0.4":
   version "0.0.4"
   resolved "https://registry.npmjs.org/@design-sdk/figma-url/-/figma-url-0.0.4.tgz"
   integrity sha512-9wvaecM9vVxI97CNfnckv0S9yi/ES3zuwQBa0ZfM5eQNbZlAgqTwBIi/Q/xsx7d+aePeGs+nEo2UhR52Rd+xNg==
 
+"@design-sdk/figma-url@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-url/-/figma-url-0.0.41.tgz#36b51f1376946551ba2e4dd92a1c95c8a61cc235"
+  integrity sha512-bXCD/MHL0X6H8Jacim2hnbfQbPfKG9Q++d0Pt/ILUMQDxcXK3Or6RVeNm5m5mD1e4yw1nBvswVTKAneJPEhZjA==
+
 "@design-sdk/figma-utils@^0.0.25":
   version "0.0.25"
   resolved "https://registry.yarnpkg.com/@design-sdk/figma-utils/-/figma-utils-0.0.25.tgz#7b7f6632fd8689ef713b27b34a61257accc2052e"
   integrity sha512-HarFMa14L9zqg8rhLaCTXhTKFd6tlBno1mnSc/vl8ZVilmdq32OFFlmqS4MjyvrTfyAvbwlEMAhxV1SUQhFhRg==
 
-"@design-sdk/figma-utils@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-utils/-/figma-utils-0.0.38.tgz#a3cdb9fea0337a4c1a6917a059bde3273ed47808"
-  integrity sha512-sFfErnmlzNlbwlmikT1TsPclCeg9tYvo4JQZN1JYlKxrslhpBDr2F3uDV2aDYkisD8+Lie7hEcluUWgi+mvYMg==
+"@design-sdk/figma-utils@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-utils/-/figma-utils-0.0.41.tgz#f457322e6af5ac2337ec3172cccd95a9f7bf39c0"
+  integrity sha512-SbGLuth2IkEZjxLhLZkThDJeNFwEZDdGdzcRusYkNsUPIqBJ6ykuRE3CRNqIudxp3y4rO+rcWOWfRJb1ds3S7g==
 
-"@design-sdk/figma-xpath@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-xpath/-/figma-xpath-0.0.38.tgz#b5d39e81f19193ac47420089cb669312bf2436c9"
-  integrity sha512-IYlZyyrT7cB/IWG7EcAXjiNYG/B28/ugh75X+f4ieMbksi/g+9QNZm/HAvQNslYHNn1TNyc8aSZGIpzX5FoHPw==
+"@design-sdk/figma-xpath@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-xpath/-/figma-xpath-0.0.41.tgz#09d034c524fd3f60d475f3ba22f4f4fbf19004a1"
+  integrity sha512-KgM6vTjzKobrQwwSoqmzA2vALlR/dBHlukEZUg2NTAZPVG8GXob1x4s+oBeOkug0IGfKSNEQCPHDxCNkvkBsSg==
 
-"@design-sdk/figma@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma/-/figma-0.0.38.tgz#88204b4f0145c90115ad5208dcaaaaf09cc84af9"
-  integrity sha512-isPknSndK/SQBKdLrQ8xq9ya7czaAYINCC3Y+i/VLIY2lLNm2syPZS6HJoyopFsGhjuHxPATQFESAy3l/BJ60w==
+"@design-sdk/figma@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma/-/figma-0.0.41.tgz#ad1061515d3fed43c7c3acccf550ac27415f71de"
+  integrity sha512-3KE3pzLJ+169DLyVAjchXOtYXTHOBIyvPG4o8t13/zTClCF5UvygAYrSOl98SQVs1NZAl+aAK1vexoRXFpdjBg==
   dependencies:
-    "@design-sdk/asset-repository" "^0.0.38"
-    "@design-sdk/figma-node" "^0.0.38"
-    "@design-sdk/figma-node-conversion" "^0.0.38"
-    "@design-sdk/figma-remote" "^0.0.38"
-    "@design-sdk/figma-types" "^0.0.38"
-    "@design-sdk/figma-url" "^0.0.38"
+    "@design-sdk/asset-repository" "^0.0.41"
+    "@design-sdk/figma-node" "^0.0.41"
+    "@design-sdk/figma-node-conversion" "^0.0.41"
+    "@design-sdk/figma-remote" "^0.0.41"
+    "@design-sdk/figma-types" "^0.0.41"
+    "@design-sdk/figma-url" "^0.0.41"
     "@reflect-ui/uiutils" "0.1.2-1"
 
 "@design-sdk/flags@^0.0.17":
@@ -1668,22 +1668,22 @@
   resolved "https://registry.npmjs.org/@design-sdk/flags/-/flags-0.0.17.tgz"
   integrity sha512-GRb24/NmZwd/O4UZHoDeOTebd8uU+u/oF5+P9OvrPYgds7CeWHftYeuu/RtXMn3i5GBXiMYw1W2r6mRCj486KQ==
 
-"@design-sdk/flags@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/flags/-/flags-0.0.38.tgz#07e3185e8e684e497313823eea6fcd9ab04333e9"
-  integrity sha512-mOVD9JPkM4rb0AY2V/N7A61ReWLL5odvgB2Yqx+UEekNzR1AusLX5TY4TBnfaW6qaxz/ZhFFWnWroPVD5RG1xQ==
+"@design-sdk/flags@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/flags/-/flags-0.0.41.tgz#5642ec3f25b3c5a098a758284558ab0be987e8a8"
+  integrity sha512-B87clYbPB+2iGBGS6yVp+Ib+MOYYr4gnSM5Bwer6zZDcX0RanRbwGYXE34RMRNsQ/2ftjEsluyr9W5jI2bD8ig==
   dependencies:
-    "@design-sdk/core-flags-dashdash" "^0.0.38"
+    "@design-sdk/core-flags-dashdash" "^0.0.41"
 
-"@design-sdk/query@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/query/-/query-0.0.38.tgz#6e2947ebdbad1e869aaee0291f040467be70e2e0"
-  integrity sha512-GIde1JEWyvZlBz0W1BK5lfv/HUhcyXjskjbHmN3iISE4BHTghBAJDfCIR6qdK9Im1m5E5/lbrwdA8oIPk0tPUg==
+"@design-sdk/query@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/query/-/query-0.0.41.tgz#29a9a24c4240d93087430f7f39a124892bcfc661"
+  integrity sha512-NaTtCv48tnCbgpZ4rddiay7G3IWTYxAROLiUPfwkyR/bg/fGdwoB9l0PdfshLwDByKuXnuR9sTnLTn6L22uDOw==
 
-"@design-sdk/url-analysis@^0.0.38":
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/@design-sdk/url-analysis/-/url-analysis-0.0.38.tgz#22055cf3d735718fffd6dcc13610c052d0e723f4"
-  integrity sha512-B3swjGhNO5XMaTUxZv+GMW/VRZlrPaW8IfadnJH89YlXYD9Au0MbQbQHRwxX1t43kImXTWBD/mAwv56bB+bhig==
+"@design-sdk/url-analysis@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@design-sdk/url-analysis/-/url-analysis-0.0.41.tgz#7f84f655b65eb4cfe70cd801dfe3c460bec46030"
+  integrity sha512-m4xC5tTbtT07WbuTqSdfyUFVurN+5eIm46OyjqPOOPbnkDdcSiBtSb6oNtcU1hRf33qUl5pwFmxv1umQqpofzw==
 
 "@discoveryjs/json-ext@^0.5.3":
   version "0.5.7"
