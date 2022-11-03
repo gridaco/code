@@ -1,9 +1,9 @@
 {
   "build": {
     "beforeDevCommand": "yarn workspace editor dev",
-    "beforeBuildCommand": "yarn build",
+    "beforeBuildCommand": "yarn workspace editor build",
     "devPath": "http://localhost:6626",
-    "distDir": "../dist",
+    "distDir": "../editor/.next",
     "withGlobalTauri": false
   },
   "package": {
