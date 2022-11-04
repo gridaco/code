@@ -26,6 +26,9 @@ import { debug, debugIf } from "@designto/debugger";
 
 interface AssetsConfig {
   asset_repository?: BaseImageRepositories<string>;
+  /**
+   * if set to true, skips the asset replacement, preserve unknown url scheme grida://asset-reservation ...
+   */
   skip_asset_replacement?: boolean;
   /**
    * this is currently only supported on vanilla framework - for preview.
@@ -52,7 +55,8 @@ export async function designToCode({
 }: DesignToCodeInput): Promise<Result> {
   assert(input, "input is required");
   debugIf(
-    framework_config.framework !== "vanilla",
+    // framework_config.framework !== "vanilla",
+    false,
     "dev: starting designtocode with user input",
     input,
     framework_config,
@@ -283,9 +287,13 @@ export async function designToFlutter({
   await Promise.resolve();
 
   const flutterwidget = toFlutter.buildFlutterWidget(input.widget);
-  const flutterapp = toFlutter.buildFlutterApp(flutterwidget, {
-    id: input.widget.key.id,
-  });
+  const flutterapp = toFlutter.buildFlutterApp(
+    input.widget.key,
+    flutterwidget,
+    {
+      id: input.widget.key.id,
+    }
+  );
 
   // ------------------------------------------------------------------------
   // finilize temporary assets

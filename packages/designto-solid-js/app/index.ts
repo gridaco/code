@@ -1,5 +1,5 @@
 import { Widget } from "@reflect-ui/core";
-import { buildWebWidgetFromTokens } from "@designto/web/tokens-to-web-widget";
+import { compose } from "@designto/web";
 import { JsxWidget } from "@web-builder/core";
 import { solid as config } from "@grida/builder-config";
 import {
@@ -22,6 +22,7 @@ export function buildSolidApp(
         name: entry.key.name,
         code: { raw: res.code },
         scaffold: { raw: res.code },
+        main: { raw: res.code },
       };
       break;
     }
@@ -35,6 +36,7 @@ export function buildSolidApp(
         name: entry.key.name,
         code: { raw: res.code },
         scaffold: { raw: res.code },
+        main: { raw: res.code },
       };
     }
     default: {

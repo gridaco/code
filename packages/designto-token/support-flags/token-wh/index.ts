@@ -71,7 +71,7 @@ export function tokenize_flagged_wh_declaration(
   // if the constraints are set to left & right or top & bottom, we have to add `margin-(?): auto;` to make align the item to center as it is on origin design.
   // Learn more about this transformation - https://stackoverflow.com/questions/17993471/css-wont-center-div-with-max-width
   // TODO: the margin's value to "auto" is not acceptable. this is a abberation, needs to fixed.
-  const container = widget as Container;
+  const container = widget as Widget as Container;
   const _provide_initial_margin_if_none = () => {
     if (!container.margin) {
       container.margin = new EdgeInsets({

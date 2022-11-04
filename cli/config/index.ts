@@ -4,6 +4,7 @@ export type GridaProjectType = "module" | "project";
 
 export interface GridaConfig extends BuilderConfig {
   name: string;
+  $schema: string;
 
   /**
    * @see {GridaProjectType}

@@ -7,11 +7,18 @@ import type { DesignSourceConfig } from "@grida/builder-config";
 import path from "path";
 
 interface ModuleInfo {
-  uri?: string;
-  version?: string;
+  uri: string[];
+  version?: string | "latest";
 }
 
-export async function add(cwd = process.cwd(), module: ModuleInfo) {
+export async function add(
+  cwd = process.cwd(),
+  modules: ModuleInfo,
+  flags: {
+    out: any;
+  }
+) {
+  const { out } = flags;
   const grida = locateGridaProject(cwd);
   if (!grida) {
     throw new Error("No grida project found. run `grida init` first.");
@@ -19,20 +26,25 @@ export async function add(cwd = process.cwd(), module: ModuleInfo) {
 
   const { fallbackDir } = grida.config;
 
-  if (!module.uri) {
-    module.uri = await prompt_project_design_source_module(
-      grida.config.designsource
-    );
+  if (!modules.uri || modules.uri.length === 0) {
+    modules.uri = [
+      await prompt_project_design_source_module(grida.config.designsource),
+    ];
   }
 
-  code(cwd, {
-    auth: {
-      personalAccessToken: process.env.FIGMA_PERSONAL_ACCESS_TOKEN,
-    },
-    baseUrl: path.join(cwd, fallbackDir),
-    uri: module.uri,
-    framework: grida.config.framework,
-  });
+  // todo: enhanced logging per each procs.
+  for (const uri of modules.uri) {
+    await code(cwd, {
+      auth: {
+        personalAccessToken: process.env.FIGMA_PERSONAL_ACCESS_TOKEN,
+      },
+      baseUrl: path.join(cwd, fallbackDir),
+      uri: uri,
+      framework: grida.config.framework,
+      out: out,
+    });
+    await new Promise((r) => setTimeout(r, 200));
+  }
 }
 
 async function prompt_project_design_source_module(

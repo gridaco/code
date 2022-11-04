@@ -15,7 +15,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@reflect-ui/core": "^0.0.8",
+    "@reflect-ui/core": "^0.0.9",
     "@reflect-ui/detection": "0.1.6"
   },
   "files": [

@@ -72,7 +72,7 @@ async function prompt_figma_personal_access_token(
   const _ = await prompt({
     name: "figma-personal-access-token",
     message: "Please enter your figma personal access token.",
-    type: "input",
+    type: "password",
     // @ts-ignore
     async validate(value) {
       // it's usually 43 chars long e.g "xxxxxx-xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx"

@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import fs from "fs";
 import { checkForUpdate } from "./update";
 import { login, logout } from "./auth";
+import { startFlutterDaemonServer } from "./flutter/daemon";
 
 function loadenv(argv) {
   const { cwd } = argv;
@@ -45,11 +46,17 @@ export default async function cli() {
       }
     )
     .command(
-      "add [uri]",
+      "add [uri...]",
       "add grida module",
       () => {},
-      async ({ cwd, uri }) => {
-        add(cwd, { uri: uri as string, version: "latest" });
+      async ({ cwd, uri, out }) => {
+        add(
+          cwd,
+          { uri: uri as string[], version: "latest" },
+          {
+            out: _map_out(out as string),
+          }
+        );
       },
       [loadenv]
     )
@@ -102,10 +109,22 @@ export default async function cli() {
             personalAccessToken: _personal_access_token,
           },
           baseUrl: _outpath_abs,
+          out: _map_out(out as string) as any,
         });
       },
       [loadenv]
     )
+    .command(
+      "flutter daemon",
+      "Starts local flutter daemon server for grida services",
+      () => {},
+      () => {
+        startFlutterDaemonServer();
+      }
+    )
+    .option("port", {
+      requiresArg: false,
+    })
     .option("figma-personal-access-token", {
       description: "figma personal access token",
       alias: ["fpat", "figma-pat"],
@@ -121,4 +140,21 @@ export default async function cli() {
     })
     .demandCommand(0)
     .parse();
+}
+
+function _map_out(out: string) {
+  if (path.isAbsolute(out)) {
+    return {
+      type: "absolute",
+      path: out,
+    };
+  }
+  if (out === ".") {
+    return out;
+  } else {
+    return {
+      type: "file-name",
+      name: out,
+    };
+  }
 }

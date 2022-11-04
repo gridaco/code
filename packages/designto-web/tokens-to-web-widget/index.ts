@@ -11,7 +11,7 @@ import { compose_wrapped_with_rotation } from "./compose-wrapped-with-rotation";
 import { compose_wrapped_with_blurred } from "./compose-wrapped-with-blurred";
 import { compose_wrapped_with_opacity } from "./compose-wrapped-with-opacity";
 import { compose_wrapped_with_positioned } from "./compose-wrapped-with-positioned";
-import { compose_wrapped_with_clip_stretched } from "./compose-wrapped-with-stretched";
+import { compose_wrapped_with_stretched } from "./compose-wrapped-with-stretched";
 import { compose_wrapped_with_sized_box } from "./compose-wrapped-with-sized-box";
 import { compose_wrapped_with_overflow_box } from "./compose-wrapped-with-overflow-box";
 import { compose_wrapped_with_expanded } from "./compose-wrapped-with-expanded";
@@ -35,11 +35,11 @@ interface WebWidgetComposerConfig {
   img_no_alt?: boolean;
 }
 
-export function buildWebWidgetFromTokens(
+export function compose(
   widget: core.Widget,
   config: WebWidgetComposerConfig
 ): JsxWidget {
-  const composed = compose(
+  const composed = _compose(
     widget,
     {
       is_root: true,
@@ -56,7 +56,7 @@ export type Composer = (
   config?: WebWidgetComposerConfig
 ) => StylableJsxWidget;
 
-function compose<T extends JsxWidget>(
+function _compose<T extends JsxWidget>(
   widget: core.Widget,
   context: { is_root: boolean },
   config: WebWidgetComposerConfig
@@ -71,7 +71,7 @@ function compose<T extends JsxWidget>(
   };
 
   const handleChild = <T extends JsxWidget>(child: core.Widget): T => {
-    return compose(child, { ...context, is_root: false }, config);
+    return _compose(child, { ...context, is_root: false }, config);
   };
 
   const _remove_width_height_if_root_wh = {
@@ -87,6 +87,7 @@ function compose<T extends JsxWidget>(
   const _key = keyFromWidget(widget);
 
   let thisWebWidget: JsxWidget;
+
   // ------------------------------------
   // region layouts
   // ------------------------------------
@@ -167,7 +168,14 @@ function compose<T extends JsxWidget>(
     thisWebWidget = child;
   }
   // ----- endregion clip path ------
-  else if (widget instanceof core.RenderedText) {
+  else if (widget instanceof special.SizedText) {
+    const text = handleChild(widget.child) as web.Text;
+    text.fixSize({
+      width: widget.width,
+      height: widget.height,
+    });
+    thisWebWidget = text;
+  } else if (widget instanceof core.RenderedText) {
     thisWebWidget = new web.Text({
       ...widget,
       key: _key,
@@ -322,7 +330,7 @@ function compose<T extends JsxWidget>(
   // special tokens
   // -------------------------------------
   else if (widget instanceof special.Stretched) {
-    thisWebWidget = compose_wrapped_with_clip_stretched(widget, handleChild);
+    thisWebWidget = compose_wrapped_with_stretched(widget, handleChild);
   }
   // -------------------------------------
   // -------------------------------------
@@ -351,7 +359,7 @@ function compose<T extends JsxWidget>(
     // todo - handle case more specific
     thisWebWidget = new web.ErrorWidget({
       key: _key,
-      errorMessage: `The input design was not handled. "${
+      errorMessage: `Web tokenizer: The input design was not handled. "${
         widget.key.originName
       }" type of "${widget._type}" - ${JSON.stringify(widget.key)}`,
     });

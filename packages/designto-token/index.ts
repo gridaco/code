@@ -20,3 +20,5 @@ export * from "./token-gradient";
 export * as t2t from "./token-to-token";
 
 export { wrap } from "./wrappings";
+
+export type { SnapshotWidget } from "./types";

@@ -1,18 +1,26 @@
 import fs from "fs";
 import path from "path";
-import { locateGridaProject, locateBaseProject } from "../project";
+import {
+  locateGridaProject,
+  locateBaseProject,
+  BaseProjectInfo,
+} from "../project";
 import { prompt } from "enquirer";
-import type { GridaConfig } from "../config";
 import type { FrameworkConfig } from "@grida/builder-config";
-import JSON5 from "json5";
-import { Language } from "@grida/builder-platform-types";
-import { prompt_designsource_config } from "./init-config-designsource";
+import { Framework, Language } from "@grida/builder-platform-types";
 import { addDotEnv } from "./init-.env";
 import chalk from "chalk";
-import { init_base_project_with_template } from "./init-base-project-with-teplate";
 import { exit } from "process";
+import { prompt_designsource_config } from "./init-config-designsource";
+import { init_base_project_with_template } from "./init-base-project-with-teplate";
+import { create_grida_config_js } from "./init-grida.config.js";
+import { init_dotgrida } from "./init-.grida";
+import { init_gitignore } from "./init-.gitignore";
 
-export async function init(cwd = process.cwd(), initials?: { name?: string }) {
+export async function init(
+  cwd = process.cwd(),
+  initials?: { name?: string; initialized_with_template?: boolean }
+) {
   const baseproj = locateBaseProject(cwd);
   const proj = locateGridaProject(cwd);
   if (proj) {
@@ -36,18 +44,19 @@ export async function init(cwd = process.cwd(), initials?: { name?: string }) {
         exit(0);
       } else {
         const { created, cwd: newcwd, name } = _;
-        if (created) return init(newcwd, { name });
+        if (created)
+          return init(newcwd, { name, initialized_with_template: true });
       }
       return;
     }
   }
 
-  let name: string = "untitled";
-  if (!initials.name) {
+  let name: string = initials?.name ?? "untitled";
+  if (!initials?.name) {
     // the name can be passed via previous init operation, -- create base project with template
     const { name: _name } = await prompt<{ name: string }>({
       name: "name",
-      message: "What is your project name?",
+      message: "What is your project named?",
       initial: baseproj?.name ?? "my-project",
       type: "input",
     });
@@ -82,10 +91,16 @@ export async function init(cwd = process.cwd(), initials?: { name?: string }) {
     }
   }
 
-  // create grida.config.js file
+  // inits grida.config.js file if requirements not met.
+  init_gitignore(cwd, {
+    template: framework_gitignore_templates[config_framework.framework],
+  }); // init .gitignore first (why? cause we're dealing with user's local directory here. we don't want to mass things up. .gitignore first.)
+  // creates grida.config.js
   create_grida_config_js(cwd, {
     name: name,
     type: "project",
+    // TODO: better approach to manage schema version?
+    $schema: "node_modules/@grida/grida-config-schema/v1.json",
     designsource: {
       ...config_designsource,
       // this should not be written to grida.config.js - it's written to .env
@@ -94,36 +109,58 @@ export async function init(cwd = process.cwd(), initials?: { name?: string }) {
     fallbackDir: fallbackdir,
     framework: config_framework,
   });
+  // inits .grida directory if requierd
+  init_dotgrida(cwd);
 }
+
+const framework_gitignore_templates = {
+  pub: "dart",
+  node: "node",
+  flutter: "dart",
+  react: "node",
+  svelte: "node",
+  "react-native": "react-native",
+} as const;
 
 async function prompt_framework_config(
   cwd,
-  baseproj
+  baseproj?: BaseProjectInfo | undefined,
+  initialized_with_template?: boolean
 ): Promise<FrameworkConfig> {
-  let framework: FrameworkConfig["framework"] = baseproj?.framework;
-  if (framework) {
-    const _rel_path_to_config_file = path.relative(cwd, baseproj.config_file);
-    console.log(
-      `${framework} configuration found in ${_rel_path_to_config_file}`
-    );
-  } else {
-    const { framework: _framework } = await prompt<{
-      framework: FrameworkConfig["framework"];
-    }>({
-      name: "framework",
-      type: "select",
-      message: "Select framework",
-      // initial: baseproj?.framework,
-      choices: <Array<FrameworkConfig["framework"]>>[
+  let framework: BaseProjectInfo["framework"] = baseproj?.framework;
+  if (!initialized_with_template) {
+    if (framework && framework !== "unknown") {
+      const _rel_path_to_config_file = path.relative(cwd, baseproj.config_file);
+      console.log(
+        `${framework} configuration found in ${_rel_path_to_config_file}`
+      );
+    } else {
+      let choices: Array<FrameworkConfig["framework"]> = [
         "flutter",
         "react",
         "react-native",
-        "vue",
         "vanilla",
         "solid-js",
-      ],
-    });
-    framework = _framework;
+        // "vue",
+      ];
+
+      if (baseproj?.framework == "unknown") {
+        choices = choices.filter((f) =>
+          baseproj.allowed_frameworks.includes(f)
+        );
+      }
+
+      const { framework: _framework } = await prompt<{
+        framework: FrameworkConfig["framework"];
+      }>({
+        name: "framework",
+        type: "select",
+        message: "Select framework",
+        // initial: baseproj?.framework,
+        choices: choices,
+      });
+      framework = _framework;
+    }
   }
 
   const _selection_ux_guide_msg = "(press space to select, enter to confirm)";
@@ -245,21 +282,4 @@ function create_grida_fallback_dir(
     name: dirname,
     path: dir,
   };
-}
-
-function create_grida_config_js(cwd = process.cwd(), config: GridaConfig) {
-  const grida_config_js = path.join(cwd, "grida.config.js");
-  if (fs.existsSync(grida_config_js)) {
-    throw new Error(`grida.config.js already exists in ${cwd}`);
-  }
-  const configjson = JSON5.stringify(config, null, 2);
-  const src = `// This file is auto-generated by Grida.
-
-/**
- * @type {import('grida').GridaConfig}
- */
-const config = ${configjson};
-
-module.exports = config;`;
-  fs.writeFileSync(grida_config_js, src);
 }

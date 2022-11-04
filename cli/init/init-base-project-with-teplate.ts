@@ -1,6 +1,7 @@
 import { spawnSync, SpawnSyncOptions } from "child_process";
 import { prompt } from "enquirer";
 import path from "path";
+import { binexists } from "../_utils/bin-exists";
 
 export async function init_base_project_with_template(
   cwd = process.cwd(),
@@ -48,27 +49,49 @@ export async function init_base_project_with_template(
   const __spawan_cfg: SpawnSyncOptions = { stdio: "inherit", cwd };
   switch (template) {
     case "flutter": {
-      await spawnSync("flutter", ["create", name], __spawan_cfg);
-      return { created: true, cwd: path.join(cwd, name), name };
+      if (binexists("flutter")) {
+        await spawnSync("flutter", ["create", name], __spawan_cfg);
+        return { created: true, cwd: path.join(cwd, name), name };
+      }
+      break;
     }
     case "next.js": {
-      await spawnSync(
-        "npx",
-        ["create-next-app", name, "--typescript"],
-        __spawan_cfg
-      );
-      return { created: true, cwd: path.join(cwd, name), name };
+      if (binexists("npx")) {
+        await spawnSync(
+          "npx",
+          ["create-next-app", name, "--typescript"],
+          __spawan_cfg
+        );
+        return { created: true, cwd: path.join(cwd, name), name };
+      }
+      break;
     }
     case "cra": {
-      await spawnSync(
-        "npx",
-        ["create-react-app", name, "--template", "typescript"],
-        __spawan_cfg
-      );
-      return { created: true, cwd: path.join(cwd, name), name };
+      if (binexists("npx")) {
+        await spawnSync(
+          "npx",
+          ["create-react-app", name, "--template", "typescript"],
+          __spawan_cfg
+        );
+        return { created: true, cwd: path.join(cwd, name), name };
+      }
+      break;
     }
     default:
       throw new Error(`Unknown template: ${template}`);
   }
-  //
+
+  console.log(
+    bin_not_found_descriptions[template] ||
+      `Grida CLI failed to create project with template ${template}. Please create base project manually and re-run \`grida init\``
+  );
+  return "exit";
 }
+
+const bin_not_found_descriptions = {
+  flutter:
+    "flutter is not installed cannot create flutter project via `flutter create`",
+  cra: "npx is not installed cannot create react project via `npx craete-react-app`",
+  "next.js":
+    "npx is not installed cannot create nextjs project via `npx create-next-app`",
+} as const;

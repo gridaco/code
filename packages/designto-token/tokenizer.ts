@@ -25,7 +25,7 @@ import {
   hasLayerBlurType,
   hasRotation,
   hasStretching,
-  hasFlexible,
+  hasFlexGrow,
 } from "./detection";
 import { MaskingItemContainingNode, tokenizeMasking } from "./token-masking";
 import { wrap_with_opacity } from "./token-opacity";
@@ -35,6 +35,8 @@ import { wrap_with_background_blur } from "./token-effect/background-blur";
 import { wrap_with_rotation } from "./token-rotation";
 import { wrap_with_expanded } from "./token-expanded";
 import flags_handling_gate from "./support-flags";
+import { SnapshotWidget } from "./types";
+import { unwrappedChild } from "./wrappings";
 
 export type { Widget };
 
@@ -49,7 +51,7 @@ let __dangerous_current_config: TokenizerConfig | null = null;
 export function tokenize(
   node: ReflectSceneNode,
   config: TokenizerConfig = default_tokenizer_config
-): Widget {
+): SnapshotWidget<Widget> {
   if (!node) {
     throw "A valid design node should be passed in order to tokenize it into a reflect widget.";
   }
@@ -64,7 +66,7 @@ function independantTokenizer(
   node: SingleOrArray<ReflectSceneNode>,
   config: TokenizerConfig
 ) {
-  return dynamicGenerator(node, config) as Widget;
+  return dynamicGenerator(node, config) as SnapshotWidget<Widget>;
 }
 
 /**
@@ -75,9 +77,12 @@ function independantTokenizer(
 function dynamicGenerator(
   node: SingleOrArray<ReflectSceneNode>,
   config: TokenizerConfig
-): SingleOrArray<Widget> {
-  const node_handler = (node, config) => {
-    return handle_with_custom_wrapping_provider(
+): SingleOrArray<SnapshotWidget<Widget>> {
+  const node_handler = (
+    node: ReflectSceneNode,
+    config
+  ): SnapshotWidget<Widget> => {
+    const widget = handle_with_custom_wrapping_provider(
       config.custom_wrapping_provider,
       {
         token: handleNode(node, config),
@@ -85,10 +90,12 @@ function dynamicGenerator(
         depth: undefined, // TODO:
       }
     );
+    _extend_snapshot(widget, node);
+    return widget as SnapshotWidget;
   };
 
   if (isNotEmptyArray(node)) {
-    const widgets: Array<Widget> = [];
+    const widgets: Array<SnapshotWidget<Widget>> = [];
     node = node as Array<ReflectSceneNode>;
     node
       // .sort(byY)
@@ -101,7 +108,7 @@ function dynamicGenerator(
     const finalWidgets = widgets.filter((w) => array.filters.notEmpty(w));
     return finalWidgets;
   } else {
-    return node_handler(node, config);
+    return node_handler(node as ReflectSceneNode, config);
   }
 }
 
@@ -259,7 +266,7 @@ export function post_wrap(
     wrapped = wrap_with_stretched(node, wrapped);
   }
 
-  if (hasFlexible(node)) {
+  if (hasFlexGrow(node)) {
     wrapped = wrap_with_expanded(node, wrapped);
   }
 
@@ -323,6 +330,8 @@ function handle_by_types(
         },
         config
       );
+
+      _extend_snapshot(tokenizedTarget, node);
       break;
 
     case ReflectSceneNodeType.vector:
@@ -374,4 +383,15 @@ function handle_by_types(
       break;
   }
   return tokenizedTarget;
+}
+
+function _extend_snapshot<T extends Widget = Widget>(
+  widget: T,
+  node: ReflectSceneNode
+) {
+  // we need to unwrap first, because the level1 tokenizer might have a wrapping. e.g. the SizedText or Stretched
+  const unwrapped = unwrappedChild(widget);
+  Object.assign(unwrapped, {
+    snapshot: node,
+  }) as SnapshotWidget<T>;
 }

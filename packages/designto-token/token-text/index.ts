@@ -1,5 +1,6 @@
 import type { ReflectTextNode } from "@design-sdk/figma-node";
 import { RenderedText, TextStyle, TextShadowManifest } from "@reflect-ui/core";
+import { SizedText } from "../tokens";
 import { keyFromNode } from "../key";
 
 /**
@@ -7,7 +8,7 @@ import { keyFromNode } from "../key";
  * @param node
  * @returns
  */
-export function fromText(node: ReflectTextNode): RenderedText {
+export function fromText(node: ReflectTextNode): RenderedText | SizedText {
   // 1. check if text is rich text
   // if () //
 
@@ -35,23 +36,34 @@ export function fromText(node: ReflectTextNode): RenderedText {
   }
   // -------------------------------
 
-  return new RenderedText({
-    key: keyFromNode(node),
+  const key = keyFromNode(node);
+  const text = new RenderedText({
+    key: key,
     data: node.data,
     textAlign: node.textAlign,
     style: new TextStyle({
       decoration: node.textDecoration,
       fontFamily: node.fontName?.family,
       fontSize: node.fontSize,
-      fontWeight: node.fontWeight,
+      fontWeight: node.textStyle?.fontWeight,
       color: node.primaryColor,
       lineHeight: node.lineHeight,
       letterSpacing: node.letterSpacing,
       textTransform: node.textCase,
       textShadow: node.shadows as TextShadowManifest[],
     }),
-    ...wh,
   });
+
+  if (wh.height || wh.width) {
+    return new SizedText({
+      key: key.copyWith({ id: key.id + ".sized-text" }),
+      child: text,
+      width: wh.width,
+      height: wh.height,
+    });
+  }
+
+  return text;
 }
 
 export const tokenizeText = {

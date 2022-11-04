@@ -1,3 +1,4 @@
-import { version, license } from "../package.json";
+import pkg from "../package.json";
 
-export { version, license };
+export const version = pkg.version;
+export const license = pkg.license;

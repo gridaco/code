@@ -3,37 +3,51 @@ import * as flutter from "@flutter-builder/flutter";
 import * as painting from "../painting";
 import * as rendering from "../rendering";
 import * as dartui from "../dart-ui";
-import { tokens as special, t2t } from "@designto/token";
+import { tokens as special, t2t, SnapshotWidget } from "@designto/token";
 import { MainImageRepository } from "@design-sdk/asset-repository";
 import { Axis, BoxShape } from "@reflect-ui/core";
 import { escapeDartString } from "@coli.codes/escape-string";
 import { boxDecorationPart } from "../painting";
 import {
   flutter_handle_svg_vector_as_bitmap_converted,
+  handle_flutter_biased_center_positioning,
   handle_flutter_case_nested_positioned_stack,
   handle_flutter_case_no_size_stack_children,
 } from "../case-handling";
 import { rd } from "../_utils";
 import assert from "assert";
 import { WrappingContainer } from "@designto/token/tokens";
+import { handle_default_style_multichild_render_object_widget } from "./handle-default-style-multichild-render-object-widget";
+import { compose_flutter_wrap } from "./compose-flutter-wrap";
+import { compose_flutter_positioned } from "./compose-flutter-positioned";
+import { compose_flutter_unwrapped_text_field } from "./compose-flutter-unwrapped-textfield";
+import { compose_flutter_unwrapped_button } from "./compose-flutter-unwrapped-button";
+import { compose_flutter_unwrapped_progress_indicator } from "./compose-flutter-unwrapped-progress-indicator";
+import { compose_flutter_unwrapped_checkbox } from "./compose-flutter-unwrapped-checkbox";
+import { compose_flutter_unwrapped_slider } from "./compose-flutter-unwrapped-slider";
+import { compose_wrapped_with_blurred } from "./compose-wrapped-with-blurred";
+import { unwrappedChild } from "@designto/token/wrappings";
 
-export function buildFlutterWidgetFromTokens(
-  widget: core.DefaultStyleWidget
-): flutter.Widget {
-  const composed = compose(widget, {
+export function compose(widget: core.DefaultStyleWidget): flutter.Widget {
+  const composed = _compose(widget, {
     is_root: true,
   });
 
   if (process.env.NODE_ENV === "development") {
     console.info("dev::", "final flutter token composed", composed);
   }
-
   return composed;
 }
 
-function compose(
+export type Composer<T extends flutter.Widget = flutter.Widget> = (
+  widget: core.Widget,
+  child_composer: Composer,
+  context?: { is_root: boolean }
+) => T;
+
+function _compose(
   widget: core.DefaultStyleWidget,
-  context: { is_root: boolean }
+  context: { is_root: boolean; parent?: core.Widget }
 ) {
   assert(widget, "input widget is required");
 
@@ -46,7 +60,7 @@ function compose(
   };
 
   const handleChild = (child: core.DefaultStyleWidget): flutter.Widget => {
-    return compose(child, { ...context, is_root: false });
+    return _compose(child, { ...context, is_root: false, parent: widget });
   };
 
   const _remove_width_height_if_root_wh = {
@@ -59,141 +73,133 @@ function compose(
     ..._remove_width_height_if_root_wh,
   };
 
-  //   const _key = keyFromWidget(widget);
-  let thisFlutterWidget: flutter.Widget;
+  const _key = new flutter.Key(
+    escapeDartString(widget.key.originName + " " + `(${widget.key.id})`)
+  );
 
-  const flex_props = (f: core.Flex) => {
-    return {
-      mainAxisAlignment: rendering.mainAxisAlignment(f.mainAxisAlignment),
-      crossAxisAlignment: rendering.crossAxisAlignment(f.crossAxisAlignment),
-      mainAxisSize: rendering.mainAxisSize(f.mainAxisSize),
-      verticalDirection: painting.verticalDirection(f.verticalDirection),
-    };
-  };
+  let final: flutter.Widget;
 
+  // ------------------------------------
+  // region layouts
+  // ------------------------------------
   if (widget instanceof core.Column) {
-    const children = compose_item_spacing_children(widget.children, {
-      itemspacing: widget.itemSpacing,
-      axis: widget.direction,
-    });
-    thisFlutterWidget = new flutter.Column({
+    final = new flutter.Column({
       ...default_props_for_layout,
       ...flex_props(widget),
-      children: children,
-      //   key: _key,
+      children: compose_children_with_item_spacing(widget.children, {
+        itemspacing: widget.itemSpacing,
+        axis: widget.direction,
+      }),
+      key: _key,
     });
   } else if (widget instanceof core.Row) {
-    const children = compose_item_spacing_children(widget.children, {
-      itemspacing: widget.itemSpacing,
-      axis: widget.direction,
-    });
-    thisFlutterWidget = new flutter.Row({
+    final = new flutter.Row({
       ...default_props_for_layout,
       ...flex_props(widget),
-      children: children,
-      //   key: _key,
+      children: compose_children_with_item_spacing(widget.children, {
+        itemspacing: widget.itemSpacing,
+        axis: widget.direction,
+      }),
+      key: _key,
     });
   } else if (widget instanceof core.Wrap) {
-    thisFlutterWidget = new flutter.Wrap({
-      ...default_props_for_layout,
-      direction: painting.axis(widget.direction),
-      alignment: rendering.wrapAlignment(widget.alignment),
-      spacing: widget.spacing,
-      runAlignment: rendering.wrapAlignment(widget.runAlignment),
-      runSpacing: widget.runSpacing,
-      crossAxisAlignment: rendering.wrapCrossAxisAlignment(
-        widget.crossAxisAlignment
-      ),
-      verticalDirection: painting.verticalDirection(widget.verticalDirection),
-      clipBehavior: dartui.clip(widget.clipBehavior),
-      children: handleChildren(widget.children),
-      key: undefined,
-    });
+    final = compose_flutter_wrap(_key, widget, handleChildren(widget.children));
   } else if (widget instanceof core.Flex) {
     // FIXME: FLEX not supported yet.
-    thisFlutterWidget = new flutter.Flex({
+    final = new flutter.Flex({
       ...widget,
       ...default_props_for_layout,
       ...flex_props(widget),
       clipBehavior: null,
       direction: painting.axis(widget.direction),
       children: handleChildren(widget.children),
-      //   key: _key,
+      key: _key,
     });
   } else if (widget instanceof core.Stack) {
-    const _remove_overflow_if_root_overflow = {
-      clipBehavior: context.is_root
-        ? undefined
-        : dartui.clip((widget as core.Stack).clipBehavior),
-    };
+    // TODO: is this ok? - ignoring stack if single child.
+    if (widget.children.length > 1) {
+      const _remove_overflow_if_root_overflow = {
+        clipBehavior: context.is_root
+          ? undefined
+          : dartui.clip((widget as core.Stack).clipBehavior),
+      };
 
-    const children = handle_flutter_case_no_size_stack_children(
-      handleChildren(widget.children as [])
-    );
-    const stack = new flutter.Stack({
-      ...default_props_for_layout,
-      ..._remove_overflow_if_root_overflow,
-      children: children,
-      //   key: _key,
-    });
-    if (!context.is_root) {
-      thisFlutterWidget = handle_flutter_case_nested_positioned_stack(stack);
+      const children = handle_flutter_case_no_size_stack_children(
+        handleChildren(widget.children as [])
+      );
+      const stack = new flutter.Stack({
+        ...default_props_for_layout,
+        ..._remove_overflow_if_root_overflow,
+        children: children,
+        key: _key,
+      });
+      if (!context.is_root) {
+        const wh = _nested_stack_wh_by_parent(context.parent);
+        console.log("wh", wh);
+        final = handle_flutter_case_nested_positioned_stack(stack, {
+          widget: widget as SnapshotWidget<core.Stack>,
+          ...wh,
+        });
+      } else {
+        final = stack;
+      }
     } else {
-      thisFlutterWidget = stack;
+      final = handleChild(widget.children[0]);
     }
   } else if (widget instanceof core.SingleChildScrollView) {
     const _child = handleChild(widget.child);
-    thisFlutterWidget = new flutter.SingleChildScrollView({
+    final = new flutter.SingleChildScrollView({
       // TODO: map axis
       //   scrollDirection: widget.direction,
       child: _child,
     });
   } else if (widget instanceof core.Positioned) {
-    const _tmp_length_convert = (l) => {
-      return rd(l) as number;
-    };
+    const positioned = handle_flutter_biased_center_positioning(
+      widget,
+      handleChild,
+      {
+        compose_positioned: compose_flutter_positioned,
+      }
+    );
 
-    const _child = handleChild(widget.child);
-    if (_child) {
-      thisFlutterWidget = new flutter.Positioned({
-        left: widget.left && _tmp_length_convert(widget.left),
-        right: widget.right && _tmp_length_convert(widget.right),
-        top: widget.top && _tmp_length_convert(widget.top),
-        bottom: widget.bottom && _tmp_length_convert(widget.bottom),
-        child: _child,
-      });
+    if (positioned.child instanceof flutter.Container) {
       // -------------------------------------
       // override w & h with position provided w/h
-      if (_child instanceof flutter.Container) {
-        _child.width = rd(widget.width);
-        _child.height = rd(widget.height);
-      }
-      // -------------------------------------
+      positioned.child.width = rd(widget.width);
+      positioned.child.height = rd(widget.height);
     }
+
+    final = positioned;
+    if (!positioned.child) {
+      // if the positioned does not contain a child, cancel it.
+      final = null;
+    }
+
+    // -------------------------------------
   } else if (widget instanceof core.SizedBox) {
+    // TODO:
     //
   } else if (widget instanceof core.OverflowBox) {
+    // TODO:
     //
   } else if (widget instanceof core.Opacity) {
-    thisFlutterWidget = new flutter.Opacity({
-      opacity: widget.opacity,
+    final = new flutter.Opacity({
+      opacity: rd(widget.opacity),
       child: handleChild(widget.child),
     });
   } else if (widget instanceof core.Blurred) {
-    // FIXME: blur flutter control
-    //   const isBlurVisibile = widget.blur.visible;
-    //   if (isBlurVisibile) {
-    //     if (widget.blur.type === "LAYER_BLUR") {
-    //     } else if (widget.blur.type === "BACKGROUND_BLUR") {
-    //     }
-    //   }
+    if (widget.blur.visible) {
+      final = compose_wrapped_with_blurred(widget, handleChild);
+    } else {
+      final = handleChild(widget.child);
+    }
   } else if (widget instanceof core.Rotation) {
-    thisFlutterWidget = flutter.Transform.rotate({
+    final = flutter.Transform.rotate({
       angle: widget.rotation,
       child: handleChild(widget.child),
     });
   } else if (widget instanceof core.Expanded) {
-    thisFlutterWidget = new flutter.Expanded({
+    final = new flutter.Expanded({
       flex: widget.flex,
       child: handleChild(widget.child),
     });
@@ -202,33 +208,41 @@ function compose(
   // ----- region clip path ------
   else if (widget instanceof core.ClipRRect) {
     // FIXME: flutter clip rrect support is not ready.
-    thisFlutterWidget = handleChild(widget.child);
+    final = handleChild(widget.child);
   } else if (widget instanceof core.ClipPath) {
     // FIXME: flutter clip path support is not ready.
-    thisFlutterWidget = handleChild(widget.child);
+    final = handleChild(widget.child);
   }
   // ----- endregion clip path ------
-  else if (widget instanceof core.RenderedText) {
+  else if (widget instanceof special.SizedText) {
+    const text = handleChild(widget.child);
+    console.log(widget);
+    final = new flutter.SizedBox({
+      width: rd(widget.width),
+      height: rd(widget.height),
+      child: text,
+    });
+  } else if (widget instanceof core.RenderedText) {
     const _escaped_dart_string = escapeDartString(widget.data);
-    thisFlutterWidget = new flutter.Text(_escaped_dart_string, {
+    final = new flutter.Text(_escaped_dart_string, {
       ...widget,
       textAlign: dartui.textAlign(widget.textAlign),
       style: painting.textStyle(widget.style),
       /** explicit assignment - field name is different */
-      //   key: _key,
+      key: _key,
     });
   } else if (widget instanceof core.VectorWidget) {
     const id = widget.key.id;
     // use widget as baked image.
-    thisFlutterWidget = handleChild(t2t.vector_token_to_image_token(widget));
+    final = handleChild(t2t.vector_token_to_image_token(widget));
     // TODO: convert vector data to bitmap, host the image, than load.
     // thisFlutterWidget = flutter_handle_svg_vector_as_bitmap_converted(widget);
   } else if (widget instanceof core.ImageWidget) {
-    thisFlutterWidget = flutter.Image.network(widget.src, {
+    final = flutter.Image.network(widget.src, {
       width: rd(widget.width),
       height: rd(widget.height),
       // fit?: BoxFit;
-      //   key: _key,
+      key: _key,
     });
   } else if (widget instanceof core.IconWidget) {
     // TODO: not ready - svg & named icon not supported
@@ -241,24 +255,24 @@ function compose(
             key: widget.key.id,
           });
 
-        thisFlutterWidget = flutter.Image.network(
+        final = flutter.Image.network(
           _tmp_icon_as_img.url ||
             /*fallback*/ "https://bridged-service-static.s3.us-west-1.amazonaws.com/branding/logo/32.png", // TODO: change this
           {
             width: rd(widget.width),
             height: rd(widget.height),
             // fit?: BoxFit;
-            //   key: _key,
+            key: _key,
           }
         );
         break;
       }
       case "remote-uri": {
-        thisFlutterWidget = flutter.Image.network(widget.icon.uri, {
+        final = flutter.Image.network(widget.icon.uri, {
           width: rd(widget.size),
           height: rd(widget.size),
           semanticLabel: "icon",
-          //   key: _key,
+          key: _key,
         });
         break;
       }
@@ -268,34 +282,46 @@ function compose(
   // #region component widgets
   // button
   else if (widget instanceof core.ButtonStyleButton) {
-    // TODO: widget.icon - not supported
-    // thisFlutterWidget = compose_unwrapped_button(_key, widget);
+    final = compose_flutter_unwrapped_button(_key, widget, handleChild);
+  }
+  // checkbox
+  else if (widget instanceof core.Checkbox) {
+    final = compose_flutter_unwrapped_checkbox(_key, widget);
   }
   // textfield
   else if (widget instanceof core.TextField) {
-    // thisFlutterWidget = compose_unwrapped_text_input(_key, widget);
-  } else if (widget instanceof core.Slider) {
-    // thisFlutterWidget = compose_unwrapped_slider(_key, widget);
+    final = compose_flutter_unwrapped_text_field(_key, widget);
   }
+  // slider
+  else if (widget instanceof core.Slider) {
+    final = compose_flutter_unwrapped_slider(_key, widget);
+  }
+  // progress
+  else if (widget instanceof core.ProgressIndicator) {
+    final = compose_flutter_unwrapped_progress_indicator(_key, widget);
+  }
+
   // wrapping container
   else if (widget instanceof WrappingContainer) {
+    const { child } = widget;
     // #region
-    // mergable widgets for web
-    // if (widget.child instanceof core.TextField) {
-    //   thisFlutterWidget = compose_unwrapped_text_input(
-    //     _key,
-    //     widget.child,
-    //     widget
-    //   );
-    // } else if (widget.child instanceof core.ButtonStyleButton) {
-    //   thisFlutterWidget = compose_unwrapped_button(_key, widget.child, widget);
-    // } else if (widget.child instanceof core.Slider) {
-    //   thisFlutterWidget = compose_unwrapped_slider(_key, widget.child, widget);
-    // } else {
-    //   throw new Error(
-    //     `Unsupported widget type: ${widget.child.constructor.name}`
-    //   );
-    // }
+    // mergable widgets @see - designto/web/tokens-to-web-widget.ts
+    if (child instanceof core.TextField) {
+      final = compose_flutter_unwrapped_text_field(_key, child, widget);
+    } else if (widget.child instanceof core.ButtonStyleButton) {
+      final = compose_flutter_unwrapped_button(
+        _key,
+        widget.child,
+        handleChild,
+        widget
+      );
+    } else if (child instanceof core.Checkbox) {
+      final = compose_flutter_unwrapped_checkbox(_key, child);
+    } else if (child instanceof core.Slider) {
+      final = compose_flutter_unwrapped_slider(_key, child);
+    } else if (child instanceof core.ProgressIndicator) {
+      final = compose_flutter_unwrapped_progress_indicator(_key, child);
+    }
     // #endregion
   }
   // #endregion
@@ -317,7 +343,7 @@ function compose(
     }
 
     const _deco_part_bg = boxDecorationPart.fromBackground(widget.background);
-    thisFlutterWidget = new flutter.Container({
+    final = new flutter.Container({
       padding: painting.edgeinsets(widget.padding),
       margin: painting.edgeinsets(widget.margin),
       width: rd(widget.width),
@@ -330,7 +356,7 @@ function compose(
         // TODO: background list
         // background: painting.linearGradient(widget.background.gradient),
       }),
-      //   key: _key,
+      key: _key,
     });
     // thisFlutterWidget.x = widget.x;
     // thisFlutterWidget.y = widget.y;
@@ -351,8 +377,12 @@ function compose(
         break;
     }
 
-    thisFlutterWidget = handleChild(widget.child);
-    thisFlutterWidget = wrap_with_sized_and_inject_size(thisFlutterWidget, {
+    final = handleChild(widget.child);
+    // TODO: don't use snapshot's value. use Stretched.preserved_width (TODO: << add this to tokenizer)
+    const { snapshot } = unwrappedChild(widget.child) as SnapshotWidget;
+    final = size(final, {
+      width: snapshot?.width,
+      height: snapshot?.height,
       [remove_size]: undefined, // Double.infinity,
     });
   }
@@ -362,21 +392,7 @@ function compose(
   // end of logic gate
   // -------------------------------------
   else {
-    const err_user_msg = `The input design was not handled. "${
-      widget.key.originName
-    }" type of "${widget._type}" - ${JSON.stringify(widget.key)}`;
-    console.error(
-      "flutter: error while handling the design token",
-      err_user_msg,
-      "the input token was",
-      widget
-    );
-
-    // todo - handle case more specific
-    thisFlutterWidget = flutter.ErrorWidget.withDetails({
-      //   key: _key,
-      message: escapeDartString(err_user_msg),
-    }) as flutter.Widget;
+    return err(widget);
   }
   // -------------------------------------
   // -------------------------------------
@@ -386,7 +402,32 @@ function compose(
     // TODO: add overflow x hide handling by case.
   }
 
-  return thisFlutterWidget;
+  if (!final) {
+    return err(widget);
+  }
+
+  // wrap existing with extra styles widgets
+  final = handle_default_style_multichild_render_object_widget(final, widget);
+
+  return final;
+}
+
+function err(widget) {
+  const err_user_msg = `The input design was not handled. "${
+    widget.key.originName
+  }" type of "${widget._type}" - ${JSON.stringify(widget.key)}`;
+  console.error(
+    "flutter: error while handling the design token",
+    err_user_msg,
+    "the input token was",
+    widget
+  );
+
+  // todo - handle case more specific
+  return flutter.ErrorWidget.withDetails({
+    // key: new flutter.Key(`error://${widget.key.id}`),
+    message: escapeDartString(err_user_msg),
+  }) as flutter.Widget;
 }
 
 /**
@@ -397,7 +438,7 @@ function compose(
  * | 1 | s | 2 | s | 3 | s | 4
  * ```
  */
-function compose_item_spacing_children(
+function compose_children_with_item_spacing(
   children: core.DefaultStyleWidget[],
   args: {
     itemspacing: number;
@@ -426,7 +467,7 @@ function compoes_children_with_injection(
   between?: flutter.Widget
 ): flutter.Widget[] {
   const composedchildren = children.map((c) => {
-    return compose(c, {
+    return _compose(c, {
       is_root: false,
     });
   });
@@ -444,7 +485,15 @@ function compoes_children_with_injection(
   // const result = array.reduce((r, a) => r.concat(a, 0), [0]);
 }
 
-function wrap_with_sized_and_inject_size(
+/**
+ * size the widget with width and height.
+ * if the widget is a container or sizedbox (or other w, h containing widget), alt the property.
+ * if not, wrap with SizeBox with givven size.
+ * @param widget
+ * @param size
+ * @returns
+ */
+function size(
   widget: flutter.Widget,
   size: {
     width?: flutter.double;
@@ -455,8 +504,9 @@ function wrap_with_sized_and_inject_size(
     widget instanceof flutter.Container ||
     widget instanceof flutter.SizedBox
   ) {
-    size.width && (widget.width = size.width);
-    size.height && (widget.height = size.height);
+    // remove or assign the size
+    widget.width = size.width;
+    widget.height = size.height;
     return widget;
   } else {
     return new flutter.SizedBox({
@@ -465,4 +515,68 @@ function wrap_with_sized_and_inject_size(
       height: rd(size.height),
     });
   }
+}
+
+const flex_props = (f: core.Flex) => {
+  return {
+    mainAxisAlignment: rendering.mainAxisAlignment(f.mainAxisAlignment),
+    crossAxisAlignment: rendering.crossAxisAlignment(f.crossAxisAlignment),
+    mainAxisSize: rendering.mainAxisSize(f.mainAxisSize),
+    verticalDirection: painting.verticalDirection(f.verticalDirection),
+  };
+};
+
+function _nested_stack_wh_by_parent(parent: core.Widget): {
+  explicit_width: boolean;
+  explicit_height: boolean;
+  _d_reason?: string;
+} {
+  if (parent instanceof core.Flex) {
+    switch (parent.direction) {
+      case Axis.horizontal:
+        return {
+          explicit_width: true,
+          explicit_height: false,
+          _d_reason: 'parent is typeof Flex with direction "horizontal"',
+        };
+      case Axis.vertical:
+        return {
+          explicit_width: false,
+          explicit_height: true,
+          _d_reason: 'parent is typeof Flex with direction "vertical"',
+        };
+    }
+  }
+
+  if (parent instanceof core.Stack) {
+    return {
+      explicit_width: true,
+      explicit_height: true,
+      _d_reason:
+        "parent is typeof Stack, the stack under stack should have both fixed size to be rendered properly",
+    };
+  }
+
+  if (parent instanceof special.Stretched) {
+    switch (parent.axis) {
+      case Axis.horizontal:
+        return {
+          explicit_width: true,
+          explicit_height: false,
+          _d_reason: 'parent is typeof Stretched with direction "horizontal"',
+        };
+      case Axis.vertical:
+        return {
+          explicit_width: false,
+          explicit_height: true,
+          _d_reason: 'parent is typeof Stretched with direction "vertical"',
+        };
+    }
+  }
+
+  console.log("flutter: _nested_stack_wh_by_parent", parent);
+  return {
+    explicit_width: false,
+    explicit_height: false,
+  };
 }

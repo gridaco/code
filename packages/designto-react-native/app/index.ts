@@ -27,6 +27,7 @@ export function buildReactNativeApp(
         name: entry.key.name,
         code: { raw: res.code },
         scaffold: { raw: res.code },
+        main: { raw: res.code },
       };
     }
     case "styled-components": {
@@ -39,6 +40,7 @@ export function buildReactNativeApp(
         name: entry.key.name,
         code: { raw: res.code },
         scaffold: { raw: res.code },
+        main: { raw: res.code },
       };
     }
     case "inline-style": {
@@ -51,6 +53,7 @@ export function buildReactNativeApp(
         name: entry.key.name,
         code: { raw: res.code },
         scaffold: { raw: res.code },
+        main: { raw: res.code },
       };
     }
   }
