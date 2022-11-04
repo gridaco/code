@@ -13,21 +13,30 @@ export async function fetch_all_assets(
   let should_fetch_keys = [];
   Object.keys(asset_repository.mergeAll()).map((k) => {
     const i = asset_repository.find(k);
-    i.hash && (fetches[i.hash] = asset_repository._fetchDataByHash(i.hash));
-    i.key && should_fetch_keys.push(i.key);
+
+    if (i.hash) {
+      fetches[i.hash] = asset_repository._fetchDataByHash(i.hash);
+    }
+
+    if (i.key) {
+      should_fetch_keys.push(i.key);
+    }
   });
+
   const fetched = {};
 
   try {
     fetches = {
       ...fetches,
-      ...(should_fetch_keys &&
+      ...(should_fetch_keys.length > 0 &&
         (await asset_repository.fetchAll(...should_fetch_keys))),
     };
 
     const keys = Object.keys(fetches);
     (await Promise.all(Object.values(fetches))).map((v, i, a) => {
-      fetched[keys[i]] = v;
+      const k = keys[i];
+      fetched[k] = v;
+      // cache.set(k, v);
     });
     return fetched;
   } catch (_) {

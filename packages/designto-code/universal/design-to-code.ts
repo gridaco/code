@@ -55,7 +55,8 @@ export async function designToCode({
 }: DesignToCodeInput): Promise<Result> {
   assert(input, "input is required");
   debugIf(
-    framework_config.framework !== "vanilla",
+    // framework_config.framework !== "vanilla",
+    false,
     "dev: starting designtocode with user input",
     input,
     framework_config,
