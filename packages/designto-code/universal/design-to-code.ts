@@ -24,6 +24,12 @@ import {
 import assert from "assert";
 import { debug, debugIf } from "@designto/debugger";
 
+type CustomAssetResolver = ({
+  keys,
+}: {
+  keys: string[];
+}) => Promise<{ [key: string]: string }>;
+
 interface AssetsConfig {
   asset_repository?: BaseImageRepositories<string>;
   /**
@@ -34,6 +40,11 @@ interface AssetsConfig {
    * this is currently only supported on vanilla framework - for preview.
    */
   custom_asset_replacement?: { type: "static"; resource: string };
+  /**
+   * If the resolver is set, this resolver will be used to resolve assets from asset repository, not using the built in resolver in the provided asset repository.
+   * @beta - the asset repository has legacy design, wich this field is required. this might be merged into built in asset repository.
+   */
+  resolver?: CustomAssetResolver;
 }
 
 export type Result = output.ICodeOutput & { widget: Widget } & {
@@ -226,7 +237,7 @@ export async function designToReact({
       asset_config?.asset_repository &&
       !asset_config.skip_asset_replacement
     ) {
-      const assets = await fetch_all_assets(asset_config.asset_repository);
+      const assets = await resolve_assets(asset_config);
       res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
       res.scaffold.raw = dangerous_temporary_asset_replacer(
         res.scaffold.raw,
@@ -299,7 +310,7 @@ export async function designToFlutter({
   // finilize temporary assets
   // this should be placed somewhere else
   if (asset_config?.asset_repository && !asset_config.skip_asset_replacement) {
-    const assets = await fetch_all_assets(asset_config?.asset_repository);
+    const assets = await resolve_assets(asset_config);
     flutterapp.scaffold.raw = dangerous_temporary_asset_replacer(
       flutterapp.scaffold.raw,
       assets
@@ -352,7 +363,7 @@ export async function designToSolid({
       asset_config?.asset_repository &&
       !asset_config.skip_asset_replacement
     ) {
-      const assets = await fetch_all_assets(asset_config.asset_repository);
+      const assets = await resolve_assets(asset_config);
       res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
       res.scaffold.raw = dangerous_temporary_asset_replacer(
         res.scaffold.raw,
@@ -407,7 +418,7 @@ export async function designToVanillaPreview({
       asset_config?.asset_repository &&
       !asset_config.skip_asset_replacement
     ) {
-      const assets = await fetch_all_assets(asset_config.asset_repository);
+      const assets = await resolve_assets(asset_config);
       res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
       res.scaffold.raw = dangerous_temporary_asset_replacer(
         res.scaffold.raw,
@@ -460,7 +471,7 @@ export async function designToVanilla({
       asset_config?.asset_repository &&
       !asset_config.skip_asset_replacement
     ) {
-      const assets = await fetch_all_assets(asset_config.asset_repository);
+      const assets = await resolve_assets(asset_config);
       res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
       res.scaffold.raw = dangerous_temporary_asset_replacer(
         res.scaffold.raw,
@@ -472,6 +483,15 @@ export async function designToVanilla({
 
   return res;
 }
+
+const resolve_assets = async ({ asset_repository, resolver }: AssetsConfig) => {
+  if (resolver) {
+    const keys = Object.keys(asset_repository.mergeAll());
+    return (await resolver({ keys: keys })) || {};
+  } else {
+    return await fetch_all_assets(asset_repository);
+  }
+};
 
 const default_asset_replacement_prefix = "grida://assets-reservation/images/";
 const dangerous_temporary_asset_replacer = (r, a) => {
