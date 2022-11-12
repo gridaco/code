@@ -21,8 +21,8 @@ export function make_create_react_app_typescript_package_json({
     keywords: ["grida", "design to code", "made with grida"],
     main: main,
     dependencies: {
-      react: "17.0.2",
-      "react-dom": "17.0.2",
+      react: "18.2.0",
+      "react-dom": "18.2.0",
       "react-scripts": "4.0.0",
       ...dependencies,
     },
