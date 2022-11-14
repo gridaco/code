@@ -59,24 +59,24 @@ const T_REACT_DOM: StandardLibraryManifest = {
 };
 
 /**
- * last-update: May 2021
+ * last-update: Nov 2022
  * https://www.npmjs.com/package/react
  */
 const REACT: StandardLibraryManifest = {
   id: "react",
   name: "react",
-  version: "17.0.2",
+  version: "18.2.0",
   website: "https://reactjs.org",
 };
 
 /**
- * last-update: May 2021
+ * last-update: Nov 2022
  * https://www.npmjs.com/package/react-dom
  */
 const REACT_DOM: StandardLibraryManifest = {
   id: "react-dom",
   name: "react-dom",
-  version: "17.0.2",
+  version: "18.2.0",
   website: "https://reactjs.org",
 };
 

@@ -1,4 +1,3 @@
-
 # Installation & Build
 
 ```
@@ -8,19 +7,12 @@ yarn
 yarn editor
 ```
 
-
-## Setup credentials for development
-
-visit http://localhost:6626/preferences/access-tokens and set pats for api calls
-
-
 ## Structure
 
 - editor - visual editor for development
 - editor-packages - editor related packages
 - packages - core packages contributing to the code-gen logic
 - externals - external foundational packages, like [reflect-core](https://github.com/reflect-ui/reflect-core-ts)
-
 
 # Why 6626?
 
