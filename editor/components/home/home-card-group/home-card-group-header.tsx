@@ -19,7 +19,18 @@ export function HomeSceneCardGoupHeader({
     </RootWrapperBaseHomeSceneCardGoupHeader>
   );
 
-  return anchor ? <Link href={anchor}>{Content}</Link> : Content;
+  return anchor ? (
+    <Link
+      style={{
+        textDecoration: "none",
+      }}
+      href={anchor}
+    >
+      {Content}
+    </Link>
+  ) : (
+    Content
+  );
 }
 
 const RootWrapperBaseHomeSceneCardGoupHeader = styled.div`

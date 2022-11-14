@@ -1,7 +1,6 @@
 const IS_DEV = process.env.NODE_ENV === "development";
 
-const withPlugins = require("next-compose-plugins");
-const withTM = require("next-transpile-modules")([
+const transpiles = [
   // region @editor-app
   "@editor-app/live-session",
   "@code-editor/preview-pip", // TODO: remove me. this is for development. for production, use npm ver instead.
@@ -61,7 +60,8 @@ const withTM = require("next-transpile-modules")([
   "@web-builder/styles",
   // endregion web builders
   // -----------------------------
-]);
+];
+// const withTM = require("next-transpile-modules")();
 
 const withPWA = require("next-pwa")({
   register: true,
@@ -73,42 +73,31 @@ const withPWA = require("next-pwa")({
   },
 });
 
-module.exports = withPlugins(
-  [
-    [withTM],
-    [
-      withPWA,
+/**
+ * @type {import('next').NextConfig}
+ */
+const config = {
+  experimental: {
+    transpilePackages: transpiles,
+  },
+  compiler: {
+    emotion: true,
+  },
+  async redirects() {
+    return [
       {
-        pwa: {
-          dest: "public",
-          // swSrc: "sw.js",
-        },
+        // typo gaurd
+        source: "/preference",
+        destination: "/preferences",
+        permanent: true,
       },
-    ],
-  ],
-  {
-    webpack: (config) => {
-      config.resolve.fallback = {
-        fs: false, // used by handlebars
-        path: false, // used by handlebars
-      };
+      {
+        source: "/files/:key/:id",
+        destination: "/files/:key?node=:id",
+        permanent: false,
+      },
+    ];
+  },
+};
 
-      return config;
-    },
-    async redirects() {
-      return [
-        {
-          // typo gaurd
-          source: "/preference",
-          destination: "/preferences",
-          permanent: true,
-        },
-        {
-          source: "/files/:key/:id",
-          destination: "/files/:key?node=:id",
-          permanent: false,
-        },
-      ];
-    },
-  }
-);
+module.exports = withPWA(config); //withTM();
