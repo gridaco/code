@@ -72,6 +72,6 @@ export function buildVanillaWidget(
   }
 
   return compose(widget, {
-    img_no_alt: config.imgage_alt.no_alt,
+    img_no_alt: config.imgage_alt?.no_alt ?? false,
   });
 }
