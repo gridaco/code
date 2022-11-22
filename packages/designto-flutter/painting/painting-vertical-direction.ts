@@ -15,6 +15,8 @@ export function verticalDirection(
         config,
         flutter.VerticalDirection.down as flutter.VerticalDirection
       );
+    case undefined:
+      return undefined;
   }
   throw new Error(`unknown vertical direction ${vd}`);
 }
