@@ -19,9 +19,9 @@ export function finalizeReactReusable_StyledComponents__Experimental({
   tree: InstanceWidget;
   components: MasterComponentWidget[];
 }) {
-  const hanlde = (token) => {
+  const handle = (token) => {
     if (token instanceof InstanceMetaToken) {
-      const children = token.master["children"]?.map(hanlde);
+      const children = token.master["children"]?.map(handle);
       return {
         ...token.master,
         children,
@@ -31,7 +31,7 @@ export function finalizeReactReusable_StyledComponents__Experimental({
     }
   };
 
-  const token = hanlde(tree);
+  const token = handle(tree);
   const webwi = compose(token, {});
   const builder = new ReactStyledComponentsModuleBuilder({
     entry: webwi,
