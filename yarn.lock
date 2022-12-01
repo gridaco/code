@@ -1131,7 +1131,7 @@
     core-js-pure "^3.25.1"
     regenerator-runtime "^0.13.11"
 
-"@babel/runtime@7.16.3", "@babel/runtime@^7.14.0":
+"@babel/runtime@7.16.3":
   version "7.16.3"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.16.3.tgz"
   integrity sha512-WBwekcqacdY2e9AF/Q7WLFUWmdJGJTkbjqTjoMDgXkVZ3ZRUvOPsLb5KdwISoQVsbP+DQzVZW4Zhci0DvpbNTQ==
@@ -1145,7 +1145,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.14.6", "@babel/runtime@^7.14.8", "@babel/runtime@^7.15.3", "@babel/runtime@^7.15.4", "@babel/runtime@^7.16.0", "@babel/runtime@^7.17.8", "@babel/runtime@^7.18.3", "@babel/runtime@^7.20.1", "@babel/runtime@^7.5.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.14.0", "@babel/runtime@^7.14.6", "@babel/runtime@^7.14.8", "@babel/runtime@^7.15.3", "@babel/runtime@^7.15.4", "@babel/runtime@^7.16.0", "@babel/runtime@^7.17.8", "@babel/runtime@^7.18.3", "@babel/runtime@^7.20.1", "@babel/runtime@^7.5.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.20.6"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.20.6.tgz"
   integrity sha512-Q+8MqP7TiHMWzSfwiJwXCjyf4GYA4Dgw3emg/7xmwsdLJOZUp+nMqcOwOzzYheuM1rhDu8FSj2l0aoMygEuXuA==
@@ -1692,7 +1692,7 @@
 
 "@emotion-icons/bootstrap@3.27.0":
   version "3.27.0"
-  resolved "https://registry.yarnpkg.com/@emotion-icons/bootstrap/-/bootstrap-3.27.0.tgz#53cde4cc341e0aa79f9a717ee78f2502c9bc1ae5"
+  resolved "https://registry.npmjs.org/@emotion-icons/bootstrap/-/bootstrap-3.27.0.tgz"
   integrity sha512-ZLUHpiXI/Lsej4i8T9do9Vrn5LGdcYtDAPz09cyHlp5cvEVkncgqAcGmeDVMnweNBf6wB+QzL33IqZiD43S/HA==
   dependencies:
     "@babel/runtime" "^7.15.4"
@@ -1923,7 +1923,7 @@
 
 "@emotion-icons/octicons@3.27.0":
   version "3.27.0"
-  resolved "https://registry.yarnpkg.com/@emotion-icons/octicons/-/octicons-3.27.0.tgz#bd3fbdf5fc9781997e0bcc582415b66201388741"
+  resolved "https://registry.npmjs.org/@emotion-icons/octicons/-/octicons-3.27.0.tgz"
   integrity sha512-O9PNyFrN2Zr/a0wCzNND4Fy2FC02J5FKNlDoFc36EsMbUrvGfUW7T2fECb6WmEAoLiL5rC2sJSZcHb6ieJugCQ==
   dependencies:
     "@babel/runtime" "^7.15.4"
@@ -1955,7 +1955,7 @@
 
 "@emotion-icons/simple-icons@3.27.0":
   version "3.27.0"
-  resolved "https://registry.yarnpkg.com/@emotion-icons/simple-icons/-/simple-icons-3.27.0.tgz#182fb1c0c870095676ec11825753efb3d71ff642"
+  resolved "https://registry.npmjs.org/@emotion-icons/simple-icons/-/simple-icons-3.27.0.tgz"
   integrity sha512-DAp2Hq6EQDFTQ1n80PAIhnREQlJ1j5MbJoYneDPKhzl9ItWrUVHPvqBuIAE2qQ0PtaVJAcw1COOxeE/xuxZFyw==
   dependencies:
     "@babel/runtime" "^7.15.4"
@@ -4346,7 +4346,7 @@
 
 "@radix-ui/popper@0.0.10":
   version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@radix-ui/popper/-/popper-0.0.10.tgz#9f707d9cec8762423f81acaf8e650e40a554cb73"
+  resolved "https://registry.npmjs.org/@radix-ui/popper/-/popper-0.0.10.tgz"
   integrity sha512-YFKuPqQPKscreQid7NuB4it3PMzSwGg03vgrud6sVliHkI43QNAOHyrHyMNo015jg6QK5GVDn+7J2W5uygqSGA==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -4424,7 +4424,7 @@
 
 "@radix-ui/react-arrow@0.0.13":
   version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-arrow/-/react-arrow-0.0.13.tgz#06b5a17f33bbc1af1c88d2827f25f37be95daa38"
+  resolved "https://registry.npmjs.org/@radix-ui/react-arrow/-/react-arrow-0.0.13.tgz"
   integrity sha512-BHBAULgQYmj36BrJ+1AGhC5p4QjJaE+szJgJ1a1EYOM3G6QOeIQKYvIm8TPEdKAiJhAivK+jZFccsE4Blzqc9g==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -4433,7 +4433,7 @@
 
 "@radix-ui/react-arrow@0.0.14":
   version "0.0.14"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-arrow/-/react-arrow-0.0.14.tgz#70b2c66efbf3cde0c9dd0895417e39f6cdf31805"
+  resolved "https://registry.npmjs.org/@radix-ui/react-arrow/-/react-arrow-0.0.14.tgz"
   integrity sha512-ZWfQM3hTCXN6ub2dMUmMv2ttEB/1zuBlOZdeWFeCCJHwZ+yy7iPzWF6ixaNygBa6t451PImq/dC7sqOnDJCfqQ==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -5009,7 +5009,7 @@
 
 "@radix-ui/react-popper@0.0.16":
   version "0.0.16"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-popper/-/react-popper-0.0.16.tgz#62cccb7d920dc89e076bbdc3421db8c84078f428"
+  resolved "https://registry.npmjs.org/@radix-ui/react-popper/-/react-popper-0.0.16.tgz"
   integrity sha512-njciQ/eIKaDF9h+27Pwi1H6NliQbzTgaHOsT0w/Lxx4vfMe8zcHtiEigYVGErNR4zAYlbW72KzLjtngtNnaorg==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -5025,7 +5025,7 @@
 
 "@radix-ui/react-popper@0.0.17":
   version "0.0.17"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-popper/-/react-popper-0.0.17.tgz#a73486e19a628cb3fecaf3fb6eecf6e2cab9d0be"
+  resolved "https://registry.npmjs.org/@radix-ui/react-popper/-/react-popper-0.0.17.tgz"
   integrity sha512-2Lk5AjlCcN9B6fQwQ+y1Zb93f1LfyCK6u0oOAUsPtwbnYEHCdC6wuCFBOZ7AonpjHbrHbY6QDrLGcC43TY6ihw==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -5072,7 +5072,7 @@
 
 "@radix-ui/react-portal@0.0.13":
   version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-portal/-/react-portal-0.0.13.tgz#8e60e9ee9b1594f98ee4a8f24a9851ef7ef2ad31"
+  resolved "https://registry.npmjs.org/@radix-ui/react-portal/-/react-portal-0.0.13.tgz"
   integrity sha512-Mw5hrxds2T9HTGwdDbvlKGvTUfcuKhPtqxLnizOrM685e80j+pfjAAfMSXSyfmra9KFQvk3XxmUP0d4U6+kzMg==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -5351,7 +5351,7 @@
 
 "@radix-ui/react-slot@0.0.10":
   version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-slot/-/react-slot-0.0.10.tgz#27a17cad7064872117aeb68113fa934bc5d34c37"
+  resolved "https://registry.npmjs.org/@radix-ui/react-slot/-/react-slot-0.0.10.tgz"
   integrity sha512-p0jJj6lTz1RV2imavnclk8Gda002ZSDR4/zPJ4EQBhspGnx7Y8l6G59c8lxJrT7c7F46F2eRNjpTTjFqqir6EQ==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -5360,7 +5360,7 @@
 
 "@radix-ui/react-slot@0.0.11", "@radix-ui/react-slot@^0.0.11":
   version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-slot/-/react-slot-0.0.11.tgz#d0121018ae20d86683d527b7011b7f21465dffbd"
+  resolved "https://registry.npmjs.org/@radix-ui/react-slot/-/react-slot-0.0.11.tgz"
   integrity sha512-H/l58Aqoyi9Jq5Jcny5v6HeMNelOivm2NUdaIvMBJzysbbwWhc78VEmpOpfQ6H+y/Fsx6aLprHbfmxPd/66PxQ==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -5458,7 +5458,7 @@
 
 "@radix-ui/react-tooltip@^0.0.18":
   version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-tooltip/-/react-tooltip-0.0.18.tgz#7594297dbc2acf101ac45fdb414c7bc0ac9426bc"
+  resolved "https://registry.npmjs.org/@radix-ui/react-tooltip/-/react-tooltip-0.0.18.tgz"
   integrity sha512-oYRAbbTZJ8zEokrrk5pe7QbzF+ZnzMby8mBplrkColi0ntToJ7RKzPgUs1OOFvmg/Nld0Iy2FufrTNlyyEI3kQ==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -5481,7 +5481,7 @@
 
 "@radix-ui/react-tooltip@^0.0.19":
   version "0.0.19"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-tooltip/-/react-tooltip-0.0.19.tgz#2ee843c7c5612708b31ad52adbefc580b213a421"
+  resolved "https://registry.npmjs.org/@radix-ui/react-tooltip/-/react-tooltip-0.0.19.tgz"
   integrity sha512-zDFrGH0nQfRZyk7qD73o22nCbA1QNQoo8cl6RhBLBAFG/b+h1Q5Y4VHu2ZKEz3zZEgrZ8lOKnX8A6dOa9619PQ==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -5658,7 +5658,7 @@
 
 "@radix-ui/react-use-previous@0.0.5":
   version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-use-previous/-/react-use-previous-0.0.5.tgz#75191d1fa0ac24c560fe8cfbaa2f1174858cbb2f"
+  resolved "https://registry.npmjs.org/@radix-ui/react-use-previous/-/react-use-previous-0.0.5.tgz"
   integrity sha512-GjtJlWlDAEMqCm2RDnVdWI6tk4/ZQfRq/VlP05Xy5rFZj6lD37VZWVWUELMBasRPzd2AS/9wPmphOgjH0VnE5A==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -5672,7 +5672,7 @@
 
 "@radix-ui/react-use-rect@0.0.7":
   version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-use-rect/-/react-use-rect-0.0.7.tgz#e3a55fa7183ef436042198787bf38f8c9befcc14"
+  resolved "https://registry.npmjs.org/@radix-ui/react-use-rect/-/react-use-rect-0.0.7.tgz"
   integrity sha512-OmaeFTgyiGNAchaxzDu+kFLz4Ly8RUcT5nwfoz4Nddd86I8Zdq93iNFnOpVLoVYqBnFEmvR6zexHXNFATrMbbQ==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -5703,7 +5703,7 @@
 
 "@radix-ui/react-use-size@0.0.6":
   version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-use-size/-/react-use-size-0.0.6.tgz#998eaf6e8871b868f81f3b7faac06c3e896c37a0"
+  resolved "https://registry.npmjs.org/@radix-ui/react-use-size/-/react-use-size-0.0.6.tgz"
   integrity sha512-kP4RIb2I5oHQzwzXJ21Hu8htNqf+sdaRzywxQpbj+hmqeUhpvIkhoq+ShNWV9wE/3c1T7gPnka8/nKYsKaKdCg==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -5725,7 +5725,7 @@
 
 "@radix-ui/react-visually-hidden@0.0.13":
   version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-visually-hidden/-/react-visually-hidden-0.0.13.tgz#c7f69097eb7d796dcd9117cdd228d87991c08baf"
+  resolved "https://registry.npmjs.org/@radix-ui/react-visually-hidden/-/react-visually-hidden-0.0.13.tgz"
   integrity sha512-8VNuE4/3PnyrLv1je56fxaa5qka0Nb6/FlyQEDF2HCPpxVOWR4sxRfSBe8cjy+Me+pJN9ZoKBIuoFCVRk54xJA==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -5734,7 +5734,7 @@
 
 "@radix-ui/react-visually-hidden@0.0.14":
   version "0.0.14"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-visually-hidden/-/react-visually-hidden-0.0.14.tgz#47b764d295275572aa290dabc81c39be3091663b"
+  resolved "https://registry.npmjs.org/@radix-ui/react-visually-hidden/-/react-visually-hidden-0.0.14.tgz"
   integrity sha512-fCz6Q24EWfU5uX4JGXFoO2I5H5otGzyyrxyKeOKYpkWiTGY93CO9C4oN7rXiRNCxkm68bgynAgIG40TjOqy0Lw==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -5751,7 +5751,7 @@
 
 "@radix-ui/rect@0.0.5":
   version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@radix-ui/rect/-/rect-0.0.5.tgz#6000d8d800288114af4bbc5863e6b58755d7d978"
+  resolved "https://registry.npmjs.org/@radix-ui/rect/-/rect-0.0.5.tgz"
   integrity sha512-gXw171KbjyttA7K1DRIvPguLmKsg8raitB67MIcsdZwcquy+a1O2w3xY21NIKEqGhJwqJkECPUmMJDXgMNYuAg==
   dependencies:
     "@babel/runtime" "^7.13.10"
@@ -5990,9 +5990,9 @@
   integrity sha512-1P1OROm/rdubP5aFDSZQILU0vrLCJ4fvHt6EoqHEM+2D/G5MK3bIaymUKLit8Js9gbns5UyJnkP/TZROLw4tUA==
 
 "@sinonjs/commons@^1.7.0":
-  version "1.8.5"
-  resolved "https://registry.npmjs.org/@sinonjs/commons/-/commons-1.8.5.tgz"
-  integrity sha512-rTpCA0wG1wUxglBSFdMMY0oTrKYvgf4fNgv/sXbfCVAdf+FnPBdKJR/7XbpTCwbCrvCbdPYnlWaUUYz4V2fPDA==
+  version "1.8.6"
+  resolved "https://registry.npmjs.org/@sinonjs/commons/-/commons-1.8.6.tgz"
+  integrity sha512-Ky+XkAkqPZSm3NLBeUng77EBQl3cmeJhITaGHdYH8kjVB+aun3S4XBRti2zt17mtt0mIUDiNxYeoJm6drVvBJQ==
   dependencies:
     type-detect "4.0.8"
 
@@ -7165,9 +7165,9 @@
   integrity sha512-qcUXuemtEu+E5wZSJHNxUXeCZhAfXKQ41D+duX+VYPde7xyEVZci+/oXKJL13tnRs9lR2pr4fod59GT6/X1/yQ==
 
 "@types/lodash@^4.14.146", "@types/lodash@^4.14.167", "@types/lodash@^4.14.178":
-  version "4.14.190"
-  resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.190.tgz"
-  integrity sha512-5iJ3FBJBvQHQ8sFhEhJfjUP+G+LalhavTkYyrAYqz5MEJG+erSv0k9KJLb6q7++17Lafk1scaTIFXcMJlwK8Mw==
+  version "4.14.191"
+  resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.191.tgz"
+  integrity sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==
 
 "@types/lokijs@1.5.7":
   version "1.5.7"
@@ -7220,19 +7220,19 @@
     form-data "^3.0.0"
 
 "@types/node@*", "@types/node@>=12.12.47", "@types/node@>=13.7.0", "@types/node@^18.11.9", "@types/node@^18.6.3":
-  version "18.11.9"
-  resolved "https://registry.npmjs.org/@types/node/-/node-18.11.9.tgz"
-  integrity sha512-CRpX21/kGdzjOpFsZSkcrXMGIBWMGNIHXXBVFSH+ggkftxg+XYP20TESbh+zFvFj3EQOl5byk0HTRn1IL6hbqg==
+  version "18.11.10"
+  resolved "https://registry.npmjs.org/@types/node/-/node-18.11.10.tgz"
+  integrity sha512-juG3RWMBOqcOuXC643OAdSA525V44cVgGV6dUDuiFtss+8Fk5x1hI93Rsld43VeJVIeqlP9I7Fn9/qaVqoEAuQ==
 
 "@types/node@^14.0.10 || ^16.0.0", "@types/node@^14.14.20 || ^16.0.0", "@types/node@^16.11.7":
-  version "16.18.3"
-  resolved "https://registry.npmjs.org/@types/node/-/node-16.18.3.tgz"
-  integrity sha512-jh6m0QUhIRcZpNv7Z/rpN+ZWXOicUUQbSoWks7Htkbb9IjFQj4kzcX/xFCkjstCj5flMsN8FiSvt+q+Tcs4Llg==
+  version "16.18.4"
+  resolved "https://registry.npmjs.org/@types/node/-/node-16.18.4.tgz"
+  integrity sha512-9qGjJ5GyShZjUfx2ArBIGM+xExdfLvvaCyQR0t6yRXKPcWCVYF/WemtX/uIU3r7FYECXRXkIiw2Vnhn6y8d+pw==
 
 "@types/node@^14.14.31", "@types/node@^14.14.37":
-  version "14.18.33"
-  resolved "https://registry.npmjs.org/@types/node/-/node-14.18.33.tgz"
-  integrity sha512-qelS/Ra6sacc4loe/3MSjXNL1dNQ/GjxNHVzuChwMfmk7HuycRLVQN2qNY3XahK+fZc5E2szqQSKUyAF0E+2bg==
+  version "14.18.34"
+  resolved "https://registry.npmjs.org/@types/node/-/node-14.18.34.tgz"
+  integrity sha512-hcU9AIQVHmPnmjRK+XUUYlILlr9pQrsqSrwov/JK1pnf3GTQowVBhx54FbvM0AU/VXGH4i3+vgXS5EguR7fysA==
 
 "@types/node@^15.12.1":
   version "15.14.9"
@@ -7356,7 +7356,7 @@
 
 "@types/react-virtualized@^9.21.13":
   version "9.21.21"
-  resolved "https://registry.yarnpkg.com/@types/react-virtualized/-/react-virtualized-9.21.21.tgz#65c96f25314f0fb3d40536929dc78112753b49e1"
+  resolved "https://registry.npmjs.org/@types/react-virtualized/-/react-virtualized-9.21.21.tgz"
   integrity sha512-Exx6I7p4Qn+BBA1SRyj/UwQlZ0I0Pq7g7uhAp0QQ4JWzZunqEqNBGTmCmMmS/3N9wFgAGWuBD16ap7k8Y14VPA==
   dependencies:
     "@types/prop-types" "*"
@@ -9287,9 +9287,9 @@ camelcase@^6.2.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001109, caniuse-lite@^1.0.30001400, caniuse-lite@^1.0.30001406:
-  version "1.0.30001434"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001434.tgz"
-  integrity sha512-aOBHrLmTQw//WFa2rcF1If9fa3ypkC1wzqqiKHgfdrXTWcU8C4gKVZT77eQAPWN1APys3+uQ0Df07rKauXGEYA==
+  version "1.0.30001435"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001435.tgz"
+  integrity sha512-kdCkUTjR+v4YAJelyiDTqiu82BDr4W4CP5sgTA0ZBmqn30XfS2ZghPLMowik9TPhS+psWJiUNxsqLyurDbmutA==
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -11029,7 +11029,7 @@ emojis-list@^3.0.0:
 
 emotion-icons@^3.7.0:
   version "3.27.0"
-  resolved "https://registry.yarnpkg.com/emotion-icons/-/emotion-icons-3.27.0.tgz#929a7f56f1dd6545e7b91fcdb0d846fab55fe0b5"
+  resolved "https://registry.npmjs.org/emotion-icons/-/emotion-icons-3.27.0.tgz"
   integrity sha512-qx1cTQFHJRbQ+efQpd6E3mXs8Gje7sisERIPLsdh33lfaibzX6LSuyul7vTCJlqTvBOtsuk/IK9AxGV4wRxXZA==
   dependencies:
     "@babel/runtime" "^7.15.4"
@@ -13226,7 +13226,7 @@ immediate@~3.0.5:
 
 immer@^9.0.3:
   version "9.0.16"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.16.tgz#8e7caab80118c2b54b37ad43e05758cdefad0198"
+  resolved "https://registry.npmjs.org/immer/-/immer-9.0.16.tgz"
   integrity sha512-qenGE7CstVm1NrHQbMh8YaSzTZTFNP3zPqr3YU0S0UY441j4bJTg4A2Hh5KAhwgaiU6ZZ1Ar6y/2f4TblnMReQ==
 
 import-cwd@^2.0.0:
@@ -15670,9 +15670,9 @@ minimalistic-crypto-utils@^1.0.1:
     brace-expansion "^1.1.7"
 
 minimatch@^5.0.1, minimatch@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.npmjs.org/minimatch/-/minimatch-5.1.0.tgz"
-  integrity sha512-9TPBGGak4nHfGZsPBohm9AWg6NoT7QTCehS3BIJABslyZbzxfV78QM2Y6+i741OPZIafFAaiiEMh5OyIrJPgtg==
+  version "5.1.1"
+  resolved "https://registry.npmjs.org/minimatch/-/minimatch-5.1.1.tgz"
+  integrity sha512-362NP+zlprccbEt/SkxKfRMHnNY85V74mVnpUpNyr3F35covl09Kec7/sEFLt3RA4oXmewtoaanoIf67SE5Y5g==
   dependencies:
     brace-expansion "^2.0.1"
 
@@ -16308,7 +16308,7 @@ npm-normalize-package-bin@^1.0.0, npm-normalize-package-bin@^1.0.1:
 
 npm-normalize-package-bin@^2.0.0:
   version "2.0.0"
-  resolved "https://registry.yarnpkg.com/npm-normalize-package-bin/-/npm-normalize-package-bin-2.0.0.tgz#9447a1adaaf89d8ad0abe24c6c84ad614a675fff"
+  resolved "https://registry.npmjs.org/npm-normalize-package-bin/-/npm-normalize-package-bin-2.0.0.tgz"
   integrity sha512-awzfKUO7v0FscrSpRoogyNm0sajikhBWpU0QMrW09AMi9n1PoKU6WaIqUzuJSQnpciZZmJ/jMZ2Egfmb/9LiWQ==
 
 npm-package-arg@^5.1.2:
@@ -18579,7 +18579,7 @@ react-virtualized@^9.22.3:
 
 react-window@^1.8.6:
   version "1.8.8"
-  resolved "https://registry.yarnpkg.com/react-window/-/react-window-1.8.8.tgz#1b52919f009ddf91970cbdb2050a6c7be44df243"
+  resolved "https://registry.npmjs.org/react-window/-/react-window-1.8.8.tgz"
   integrity sha512-D4IiBeRtGXziZ1n0XklnFGu7h9gU684zepqyKzgPNzrsrk7xOCxni+TCckjg2Nr/DiaEEGVVmnhYSlT2rB47dQ==
   dependencies:
     "@babel/runtime" "^7.0.0"
