@@ -81,7 +81,13 @@ const createWindow = async () => {
     },
   });
 
-  mainWindow.loadURL(resolveHtmlPath('index.html'));
+  // --- OVERRIDE --- use this to load a local html file
+  // mainWindow.loadURL(resolveHtmlPath('index.html'));
+  const HOST =
+    process.env.NODE_ENV === 'production'
+      ? 'https://code.grida.co'
+      : 'http://localhost:6626';
+  mainWindow.loadURL(HOST);
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
