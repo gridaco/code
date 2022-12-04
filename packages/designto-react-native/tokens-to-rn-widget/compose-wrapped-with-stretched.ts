@@ -7,7 +7,7 @@ export function compose_wrapped_with_clip_stretched(
   widget: Stretched,
   child_composer: Composer
 ) {
-  let remove_size;
+  let remove_size: keyof ViewStyle;
   switch (widget.axis) {
     case core.Axis.horizontal:
       remove_size = "height";

@@ -102,7 +102,7 @@ function fromMultichild(
       );
 
     const raw_maskier_key = keyFromNode(maskier); // we do not override key for clipped because maskier it self is not being nested, but being converted as a container-like.
-    let clipped;
+    let clipped: ClipRRect | ClipPath | undefined;
 
     // TODO: this should rather be isImage then hasImage.
     if (maskier.hasImage) {
