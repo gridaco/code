@@ -19,8 +19,8 @@ export async function login() {
   }
 
   //
-  let session;
-  let url;
+  let session: string;
+  let url: string;
   try {
     const { authUrl, id: _session } = await startAuthenticationSession();
     session = _session;

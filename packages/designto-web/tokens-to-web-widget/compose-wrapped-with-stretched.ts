@@ -1,12 +1,13 @@
 import * as core from "@reflect-ui/core";
 import { Composer } from ".";
 import { Stretched } from "@designto/token/tokens";
+import { ElementCssProperties } from "@coli.codes/css";
 
 export function compose_wrapped_with_stretched(
   widget: Stretched,
   child_composer: Composer
 ) {
-  let remove_size;
+  let remove_size: keyof ElementCssProperties;
   switch (widget.axis) {
     case core.Axis.horizontal:
       remove_size = "height";

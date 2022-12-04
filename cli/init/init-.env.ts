@@ -24,9 +24,9 @@ export function addDotEnv(
   value: string,
   allowOverwrite: boolean = false
 ): AddDotEnvResult {
-  let added = false;
-  let filecreated = false;
-  let overwrite = false;
+  let added: boolean = false;
+  let filecreated: boolean = false;
+  let overwrite: boolean = false;
 
   const dotenv_file = path.join(cwd, ".env");
   const dotenv_file_exists = fs.existsSync(dotenv_file);
