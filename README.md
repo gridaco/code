@@ -239,6 +239,10 @@ Visit project ([`./editor`](./editor/))
 
 </details>
 
-## Architecture
+## Contributing
 
-Read [architecture.md](./architecture.md)
+- See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
+
+**architecture**
+
+- See [architecture.md](./architecture.md)
