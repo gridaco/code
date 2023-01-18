@@ -1469,7 +1469,7 @@
 
 "@design-sdk/figma-core@^0.0.25":
   version "0.0.25"
-  resolved "https://registry.npmjs.org/@design-sdk/figma-core/-/figma-core-0.0.25.tgz"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-core/-/figma-core-0.0.25.tgz#7fa28cc7d6e45cd713c5f268d42e4dd4f2b41590"
   integrity sha512-6OF7eUbDOlR4/BFtd2FRyDvvUf777OGNbVbNScUOv3Fk/kUXBzMTXX6ZdoRlTx887v/vo3+Lh0D31SG1sm80aA==
 
 "@design-sdk/figma-node-conversion@^0.0.43":
@@ -6872,6 +6872,11 @@
   version "2.0.0"
   resolved "https://registry.npmjs.org/@tootallnate/once/-/once-2.0.0.tgz"
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
+
+"@tree-/q@^0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@tree-/q/-/q-0.0.0.tgz#c99033079e9c570102f124b27fb2c01b33a4be47"
+  integrity sha512-l67D4E+prLW/NOihNl709VRkpfpT3Xcx7n6x3d72dJrXNS9pdjoEHRnSoIIoFVEK79lBP4JFa4jXGcsKk6R+Tw==
 
 "@types/aria-query@^4.2.0":
   version "4.2.2"
