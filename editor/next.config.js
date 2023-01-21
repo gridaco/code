@@ -17,6 +17,9 @@ const packages = [
   "@code-editor/module-icons",
   "use-sys-theme",
 
+  // fsv
+  "@fsv/ds",
+
   // -----------------------------
   // region @designto-code
   "@designto/debugger",

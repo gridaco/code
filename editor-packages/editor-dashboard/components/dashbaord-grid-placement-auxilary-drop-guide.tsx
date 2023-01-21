@@ -2,11 +2,17 @@ import React from "react";
 import styled from "@emotion/styled";
 import assert from "assert";
 
+export type AuxilaryGridDropGuideProps =
+  AuxilaryGridDropGuideLeftOrRightSpecification & {
+    path: string;
+  };
+
 export type AuxilaryGridDropGuideLeftOrRightSpecification = {
   left?: boolean;
   right?: boolean;
 };
-type AuxilaryGridDropGuide = AuxilaryGridDropGuideLeftOrRightSpecification & {
+
+type AuxilaryGridDropGuide = AuxilaryGridDropGuideProps & {
   onClick?: () => void;
   over?: boolean;
 };

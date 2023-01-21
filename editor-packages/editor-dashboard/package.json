@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@radix-ui/react-collapsible": "^1.0.1",
+    "memfs": "^3.4.13",
     "react-selecto": "^1.20.2"
   }
 }

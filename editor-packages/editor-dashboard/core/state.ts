@@ -1,3 +1,4 @@
+import type { FSVDSStore } from "@fsv/ds";
 import type { ReflectSceneNode } from "@design-sdk/figma-node";
 import type { ComponentNode } from "@design-sdk/figma";
 
@@ -25,6 +26,7 @@ export type DashboardFolderItem = {
   path: string;
   name: string;
   contents: Array<DashboardItem>;
+  ds_store: FSVDSStore;
 };
 
 export type SceneItem = FrameSceneItem | ComponentItem | GroupedSceneItem;

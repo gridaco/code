@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import type { DashboardState } from "./state";
 import type { Action } from "./action";
-import { reducer } from "./reducer";
+import { reducer } from "./reducers";
 import { initialDashboardState } from "./initial";
 import { FigmaReflectRepository, useEditorState } from "editor/core/states";
 import { useDispatch as useEditorDispatch } from "editor/core/dispatch";

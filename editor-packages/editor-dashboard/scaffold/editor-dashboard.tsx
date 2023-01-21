@@ -9,7 +9,7 @@ import {
   DASHBOARD_ITEM_CARD_SELECTOR,
   DASHBOARD_ITEM_PATH_ATTRIBUTE,
   AuxilaryDashbaordGridPlacementGuide,
-  AuxilaryGridDropGuideLeftOrRightSpecification,
+  AuxilaryGridDropGuideProps,
 } from "../components";
 import { EditorHomeHeader } from "./editor-dashboard-header";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
@@ -194,18 +194,18 @@ function Directory({
           />
           <Collapsible.Content>
             <SceneGrid onClick={onBlur}>
-              {contents.map((i) => (
-                <DashboardItemCardWrapper key={i.id}>
+              {contents.map((item, i) => (
+                <DashboardItemCardWrapper key={item.id} path={item.path}>
                   <DashboardItemCard
                     q={query}
-                    {...i}
-                    selected={selections.includes(i.id)}
+                    {...item}
+                    selected={selections.includes(item.id)}
                     onClick={(e) => {
-                      onSelect(i.id);
+                      onSelect(item.id);
                       e.stopPropagation();
                     }}
                     onDoubleClick={() => {
-                      onEnter(i.id);
+                      onEnter(item.id);
                     }}
                   />
                 </DashboardItemCardWrapper>
@@ -265,27 +265,30 @@ function RootDirectoryContextMenuProvider({
 }
 
 type DndMetaItem<T = object> = T & {
-  id: string;
+  path: string;
   $type: DashboardItem["$type"];
 };
 
-function DashboardItemCardWrapper({ children }: React.PropsWithChildren<{}>) {
+function DashboardItemCardWrapper({
+  path,
+  children,
+}: React.PropsWithChildren<{ path: string }>) {
   return (
     <div
       style={{
         position: "relative",
       }}
     >
-      <PlacementGuide left />
+      <PlacementGuide left path={path} />
       {children}
-      <PlacementGuide right />
+      <PlacementGuide right path={path} />
     </div>
   );
 }
 
-function PlacementGuide({
-  ...props
-}: AuxilaryGridDropGuideLeftOrRightSpecification) {
+function PlacementGuide({ ...props }: AuxilaryGridDropGuideProps) {
+  const { path: target } = props;
+  const { mv } = useDashboard();
   const [{ isActive }, drop] = useDrop(() => ({
     accept: "scene",
     collect: (monitor) => ({
@@ -295,8 +298,21 @@ function PlacementGuide({
       return true;
     },
     drop(item, monitor) {
-      console.log("drop", item, monitor);
-      // todo:
+      const it: DashboardItem = item as DashboardItem;
+
+      console.log("move order", it, monitor);
+
+      switch (it.$type) {
+        case "frame-scene": {
+          const dest = target.split("/").slice(0, -1).join("/");
+          console.log(target, dest);
+          mv([it.path], dest); // TODO: add order info
+          break;
+        }
+        case "folder": {
+          throw new Error("folder cannot be moved to a scene");
+        }
+      }
     },
   }));
 
@@ -332,7 +348,7 @@ function DashboardItemCard(
 function SceneCard(
   props: SceneItem & Omit<DashboardItemCardProps, "label" | "preview" | "icon">
 ) {
-  const { isolateNode, focusNodeOnCanvas } = useDashboard();
+  const { mv, isolateNode, focusNodeOnCanvas } = useDashboard();
 
   const [{ isActive }, drop] = useDrop(() => ({
     accept: "scene",
@@ -340,10 +356,23 @@ function SceneCard(
       isActive: monitor.canDrop() && monitor.isOver(),
     }),
     canDrop(item: DndMetaItem, monitor) {
-      return item.id !== props.id;
+      return item.path !== props.path;
     },
     drop(item, monitor) {
-      console.log("drop", item, monitor);
+      const it: DashboardItem = item as DashboardItem;
+
+      console.log("drop into SceneCard", it, monitor);
+
+      switch (it.$type) {
+        case "frame-scene": {
+          mv([it.path], props.path);
+          break;
+        }
+        case "folder": {
+          throw new Error("folder cannot be moved to a scene");
+        }
+      }
+
       // todo:
     },
   }));
@@ -351,9 +380,13 @@ function SceneCard(
   const [{ opacity }, drag] = useDrag(() => {
     return {
       type: "scene",
-      item: props.scene,
+      item: {
+        id: props.id,
+        $type: props.$type,
+        path: props.path,
+      },
       collect: (monitor) => ({
-        opacity: monitor.isDragging() ? 0.5 : 1,
+        opacity: monitor.isDragging() ? 0.4 : 1,
       }),
     };
   }, []);
@@ -415,11 +448,17 @@ function FolderCard(
       isActive: monitor.canDrop() && monitor.isOver(),
     }),
     canDrop(item: DndMetaItem, monitor) {
-      return item.id !== props.id;
+      return item.path !== props.path;
     },
     drop(item, monitor) {
-      // @ts-ignore
-      mv([item.path], props.path);
+      const it: DashboardItem = item as DashboardItem;
+
+      switch (it.$type) {
+        case "frame-scene":
+        case "folder": {
+          mv([it.path], props.path);
+        }
+      }
     },
   }));
 
@@ -428,7 +467,7 @@ function FolderCard(
       type: props.$type,
       item: props,
       collect: (monitor) => ({
-        opacity: monitor.isDragging() ? 0.5 : 1,
+        opacity: monitor.isDragging() ? 0.4 : 1,
       }),
     };
   }, []);

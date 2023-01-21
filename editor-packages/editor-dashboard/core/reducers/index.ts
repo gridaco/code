@@ -1,5 +1,6 @@
+import assert from "assert";
 import produce from "immer";
-import path from "path";
+
 import type {
   Action,
   FilterAction,
@@ -10,8 +11,12 @@ import type {
   NewSectionAction,
   UnfoldAction,
   UnfoldAllAction,
-} from "./action";
-import type { DashboardFolderItem, DashboardState } from "./state";
+} from "../action";
+import type {
+  DashboardFolderItem,
+  DashboardItem,
+  DashboardState,
+} from "../state";
 
 export function reducer(state: DashboardState, action: Action): DashboardState {
   switch (action.type) {
@@ -24,6 +29,7 @@ export function reducer(state: DashboardState, action: Action): DashboardState {
           id: name, // add confliction check
           path: name, // add confliction check
           contents: [],
+          ds_store: {},
         });
       });
     }
@@ -56,6 +62,7 @@ export function reducer(state: DashboardState, action: Action): DashboardState {
             id: path,
             path: path,
             contents: [],
+            ds_store: {},
           });
         }
       });
@@ -67,34 +74,53 @@ export function reducer(state: DashboardState, action: Action): DashboardState {
       console.log("move", source, dest);
       return produce(state, (draft) => {
         // // 1. check if dest is a valid directory
-        // const destFolder = findFolder(dest, {
-        //   directories: state.hierarchy.sections,
-        // });
-        // console.log("destDir", destFolder);
-        // if (!destFolder) {
-        //   return;
-        // }
-        // // 2. move each source under dest
-        // for (const src of source) {
-        //   console.log("moving", src, "to", dest);
-        //   const srcFolder = draft.hierarchy.sections.find(
-        //     (s) => s.path === src
-        //   );
-        //   const srcParent = draft.hierarchy.sections.find((s) =>
-        //     s.contents.find((c) => c.path === src)
-        //   );
-        //   if (!srcParent) {
-        //     continue;
-        //   }
-        //   // 2.1 remove src from srcParent
-        //   srcParent.contents = srcParent.contents.filter(
-        //     (c) => c.path !== srcFolder.path
-        //   );
-        //   // 2.2 add src to dest
-        //   destFolder.contents.push(srcFolder);
-        //   console.log("srcParent", srcParent);
-        //   console.log("destDir", destFolder);
-        // }
+        const destFolder = findFolder(dest, {
+          directories: state.hierarchy.sections,
+        });
+        assert(destFolder, `"${destFolder}" is not a valid dest directory`);
+
+        // 2. move each source under dest
+        for (const src of source) {
+          const srcdir = src.split("/").slice(0, -1).join("/");
+          console.log("moving", src, "to", dest, "from", srcdir);
+          const srcFolder = findFolder(srcdir, {
+            directories: state.hierarchy.sections,
+          });
+
+          assert(srcFolder, `"${srcdir}" is not a valid source directory`);
+
+          const item: DashboardItem = srcFolder.contents.find(
+            (c) => c.path === src
+          );
+
+          // move item from src to dest (immer)
+          // - remove src from srcFolder
+          // - add src to destFolder
+
+          // rm from srcFolder
+          draft.hierarchy.sections = draft.hierarchy.sections.map((s) => {
+            if (s.path === srcFolder.path) {
+              return {
+                ...s,
+                contents: s.contents.filter((c) => c.path !== src),
+              };
+            } else if (s.path === destFolder.path) {
+              return {
+                ...s,
+                contents: s.contents.concat(
+                  srcFolder.contents.find((c) => c.path === src) as any
+                ),
+              };
+            } else {
+              return s;
+            }
+          });
+
+          // add to destFolder
+          draft.hierarchy.sections
+            .find((s) => s.path === destFolder.path)
+            .contents.push(item as any);
+        }
       });
     }
 
@@ -169,7 +195,7 @@ function newDirName({
 function findFolder(
   path: string,
   { directories }: { directories: Array<DashboardFolderItem> }
-) {
+): DashboardFolderItem | undefined {
   for (const dir of directories) {
     if (dir.path === path) {
       return dir;
