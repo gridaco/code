@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`create 1`] = `
+{
+  "/foo/bar.txt": "hello world",
+}
+`;
+
+exports[`mkdir 1`] = `
+{
+  "/foo": null,
+}
+`;
+
+exports[`touch 1`] = `
+{
+  "/foo/bar.txt": "hello world",
+}
+`;
