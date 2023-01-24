@@ -4,8 +4,7 @@ import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import { MonacoEmptyMock } from "./monaco-mock-empty";
 import { register } from "./monaco-utils";
 import { __dangerous__lastFormattedValue__global } from "@code-editor/prettier-services";
-import { debounce } from "utils/debounce";
-import { downloadFile } from "utils/download";
+import { debounce, downloadFile } from "@code-editor/utils";
 
 type ICodeEditor = monaco.editor.IStandaloneCodeEditor;
 type Options = Omit<
