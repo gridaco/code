@@ -1,10 +1,6 @@
 import React from "react";
-import {
-  ResizablePIP,
-  VanillaFrameContextManuProvider,
-} from "@code-editor/preview-pip";
+import { ResizablePIP } from "@code-editor/preview-pip";
 import { CodeEditor } from "@code-editor/monaco";
-import styled from "@emotion/styled";
 
 function Preview() {
   return (
