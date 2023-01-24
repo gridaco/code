@@ -15,6 +15,7 @@
         "editor",
         "editor-packages/*",
         "packages/*",
+        "vscode/*",
         "ui/editor-ui/packages/*"
     ],
     "resolutions": {
