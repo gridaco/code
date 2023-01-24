@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect } from "react";
 import styled from "@emotion/styled";
 import { File } from "core/states";
-import { debounce } from "utils/debounce";
-import { MonacoEditor } from "components/code-editor";
+import { debounce } from "@code-editor/utils";
+import { MonacoEditor } from "@code-editor/monaco";
 import { CodingToolbar } from "./codeing-toolbar";
 import { useCurrentFile } from "./hooks";
 import { useDispatch } from "core/dispatch";

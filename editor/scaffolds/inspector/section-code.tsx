@@ -6,7 +6,7 @@ import {
 } from "@editor-ui/property";
 import { Result } from "@designto/code";
 import { useTargetContainer } from "hooks/use-target-node";
-import { MonacoEditor } from "components/code-editor";
+import { MonacoEditor } from "@code-editor/monaco";
 import { ClipboardBox } from "components/inspector";
 import { useDispatch } from "core/dispatch";
 import { code as wwcode } from "../code/code-worker-messenger";

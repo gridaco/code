@@ -1,5 +1,5 @@
 import React from "react";
-import { MonacoEditor } from "components/code-editor";
+import { MonacoEditor } from "@code-editor/monaco";
 import { SceneNode } from "@design-sdk/figma-types";
 import { useDesign } from "hooks";
 import LoadingLayout from "layouts/loading-overlay";

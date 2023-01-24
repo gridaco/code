@@ -10,7 +10,7 @@ import { Tooltip } from "@editor-ui/tooltip";
 import { Filetab } from "./filetab";
 import { useEditorState } from "core/states";
 import { useDispatch } from "core/dispatch";
-import { downloadFile } from "utils/download";
+import { downloadFile } from "@code-editor/utils";
 import { useOpenPreferences } from "@code-editor/preferences";
 import { useCurrentFile } from "./hooks";
 import { useCodingDispatch, useCodingState } from "./coding";

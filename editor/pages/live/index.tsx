@@ -9,7 +9,7 @@ import {
   WorkspaceContentPanelGridLayout,
 } from "layouts/panel";
 import { PreviewAndRunPanel } from "components/preview-and-run";
-import { CodeEditor } from "components/code-editor";
+import { CodeEditor } from "@code-editor/monaco";
 import {
   ImageRepository,
   MainImageRepository,

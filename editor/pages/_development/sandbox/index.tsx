@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { IsolatedCanvas } from "components/canvas";
-import { CodeEditor } from "components/code-editor";
+import { CodeEditor } from "@code-editor/monaco";
 import { DefaultEditorWorkspaceLayout } from "layout/default-editor-workspace-layout";
 import {
   WorkspaceContentPanel,
@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { colors } from "theme";
 import bundler from "@code-editor/esbuild-services";
-import { debounce } from "utils/debounce";
+import { debounce } from "@code-editor/utils";
 import { VanillaESBuildAppRunner } from "components/app-runner";
 
 const component_code = `
