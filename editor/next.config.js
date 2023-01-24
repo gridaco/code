@@ -7,6 +7,8 @@ const packages = [
   "@code-editor/preview-pip", // TODO: remove me. this is for development. for production, use npm ver instead.
   "@code-editor/devtools",
   "@code-editor/canvas",
+  "@code-editor/monaco",
+  "@code-editor/utils",
   "@code-editor/property",
   "@code-editor/preferences",
   "@code-editor/dashboard",
