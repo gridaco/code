@@ -23,6 +23,7 @@ import {
   StringLiteral,
 } from "coli";
 import { Framework } from "@grida/builder-platform-types";
+import { stringfy as stringfyHtmlMeta, HtmlMeta } from "../html-meta";
 
 interface CssDeclaration {
   key: {
@@ -224,11 +225,19 @@ function injectIdToJsx(jsx: JSXElementLike, id: string) {
 }
 
 const html_render = ({ css, body }: { css: string; body: string }) => {
+  // TODO: fixme - this is inacurate (the first line won't be indented)
   const indenter = (s: string, tabs: number = 0) =>
     s.replace(/\n/g, "\n" + "\t".repeat(tabs));
+
   return `<!DOCTYPE html>
 <html>
   <head>
+${indenter(
+  stringfyHtmlMeta({
+    charset: "utf-8",
+  }),
+  2
+)}
     <style>
 ${indenter(css, 3)}
     </style>
