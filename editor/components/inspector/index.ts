@@ -1,1 +1,2 @@
-export * from "./default-inspector";
+export * from "./inspector-readonly-property";
+export * from "./inspector-clipboard-box";

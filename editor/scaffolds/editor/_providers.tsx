@@ -1,49 +1,50 @@
-import React from "react";
-import { useHotkeys } from "react-hotkeys-hook";
+import React, { useCallback } from "react";
+import { EditorShortcutsProvider } from "./editor-shortcuts-provider";
 import { EditorImageRepositoryProvider } from "./editor-image-repository-provider";
 import { EditorPreviewDataProvider } from "./editor-preview-provider";
+import { EditorCodeWebworkerProvider } from "scaffolds/editor/editor-code-webworker-provider";
+import { EditorToastProvider } from "./editor-toast-provider";
+import { FigmaImageServiceProvider } from "./editor-figma-image-service-provider";
+import { FigmaImageServiceProviderForCanvasRenderer } from "./editor-figma-image-service-for-canvas-provider";
+import { DashboardStateProvider } from "@code-editor/dashboard";
+import { EditorState, useEditorState } from "core/states";
 
 export function EditorDefaultProviders(props: { children: React.ReactNode }) {
-  return (
-    <ShortcutsProvider>
-      <EditorImageRepositoryProvider>
-        <EditorPreviewDataProvider>{props.children}</EditorPreviewDataProvider>
-      </EditorImageRepositoryProvider>
-    </ShortcutsProvider>
+  const [state] = useEditorState();
+
+  const DashboardProvider = useCallback(
+    ({
+      children,
+      design,
+    }: React.PropsWithChildren<{ design: EditorState["design"] }>) => {
+      return state.design ? (
+        <DashboardStateProvider design={design}>
+          {children}
+        </DashboardStateProvider>
+      ) : (
+        <React.Fragment>{children}</React.Fragment>
+      );
+    },
+    [state.design?.version]
   );
-}
 
-function ShortcutsProvider(props: { children: React.ReactNode }) {
-  const noop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  const _save = keymap("ctrl-cmd", "s");
-  const _preferences = keymap("ctrl-cmd", ",");
-
-  useHotkeys(_save.universal, noop);
-  useHotkeys(_preferences.universal, noop);
-
-  return <>{props.children}</>;
-}
-
-const keymap = (
-  ...c: ("ctrl" | "cmd" | "ctrl-cmd" | "shift" | "a" | "p" | "s" | ",")[]
-) => {
-  const magic_replacer = (s: string, os: "win" | "mac") => {
-    return replaceAll(s, "ctrl-cmd", os === "win" ? "ctrl" : "cmd");
-  };
-
-  const win = magic_replacer(c.join("+"), "win");
-  const mac = magic_replacer(c.join("+"), "mac");
-  const universal = [win, mac].join(", ");
-  return { win, mac, universal };
-};
-
-function _escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
-}
-function replaceAll(str, match, replacement) {
-  return str.replace(new RegExp(_escapeRegExp(match), "g"), () => replacement);
+  return (
+    <EditorToastProvider>
+      <EditorImageRepositoryProvider>
+        <EditorCodeWebworkerProvider>
+          <EditorPreviewDataProvider>
+            <EditorShortcutsProvider>
+              <FigmaImageServiceProvider filekey={state?.design?.key}>
+                <FigmaImageServiceProviderForCanvasRenderer>
+                  <DashboardProvider design={state.design}>
+                    {props.children}
+                  </DashboardProvider>
+                </FigmaImageServiceProviderForCanvasRenderer>
+              </FigmaImageServiceProvider>
+            </EditorShortcutsProvider>
+          </EditorPreviewDataProvider>
+        </EditorCodeWebworkerProvider>
+      </EditorImageRepositoryProvider>
+    </EditorToastProvider>
+  );
 }

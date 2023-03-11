@@ -1,19 +1,55 @@
 import * as monaco from "monaco-editor";
-import { Monaco, OnMount } from "@monaco-editor/react";
+import { Monaco } from "@monaco-editor/react";
 import { registerDocumentPrettier } from "@code-editor/prettier-services";
 import { registerJsxHighlighter } from "@code-editor/jsx-syntax-highlight-services";
 import { registerPresetTypes } from "./register-preset-types";
 
 type CompilerOptions = monaco.languages.typescript.CompilerOptions;
 
-export const initEditor: OnMount = (editor, monaco) => {
-  registerJsxHighlighter(editor, monaco);
-  registerDocumentPrettier(editor, monaco);
-  registerPresetTypes();
+export const initEditor = (
+  editor: monaco.editor.IStandaloneCodeEditor,
+  monaco: Monaco
+) => {
+  const { dispose: disposeJsxHighlighter } = registerJsxHighlighter(
+    editor,
+    monaco
+  );
+
+  const { dispose: disposePrettier } = registerDocumentPrettier(editor, monaco);
+
+  const { dispose: dispostPresetTypesLoader } = registerPresetTypes();
+
+  return () => {
+    disposeJsxHighlighter();
+    disposePrettier();
+    dispostPresetTypesLoader();
+  };
 };
 
 export const initMonaco = (monaco: Monaco) => {
+  definetheme(monaco);
   baseConfigure(monaco);
+};
+
+const definetheme = (monaco: Monaco) => {
+  // define theme
+  monaco.editor.defineTheme("grida-dark", {
+    base: "vs-dark",
+    inherit: true,
+    rules: [],
+    colors: {
+      // line number
+      "editorLineNumber.foreground": "#555",
+      "editorLineNumber.activeForeground": "#fff",
+
+      // background
+      "editor.background": "#141414", // rgb(20, 20, 20)
+
+      // selected line highlight
+      "editor.lineHighlightBackground": "#FFFFFF10",
+      "editor.lineHighlightBorder": "#00000000",
+    },
+  });
 };
 
 const baseConfigure = (monaco: Monaco) => {

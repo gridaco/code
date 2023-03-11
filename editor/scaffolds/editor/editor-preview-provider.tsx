@@ -1,17 +1,21 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useEditorState } from "core/states";
+import { usePreferences } from "@code-editor/preferences";
+import { useTargetContainer } from "hooks";
+import { useDispatch } from "core/dispatch";
 import { preview_presets } from "@grida/builder-config-preset";
 import { designToCode, Result } from "@designto/code";
-import { config } from "@designto/config";
-import { MainImageRepository } from "@design-sdk/core/assets-repository";
-import bundler from "@code-editor/esbuild-services";
-import assert from "assert";
-import { useDispatch } from "core/dispatch";
-import { useTargetContainer } from "hooks";
+import { config } from "@grida/builder-config";
+import { MainImageRepository } from "@design-sdk/asset-repository";
 import { WidgetKey } from "@reflect-ui/core";
 import { supportsPreview } from "config";
+import { stable as dartservices } from "dart-services";
+import Client, { FlutterProject } from "@flutter-daemon/client";
+import bundler from "@code-editor/esbuild-services";
 
 const esbuild_base_html_code = `<div id="root"></div>`;
+
+const flutter_bundler: "dart-services" | "flutter-daemon" = "flutter-daemon";
 
 /**
  * This is a queue handler of d2c requests.
@@ -26,10 +30,13 @@ export function EditorPreviewDataProvider({
   // listen to changes
   // handle changes, dispatch with results
 
+  const { config: preferences } = usePreferences();
   const [state] = useEditorState();
   const dispatch = useDispatch();
 
-  const { target, root } = useTargetContainer();
+  const { sceneId: targetid, entry } = state.code.runner || {};
+  const { files } = state.code;
+  const { target, root } = useTargetContainer(targetid);
 
   const updateBuildingState = useCallback(
     (isBuilding: boolean) => {
@@ -74,12 +81,10 @@ export function EditorPreviewDataProvider({
       key,
       initialSize,
       raw,
-      componentName,
     }: {
       key: WidgetKey;
       initialSize: { width: number; height: number };
       raw: string;
-      componentName: string;
     }) => {
       dispatch({
         type: "preview-set",
@@ -87,7 +92,7 @@ export function EditorPreviewDataProvider({
           loader: "vanilla-html",
           viewtype: "unknown",
           widgetKey: key,
-          componentName: componentName,
+          componentName: target.name,
           fallbackSource: raw,
           source: raw,
           initialSize: initialSize,
@@ -101,7 +106,7 @@ export function EditorPreviewDataProvider({
         },
       });
     },
-    [dispatch]
+    [dispatch, target]
   );
 
   const onEsbuildReactPreviewResult = useCallback(
@@ -109,12 +114,10 @@ export function EditorPreviewDataProvider({
       key,
       initialSize,
       bundledjs,
-      componentName,
     }: {
       key: WidgetKey;
       initialSize: { width: number; height: number };
       bundledjs: string;
-      componentName: string;
     }) => {
       dispatch({
         type: "preview-set",
@@ -122,7 +125,7 @@ export function EditorPreviewDataProvider({
           loader: "vanilla-esbuild-template",
           viewtype: "unknown",
           widgetKey: key,
-          componentName: componentName,
+          componentName: target.name,
           fallbackSource: state.currentPreview?.fallbackSource,
           source: {
             html: esbuild_base_html_code,
@@ -138,8 +141,82 @@ export function EditorPreviewDataProvider({
           updatedAt: Date.now(),
         },
       });
+      consoleLog({
+        method: "info",
+        data: ["compiled esbuild-react", key, target.name],
+      });
     },
-    [dispatch]
+    [dispatch, target]
+  );
+
+  const onDartServicesFlutterBuildComplete = useCallback(
+    ({
+      key,
+      js,
+      initialSize,
+    }: {
+      key: WidgetKey;
+      js: string;
+      initialSize: { width: number; height: number };
+    }) => {
+      dispatch({
+        type: "preview-set",
+        data: {
+          loader: "vanilla-flutter-template",
+          viewtype: "unknown",
+          widgetKey: key,
+          componentName: target.name,
+          fallbackSource: state.currentPreview?.fallbackSource,
+          source: js,
+          initialSize: initialSize,
+          isBuilding: false,
+          meta: {
+            bundler: "dart-services",
+            framework: "flutter",
+            reason: "update",
+          },
+          updatedAt: Date.now(),
+        },
+      });
+      consoleLog({
+        method: "info",
+        data: ["compiled flutter app", key, target.name],
+      });
+    },
+    [dispatch, target]
+  );
+
+  const onFlutterDaemonBuildComplete = useCallback(
+    ({
+      key,
+      initialSize,
+      source,
+    }: {
+      key: WidgetKey;
+      initialSize: { width: number; height: number };
+      source: string;
+    }) => {
+      dispatch({
+        type: "preview-set",
+        data: {
+          loader: "flutter-daemon-view",
+          viewtype: "unknown",
+          widgetKey: key,
+          componentName: target.name,
+          fallbackSource: state.currentPreview?.fallbackSource,
+          source: source,
+          initialSize: initialSize,
+          isBuilding: false,
+          meta: {
+            bundler: "flutter-daemon",
+            framework: "flutter",
+            reason: "update",
+          },
+          updatedAt: Date.now(),
+        },
+      });
+    },
+    [dispatch, target]
   );
 
   const consoleLog = useCallback(
@@ -152,9 +229,7 @@ export function EditorPreviewDataProvider({
     [dispatch]
   );
 
-  const _is_mode_requires_preview_build =
-    state.canvasMode === "fullscreen-preview" ||
-    state.canvasMode === "isolated-view";
+  const _is_mode_requires_preview_build = state.mode.value === "code";
 
   useEffect(() => {
     if (!_is_mode_requires_preview_build) {
@@ -218,62 +293,124 @@ export function EditorPreviewDataProvider({
   //   // ------------------------
   //   // ------ for esbuild -----
   useEffect(() => {
-    if (!state.editingModule) {
+    if (!preferences.framework) {
       return;
     }
+    if (!state.code.runner) {
+      return;
+    }
+    if (supportsPreview(preferences.framework.framework)) {
+      try {
+        updateBuildingState(true);
 
-    if (supportsPreview(state.editingModule.framework)) {
-      const { raw, componentName } = state.editingModule;
-      assert(componentName, "component name is required");
-      assert(raw, "raw input code is required");
-      updateBuildingState(true);
+        const wkey = new WidgetKey({
+          originName: target.name,
+          id: target.id,
+        });
 
-      const wkey = new WidgetKey({
-        originName: target.name,
-        id: target.id,
-      });
+        const initialSize = {
+          width: target.width,
+          height: target.height,
+        };
 
-      const initialSize = {
-        width: target.width,
-        height: target.height,
-      };
-
-      switch (state.editingModule.framework) {
-        case "react": {
-          bundler(transform(raw, componentName), "tsx")
-            .then((d) => {
-              if (d.err == null) {
-                if (d.code) {
-                  onEsbuildReactPreviewResult({
-                    key: wkey,
-                    initialSize: initialSize,
-                    bundledjs: d.code,
-                    componentName: componentName,
-                  });
+        switch (preferences.framework.framework) {
+          case "react": {
+            bundler({
+              files: Object.keys(files).reduce((acc, key) => {
+                acc[key] = files[key].content;
+                return acc;
+              }, {}),
+              entry: entry,
+            })
+              .then((d) => {
+                if (d.err == null) {
+                  if (d.code) {
+                    onEsbuildReactPreviewResult({
+                      key: wkey,
+                      initialSize: initialSize,
+                      bundledjs: d.code,
+                    });
+                  }
+                } else {
+                  consoleLog({ ...d.err });
                 }
-              } else {
-                consoleLog({ ...d.err });
-              }
-            })
-            .catch((e) => {
-              consoleLog({ method: "error", data: [e.message] });
-            })
-            .finally(() => {
-              updateBuildingState(false);
+              })
+              .catch((e) => {
+                consoleLog({ method: "error", data: [e.message] });
+              })
+              .finally(() => {
+                updateBuildingState(false);
+              });
+            break;
+          }
+          case "vanilla": {
+            onVanillaPreviewResult({
+              key: wkey,
+              initialSize,
+              raw: state.code.files[state.code.runner.entry].content,
             });
-          break;
+            break;
+          }
+          case "flutter": {
+            // TODO: currnetly, we don't support multi file compile for flutter
+            const main = state.code.files[state.code.runner.entry].content;
+
+            is_daemon_running(local_flutter_daemon_server_url).then(
+              (daemon_available) => {
+                consoleLog({
+                  method: "info",
+                  data: ["running flutter app with local daemon"],
+                });
+                if (daemon_available) {
+                  FlutterDaemon.instance.initProject(main).then(() => {
+                    setTimeout(() => {
+                      FlutterDaemon.instance.save(main).then(() => {
+                        FlutterDaemon.instance.webLaunchUrl().then((url) => {
+                          updateBuildingState(false);
+                          onFlutterDaemonBuildComplete({
+                            key: wkey,
+                            source: url,
+                            initialSize: initialSize,
+                          });
+                        });
+                      });
+                    }, 500);
+                  });
+                } else {
+                  dartservices
+                    .compileComplete(main)
+                    .then((r) => {
+                      if (!r.error) {
+                        onDartServicesFlutterBuildComplete({
+                          key: wkey,
+                          initialSize: initialSize,
+                          js: r.result,
+                        });
+                      } else {
+                        consoleLog({ method: "error", data: [r.error] });
+                      }
+                    })
+                    .catch((e) => {
+                      consoleLog({ method: "error", data: [e.message] });
+                    })
+                    .finally(() => {
+                      updateBuildingState(false);
+                    });
+                }
+              }
+            );
+            break;
+          }
+          default:
+            throw new Error(
+              `Unsupported framework: ${preferences.framework.framework}`
+            );
         }
-        case "vanilla": {
-          onVanillaPreviewResult({
-            key: wkey,
-            initialSize,
-            componentName,
-            raw: state.editingModule.raw,
-          });
-        }
+      } catch (e) {
+        console.error(e);
       }
     }
-  }, [state.editingModule?.framework, state.editingModule?.raw]);
+  }, [JSON.stringify(state.code.files), entry, preferences.framework]);
 
   return <>{children}</>;
 }
@@ -288,3 +425,57 @@ ${s}
 const App = () => <><${n}/></>
 ReactDOM.render(<App />, document.querySelector('#root'));`;
 };
+
+function is_daemon_running(url: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    var ws = new WebSocket(url);
+    ws.addEventListener("error", (e) => {
+      // @ts-ignore
+      if (e.target.readyState === 3) {
+        resolve(false);
+      }
+    });
+    ws.addEventListener("open", () => {
+      resolve(true);
+      ws.close();
+    });
+  });
+}
+
+const local_flutter_daemon_server_url = "ws://localhost:43070";
+
+class FlutterDaemon {
+  private static _instance: FlutterDaemon;
+  static get instance() {
+    if (!FlutterDaemon._instance) {
+      FlutterDaemon._instance = new FlutterDaemon();
+    }
+    return FlutterDaemon._instance;
+  }
+  static client: Client;
+  static project: FlutterProject;
+  constructor() {
+    if (!FlutterDaemon.client) {
+      FlutterDaemon.client = new Client(local_flutter_daemon_server_url);
+    }
+  }
+
+  async initProject(initial: string) {
+    if (!FlutterDaemon.project) {
+      FlutterDaemon.project = await FlutterDaemon.client.project(
+        "preview",
+        "preview",
+        { "lib/main.dart": initial }
+      );
+    }
+    return FlutterDaemon.project;
+  }
+
+  async save(content) {
+    await FlutterDaemon.project.writeFile("lib/main.dart", content, true);
+  }
+
+  async webLaunchUrl() {
+    return await FlutterDaemon.project.webLaunchUrl();
+  }
+}

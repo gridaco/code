@@ -1,5 +1,5 @@
 import { JsxWidget } from "@web-builder/core";
-import { react as react_config } from "@designto/config";
+import { react as react_config } from "@grida/builder-config";
 import { ReactInlineCssBuilder } from "./react-inline-css-module-builder";
 
 export function finalizeReactWidget_InlineCss(

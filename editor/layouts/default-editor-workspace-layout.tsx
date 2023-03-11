@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import React from "react";
-import { Resizable } from "re-resizable";
+import { Resizable } from "./resizable";
 
 type SidebarElementSignature =
   | JSX.Element
@@ -14,7 +14,14 @@ type SidebarElementSignature =
 export function DefaultEditorWorkspaceLayout(props: {
   leftbar?: SidebarElementSignature;
   rightbar?: SidebarElementSignature;
+  /**
+   * global area appbar
+   */
   appbar?: JSX.Element;
+  /**
+   * content area appbar
+   */
+  contentAreaAppbar?: JSX.Element;
   children: JSX.Element | Array<JSX.Element>;
   display?: "none" | "initial"; // set to none when to hide.
   backgroundColor?: string;
@@ -30,7 +37,20 @@ export function DefaultEditorWorkspaceLayout(props: {
           {props.leftbar && (
             <Sidebar position="left" signature={props.leftbar}></Sidebar>
           )}
-          <ChildrenContainerRoot>{props.children}</ChildrenContainerRoot>
+          {props.contentAreaAppbar ? (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                flex: 1,
+              }}
+            >
+              {props.contentAreaAppbar}
+              <ChildrenContainerRoot>{props.children}</ChildrenContainerRoot>
+            </div>
+          ) : (
+            <ChildrenContainerRoot>{props.children}</ChildrenContainerRoot>
+          )}
           {props.rightbar && (
             <Sidebar position="right" signature={props.rightbar}></Sidebar>
           )}
@@ -53,6 +73,10 @@ function Sidebar(
             defaultSize={{
               width: p.signature.minWidth,
               height: "100%",
+            }}
+            handleClasses={{
+              right: "handle",
+              left: "handle",
             }}
             style={{
               zIndex: 1,

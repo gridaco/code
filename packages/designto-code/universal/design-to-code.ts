@@ -2,6 +2,7 @@ import { input, output, config, build } from "../proc";
 import { tokenize, wrap } from "@designto/token";
 import { Widget } from "@reflect-ui/core";
 import * as toReact from "@designto/react";
+import * as toSolid from "@designto/solid-js";
 import * as toReactNative from "@designto/react-native";
 import * as toVanilla from "@designto/vanilla";
 import * as toFlutter from "@designto/flutter";
@@ -9,23 +10,41 @@ import {
   fetch_all_assets,
   finalize_temporary_assets_with_prefixed_static_string_keys__dangerously,
 } from "@code-features/assets";
-import { BaseImageRepositories } from "@design-sdk/core/assets-repository";
+import { BaseImageRepositories } from "@design-sdk/asset-repository";
 import { k } from "@web-builder/core";
 import {
   default_tokenizer_config,
   TokenizerConfig,
 } from "@designto/token/config";
-import { default_build_configuration, FrameworkConfig } from "@designto/config";
+import {
+  default_build_configuration,
+  FrameworkConfig,
+} from "@grida/builder-config";
 // import { reusable } from "@code-features/component";
 import assert from "assert";
+import { debug, debugIf } from "@designto/debugger";
+
+type CustomAssetResolver = ({
+  keys,
+}: {
+  keys: string[];
+}) => Promise<{ [key: string]: string }>;
 
 interface AssetsConfig {
   asset_repository?: BaseImageRepositories<string>;
+  /**
+   * if set to true, skips the asset replacement, preserve unknown url scheme grida://asset-reservation ...
+   */
   skip_asset_replacement?: boolean;
   /**
    * this is currently only supported on vanilla framework - for preview.
    */
   custom_asset_replacement?: { type: "static"; resource: string };
+  /**
+   * If the resolver is set, this resolver will be used to resolve assets from asset repository, not using the built in resolver in the provided asset repository.
+   * @beta - the asset repository has legacy design, wich this field is required. this might be merged into built in asset repository.
+   */
+  resolver?: CustomAssetResolver;
 }
 
 export type Result = output.ICodeOutput & { widget: Widget } & {
@@ -46,18 +65,15 @@ export async function designToCode({
   build_config = config.default_build_configuration,
 }: DesignToCodeInput): Promise<Result> {
   assert(input, "input is required");
-  if (process.env.NODE_ENV === "development") {
-    if (framework_config.framework == "vanilla") {
-    } else {
-      console.info(
-        "dev: starting designtocode with user input",
-        input,
-        framework_config,
-        build_config,
-        asset_config
-      );
-    }
-  }
+  debugIf(
+    // framework_config.framework !== "vanilla",
+    false,
+    "dev: starting designtocode with user input",
+    input,
+    framework_config,
+    build_config,
+    asset_config
+  );
 
   // post token processing
   let tokenizer_config: TokenizerConfig = {
@@ -163,6 +179,16 @@ export async function designToCode({
         })),
         ..._extend_result,
       };
+    case "solid-js":
+      return {
+        ...(await designToSolid({
+          input: _tokenized_widget_input,
+          build_config: build_config,
+          solid_config: framework_config,
+          asset_config: asset_config,
+        })),
+        ..._extend_result,
+      };
   }
 
   throw `The framework "${
@@ -198,12 +224,10 @@ export async function designToReact({
     !input.reusable_widget_tree
   ) {
     const reactwidget = toReact.buildReactWidget(input.widget);
-    if (process.env.NODE_ENV === "development") {
-      console.info("dev::", "final web token composed", {
-        input: input.widget,
-        reactwidget,
-      });
-    }
+    debug("dev::", "final web token composed", {
+      input: input.widget,
+      reactwidget,
+    });
 
     const res = toReact.buildReactApp(reactwidget, react_config);
     // ------------------------------------------------------------------------
@@ -213,7 +237,7 @@ export async function designToReact({
       asset_config?.asset_repository &&
       !asset_config.skip_asset_replacement
     ) {
-      const assets = await fetch_all_assets(asset_config.asset_repository);
+      const assets = await resolve_assets(asset_config);
       res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
       res.scaffold.raw = dangerous_temporary_asset_replacer(
         res.scaffold.raw,
@@ -274,15 +298,19 @@ export async function designToFlutter({
   await Promise.resolve();
 
   const flutterwidget = toFlutter.buildFlutterWidget(input.widget);
-  const flutterapp = toFlutter.buildFlutterApp(flutterwidget, {
-    id: input.widget.key.id,
-  });
+  const flutterapp = toFlutter.buildFlutterApp(
+    input.widget.key,
+    flutterwidget,
+    {
+      id: input.widget.key.id,
+    }
+  );
 
   // ------------------------------------------------------------------------
   // finilize temporary assets
   // this should be placed somewhere else
   if (asset_config?.asset_repository && !asset_config.skip_asset_replacement) {
-    const assets = await fetch_all_assets(asset_config?.asset_repository);
+    const assets = await resolve_assets(asset_config);
     flutterapp.scaffold.raw = dangerous_temporary_asset_replacer(
       flutterapp.scaffold.raw,
       assets
@@ -298,7 +326,56 @@ export async function designToFlutter({
 }
 
 export function designToVue(input: input.IDesignInput): output.ICodeOutput {
-  return;
+  throw "not ready";
+}
+
+export async function designToSolid({
+  input,
+  solid_config,
+  build_config,
+  asset_config,
+}: {
+  input: { widget: Widget; reusable_widget_tree? };
+  solid_config: config.SolidFrameworkConfig;
+  /**
+   * TODO: pass this to tokenizer +@
+   */
+  build_config: config.BuildConfiguration;
+  asset_config?: AssetsConfig;
+}): Promise<output.ICodeOutput> {
+  if (
+    build_config.disable_components ||
+    // automatically fallbacks if no valid data was passed
+    !input.reusable_widget_tree
+  ) {
+    const reactwidget = toReact.buildReactWidget(input.widget);
+
+    debug("dev::", "final web token composed", {
+      input: input.widget,
+      reactwidget,
+    });
+
+    const res = toSolid.buildSolidApp(reactwidget, solid_config);
+    // ------------------------------------------------------------------------
+    // finilize temporary assets
+    // this should be placed somewhere else
+    if (
+      asset_config?.asset_repository &&
+      !asset_config.skip_asset_replacement
+    ) {
+      const assets = await resolve_assets(asset_config);
+      res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
+      res.scaffold.raw = dangerous_temporary_asset_replacer(
+        res.scaffold.raw,
+        assets
+      );
+    }
+    // ------------------------------------------------------------------------
+
+    return res;
+  } else {
+    throw "Reusable components for solid-js is not ready yet.";
+  }
 }
 
 export async function designToVanillaPreview({
@@ -341,7 +418,7 @@ export async function designToVanillaPreview({
       asset_config?.asset_repository &&
       !asset_config.skip_asset_replacement
     ) {
-      const assets = await fetch_all_assets(asset_config.asset_repository);
+      const assets = await resolve_assets(asset_config);
       res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
       res.scaffold.raw = dangerous_temporary_asset_replacer(
         res.scaffold.raw,
@@ -394,7 +471,7 @@ export async function designToVanilla({
       asset_config?.asset_repository &&
       !asset_config.skip_asset_replacement
     ) {
-      const assets = await fetch_all_assets(asset_config.asset_repository);
+      const assets = await resolve_assets(asset_config);
       res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
       res.scaffold.raw = dangerous_temporary_asset_replacer(
         res.scaffold.raw,
@@ -406,6 +483,15 @@ export async function designToVanilla({
 
   return res;
 }
+
+const resolve_assets = async ({ asset_repository, resolver }: AssetsConfig) => {
+  if (resolver) {
+    const keys = Object.keys(asset_repository.mergeAll());
+    return (await resolver({ keys: keys })) || {};
+  } else {
+    return await fetch_all_assets(asset_repository);
+  }
+};
 
 const default_asset_replacement_prefix = "grida://assets-reservation/images/";
 const dangerous_temporary_asset_replacer = (r, a) => {

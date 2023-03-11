@@ -20,7 +20,7 @@ export class StylesRepository {
   readonly optimizer: OptimizerFunc;
   constructor(map, optimizer?: OptimizerFunc) {
     this.map = map;
-    this.optimizer = optimizer;
+    optimizer && (this.optimizer = optimizer);
 
     if (optimizer) {
       this.proxymap = optimizer(map);
@@ -49,9 +49,9 @@ export class StylesRepository {
     const originconfig = this.map.get(key);
 
     return {
-      ...targetstyle,
+      ...targetstyle!,
       // attributes must be preserved.
-      attributes: originconfig.attributes,
+      attributes: originconfig!.attributes,
     };
   }
 

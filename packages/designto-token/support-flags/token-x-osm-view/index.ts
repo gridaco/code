@@ -32,8 +32,8 @@ export function tokenize_flagged_osm_view(
       ...container,
       key: keyFromNode(node),
       child: new XOSMView({
-        key: _key,
         ...container,
+        key: _key,
         latlng: typeof v === "boolean" ? undefined : v, // passing null will cause the default latlng to be used
       }),
     });

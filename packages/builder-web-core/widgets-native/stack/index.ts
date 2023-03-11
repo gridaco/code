@@ -20,12 +20,12 @@ import { CssMinHeightMixin } from "../../widgets";
 export class Stack extends MultiChildWidget implements CssMinHeightMixin {
   readonly _type = "stack";
 
-  width: DimensionLength;
-  height: DimensionLength;
-  minWidth?: DimensionLength;
-  maxWidth?: DimensionLength;
-  minHeight?: DimensionLength;
-  maxHeight?: DimensionLength;
+  width: DimensionLength | undefined;
+  height: DimensionLength | undefined;
+  minWidth?: DimensionLength | undefined;
+  maxWidth?: DimensionLength | undefined;
+  minHeight?: DimensionLength | undefined;
+  maxHeight?: DimensionLength | undefined;
 
   borderRadius?: BorderRadiusManifest;
   border?: Border;
@@ -35,12 +35,12 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
     key: WidgetKey;
     children: Array<StylableJsxWidget>;
 
-    width: DimensionLength;
-    height: DimensionLength;
-    minWidth?: DimensionLength;
-    maxWidth?: DimensionLength;
-    minHeight?: DimensionLength;
-    maxHeight?: DimensionLength;
+    width: DimensionLength | undefined;
+    height: DimensionLength | undefined;
+    minWidth?: DimensionLength | undefined;
+    maxWidth?: DimensionLength | undefined;
+    minHeight?: DimensionLength | undefined;
+    maxHeight?: DimensionLength | undefined;
 
     boxShadow?: BoxShadowManifest[];
     borderRadius?: BorderRadiusManifest;
@@ -94,7 +94,7 @@ export class Stack extends MultiChildWidget implements CssMinHeightMixin {
   }
 }
 
-function clip(clip: Clip): CSSProperty.Overflow {
+function clip(clip: Clip | undefined): CSSProperty.Overflow | undefined {
   switch (clip) {
     case Clip.antiAlias:
     case Clip.antiAliasWithSaveLayer:

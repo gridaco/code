@@ -1,27 +1,14 @@
 import { handle } from "@coli.codes/builder";
-import { CSSProperties } from "@coli.codes/css";
 import { ScopedVariableNamer } from "@coli.codes/naming";
+import { Framework } from "@grida/builder-platform-types";
 import { WidgetWithStyle } from "@web-builder/core";
-import { JSXAttributes, JSXIdentifier } from "coli";
+import { JSXIdentifier } from "coli";
 import {
   composeStyledComponentVariableDeclaration,
   NamePreference,
-  StyledComponentDeclaration,
-} from "./styled-component-declaration";
-
-export interface StyledComponentJSXElementConfig {
-  id: string;
-  tag: JSXIdentifier;
-  attributes?: JSXAttributes;
-  style: CSSProperties;
-  styledComponent: StyledComponentDeclaration;
-}
-
-export interface NoStyleJSXElementConfig {
-  id?: string;
-  tag: JSXIdentifier;
-  attributes?: JSXAttributes;
-}
+  NoStyleJSXElementConfig,
+  StyledComponentJSXElementConfig,
+} from "./core";
 
 /**
  *
@@ -49,6 +36,7 @@ export function buildStyledComponentConfig(
        */
       root: boolean;
     };
+    framework: Framework;
   }
 ): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
   const config = widget.jsxConfig() as StyledComponentJSXElementConfig;
@@ -63,6 +51,7 @@ export function buildStyledComponentConfig(
 
   const styledVar = composeStyledComponentVariableDeclaration(widget, {
     name: namePref,
+    framework: preferences.framework,
   });
 
   if (styledVar) {

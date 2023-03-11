@@ -279,7 +279,7 @@ const _simple_typed_value_flag_preference_mapper = (
         type: type,
       };
 };
-const _simple_boolean_value_flag_prefernce_mapper = (
+const _simple_boolean_value_flag_preference_mapper = (
   k: string | Array<string>
 ): Option => _simple_typed_value_flag_preference_mapper(k, "bool");
 
@@ -314,9 +314,11 @@ function handle_single_boolean_flag_alias<T extends SimpleBooleanValueFlag>(
   return handle_single_typed_value_flag_alias<T>(raw, alias);
 }
 
-function transform_heading_alias_from_raw(raw: { [key: string]: boolean }): {
-  [key: string]: HeadingFlag;
-} {
+function transform_heading_alias_from_raw(raw: { [key: string]: boolean }):
+  | {
+      [key: string]: HeadingFlag;
+    }
+  | undefined {
   const _h1_alias = handle_single_boolean_flag_alias<HeadingFlag>(
     raw,
     keys.alias.as_h1
@@ -354,27 +356,27 @@ function transform_heading_alias_from_raw(raw: { [key: string]: boolean }): {
   if (_h6_alias) return _h6_alias;
 }
 
-const __h1_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __h1_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.as_h1
 );
 
-const __h2_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __h2_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.as_h2
 );
 
-const __h3_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __h3_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.as_h3
 );
 
-const __h4_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __h4_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.as_h4
 );
 
-const __h5_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __h5_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.as_h5
 );
 
-const __h6_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __h6_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.as_h6
 );
 
@@ -382,31 +384,31 @@ const __h6_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const __p_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __p_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.as_p
 );
 
-const __textspan_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __textspan_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.as_span
 );
 
-const __button_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __button_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.as_button
 );
 
-const __checkbox_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __checkbox_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.as_checkbox
 );
 
-const __input_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __input_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.as_input
 );
 
-const __slider_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __slider_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.as_slider
 );
 
-const __progress_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __progress_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.as_progress
 );
 
@@ -414,7 +416,7 @@ const __progress_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const _simple_custom_string_value_flag_prefernce_mapper = (
+const _simple_custom_string_value_flag_preference_mapper = (
   k: string | Array<string>
 ): Option =>
   Array.isArray(k)
@@ -429,21 +431,21 @@ const _simple_custom_string_value_flag_prefernce_mapper = (
         type: "string",
       };
 
-const __width_alias_pref = _simple_custom_string_value_flag_prefernce_mapper(
+const __width_alias_pref = _simple_custom_string_value_flag_preference_mapper(
   keys.alias.width
 );
 const __max_width_alias_pref =
-  _simple_custom_string_value_flag_prefernce_mapper(keys.alias.max_width);
+  _simple_custom_string_value_flag_preference_mapper(keys.alias.max_width);
 const __min_width_alias_pref =
-  _simple_custom_string_value_flag_prefernce_mapper(keys.alias.min_width);
+  _simple_custom_string_value_flag_preference_mapper(keys.alias.min_width);
 
-const __height_alias_pref = _simple_custom_string_value_flag_prefernce_mapper(
+const __height_alias_pref = _simple_custom_string_value_flag_preference_mapper(
   keys.alias.height
 );
 const __max_height_alias_pref =
-  _simple_custom_string_value_flag_prefernce_mapper(keys.alias.max_height);
+  _simple_custom_string_value_flag_preference_mapper(keys.alias.max_height);
 const __min_height_alias_pref =
-  _simple_custom_string_value_flag_prefernce_mapper(keys.alias.min_height);
+  _simple_custom_string_value_flag_preference_mapper(keys.alias.min_height);
 
 function transform_wh_declaration_alias_from_raw(raw: { [key: string]: any }): {
   [key: string]: WHDeclarationFlag;
@@ -480,10 +482,10 @@ function transform_wh_declaration_alias_from_raw(raw: { [key: string]: any }): {
   }, {});
 }
 
-const __fix_width_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __fix_width_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.fix_width
 );
-const __fix_height_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __fix_height_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.fix_height
 );
 
@@ -491,7 +493,7 @@ const __fix_height_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const __declare_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __declare_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.declare
 );
 
@@ -499,7 +501,7 @@ const __declare_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-const __camera_alias_pref = _simple_boolean_value_flag_prefernce_mapper(
+const __camera_alias_pref = _simple_boolean_value_flag_preference_mapper(
   keys.alias.camera
 );
 
