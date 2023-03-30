@@ -2,24 +2,19 @@ import type {
   FrameworkConfig,
   VanillaFrameworkConfig,
 } from "@grida/builder-config";
+import { LICENSE_CE } from "./license";
 
 export type FigmaNodeInput =
   | string
   | { url: string; version: string }
   | { filekey: string; node: string; version: string };
 
-export interface CodeRequets {
+export interface CodeRequest {
   figma: FigmaNodeInput;
   framework: Partial<FrameworkConfig>;
 }
 
 export type CodeResponse = FigmaToVanillaResponse;
-
-export const LICENSE_CE = {
-  "ce-use-of-generated-code": "Public Domain",
-  "ce-use-of-engine-source": "Apache-2.0",
-  "ce-use-for-commercial": "AGPL-3.0",
-};
 
 export type ApiEngineInfo = {
   name: "code.grida.co/api/v1";
@@ -67,9 +62,7 @@ export interface BaseWebFrameworkResponse extends BaseResponse {
   srcdoc: string;
   srcmap: D2CSourceMap;
   files: {
-    [key: string]: {
-      content: string;
-    };
+    [key: string]: string;
   };
 
   thumbnail: string;
