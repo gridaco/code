@@ -31,7 +31,7 @@ client.post("code", {
 #### Request Body
 
 ```ts
-interface CodeRequets {
+interface CodeRequest {
   figma: FigmaNodeInput;
   framework: Partial<FrameworkConfig>;
 }
