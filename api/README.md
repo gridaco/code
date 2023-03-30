@@ -30,7 +30,23 @@ client.post("code", {
 
 #### Request Body
 
+```ts
+interface CodeRequets {
+  figma: FigmaNodeInput;
+  framework: Partial<FrameworkConfig>;
+}
+```
+
 **`body.figma`**
+
+```ts
+type FigmaNodeInput =
+  | string
+  | { url: string; version: string }
+  | { filekey: string; node: string; version: string };
+```
+
+**Note** currently only `string` is supported.
 
 An URL indicating the target node in Figma design.
 
@@ -99,7 +115,6 @@ A Framework configuration used for generating code. Learn more at [Framework Con
 - `warnings` - An array of warnings. If there is no warning, it will be an empty array. (This is usually a warning caused by poor design, which can be ignored)
 - `src` - The generated code as a uri, a publicly accessible html file endpoint.
 - `srcdoc` - The generated code as a bundled and concatenated string, which can be used to embed the code directly into your website.
--
 
 ### `GET /api/v1/embed`
 
@@ -130,6 +145,10 @@ Warning: For security reasons, we highly recommend using the Figma Access Token 
 We are planning on providing a more secure way to use embed with the `fpat` in the future.
 
 The framework configuration for embed is `vanilla-preview` by default. We are planning on providing a way to customize the framework configuration in the future.
+
+## Request / Response Types Declarations
+
+See [./types.ts](./types.ts)
 
 ## API Clients (Under Development)
 
