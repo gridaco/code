@@ -3,6 +3,16 @@ import type {
   VanillaFrameworkConfig,
 } from "@grida/builder-config";
 
+export type FigmaNodeInput =
+  | string
+  | { url: string; version: string }
+  | { filekey: string; node: string; version: string };
+
+export interface CodeRequets {
+  figma: FigmaNodeInput;
+  framework: Partial<FrameworkConfig>;
+}
+
 export type CodeResponse = FigmaToVanillaResponse;
 
 export const LICENSE_CE = {
@@ -19,7 +29,16 @@ export type ApiEngineInfo = {
 
 export type D2CSourceMap = {};
 
+export type FigmaOriginalFileData = {
+  name: string;
+  lastModified: string;
+  thumbnailUrl: string;
+  version: string;
+};
+
 export type FigmaInputPong = {
+  file?: FigmaOriginalFileData;
+  filekey: string;
   /**
    * the id of entry node. usually it is the root node.
    */
@@ -28,6 +47,7 @@ export type FigmaInputPong = {
    * the full node tree, including only essential information. like size, position, etc.
    */
   node: object;
+  json: string;
 };
 
 export interface BaseFigmaInputResponse {
@@ -39,6 +59,7 @@ export interface BaseResponse {
   engine: ApiEngineInfo;
   version: 0; // for now, there is no versioning
   license: typeof LICENSE_CE;
+  warnings: string[];
 }
 
 export interface BaseWebFrameworkResponse extends BaseResponse {
