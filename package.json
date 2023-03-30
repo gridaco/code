@@ -14,6 +14,7 @@
   "workspaces": [
     "editor",
     "code",
+    "api",
     "editor-packages/*",
     "packages/*",
     "ui/editor-ui/packages/*"
