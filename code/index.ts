@@ -31,8 +31,6 @@ export async function code({
   if (res) {
     const { file: filekey, node } = res;
 
-    console.log(`filekey: ${filekey}`, `node: ${node}`);
-
     //
     const target = await fetchTargetAsReflect({
       file: filekey,
@@ -68,7 +66,14 @@ export async function code({
       framework.language
     );
 
-    return src;
+    return {
+      src,
+      figma: {
+        filekey,
+        node,
+      },
+      target,
+    };
   }
 }
 

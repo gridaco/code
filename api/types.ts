@@ -42,7 +42,7 @@ export type FigmaInputPong = {
    * the full node tree, including only essential information. like size, position, etc.
    */
   node: object;
-  json: string;
+  json: object;
 };
 
 export interface BaseFigmaInputResponse {
