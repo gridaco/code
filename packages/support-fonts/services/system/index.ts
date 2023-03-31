@@ -3,6 +3,7 @@ import fonts from "./fonts.json";
 interface SystemFontMeta {
   family: string;
   fallbacks: string[];
+  service: "system";
 }
 
 /**
@@ -17,6 +18,7 @@ export function systemfont(family: string): SystemFontMeta | false {
     return {
       ...found,
       family,
+      service: "system",
     };
   }
   return false;

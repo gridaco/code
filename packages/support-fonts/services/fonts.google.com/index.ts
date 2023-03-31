@@ -7,6 +7,10 @@ interface GoogleFontMeta {
   weights: number[];
   styles: string[];
   variants: [number, number][];
+  service: "fonts.google.com";
+  urls: {
+    [request: string]: string;
+  };
 }
 
 /**
@@ -21,6 +25,14 @@ export function googlefont(family: string): GoogleFontMeta | false {
     return {
       ...found,
       family,
+      service: "fonts.google.com",
+      urls: {
+        "*": {}, // TODO:
+        //   // constructURL({
+        //   // families: [family],
+        //   // , found.styles, found.weights
+        // }),
+      },
     };
   }
   return false;
