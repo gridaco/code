@@ -1,5 +1,5 @@
 {
-  "name": "@code-feature/fonts",
+  "name": "@code-features/fonts",
   "version": "0.0.0",
   "dependencies": {
     "ufo": "^1.1.1"

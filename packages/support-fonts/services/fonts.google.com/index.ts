@@ -1,12 +1,15 @@
 import fonts from "./fonts.json";
 import { constructURL } from "./utils";
 
-interface GoogleFontMeta {
-  family: string;
+interface MinimalGoogleFontMeta {
   fallbacks: string[];
   weights: number[];
   styles: string[];
   variants: [number, number][];
+}
+
+interface GoogleFontMeta extends MinimalGoogleFontMeta {
+  family: string;
   service: "fonts.google.com";
   urls: {
     [request: string]: string;
@@ -20,18 +23,22 @@ interface GoogleFontMeta {
  * @returns
  */
 export function googlefont(family: string): GoogleFontMeta | false {
-  const found = fonts[family];
+  const found = fonts[family] as MinimalGoogleFontMeta;
   if (found) {
     return {
       ...found,
       family,
       service: "fonts.google.com",
       urls: {
-        "*": {}, // TODO:
-        //   // constructURL({
-        //   // families: [family],
-        //   // , found.styles, found.weights
-        // }),
+        "*":
+          constructURL({
+            families: {
+              [family]: {
+                wght: found.weights,
+                // TODO: add styles and variants support
+              },
+            },
+          }) || "",
       },
     };
   }

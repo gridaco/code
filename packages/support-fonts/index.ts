@@ -7,11 +7,13 @@ type FontResolutions = {
   [family: string]: {
     resolution: TFontResulution;
     service: TFontService;
-    urls: ReadonlyArray<string>;
+    urls: {
+      [request: string]: string;
+    };
   };
 };
 
-type TFontResulution = "font-face" | "link";
+type TFontResulution = "fonts.googleapis.com/css2";
 
 const providers = {
   "fonts.google.com": googlefont,
@@ -42,7 +44,6 @@ export function fonts({
         result[font] = {
           resolution,
           ...resolved,
-          urls: [], // TODO:
         };
         break;
       }

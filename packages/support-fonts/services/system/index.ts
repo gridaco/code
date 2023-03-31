@@ -4,6 +4,7 @@ interface SystemFontMeta {
   family: string;
   fallbacks: string[];
   service: "system";
+  urls: {};
 }
 
 /**
@@ -19,6 +20,7 @@ export function systemfont(family: string): SystemFontMeta | false {
       ...found,
       family,
       service: "system",
+      urls: {},
     };
   }
   return false;
