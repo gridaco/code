@@ -24,6 +24,8 @@ import {
 } from "coli";
 import { Framework } from "@grida/builder-platform-types";
 import { stringfy as stringfyHtmlMeta, HtmlMeta } from "../html-meta";
+import { TFontService } from "@code-features/fonts";
+import { htmlFontsMiddleware } from "./html-fonts-middleware";
 
 interface CssDeclaration {
   key: {
@@ -36,6 +38,9 @@ interface CssDeclaration {
 export type HtmlModuleBuilderConfig = {
   disable_all_optimizations?: boolean;
   additional_css_declarations?: CssDeclaration[];
+  fonts?: {
+    services: ReadonlyArray<TFontService>;
+  };
 };
 
 export class HtmlIdCssModuleBuilder {
@@ -44,6 +49,7 @@ export class HtmlIdCssModuleBuilder {
   private readonly stylesMapper: StylesConfigMapBuilder;
   private readonly stylesRepository: StylesRepository;
   private readonly namer: ScopedVariableNamer;
+  private readonly _head: string[] = [];
   readonly config: HtmlModuleBuilderConfig;
 
   constructor({
@@ -77,6 +83,10 @@ export class HtmlIdCssModuleBuilder {
         : // ALWAYS USE EXACT OVERLAPPING STYLE REDUCTION STRATEGY FOR PREVIEW VANILLA
           create_duplication_reduction_map
     );
+
+    if (config.fonts) {
+      htmlFontsMiddleware(this, config.fonts.services);
+    }
   }
 
   private styledConfig(
@@ -96,6 +106,21 @@ export class HtmlIdCssModuleBuilder {
         self_closing_if_possible: false, // html cannot be self closed
       }
     );
+  }
+
+  /**
+   * adds literal string to <head> tag
+   */
+  head(...items: string[]) {
+    this._head.push(...items);
+    return this;
+  }
+
+  /**
+   * build the part head, excluding styles
+   */
+  partHead(): string {
+    return this._head.join("\n");
   }
 
   partStyles(): string {
@@ -181,6 +206,7 @@ export class HtmlIdCssModuleBuilder {
     });
 
     const final = html_render({
+      head: this.partHead(),
       css: this.partStyles(),
       body: strfied_body,
     });
@@ -224,7 +250,15 @@ function injectIdToJsx(jsx: JSXElementLike, id: string) {
   }
 }
 
-const html_render = ({ css, body }: { css: string; body: string }) => {
+const html_render = ({
+  head,
+  css,
+  body,
+}: {
+  head: string;
+  css: string;
+  body: string;
+}) => {
   // TODO: fixme - this is inacurate (the first line won't be indented)
   const indenter = (s: string, tabs: number = 0) =>
     s.replace(/\n/g, "\n" + "\t".repeat(tabs));
@@ -238,6 +272,7 @@ ${indenter(
   }),
   2
 )}
+${indenter(head, 2)}
     <style>
 ${indenter(css, 3)}
     </style>
