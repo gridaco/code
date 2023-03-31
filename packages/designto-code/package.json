@@ -18,7 +18,7 @@
     "@design-sdk/figma-node-repository": "^0.0.43",
     "@design-sdk/figma-remote": "^0.0.43",
     "@design-sdk/figma-remote-types": "^0.0.43",
-    "@design-sdk/figma-url": "^0.0.43",
+    "@design-sdk/figma-url": "^0.0.46",
     "@design-sdk/flags": "^0.0.43",
     "@design-sdk/url-analysis": "^0.0.43",
     "@designto/flutter": "0.0.1",
