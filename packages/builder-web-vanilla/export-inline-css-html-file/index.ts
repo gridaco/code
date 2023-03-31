@@ -22,6 +22,9 @@ export function export_vanilla_preview_source(
       ...config,
       // required (for safety, for consistant preview)
       disable_all_optimizations: true,
+      fonts: {
+        services: ["system", "fonts.google.com"],
+      },
     },
   });
   return builder.export();
