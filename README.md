@@ -165,6 +165,9 @@ Plugins
 git clone https://github.com/gridaco/designto-code.git
 cd designto-code
 
+# If you cloned this project conventionally, you'll have to run
+git submodule update --init --recursive
+
 yarn
 yarn editor
 # visit http://localhost:6626
