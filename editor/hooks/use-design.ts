@@ -9,16 +9,16 @@ import { fetch } from "@design-sdk/figma-remote";
 import { personal } from "@design-sdk/figma-auth-store";
 import { configure_auth_credentials } from "@design-sdk/figma-remote";
 import { TargetNodeConfig } from "../query/target-node";
-import { FigmaRemoteErrors } from "@design-sdk/figma-remote/lib/fetch";
+import {
+  FigmaRemoteErrors,
+  UnauthorizedError,
+  NotfoundError,
+} from "@design-sdk/figma-remote";
 import { RemoteDesignSessionCacheStore } from "../store";
 import { convert } from "@design-sdk/figma-node-conversion";
-import { mapFigmaRemoteToFigma } from "@design-sdk/figma-remote/lib/mapper";
-import { useFigmaAccessToken } from ".";
-import { FileResponse } from "@design-sdk/figma-remote-types";
-import {
-  FigmaDesignRepository,
-  TFetchFileForApp,
-} from "repository/figma-design-repository";
+import { mapper } from "@design-sdk/figma-remote";
+import { useFigmaAuth } from "scaffolds/workspace/figma-auth";
+import { FigmaDesignRepository, TFetchFileForApp } from "@editor/figma-file";
 
 // globally configure auth credentials for interacting with `@design-sdk/figma-remote`
 configure_auth_credentials({
@@ -61,7 +61,7 @@ export function useDesign({
   ...props
 }: UseDesignProp) {
   const [design, setDesign] = useState<TargetNodeConfig>(null);
-  const fat = useFigmaAccessToken();
+  const fat = useFigmaAuth();
   const router = (type === "use-router" && props["router"]) ?? useRouter();
 
   useEffect(() => {
@@ -102,8 +102,8 @@ export function useDesign({
     }
 
     if (targetnodeconfig) {
+      const filekey = targetnodeconfig.file;
       // load design from local storage or remote figma
-
       const cacheStore = new RemoteDesignSessionCacheStore({
         file: targetnodeconfig.file,
         node: targetnodeconfig.node,
@@ -111,11 +111,14 @@ export function useDesign({
       // cache control
       if (use_session_cache && cacheStore.exists) {
         const last_response = cacheStore.get();
-        const _1_converted_to_figma = mapFigmaRemoteToFigma(
+        const _1_converted_to_figma = mapper.mapFigmaRemoteToFigma(
           last_response.nodes[targetnodeconfig.node]
         );
         const _2_converted_to_reflect = convert.intoReflectNode(
-          _1_converted_to_figma
+          _1_converted_to_figma,
+          null,
+          "rest",
+          filekey
         );
 
         const res = <TargetNodeConfig>{
@@ -144,20 +147,21 @@ export function useDesign({
               });
             })
             .catch((err: FigmaRemoteErrors) => {
-              switch (err.type) {
-                case "UnauthorizedError": {
-                  // unauthorized
-                  router.push("/preferences/access-tokens");
-                  console.info(`(ignored) error while fetching design`, err);
-                  break;
-                }
-                default:
-                  if (fat.accessToken) {
-                    // wait..
-                  } else {
-                    console.error(`error while fetching design`, err);
-                    throw err;
-                  }
+              if (err instanceof UnauthorizedError) {
+                // unauthorized
+                console.error(`(ignored) error while fetching design`, err);
+                return;
+              }
+
+              if (err instanceof NotfoundError) {
+                throw new Error("Target not found");
+              }
+
+              if (fat.accessToken) {
+                // wait..
+              } else {
+                console.error(`error while fetching design`, err);
+                throw err;
               }
             });
         } else {
@@ -172,7 +176,7 @@ export function useDesign({
   return design;
 }
 
-type TUseDesignFile =
+export type TUseDesignFile =
   | TFetchFileForApp
   | {
       __type: "error";
@@ -186,7 +190,7 @@ export function useDesignFile({ file }: { file: string }) {
   const [designfile, setDesignFile] = useState<TUseDesignFile>({
     __type: "loading",
   });
-  const fat = useFigmaAccessToken();
+  const fat = useFigmaAuth();
   useEffect(() => {
     if (file) {
       if (fat.personalAccessToken || fat.accessToken.token) {

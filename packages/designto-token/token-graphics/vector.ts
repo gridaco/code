@@ -1,5 +1,5 @@
-import { ReflectSceneNode, ReflectVectorNode } from "@design-sdk/core";
-import { MainImageRepository } from "@design-sdk/core/assets-repository";
+import { ReflectSceneNode, ReflectVectorNode } from "@design-sdk/figma-node";
+import { MainImageRepository } from "@design-sdk/asset-repository";
 import { ImagePaint } from "@design-sdk/figma-types";
 import { ImageWidget, VectorWidget } from "@reflect-ui/core";
 import { keyFromNode } from "../key";
@@ -21,14 +21,12 @@ function fromPoligon(): VectorWidget {
 }
 
 function fromVector(vector: ReflectVectorNode) {
+  // TODO: support vector.fillGeomatery.
+
   if (!vector?.vectorPaths || vector.vectorPaths.length === 0) {
     // we are not sure when specifically this happens, but as reported, curvy lines does not contain a vector paths.
     // so we just return a image bake of it.
-    process.env.NODE_ENV === "development" &&
-      console.info(
-        `tried to get path data from vector, but none was provided. baking as a bitmap instead.`,
-        vector
-      );
+    // console.info(`tried to get path data from vector, but none was provided. baking as a bitmap instead.`, vector);
 
     return tokenizeBitmap.fromAnyNode(vector);
   }

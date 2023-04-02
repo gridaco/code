@@ -1,33 +1,34 @@
-import { ScopedVariableNamer } from "@coli.codes/naming";
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
 import {
-  NoStyleJSXElementConfig,
-  StyledComponentJSXElementConfig,
-} from "@web-builder/styled";
+  ScopedVariableNamer,
+  ReservedKeywordPlatformPresets,
+} from "@coli.codes/naming";
+import { StyledComponentJSXElementConfig } from "@web-builder/styled";
 import {
   react_imports,
-  makeReactModuleFile,
   ReactWidgetModuleExportable,
   emotion_styled_imports,
   styled_components_imports,
 } from "@web-builder/react-core";
-import { BlockStatement, Import, ImportDeclaration, Return } from "coli";
 import { JsxWidget } from "@web-builder/core";
+import { BlockStatement, ImportDeclaration, Return } from "coli";
 import {
   buildJsx,
-  getWidgetStylesConfigMap,
-  WidgetStyleConfigMap,
+  StylesConfigMapBuilder,
+  StylesRepository,
 } from "@web-builder/core/builders";
-import { react as react_config } from "@designto/config";
-import { StyledComponentDeclaration } from "@web-builder/styled/styled-component-declaration";
+import { react as react_config } from "@grida/builder-config";
+import {
+  StyledComponentDeclaration,
+  create_duplication_reduction_map,
+} from "@web-builder/styled";
+import { makeEsWidgetModuleFile } from "@web-builder/module-es";
+import { Framework } from "@grida/builder-platform-types";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import type { WidgetDeclarationDocumentation } from "@code-features/documentation";
+import { ReactWidgetDeclarationDocBuilder } from "@code-features/documentation";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
 
-export class ReactStyledComponentsBuilder {
-  private readonly entry: JsxWidget;
-  private readonly widgetName: string;
-  private readonly styledConfigWidgetMap: WidgetStyleConfigMap;
-  private readonly namer: ScopedVariableNamer;
-  readonly config: react_config.ReactStyledComponentsConfig;
-
+export class ReactStyledComponentsModuleBuilder extends JSXWidgetModuleBuilder<react_config.ReactStyledComponentsConfig> {
   constructor({
     entry,
     config,
@@ -35,30 +36,40 @@ export class ReactStyledComponentsBuilder {
     entry: JsxWidget;
     config: react_config.ReactStyledComponentsConfig;
   }) {
-    this.entry = entry;
-    this.widgetName = entry.key.name;
-    this.namer = new ScopedVariableNamer(
-      entry.key.id,
-      ReservedKeywordPlatformPresets.react
-    );
-    this.styledConfigWidgetMap = getWidgetStylesConfigMap(entry, {
-      namer: this.namer,
-      rename_tag: true /** styled component tag shoule be renamed */,
+    super({
+      entry,
+      config,
+      framework: Framework.react,
+      namer: new ScopedVariableNamer(
+        entry.key.id,
+        ReservedKeywordPlatformPresets.react
+      ),
     });
-    this.config = config;
   }
 
-  private styledConfig(
-    id: string
-  ): StyledComponentJSXElementConfig | NoStyleJSXElementConfig {
-    return this.styledConfigWidgetMap.get(id);
+  protected initStylesConfigMapBuilder(): StylesConfigMapBuilder {
+    return new StylesConfigMapBuilder(
+      this.entry,
+      {
+        namer: this.namer,
+        rename_tag: true /** styled component tag shoule be renamed */,
+      },
+      Framework.react
+    );
   }
 
-  private jsxBuilder(widget: JsxWidget) {
+  protected initStylesRepository(): false | StylesRepository {
+    return new StylesRepository(
+      this.stylesMapper.map,
+      create_duplication_reduction_map
+    );
+  }
+
+  protected jsxBuilder(widget: JsxWidget) {
     return buildJsx(
       widget,
       {
-        styledConfig: (id) => this.styledConfig(id),
+        styledConfig: (id) => this.stylesConfig(id),
       },
       {
         self_closing_if_possible: true,
@@ -66,11 +77,11 @@ export class ReactStyledComponentsBuilder {
     );
   }
 
-  partImports() {
+  protected partImports() {
     return [this.partImportReact(), this.partImportStyled()];
   }
 
-  partImportStyled() {
+  protected partImportStyled() {
     switch (this.config.module) {
       case "@emotion/styled":
         return emotion_styled_imports.import_styled_from_emotion_styled;
@@ -79,26 +90,46 @@ export class ReactStyledComponentsBuilder {
     }
   }
 
-  partImportReact() {
+  protected partImportReact() {
     return react_imports.import_react_from_react;
   }
 
-  partBody(): BlockStatement {
+  protected partDocumentation(): string {
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new ReactWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
+  }
+
+  protected partBody(): BlockStatement {
     let jsxTree = this.jsxBuilder(this.entry);
     return new BlockStatement(new Return(jsxTree));
   }
 
-  partDeclarations() {
-    return Array.from(this.styledConfigWidgetMap.keys())
+  private partStyledComponentsDeclarations() {
+    return Array.from(this.stylesRepository.uniques())
       .map((k) => {
-        return (
-          this.styledConfigWidgetMap.get(k) as StyledComponentJSXElementConfig
-        ).styledComponent;
+        return (this.stylesRepository.get(k) as StyledComponentJSXElementConfig)
+          .styledComponent;
       })
       .filter((s) => s);
   }
 
-  asExportableModule() {
+  protected partDeclarations() {
+    return this.partStyledComponentsDeclarations();
+  }
+
+  public asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     const styled_declarations = this.partDeclarations();
@@ -107,7 +138,8 @@ export class ReactStyledComponentsBuilder {
       {
         body,
         imports,
-        declarations: styled_declarations,
+        documentation: doc,
+        styledDeclarations: styled_declarations,
       },
       {
         dependencies: ["react", this.config.module],
@@ -124,11 +156,13 @@ export class ReactStyledComponentWidgetModuleExportable extends ReactWidgetModul
     {
       body,
       imports,
-      declarations,
+      documentation,
+      styledDeclarations,
     }: {
       body: BlockStatement;
       imports: ImportDeclaration[];
-      declarations: StyledComponentDeclaration[];
+      documentation: WidgetDeclarationDocumentation;
+      styledDeclarations: StyledComponentDeclaration[];
     },
     {
       dependencies = [],
@@ -140,9 +174,10 @@ export class ReactStyledComponentWidgetModuleExportable extends ReactWidgetModul
       name,
       body,
       imports,
+      documentation,
     });
 
-    this.declarations = declarations;
+    this.declarations = styledDeclarations;
   }
 
   asFile({
@@ -150,12 +185,13 @@ export class ReactStyledComponentWidgetModuleExportable extends ReactWidgetModul
   }: {
     exporting: react_config.ReactComponentExportingCofnig;
   }) {
-    return makeReactModuleFile({
+    return makeEsWidgetModuleFile({
       name: this.name,
       path: "src/components",
       imports: this.imports,
       declarations: this.declarations,
       body: this.body,
+      documentation: this.documentation,
       config: {
         exporting: exporting,
       },

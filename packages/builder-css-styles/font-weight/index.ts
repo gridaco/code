@@ -16,17 +16,19 @@ export type CSSFontWeight =
 type CSSNumericFontWeight =
   | "normal"
   | "bold"
-  | "100"
-  | "200"
-  | "300"
-  | "400"
-  | "500"
-  | "600"
-  | "700"
-  | "800"
-  | "900";
+  | 100
+  | 200
+  | 300
+  | 400
+  | 500
+  | 600
+  | 700
+  | 800
+  | 900;
 
-export function convertToCssFontWeight(fontWeight: FontWeight): CSSFontWeight {
+export function convertToCssFontWeight(
+  fontWeight: FontWeight
+): CSSFontWeight | undefined {
   if (fontWeight === undefined) {
     return "initial";
   }
@@ -60,34 +62,34 @@ export function convertToCssFontWeight(fontWeight: FontWeight): CSSFontWeight {
 
 export function numericFontWeight(
   fontWeight: FontWeight
-): CSSNumericFontWeight {
+): CSSNumericFontWeight | undefined {
   switch (fontWeight) {
     case FontWeight.normal:
       return "normal";
     case FontWeight.bold:
       return "bold";
     case FontWeight.lighter:
-      return "300";
+      return 300;
     case FontWeight.bolder:
-      return "900";
+      return 900;
     case FontWeight.w100:
-      return "100";
+      return 100;
     case FontWeight.w200:
-      return "200";
+      return 200;
     case FontWeight.w300:
-      return "300";
+      return 300;
     case FontWeight.w400:
-      return "400";
+      return 400;
     case FontWeight.w500:
-      return "500";
+      return 500;
     case FontWeight.w600:
-      return "600";
+      return 600;
     case FontWeight.w700:
-      return "700";
+      return 700;
     case FontWeight.w800:
-      return "800";
+      return 800;
     case FontWeight.w900:
-      return "900";
+      return 900;
     default:
       return undefined;
   }

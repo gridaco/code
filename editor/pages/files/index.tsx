@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Head from "next/head";
 import { DefaultEditorWorkspaceLayout } from "layouts/default-editor-workspace-layout";
 import {
   Cards,
@@ -7,7 +8,7 @@ import {
   HomeSidebar,
 } from "components/home";
 import { WorkspaceRepository } from "repository";
-import { FileResponseRecord } from "store/fimga-file-store/figma-file-store";
+import { FileResponseRecord } from "@editor/figma-file";
 import { colors } from "theme";
 
 export default function FilesPage() {
@@ -19,6 +20,9 @@ export default function FilesPage() {
 
   return (
     <>
+      <Head>
+        <title>Grida | files</title>
+      </Head>
       <DefaultEditorWorkspaceLayout
         backgroundColor={colors.color_editor_bg_on_dark}
         leftbar={<HomeSidebar />}

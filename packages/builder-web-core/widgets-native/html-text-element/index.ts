@@ -6,7 +6,7 @@ import { CSSProperties } from "@coli.codes/css";
 import { JSX } from "coli";
 import { RGBA } from "@reflect-ui/core";
 import * as css from "@web-builder/styles";
-import { Dynamic } from "@reflect-ui/core/lib/_utility-types";
+import { Dynamic } from "@reflect-ui/core/reflection";
 
 /**
  * Html Text Representative.
@@ -14,15 +14,15 @@ import { Dynamic } from "@reflect-ui/core/lib/_utility-types";
  * You can select wich element to render with `elementPreference`. - choose between h1 ~ h6, p, span, etc.
  */
 export class Text extends TextChildWidget {
-  _type: "Text";
+  _type: "Text" = "Text";
 
   // text properties
   data: Dynamic<string>;
   overflow: TextOverflow;
   textStyle: core.ITextStyle;
   textAlign: core.TextAlign;
-  width?: number;
-  height?: number;
+  width?: core.DimensionLength;
+  height?: core.DimensionLength;
 
   // experimental
   elementPreference?: WebTextElement;
@@ -33,8 +33,6 @@ export class Text extends TextChildWidget {
     overflow: TextOverflow;
     textStyle: core.ITextStyle;
     textAlign: core.TextAlign;
-    width?: number;
-    height?: number;
     elementPreference?: WebTextElement;
   }) {
     super(p);
@@ -44,8 +42,6 @@ export class Text extends TextChildWidget {
     this.overflow = p.overflow;
     this.textStyle = p.textStyle;
     this.textAlign = p.textAlign;
-    this.width = p.width;
-    this.height = p.height;
 
     // experimental
     this.elementPreference = p.elementPreference;
@@ -53,7 +49,7 @@ export class Text extends TextChildWidget {
 
   textData() {
     return new TextDataWidget({
-      key: { ...this.key, id: this.key.id + ".text-data" },
+      key: this.key.copyWith({ id: this.key.id + ".text-data" }),
       data: this.data,
     });
   }
@@ -73,14 +69,27 @@ export class Text extends TextChildWidget {
       "text-align": this.textAlign,
       "text-decoration": css.textDecoration(this.textStyle.decoration),
       "text-shadow": css.textShadow(this.textStyle.textShadow),
+      "text-transform": css.textTransform(this.textStyle.textTransform),
       // ------------------------------------------
-      "min-height": css.px(this.height),
-      // TODO: do not specify width when parent is a flex container.
-      // Also flex: 1 is required to make the text wrap.
-      width: css.px(this.width),
+      ...textWH({ width: this.width, height: this.height }),
     };
 
     return <CSSProperties>textStyle;
+  }
+
+  get finalStyle() {
+    const superFinalStyle = super.finalStyle;
+    // TODO: this is a dirty fix ------------------------------------------------
+    // the text's width should not be overriden by the constraint's preference.
+    if (this.width === undefined) {
+      delete superFinalStyle["width"];
+    }
+    if (this.height === undefined) {
+      delete superFinalStyle["height"];
+    }
+    // --------------------------------------------------------------------------
+
+    return { ...superFinalStyle };
   }
 
   jsxConfig(): StylableJSXElementConfig {
@@ -88,6 +97,17 @@ export class Text extends TextChildWidget {
       type: "tag-and-attr",
       tag: JSX.identifier(__get_dedicated_element_tag(this.elementPreference)),
     };
+  }
+
+  fixSize({
+    width,
+    height,
+  }: {
+    width: core.DimensionLength;
+    height: core.DimensionLength;
+  }) {
+    this.width = width;
+    this.height = height;
   }
 }
 
@@ -99,3 +119,18 @@ const __get_dedicated_element_tag = (t?: WebTextElement | undefined) => {
     return __default_element_tag;
   }
 };
+
+function textWH({
+  width,
+  height,
+}: {
+  width: core.DimensionLength;
+  height: core.DimensionLength;
+}) {
+  return {
+    // TODO: do not specify width when parent is a flex container. (set as 100%)
+    // Also flex-grow: 1 is required to make the text wrap.
+    width: css.px(width as number),
+    "min-height": css.px(height as number),
+  };
+}

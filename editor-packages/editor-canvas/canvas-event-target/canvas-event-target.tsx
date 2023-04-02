@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useGesture } from "@use-gesture/react";
 import type {
   Handler,
@@ -8,6 +8,10 @@ import type {
 } from "@use-gesture/react";
 
 export type OnPanningHandler = Handler<"wheel", WheelEvent>;
+
+export type OnPanningStartHandler = () => void;
+
+export type OnPanningEndHandler = () => void;
 
 export type OnZoomingHandler = Handler<
   "pinch",
@@ -25,6 +29,7 @@ export type OnPointerDownHandler = (
 const ZOOM_WITH_SCROLL_SENSITIVITY = 0.001;
 
 export function CanvasEventTarget({
+  onZoomToFit,
   onPanning,
   onPanningStart,
   onPanningEnd,
@@ -38,26 +43,35 @@ export function CanvasEventTarget({
   onDrag,
   onDragStart,
   onDragEnd,
+  cursor,
   children,
-}: {
-  onPanning: OnPanningHandler;
-  onPanningStart: OnPanningHandler;
-  onPanningEnd: OnPanningHandler;
-  onZooming: OnZoomingHandler;
-  onZoomingStart: OnZoomingHandler;
-  onZoomingEnd: OnZoomingHandler;
-  onPointerMove: OnPointerMoveHandler;
-  onPointerMoveStart: OnPointerMoveHandler;
-  onPointerMoveEnd: OnPointerMoveHandler;
-  onPointerDown: OnPointerDownHandler;
-  onDrag: OnDragHandler;
-  onDragStart: OnDragHandler;
-  onDragEnd: OnDragHandler;
-  children?: React.ReactNode;
-}) {
+}: React.PropsWithChildren<
+  {
+    onZoomToFit?: () => void;
+    onPanning: OnPanningHandler;
+    onPanningStart: OnPanningStartHandler;
+    onPanningEnd: OnPanningEndHandler;
+    onZooming: OnZoomingHandler;
+    onZoomingStart: OnZoomingHandler;
+    onZoomingEnd: OnZoomingHandler;
+    onPointerMove: OnPointerMoveHandler;
+    onPointerMoveStart: OnPointerMoveHandler;
+    onPointerMoveEnd: OnPointerMoveHandler;
+    onPointerDown: OnPointerDownHandler;
+    onDrag: OnDragHandler;
+    onDragStart: OnDragHandler;
+    onDragEnd: OnDragHandler;
+  } & {
+    cursor?: React.CSSProperties["cursor"];
+  }
+>) {
   const interactionEventTargetRef = useRef();
 
   const [isSpacebarPressed, setIsSpacebarPressed] = useState(false);
+  const [isAuxPressed, setIsAuxPressed] = useState(false);
+
+  const panningMetaKeyPressed = isSpacebarPressed || isAuxPressed;
+
   let platform: PlatformName = "other";
   useEffect(() => {
     platform = getCurrentPlatform(window.navigator);
@@ -65,25 +79,56 @@ export function CanvasEventTarget({
 
   useEffect(() => {
     const kd = (e) => {
-      // if spacebar is pressed, enable panning wirt dragging.
+      // if spacebar is pressed, enable panning with dragging.
       if (e.code === "Space") {
         setIsSpacebarPressed(true);
       }
+
+      // if shift + 0
+      else if (e.code === "Digit0" && e.shiftKey) {
+        onZoomToFit?.();
+      }
     };
     const ku = (e) => {
+      // space bar
       if (e.code === "Space") {
         setIsSpacebarPressed(false);
+      }
+    };
+    const md = (e) => {
+      // mouse weehl (physical) - as well as space bar, mouse wheel + drag will enable panning.
+      if (e.button === 1) {
+        setIsAuxPressed(true);
+      }
+    };
+
+    const mu = (e) => {
+      // mouse wheel (physical)
+      if (e.button === 1) {
+        setIsAuxPressed(false);
       }
     };
 
     document.addEventListener("keydown", kd);
     document.addEventListener("keyup", ku);
+    document.addEventListener("mousedown", md);
+    document.addEventListener("mouseup", mu);
 
     return () => {
       document.removeEventListener("keydown", kd);
       document.removeEventListener("keyup", ku);
+      document.removeEventListener("mousedown", md);
+      document.removeEventListener("mouseup", mu);
     };
   }, []);
+
+  useEffect(() => {
+    if (isAuxPressed) {
+      onPanningStart?.();
+    } else {
+      onPanningEnd?.();
+    }
+  }, [isAuxPressed]);
 
   const transform_wheel_to_zoom = (s) => {
     return {
@@ -95,6 +140,9 @@ export function CanvasEventTarget({
 
   const [first_wheel_event, set_first_wheel_event] =
     useState<FullGestureState<"wheel">>();
+
+  // this is a hack to prevent from onDragStart being called even when no movement is detected.
+  const [drag_start_emitted, set_drag_start_emitted] = useState(false);
 
   useGesture(
     {
@@ -135,25 +183,40 @@ export function CanvasEventTarget({
       },
       onWheelStart: (s) => {
         set_first_wheel_event(s);
-        onPanningStart(s);
+        onPanningStart();
         s.event.stopPropagation();
         s.event.preventDefault();
       },
       onWheelEnd: (s) => {
         set_first_wheel_event(undefined);
-        onPanningEnd(s);
+        onPanningEnd();
       },
-      onMove: onPointerMove,
+      onMove: (s) => {
+        if (isAuxPressed) {
+          // @ts-ignore
+          onPanning({
+            ...s,
+            // reverse delta
+            delta: [-s.delta[0], -s.delta[1]],
+          });
+          return;
+        } else {
+          onPointerMove(s);
+        }
+      },
       onDragStart: (s) => {
-        if (isSpacebarPressed) {
-          onPanningStart(s as any);
+        if (panningMetaKeyPressed) {
+          onPanningStart();
           return;
         }
 
-        onDragStart(s);
+        if (s.delta[0] || s.delta[1]) {
+          onDragStart(s);
+          set_drag_start_emitted(true);
+        }
       },
       onDrag: (s) => {
-        if (isSpacebarPressed) {
+        if (panningMetaKeyPressed) {
           onPanning({
             ...s,
             delta: [-s.delta[0], -s.delta[1]],
@@ -161,16 +224,22 @@ export function CanvasEventTarget({
           return;
         }
 
+        if ((s.delta[0] || s.delta[1]) && !drag_start_emitted) {
+          set_drag_start_emitted(true);
+          onDragStart(s);
+        }
         onDrag(s);
       },
       onDragEnd: (s) => {
-        if (isSpacebarPressed) {
-          onPanningEnd(s as any);
+        if (panningMetaKeyPressed) {
+          onPanningEnd();
           return;
         }
 
+        set_drag_start_emitted(false);
         onDragEnd(s);
       },
+      // @ts-ignore
       onMouseDown: onPointerDown,
       onMoveStart: onPointerMoveStart,
       onMoveEnd: onPointerMoveEnd,
@@ -190,12 +259,14 @@ export function CanvasEventTarget({
       style={{
         position: "absolute",
         inset: 0,
-        background: "transparent",
         overflow: "hidden",
         touchAction: "none",
-        cursor: isSpacebarPressed ? "grab" : "default",
+        cursor: panningMetaKeyPressed ? "grab" : cursor,
+        userSelect: "none",
+        WebkitUserSelect: "none",
       }}
       id="gesture-event-listener"
+      // @ts-ignore
       ref={interactionEventTargetRef}
     >
       {children}

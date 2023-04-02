@@ -8,7 +8,7 @@ import { px } from "../dimensions";
  * @param border;
  * @returns
  */
-export function border(border: Border): CSSProperties {
+export function border(border: Border | undefined): CSSProperties {
   if (!border) {
     return;
   }
@@ -33,5 +33,11 @@ export function border(border: Border): CSSProperties {
 }
 
 export function borderSide(borderSide: BorderSide): CSSProperty.Border {
-  return `solid ${px(borderSide.width)} ${color(borderSide.color)}`;
+  if (borderSide.style === "none") {
+    return "none";
+  }
+
+  return `${borderSide.style ?? "solid"} ${px(borderSide.width)} ${color(
+    borderSide.color
+  )}`;
 }

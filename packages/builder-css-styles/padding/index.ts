@@ -8,8 +8,17 @@ import { px } from "../dimensions";
 
 type PaddingValue = number | "auto";
 
-export function padding(p: EdgeInsets): CSSProperties {
-  switch (edgeInsetsShorthandMode(p)) {
+export function padding(
+  p: EdgeInsets | undefined,
+  options?: {
+    explicit?: boolean;
+  }
+): CSSProperties {
+  if (p === undefined) {
+    return {};
+  }
+
+  switch (edgeInsetsShorthandMode(p, options)) {
     case EdgeInsetsShorthandMode.empty: {
       return {};
     }
@@ -31,10 +40,10 @@ export function padding(p: EdgeInsets): CSSProperties {
     case EdgeInsetsShorthandMode.trbl:
     default: {
       return {
-        "padding-bottom": _makeifRequired(p?.bottom),
-        "padding-top": _makeifRequired(p?.top),
-        "padding-left": _makeifRequired(p?.left),
-        "padding-right": _makeifRequired(p?.right),
+        "padding-bottom": _makeifRequired(p?.bottom, options?.explicit),
+        "padding-top": _makeifRequired(p?.top, options?.explicit),
+        "padding-left": _makeifRequired(p?.left, options?.explicit),
+        "padding-right": _makeifRequired(p?.right, options?.explicit),
       };
     }
   }
@@ -55,8 +64,8 @@ function _pv(pv: PaddingValue) {
   return px(pv);
 }
 
-function _makeifRequired(val: number): string | undefined {
-  if (val && val > 0) {
+function _makeifRequired(val: number, explicit?: boolean): string | undefined {
+  if (explicit || (val && val > 0)) {
     return px(val);
   }
 }

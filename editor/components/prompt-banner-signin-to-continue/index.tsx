@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 const __is_dev = process.env.NODE_ENV == "development";
 
-export function SigninToContinueBannerPrmoptProvider({
+export function SigninToContinuePrmoptProvider({
   children,
 }: {
   children: React.ReactNode;
@@ -44,6 +44,7 @@ const Positioner = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-end;
 
   position: fixed;
   bottom: 0;

@@ -1,3 +1,4 @@
 export * from "./editor-appbar";
-export * from "./editor-layer-hierarchy";
+export * from "./editor-browser-meta-head";
+export * from "./editor-hierarchy-layers";
 export * from "./editor-sidebar";

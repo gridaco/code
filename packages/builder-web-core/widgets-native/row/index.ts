@@ -1,6 +1,6 @@
 import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
 import { WidgetKey } from "../..";
-import { BoxShadowManifest } from "@reflect-ui/core/lib/box-shadow";
+import { BoxShadowManifest } from "@reflect-ui/core";
 import {
   Axis,
   BorderRadiusManifest,
@@ -8,7 +8,7 @@ import {
   EdgeInsets,
 } from "@reflect-ui/core";
 import { Flex } from "../flex";
-import { IFlexManifest } from "@reflect-ui/core/lib/flex/flex.manifest";
+import { IFlexManifest } from "@reflect-ui/core";
 
 export class Row extends Flex {
   readonly _type = "row";

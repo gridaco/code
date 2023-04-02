@@ -1,4 +1,4 @@
-import { Dynamic } from "@reflect-ui/core/lib/_utility-types";
+import { Dynamic } from "@reflect-ui/core/reflection";
 import {
   WidgetKey,
   WidgetWithStyle,

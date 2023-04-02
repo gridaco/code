@@ -1,12 +1,13 @@
 import * as core from "@reflect-ui/core";
 import { Composer } from ".";
 import { Stretched } from "@designto/token/tokens";
+import { ElementCssProperties } from "@coli.codes/css";
 
 export function compose_wrapped_with_stretched(
   widget: Stretched,
   child_composer: Composer
 ) {
-  let remove_size;
+  let remove_size: keyof ElementCssProperties;
   switch (widget.axis) {
     case core.Axis.horizontal:
       remove_size = "height";
@@ -19,8 +20,8 @@ export function compose_wrapped_with_stretched(
   const child = child_composer(widget.child);
   child.extendStyle({
     "align-self": "stretch",
-    // TODO:
-    // flex: 1,
+    // TODO: this is required, for fixed width / height to work, but not sure this is the best place to be.
+    "flex-shrink": 0,
     [remove_size]: undefined,
   });
   return child;

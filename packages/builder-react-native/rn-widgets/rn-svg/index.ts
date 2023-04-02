@@ -1,4 +1,4 @@
-import { reactnative } from "@designto/config";
+import { reactnative } from "@grida/builder-config";
 import { WidgetKey } from "@web-builder/core";
 import { SvgWithPathElement, SvgXmlElement } from "../../rn-svg";
 

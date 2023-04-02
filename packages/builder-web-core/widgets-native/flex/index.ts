@@ -12,13 +12,13 @@ import {
   VerticalDirection,
   IFlexManifest,
 } from "@reflect-ui/core";
-import { MainAxisSize } from "@reflect-ui/core/lib/main-axis-size";
+import { MainAxisSize } from "@reflect-ui/core";
 import { JSX } from "coli";
 import {
   MultiChildWidget,
   StylableJsxWidget,
 } from "@web-builder/core/widget-tree/widget";
-import { Background } from "@reflect-ui/core/lib/background";
+import { Background } from "@reflect-ui/core";
 import * as css from "@web-builder/styles";
 import { tricks } from "@web-builder/styles";
 import { CssMinHeightMixin } from "../../widgets";
@@ -123,10 +123,16 @@ export class Flex extends MultiChildWidget implements CssMinHeightMixin {
       overflow: this.overflow,
       ...css.justifyContent(this.mainAxisAlignment),
       "flex-direction": direction(this.direction),
-      "align-items": this.crossAxisAlignment,
-      flex: this.flex,
+      "align-items": flex_align_items(this.crossAxisAlignment),
+      flex: this.flex > 0 ? this.flex : undefined,
       "flex-wrap": this.flexWrap,
-      gap: this.itemSpacing && css.px(this.itemSpacing),
+      gap:
+        // if justify-content is set to space-between, do not set the gap.
+        this.mainAxisAlignment == MainAxisAlignment.spaceBetween
+          ? undefined
+          : this.itemSpacing > 0
+          ? css.px(this.itemSpacing)
+          : undefined,
       "box-shadow": css.boxshadow(...(this.boxShadow ?? [])),
       ...css.border(this.border),
       ...css.borderRadius(this.borderRadius),
@@ -152,4 +158,25 @@ function direction(axis: Axis): CSSProperty.FlexDirection {
       return "column";
   }
   throw `axis value of "${axis}" is not a valid reflect Axis value.`;
+}
+
+/**
+ * explicit css value with `flex-` prefix for start, end
+ * why? - "start" and "end" also attributes to the box itself -> to be more flex-specific.
+ * @param alignment
+ * @returns
+ */
+function flex_align_items(alignment: CrossAxisAlignment) {
+  switch (alignment) {
+    case CrossAxisAlignment.start:
+      return "flex-start";
+    case CrossAxisAlignment.end:
+      return "flex-end";
+    case CrossAxisAlignment.center:
+      return "center";
+    case CrossAxisAlignment.stretch:
+      return "stretch";
+    case CrossAxisAlignment.baseline:
+      return "baseline";
+  }
 }

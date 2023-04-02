@@ -10,5 +10,6 @@ export function keyFromWidget(widget: core.Widget): WidgetKey {
   const name = nameit(widget.key.originName, {
     case: NameCases.pascal,
   });
-  return new WidgetKey(widget.key.id, name.name);
+
+  return widget.key.rename(name.name);
 }

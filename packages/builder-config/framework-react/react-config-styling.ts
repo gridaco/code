@@ -1,4 +1,4 @@
-import type { CssStylingConfig } from "../framework-css";
+import type { CssStylingConfig } from "../module-css";
 
 export type ReactStylingStrategy =
   | ReactInlineCssConfig
@@ -33,7 +33,7 @@ interface ReactEmotionStyledConfig {
  *
  * ```tsx
  * // examples
- * <div style={{background: "black", width: 50, height: 50}}/>
+ * <div style={{background: "black", width: 50, height: 50, fontWeight: 800}}/>
  * <div style={box_style}/>
  * ```
  */

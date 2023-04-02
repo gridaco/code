@@ -1,5 +1,5 @@
 import { ScopedVariableNamer } from "@coli.codes/naming";
-import { ReservedKeywordPlatformPresets } from "@coli.codes/naming/reserved";
+import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
 import {
   BlockStatement,
   Identifier,
@@ -12,18 +12,24 @@ import {
 } from "coli";
 import {
   react_imports,
-  makeReactModuleFile,
   ReactWidgetModuleExportable,
 } from "@web-builder/react-core";
 import { JsxWidget } from "@web-builder/core";
 import {
   buildJsx,
-  getWidgetStylesConfigMap,
-  JSXWithoutStyleElementConfig,
-  JSXWithStyleElementConfig,
-  WidgetStyleConfigMap,
+  StylesConfigMapBuilder,
+  StylesRepository,
 } from "@web-builder/core/builders";
-import { react as react_config } from "@designto/config";
+import { react as react_config } from "@grida/builder-config";
+import { create_duplication_reduction_map } from "@web-builder/styled";
+import { makeEsWidgetModuleFile } from "@web-builder/module-es";
+import { Framework } from "@grida/builder-platform-types";
+import { JSXWidgetModuleBuilder } from "@web-builder/module-jsx";
+import { extractMetaFromWidgetKey } from "@designto/token/key";
+import {
+  ReactWidgetDeclarationDocBuilder,
+  WidgetDeclarationDocumentation,
+} from "@code-features/documentation";
 
 /**
  * CSS Module Builder for React Framework
@@ -31,13 +37,7 @@ import { react as react_config } from "@designto/config";
  *
  * - @todo: css file not built
  */
-export class ReactCssModuleBuilder {
-  private readonly entry: JsxWidget;
-  private readonly widgetName: string;
-  private readonly stylesConfigWidgetMap: WidgetStyleConfigMap;
-  private readonly namer: ScopedVariableNamer;
-  readonly config: react_config.ReactCssModuleConfig;
-
+export class ReactCssModuleBuilder extends JSXWidgetModuleBuilder<react_config.ReactCssModuleConfig> {
   constructor({
     entry,
     config,
@@ -45,26 +45,36 @@ export class ReactCssModuleBuilder {
     entry: JsxWidget;
     config: react_config.ReactCssModuleConfig;
   }) {
-    this.entry = entry;
-    this.widgetName = entry.key.name;
-    this.namer = new ScopedVariableNamer(
-      entry.key.id,
-      ReservedKeywordPlatformPresets.react
-    );
-    this.stylesConfigWidgetMap = getWidgetStylesConfigMap(entry, {
-      namer: this.namer,
-      rename_tag: false /** css-module tag shoule not be renamed */,
+    super({
+      entry,
+      config,
+      framework: Framework.react,
+      namer: new ScopedVariableNamer(
+        entry.key.id,
+        ReservedKeywordPlatformPresets.react
+      ),
     });
-    this.config = config;
   }
 
-  private stylesConfig(
-    id: string
-  ): JSXWithStyleElementConfig | JSXWithoutStyleElementConfig {
-    return this.stylesConfigWidgetMap.get(id);
+  protected initStylesConfigMapBuilder(): StylesConfigMapBuilder {
+    return new StylesConfigMapBuilder(
+      this.entry,
+      {
+        namer: this.namer,
+        rename_tag: false /** css-module tag shoule not be renamed */,
+      },
+      Framework.react
+    );
   }
 
-  private jsxBuilder(widget: JsxWidget) {
+  protected initStylesRepository(): false | StylesRepository {
+    return new StylesRepository(
+      this.stylesMapper.map,
+      create_duplication_reduction_map
+    );
+  }
+
+  protected jsxBuilder(widget: JsxWidget) {
     // e.g. import styles from "./?.module.css"
     const importedCssIdentifier = new Identifier(this.config.importDefault);
 
@@ -95,7 +105,7 @@ export class ReactCssModuleBuilder {
                   // TODO: this currently generates styles.ClassName, but it also should be compatible with
                   // - styles.className
                   // - styles.["class-name"]
-                  cfg.id
+                  cfg.id!
                 )
               )
             );
@@ -104,7 +114,7 @@ export class ReactCssModuleBuilder {
           const newattributes = [
             ...(_default_attr ?? []),
             //
-            className,
+            className!,
           ];
 
           cfg.attributes = newattributes;
@@ -118,15 +128,15 @@ export class ReactCssModuleBuilder {
     );
   }
 
-  partImports(): Array<ImportDeclaration> {
+  protected partImports(): Array<ImportDeclaration> {
     return [this.partImportReact(), this.partImportModuleCss()];
   }
 
-  partImportReact(): ImportDeclaration {
+  protected partImportReact(): ImportDeclaration {
     return react_imports.import_react_from_react;
   }
 
-  partImportModuleCss(): ImportDeclaration {
+  protected partImportModuleCss(): ImportDeclaration {
     return (
       new Import()
         .importDefault(this.config.importDefault)
@@ -136,16 +146,34 @@ export class ReactCssModuleBuilder {
     );
   }
 
-  partBody(): BlockStatement {
+  protected partBody(): BlockStatement {
     let jsxTree = this.jsxBuilder(this.entry);
     return new BlockStatement(new Return(jsxTree));
   }
 
-  asExportableModule() {
+  protected partDocumentation() {
+    const metafromkey = extractMetaFromWidgetKey(this.entry.key);
+    const docstr = new ReactWidgetDeclarationDocBuilder({
+      module: {
+        ...metafromkey,
+      },
+      declaration: {
+        type: "unknown",
+        identifier: this.widgetName,
+      },
+      params: undefined,
+      defaultValues: undefined,
+    }).make();
+    return docstr;
+  }
+
+  public asExportableModule() {
+    const doc = this.partDocumentation();
     const body = this.partBody();
     const imports = this.partImports();
     return new ReactCssModuleWidgetModuleExportable(this.widgetName, {
       body,
+      documentation: doc,
       imports,
     });
   }
@@ -157,8 +185,10 @@ export class ReactCssModuleWidgetModuleExportable extends ReactWidgetModuleExpor
     {
       body,
       imports,
+      documentation,
     }: {
       body: BlockStatement;
+      documentation: WidgetDeclarationDocumentation;
       imports: ImportDeclaration[];
     }
   ) {
@@ -166,6 +196,7 @@ export class ReactCssModuleWidgetModuleExportable extends ReactWidgetModuleExpor
       name,
       body,
       imports,
+      documentation,
     });
   }
 
@@ -174,12 +205,13 @@ export class ReactCssModuleWidgetModuleExportable extends ReactWidgetModuleExpor
   }: {
     exporting: react_config.ReactComponentExportingCofnig;
   }) {
-    return makeReactModuleFile({
+    return makeEsWidgetModuleFile({
       name: this.name,
       path: "src/components",
       imports: this.imports,
       declarations: [],
       body: this.body,
+      documentation: this.documentation,
       config: {
         exporting: exporting,
       },

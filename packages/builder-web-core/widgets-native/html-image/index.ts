@@ -3,39 +3,64 @@ import assert from "assert";
 import { JSX, JSXAttribute, StringLiteral } from "coli";
 import { StylableJSXElementConfig, WidgetKey, k } from "../..";
 import { SelfClosingContainer } from "../container";
+import {
+  BoxFit,
+  ImageRepeat,
+  cgr,
+  Alignment,
+  ImageManifest,
+} from "@reflect-ui/core";
 import * as css from "@web-builder/styles";
-export class ImageElement extends SelfClosingContainer {
+
+type HtmlImageElementProps = Omit<ImageManifest, "semanticLabel"> & {
+  alt?: string;
+};
+
+export class ImageElement
+  extends SelfClosingContainer
+  implements HtmlImageElementProps
+{
   _type = "img";
+
   readonly src: string;
-  readonly alt: string;
-  width: number;
-  height: number;
+  readonly width: number;
+  readonly height: number;
+  readonly alignment?: Alignment;
+  readonly centerSlice?: cgr.Rect;
+  readonly fit?: BoxFit;
+  readonly repeat?: ImageRepeat;
+  alt?: string;
 
   constructor({
     key,
     src,
-    alt,
     width,
     height,
+    alignment,
+    centerSlice,
+    fit,
+    repeat,
+    alt,
   }: {
     key: WidgetKey;
-    src: string;
-    alt?: string;
-    width?: number;
-    height?: number;
-  }) {
+  } & HtmlImageElementProps) {
     super({ key });
     assert(src !== undefined, "ImageElement requires src");
+
     this.src = src;
-    this.alt = alt;
     this.width = width;
     this.height = height;
+    this.alignment = alignment;
+    this.centerSlice = centerSlice;
+    this.fit = fit;
+    this.repeat = repeat;
+    this.alt = alt;
   }
 
   styleData() {
     return <CSSProperties>{
       ...super.styleData(),
-      "object-fit": "cover",
+      "object-fit": object_fit(this.fit) ?? "cover",
       width: css.px(this.width),
       height: css.px(this.height),
       // "max-width": "100%",
@@ -60,5 +85,27 @@ export class ImageElement extends SelfClosingContainer {
       tag: JSX.identifier("img"),
       attributes: attributes,
     };
+  }
+}
+
+function object_fit(fit?: BoxFit) {
+  switch (fit) {
+    case BoxFit.fill:
+      return "fill";
+    case BoxFit.contain:
+      return "contain";
+    case BoxFit.cover:
+      return "cover";
+    case BoxFit.none:
+      return "none";
+    case BoxFit.scaleDown:
+      return "scale-down";
+    case BoxFit.fitHeight:
+    case BoxFit.fitWidth:
+      // TODO:
+      return;
+    case undefined:
+    default:
+      return;
   }
 }

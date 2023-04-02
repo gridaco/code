@@ -13,6 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "incremental": true,
     "baseUrl": ".",
     "paths": {
       "components/*": ["./components/*"],
@@ -27,6 +28,12 @@
       "hooks/*": ["./hooks/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "../editor-packages/editor-canvas-renderer-core/util.ts",
+    "../editor-packages/editor-canvas-renderer-bitmap/image-preview.tsx"
+  ],
   "exclude": ["node_modules"]
 }

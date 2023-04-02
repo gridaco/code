@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import styled from "@emotion/styled";
-import { EditorAppbarFragments } from "components/editor";
 import { Canvas } from "@code-editor/canvas";
 import { useEditorState, useWorkspace } from "core/states";
-import { Preview } from "scaffolds/preview";
+import {
+  D2CVanillaPreview,
+  OptimizedPreviewCanvas,
+} from "scaffolds/preview-canvas";
 import useMeasure from "react-use-measure";
 import { useDispatch } from "core/dispatch";
 import { FrameTitleRenderer } from "./render/frame-title";
-import { IsolateModeCanvas } from "./isolate-mode";
+import { cursors } from "@code-editor/ui";
+import { usePreferences } from "@code-editor/preferences";
 
 /**
  * Statefull canvas segment that contains canvas as a child, with state-data connected.
@@ -15,96 +18,143 @@ import { IsolateModeCanvas } from "./isolate-mode";
 export function VisualContentArea() {
   const [state] = useEditorState();
   const [canvasSizingRef, canvasBounds] = useMeasure();
+  const { config: preferences } = usePreferences();
 
   const { highlightedLayer, highlightLayer } = useWorkspace();
   const dispatch = useDispatch();
 
-  const { selectedPage, design, selectedNodes } = state;
+  const {
+    selectedPage,
+    design,
+    selectedNodes,
+    canvas: canvasMeta,
+    canvasMode,
+  } = state;
+  const { focus } = canvasMeta;
 
-  const thisPageNodes = selectedPage
-    ? state.design.pages
-        .find((p) => p.id == selectedPage)
-        .children.filter(Boolean)
-    : [];
+  const thisPage = design?.pages?.find((p) => p.id == selectedPage);
+  const thisPageNodes = selectedPage ? thisPage?.children?.filter(Boolean) : [];
 
   const isEmptyPage = thisPageNodes?.length === 0;
 
-  const [mode, setMode] = useState<"full" | "isolate">("full");
+  const startCodeSession = useCallback(
+    (target: string) =>
+      dispatch({
+        type: "coding/new-template-session",
+        template: {
+          type: "d2c",
+          target: target,
+        },
+      }),
+    [dispatch]
+  );
+
+  const enterIsolation = useCallback(
+    (node: string) =>
+      dispatch({
+        type: "design/enter-isolation",
+        node,
+      }),
+    [dispatch]
+  );
+
+  const _bg =
+    thisPage?.backgroundColor &&
+    `rgba(${thisPage.backgroundColor.r * 255}, ${
+      thisPage.backgroundColor.g * 255
+    }, ${thisPage.backgroundColor.b * 255}, ${thisPage.backgroundColor.a})`;
+
+  const cursor = state.designerMode === "comment" ? cursors.comment : "default";
+
+  const { renderer } = preferences.canvas;
+  const renderItem = useCallback(
+    (p) => {
+      switch (renderer) {
+        case "bitmap-renderer": {
+          return (
+            <OptimizedPreviewCanvas key={p.node.id} target={p.node} {...p} />
+          );
+        }
+        case "vanilla-renderer": {
+          return <D2CVanillaPreview key={p.node.id} target={p.node} {...p} />;
+        }
+        default:
+          throw new Error("Unknown renderer", renderer);
+      }
+    },
+    [renderer]
+  );
 
   return (
-    <CanvasContainer
-      ref={canvasSizingRef}
-      id="canvas"
-      maxWidth={mode == "isolate" ? "calc((100vw - 200px) * 0.6)" : "100%"} // TODO: make this dynamic
-    >
+    <CanvasContainer ref={canvasSizingRef} id="canvas">
       {/* <EditorAppbarFragments.Canvas /> */}
 
       {isEmptyPage ? (
         <></>
       ) : (
         <>
-          {mode == "isolate" && (
-            <IsolateModeCanvas
-              onClose={() => {
-                setMode("full");
-              }}
-            />
-          )}
-          <div
-            style={{
-              display: mode == "full" ? undefined : "none",
+          <Canvas
+            key={selectedPage}
+            viewbound={[
+              canvasBounds.left,
+              canvasBounds.top,
+              canvasBounds.right,
+              canvasBounds.bottom,
+            ]}
+            filekey={state.design.key}
+            pageid={selectedPage}
+            backgroundColor={_bg}
+            selectedNodes={selectedNodes}
+            focusRefreshkey={focus.refreshkey}
+            focus={focus.nodes}
+            highlightedLayer={highlightedLayer}
+            onSelectNode={(...nodes) => {
+              dispatch({ type: "select-node", node: nodes.map((n) => n.id) });
             }}
-          >
-            <Canvas
-              key={selectedPage}
-              viewbound={[
-                canvasBounds.left,
-                canvasBounds.top,
-                canvasBounds.bottom,
-                canvasBounds.right,
-              ]}
-              filekey={state.design.key}
-              pageid={selectedPage}
-              selectedNodes={selectedNodes.filter(Boolean)}
-              highlightedLayer={highlightedLayer}
-              onSelectNode={(node) => {
-                dispatch({ type: "select-node", node: node?.id });
-              }}
-              onClearSelection={() => {
-                dispatch({ type: "select-node", node: null });
-              }}
-              nodes={thisPageNodes}
-              renderItem={(p) => {
-                return <Preview key={p.node.id} target={p.node} {...p} />;
-              }}
-              config={{
-                can_highlight_selected_layer: true,
-                marquee: {
-                  disabled: true,
-                },
-              }}
-              renderFrameTitle={(p) => (
-                <FrameTitleRenderer
-                  key={p.id}
-                  {...p}
-                  onRunClick={() => {
-                    setMode("isolate");
-                  }}
-                />
-              )}
-            />
-          </div>
+            onMoveNodeEnd={([x, y], ...nodes) => {
+              dispatch({
+                type: "node-transform-translate",
+                node: nodes,
+                translate: [x, y],
+              });
+            }}
+            // onMoveNode={() => {}}
+            onClearSelection={() => {
+              dispatch({ type: "select-node", node: [] });
+            }}
+            nodes={thisPageNodes}
+            // initialTransform={ } // TODO: if the initial selection is provided from first load, from the query param, we have to focus to fit that node.
+            renderItem={renderItem}
+            // readonly={false}
+            readonly
+            config={{
+              can_highlight_selected_layer: true,
+              marquee: {
+                disabled: false,
+              },
+              grouping: {
+                disabled: false,
+              },
+            }}
+            cursor={cursor}
+            renderFrameTitle={(p) => (
+              <FrameTitleRenderer
+                key={p.id}
+                {...p}
+                runnable={selectedNodes.length === 1}
+                onRunClick={() => startCodeSession(p.id)}
+                onDoubleClick={() => enterIsolation(p.id)}
+              />
+            )}
+          />
         </>
       )}
     </CanvasContainer>
   );
 }
 
-const CanvasContainer = styled.div<{
-  maxWidth?: string;
-}>`
+const CanvasContainer = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: ${(p) => p.maxWidth};
   height: 100%;
 `;

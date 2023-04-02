@@ -121,12 +121,11 @@ export function buildJsx(
 
       return jsx;
     } else {
-      const config = widget.jsxConfig();
-      if (config.type === "tag-and-attr") {
-        const _tag = handle(config.tag);
+      if (_jsxcfg.type === "tag-and-attr") {
+        const _tag = handle(_jsxcfg.tag);
         const jsx = _jsx_element_with_self_closing_if_possible({
           tag: _tag,
-          attributes: config.attributes,
+          attributes: _jsxcfg.attributes,
           children: children,
           options: {
             force_dont_self_close: force_dont_self_close,
@@ -134,6 +133,8 @@ export function buildJsx(
         });
 
         return jsx;
+      } else {
+        // unreachable (static-tree is handled above)
       }
       return;
     }

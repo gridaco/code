@@ -1,7 +1,7 @@
-import { MainImageRepository } from "@design-sdk/core/assets-repository";
-import { ReflectSceneNode } from "@design-sdk/figma-node";
+import type { ReflectSceneNode } from "@design-sdk/figma-node";
+import type { DetectedIconData } from "@reflect-ui/detection";
+import { MainImageRepository } from "@design-sdk/asset-repository";
 import { IconWidget } from "@reflect-ui/core";
-import { DetectedIconData } from "@reflect-ui/detection/lib/icon.detection";
 import { keyFromNode } from "../key";
 
 function fromIcon(node: ReflectSceneNode, d: DetectedIconData): IconWidget {

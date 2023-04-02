@@ -1,4 +1,3 @@
-
 # Installation & Build
 
 ```
@@ -8,12 +7,6 @@ yarn
 yarn editor
 ```
 
-
-## Setup credentials for development
-
-visit http://localhost:6626/preferences/access-tokens and set pats for api calls
-
-
 ## Structure
 
 - editor - visual editor for development
@@ -21,7 +14,11 @@ visit http://localhost:6626/preferences/access-tokens and set pats for api calls
 - packages - core packages contributing to the code-gen logic
 - externals - external foundational packages, like [reflect-core](https://github.com/reflect-ui/reflect-core-ts)
 
+## QnA
 
-# Why 6626?
+- Why 6626? - 6626 is from `69 68 2 67` Which is a decimal representation of ED2C(Engine: Design 2 Code)
 
-6626 is from `69 68 2 67` Which is a decimal representation of ED2C(Engine: Design 2 Code)
+## Utilities
+
+- npx npkill to clean all node_modules folders
+- clean: `npx npkill && rm -rf yarn.lock`

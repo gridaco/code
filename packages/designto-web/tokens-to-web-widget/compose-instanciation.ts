@@ -14,10 +14,9 @@ export function compose_instanciation(
   }).name;
 
   return new web.InstanciationElement({
-    key: {
-      name: "ExampleUsageOf_" + identifier, // FIXME: should not use identifier as name
-      id: widget.key.id,
-    },
+    key: widget.key.copyWith({
+      name: "ExampleUsageOf_" + identifier,
+    }),
     identifier: identifier,
     arguments: widget.meta.arguments,
   });

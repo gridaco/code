@@ -1,12 +1,16 @@
-import { nodes } from "@design-sdk/core";
+import type {
+  ReflectRectangleNode,
+  ReflectLineNode,
+  ReflectEllipseNode,
+} from "@design-sdk/figma-node";
 import * as core from "@reflect-ui/core";
 import { tokenizeBackground } from "../token-background";
-import { BoxShape } from "@reflect-ui/core/lib/box-shape";
+import { BoxShape } from "@reflect-ui/core";
 import { keyFromNode } from "../key";
 import { tokenizeBorder } from "../token-border";
-import { BoxShadowManifest } from "@reflect-ui/core";
+import { BorderRadius, BoxShadowManifest } from "@reflect-ui/core";
 
-function fromRectangle(rect: nodes.ReflectRectangleNode): core.Container {
+function fromRectangle(rect: ReflectRectangleNode): core.Container {
   const container = new core.Container({
     key: keyFromNode(rect),
     width: rect.width,
@@ -23,14 +27,28 @@ function fromRectangle(rect: nodes.ReflectRectangleNode): core.Container {
   return container;
 }
 
-function fromEllipse(ellipse: nodes.ReflectEllipseNode): core.Container {
+function fromLine(line: ReflectLineNode): core.Container {
+  const container = new core.Container({
+    key: keyFromNode(line),
+    width: line.width,
+    height: 0,
+    boxShadow: line.shadows as BoxShadowManifest[],
+    border: tokenizeBorder.fromLineNode(line),
+  });
+
+  container.x = line.x;
+  container.y = line.y;
+  return container;
+}
+
+function fromEllipse(ellipse: ReflectEllipseNode): core.Container {
   const container = new core.Container({
     key: keyFromNode(ellipse),
     width: ellipse.width,
     height: ellipse.height,
     boxShadow: ellipse.shadows as BoxShadowManifest[],
     border: tokenizeBorder.fromNode(ellipse),
-    borderRadius: { all: Math.max(ellipse.width, ellipse.height) / 2 },
+    borderRadius: BorderRadius.all({ x: ellipse.width, y: ellipse.height }), // this is equivalant to css "50%"
     background: tokenizeBackground.fromFills(ellipse.fills),
   });
 
@@ -45,4 +63,5 @@ function fromEllipse(ellipse: nodes.ReflectEllipseNode): core.Container {
 export const tokenizeContainer = {
   fromRectangle: fromRectangle,
   fromEllipse: fromEllipse,
+  fromLine: fromLine,
 };
