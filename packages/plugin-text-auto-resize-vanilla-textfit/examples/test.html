@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/textfit/textFit.min.js"></script>
+    <script defer>
+      window.onload = () => {
+        [".a", ".b", ".c"]
+          .map((selector) => document.querySelector(selector))
+          .forEach((el) => {
+            try {
+              el &&
+                textFit(el, {
+                  multiLine: false,
+                  widthOnly: true,
+                });
+            } catch (e) {}
+          });
+      };
+    </script>
+    <style>
+      .a {
+        font-size: 12px;
+      }
+      .b {
+        font-size: 32px;
+      }
+      .c {
+        font-size: 12px;
+      }
+
+      .demo {
+        display: block;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <span style="width: 20px; height: 80px" class="demo a">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </span>
+    </div>
+    <div>
+      <span style="width: 80px; height: 80px" class="demo b">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </span>
+    </div>
+    <div>
+      <span style="width: 120px; height: 80px" class="demo c">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </span>
+    </div>
+  </body>
+</html>

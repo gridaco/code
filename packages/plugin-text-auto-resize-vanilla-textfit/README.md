@@ -44,14 +44,18 @@ For **API**
 
 ## Options
 
-| property    | default | type       | required | description                                                   |
-| ----------- | ------- | ---------- | -------- | ------------------------------------------------------------- |
-| `upscale`   | `false` | `bool`     | ☐        | rather to upscale-fit the text                                |
-| `downscale` | `false` | `bool`     | ☐        | rather to downscale-fit the text                              |
-| `min`       | `6`     | `number`   | ☐        | minimum font size in px                                       |
-| `max`       | `999`   | `number`   | ☐        | maximum font size in px                                       |
-| `include`   | `[]`    | `string[]` | ☐        | array of element selectors to fit (`.` for class, `#` for id) |
-| `exclude`   | `[]`    | `string[]` | ☐        | array of element selectors to exclude                         |
+| property  | default | type              | required | description                                                                                                           |
+| --------- | ------- | ----------------- | -------- | --------------------------------------------------------------------------------------------------------------------- |
+| `mode`    | `fixed` | `fixed`           | ☑        | the mode, only supports `fixed` for now, which the resize will be applied to text with both width & height specified. |
+| `min`     | `6`     | `number`          | ☐        | minimum font size in px                                                                                               |
+| `max`     | `999`   | `number`          | ☐        | maximum font size in px                                                                                               |
+| `include` | `[]`    | `string[]`        | ☐        | array of query selectors to fit (`.` for class, `#` for id)                                                           |
+| `exclude` | `[]`    | `string[]`        | ☐        | array of query selectors to exclude                                                                                   |
+| loglevel  | `null`  | `'error' \| null` | ☐        | log level, 0 for none, 1 for info, 2 for debug                                                                        |
+
+<!--
+| `upscale`   | `false` | `bool`     | ☐        | rather to upscale-fit the text                                                                                        |
+| `downscale` | `false` | `bool`     | ☐        | rather to downscale-fit the text               -->
 
 ## Output
 
