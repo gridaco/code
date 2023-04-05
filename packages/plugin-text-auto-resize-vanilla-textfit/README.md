@@ -10,13 +10,13 @@
 For **`grida.config.js`**
 
 ```js
-const VanilaTextFitPlugin = require("@code-plugins/vanilla-textfit");
+const VanillaTextFitPlugin = require("@code-plugins/vanilla-textfit");
 
 module.exports = {
   // ...
   plugins: [
     // ...
-    new VanilaTextFitPlugin({
+    new VanillaTextFitPlugin({
       // options
     }),
   ],
@@ -44,14 +44,14 @@ For **API**
 
 ## Options
 
-| property  | default | type              | required | description                                                                                                           |
-| --------- | ------- | ----------------- | -------- | --------------------------------------------------------------------------------------------------------------------- |
-| `mode`    | `fixed` | `fixed`           | ☑        | the mode, only supports `fixed` for now, which the resize will be applied to text with both width & height specified. |
-| `min`     | `6`     | `number`          | ☐        | minimum font size in px                                                                                               |
-| `max`     | `999`   | `number`          | ☐        | maximum font size in px                                                                                               |
-| `include` | `[]`    | `string[]`        | ☐        | array of query selectors to fit (`.` for class, `#` for id)                                                           |
-| `exclude` | `[]`    | `string[]`        | ☐        | array of query selectors to exclude                                                                                   |
-| loglevel  | `null`  | `'error' \| null` | ☐        | log level, 0 for none, 1 for info, 2 for debug                                                                        |
+| property  | default | type           | required | description                                                                                                           |
+| --------- | ------- | -------------- | -------- | --------------------------------------------------------------------------------------------------------------------- |
+| `mode`    | `fixed` | `fixed`        | ☑        | the mode, only supports `fixed` for now, which the resize will be applied to text with both width & height specified. |
+| `min`     | `6`     | `number`       | ☐        | minimum font size in px                                                                                               |
+| `max`     | `80`    | `number`       | ☐        | maximum font size in px                                                                                               |
+| `include` | `[]`    | `string[]`     | ☐        | array of query selectors to fit (`.` for class, `#` for id)                                                           |
+| `exclude` | `[]`    | `string[]`     | ☐        | array of query selectors to exclude                                                                                   |
+| loglevel  | `none`  | `none \| null` | ☐        | log level                                                                                                             |
 
 <!--
 | `upscale`   | `false` | `bool`     | ☐        | rather to upscale-fit the text                                                                                        |
