@@ -1,5 +1,5 @@
 import assert from "assert";
-function inject(builder, injections) {
+export function inject(builder, injections) {
   assert(injections);
   assert(Array.isArray(injections));
   if (!injections.length) return;
