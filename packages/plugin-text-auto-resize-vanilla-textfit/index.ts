@@ -5,27 +5,31 @@ import { inject } from "./injector";
 export default class VanillaTextFitPlugin extends Plugin {
   preset = "@code-plugins/vanilla-textfit";
   name = "VanillaTextFitPlugin";
-  options: VanillaTextFitPluginOptions;
+  config: VanillaTextFitPluginConfigs;
   //
-  constructor(options: VanillaTextFitPluginOptions) {
+  constructor(config: VanillaTextFitPluginConfigs) {
     super({
       framework: Framework.vanilla,
     });
-    this.options = options;
+    this.config = config;
   }
 
   apply(context: any): void {
     context.hooks.afterVanillaCSSBundle.tap(this.name, (config) => {
       const builder: HtmlIdCssModuleBuilder = config.builder;
-
-      switch (this.options.strategy) {
+      switch (this.config.strategy) {
         case "width-and-height": {
           inject(
             builder,
+            this.config.strategy,
             ["h1", "h2", "h3", "h4", "h5", "h6", "p", "span"].map(
               (selector) => ({
                 selector,
-                option: {},
+                option: {
+                  maxFontSize: this.config.option.max,
+                  minFontSize: this.config.option.min,
+                  reProcess: this.config.option.reProcess,
+                },
               })
             )
           );
@@ -36,30 +40,37 @@ export default class VanillaTextFitPlugin extends Plugin {
   }
 }
 
-type VanillaTextFitPluginOptions = VanillaTextFitPluginConfig;
+type VanillaTextFitPluginConfigs = VanillaTextFitPluginWidthAndHeightConfig;
 
 type FitOption = {
   /**
    * max font size to be resized in px
    * @default 80
    */
-  max: number;
+  max?: number;
 
   /**
    * min font size to be resized in px
    * @default 6
    */
-  min: number;
+  min?: number;
+
+  /**
+   * if true, textFit will re-process already-fit nodes. Set to 'false' for better performance
+   * @default false
+   */
+  reProcess?: boolean;
 
   /**
    * if true, textFit will fit text to element width, regardless of text height
    * @default false
    */
-  widthOnly: boolean;
+  widthOnly?: boolean;
 };
 
-interface VanillaTextFitPluginConfig {
+interface VanillaTextFitPluginWidthAndHeightConfig {
   strategy: "width-and-height";
+  option: Omit<FitOption, "widthOnly">;
 }
 
 /**
