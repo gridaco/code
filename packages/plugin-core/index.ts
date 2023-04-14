@@ -1,5 +1,6 @@
 import { Plugin } from "./plugin";
 
-export * from "./composer";
+export { composePlugin } from "./composer";
 export * from "./types";
 export default Plugin;
+export type { Plugin };

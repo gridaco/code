@@ -26,6 +26,7 @@ import { Framework } from "@grida/builder-platform-types";
 import { stringfy as stringfyHtmlMeta, HtmlMeta } from "../html-meta";
 import { TFontService } from "@code-features/fonts";
 import { htmlFontsMiddleware } from "./html-fonts-middleware";
+import type { Plugin } from "@code-plugin/core";
 
 interface CssDeclaration {
   key: {
@@ -41,6 +42,7 @@ export type HtmlModuleBuilderConfig = {
   fonts?: {
     services: ReadonlyArray<TFontService>;
   };
+  plugins?: ReadonlyArray<Plugin>;
 };
 
 export class HtmlIdCssModuleBuilder {
@@ -87,6 +89,20 @@ export class HtmlIdCssModuleBuilder {
     if (config.fonts) {
       htmlFontsMiddleware(this, config.fonts.services);
     }
+  }
+
+  private afterVanillaCSSBundle() {
+    this.config.plugins?.forEach((p) => {
+      p.apply({
+        hooks: {
+          afterVanillaCSSBundle: {
+            tap: (name, fn) => {
+              fn({ builder: this });
+            },
+          },
+        },
+      });
+    });
   }
 
   private styledConfig(
@@ -205,9 +221,14 @@ export class HtmlIdCssModuleBuilder {
       indentation: "\t",
     });
 
+    const strfied_css = this.partStyles();
+
+    // hook TODO: (execution matters due to textfit plugin contributes to head. this is a design flaw. needs to be fixed.)
+    this.afterVanillaCSSBundle();
+
     const final = html_render({
       head: this.partHead(),
-      css: this.partStyles(),
+      css: strfied_css,
       body: strfied_body,
     });
 

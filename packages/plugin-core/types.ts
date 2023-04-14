@@ -17,8 +17,13 @@ export type UseCodePluginByPresetNameAndParamsForInlineJsonUseSpec<
   P extends object
 > = [K, P];
 
+export type UseCodePluginByPresetNameForInlineJsonUseSpec<
+  K extends string = string
+> = [K];
+
 export type TPlugin =
   | UseCodePluginByPresetNameSpec
   | UseCodePluginByPresetNameAndParamsForInlineJsonUseSpec<any, any>
+  | UseCodePluginByPresetNameForInlineJsonUseSpec
   | IPlugin
   | Plugin;

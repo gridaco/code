@@ -19,12 +19,12 @@ export function export_vanilla_preview_source(
   const builder = new HtmlIdCssModuleBuilder({
     entry: widget,
     config: {
-      ...config,
-      // required (for safety, for consistant preview)
-      disable_all_optimizations: true,
       fonts: {
         services: ["system", "fonts.google.com"],
       },
+      ...config,
+      // required (for safety, for consistant preview)
+      disable_all_optimizations: true,
     },
   });
   return builder.export();

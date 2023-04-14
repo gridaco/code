@@ -3,6 +3,7 @@ import type {
   VanillaFrameworkConfig,
 } from "@grida/builder-config";
 import { LICENSE_CE } from "./license";
+import type { TPlugin } from "@code-plugin/core";
 
 export type FigmaNodeInput =
   | string
@@ -20,6 +21,7 @@ type DebugOptions = {
 export type CodeRequest = DebugOptions & {
   figma: FigmaNodeInput;
   framework: Partial<FrameworkConfig>;
+  plugins?: TPlugin[];
 };
 
 export type CodeResponse = FigmaToVanillaResponse;
