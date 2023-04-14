@@ -26,9 +26,9 @@ export default class VanillaTextFitPlugin extends Plugin {
               (selector) => ({
                 selector,
                 option: {
-                  maxFontSize: this.config.option.max,
-                  minFontSize: this.config.option.min,
-                  reProcess: this.config.option.reProcess,
+                  maxFontSize: this.config.max,
+                  minFontSize: this.config.min,
+                  reProcess: this.config.reProcess,
                 },
               })
             )
@@ -68,10 +68,9 @@ type FitOption = {
   widthOnly?: boolean;
 };
 
-interface VanillaTextFitPluginWidthAndHeightConfig {
+type VanillaTextFitPluginWidthAndHeightConfig = {
   strategy: "width-and-height";
-  option: Omit<FitOption, "widthOnly">;
-}
+} & Omit<FitOption, "widthOnly">;
 
 /**
  * @deprecated
