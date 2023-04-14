@@ -44,7 +44,6 @@ function composePluginByNameAndParams(
   params: object,
   resolver?: Resolver
 ): Plugin {
-  console.log("resolver", resolver);
   if (resolver) {
     return resolver(name, params);
   }
