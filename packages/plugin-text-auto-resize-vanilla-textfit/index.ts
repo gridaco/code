@@ -20,7 +20,16 @@ export default class VanillaTextFitPlugin extends Plugin {
 
       switch (this.options.strategy) {
         case "width-and-height": {
-          inject(builder, ["h1", "h2", "h3", "h4", "h5", "h6", "p", "span"]);
+          inject(
+            builder,
+            ["h1", "h2", "h3", "h4", "h5", "h6", "p", "span"].map(
+              (selector) => ({
+                selector,
+                option: {},
+              })
+            )
+          );
+          break;
         }
       }
     });
