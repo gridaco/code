@@ -9,10 +9,18 @@ export type FigmaNodeInput =
   | { url: string; version: string }
   | { filekey: string; node: string; version: string };
 
-export interface CodeRequest {
+type DebugOptions = {
+  /**
+   * if true, the response will be a vanilla html without other data.
+   * @default false
+   */
+  raw?: boolean;
+};
+
+export type CodeRequest = DebugOptions & {
   figma: FigmaNodeInput;
   framework: Partial<FrameworkConfig>;
-}
+};
 
 export type CodeResponse = FigmaToVanillaResponse;
 
