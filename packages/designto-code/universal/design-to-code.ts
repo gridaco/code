@@ -23,6 +23,7 @@ import {
 // import { reusable } from "@code-features/component";
 import assert from "assert";
 import { debug, debugIf } from "@designto/debugger";
+import { composePlugin } from "../plugin";
 
 type CustomAssetResolver = ({
   keys,
@@ -56,15 +57,37 @@ export type DesignToCodeInput = {
   framework: config.FrameworkConfig;
   build_config?: config.BuildConfiguration;
   asset_config: AssetsConfig;
+  plugins?: config.Plugins;
 };
+
+const K_PLUGIN_SUPPORTED_FRAMEWORKS: Array<FrameworkConfig["framework"]> = [
+  "vanilla",
+  "preview",
+];
+
+function assert_plugin_supported_framework(
+  framework: FrameworkConfig["framework"],
+  plugins: config.Plugins
+) {
+  if (plugins?.length) {
+    assert(
+      K_PLUGIN_SUPPORTED_FRAMEWORKS.includes(framework),
+      "plugins are not supported for this framework"
+    );
+  }
+}
 
 export async function designToCode({
   input,
   framework: framework_config,
   asset_config,
   build_config = config.default_build_configuration,
+  plugins,
 }: DesignToCodeInput): Promise<Result> {
   assert(input, "input is required");
+
+  assert_plugin_supported_framework(framework_config["framework"], plugins);
+
   debugIf(
     // framework_config.framework !== "vanilla",
     false,
@@ -136,6 +159,7 @@ export async function designToCode({
           build_config: build_config,
           vanilla_config: framework_config,
           asset_config: asset_config,
+          plugins,
         })),
         ..._extend_result,
       };
@@ -146,6 +170,7 @@ export async function designToCode({
           build_config: build_config,
           vanilla_config: framework_config,
           asset_config: asset_config,
+          plugins,
         })),
         ..._extend_result,
       };
@@ -383,6 +408,7 @@ export async function designToVanillaPreview({
   asset_config,
   vanilla_config,
   build_config,
+  plugins,
 }: {
   input: { widget: Widget };
   /**
@@ -391,12 +417,18 @@ export async function designToVanillaPreview({
   build_config: config.BuildConfiguration;
   vanilla_config: config.VanillaPreviewFrameworkConfig;
   asset_config?: AssetsConfig;
+  plugins?: config.Plugins;
 }): Promise<output.ICodeOutput> {
   const vanillawidget = toVanilla.buildVanillaWidget(
     input.widget,
     vanilla_config as any as config.VanillaFrameworkConfig
   );
-  const res = toVanilla.buildVanillaPreviewFile(vanillawidget, vanilla_config);
+
+  const res = toVanilla.buildVanillaPreviewFile(
+    vanillawidget,
+    vanilla_config,
+    plugins?.map(composePlugin)
+  );
 
   // ------------------------------------------------------------------------
   // finilize temporary assets
@@ -436,6 +468,7 @@ export async function designToVanilla({
   asset_config,
   vanilla_config,
   build_config,
+  plugins,
 }: {
   input: { widget: Widget };
   /**
@@ -444,12 +477,18 @@ export async function designToVanilla({
   build_config: config.BuildConfiguration;
   vanilla_config: config.VanillaFrameworkConfig;
   asset_config?: AssetsConfig;
+  plugins?: config.Plugins;
 }): Promise<output.ICodeOutput> {
   const vanillawidget = toVanilla.buildVanillaWidget(
     input.widget,
     vanilla_config
   );
-  const res = toVanilla.buildVanillaFile(vanillawidget, vanilla_config);
+
+  const res = toVanilla.buildVanillaFile(
+    vanillawidget,
+    vanilla_config,
+    plugins?.map(composePlugin)
+  );
 
   // ------------------------------------------------------------------------
   // finilize temporary assets

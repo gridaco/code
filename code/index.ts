@@ -11,11 +11,13 @@ import type { FrameworkConfig } from "@grida/builder-config";
 import { defaultConfigByFramework } from "@grida/builder-config-preset";
 import { Language } from "@grida/builder-platform-types";
 import { formatCode } from "dart-style";
+import type { TPlugin } from "@code-plugin/core";
 
 export async function code({
   auth,
   uri,
   framework,
+  plugins,
 }: {
   auth:
     | {
@@ -24,6 +26,7 @@ export async function code({
     | { accessToken: string };
   uri: string;
   framework: FrameworkConfig;
+  plugins?: TPlugin[];
 }) {
   //
 
@@ -59,6 +62,7 @@ export async function code({
         ...framework,
       },
       asset_config: { asset_repository: MainImageRepository.instance },
+      plugins,
     });
 
     const src = postproc_src(
