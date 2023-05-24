@@ -19,6 +19,9 @@ export function export_vanilla_preview_source(
   const builder = new HtmlIdCssModuleBuilder({
     entry: widget,
     config: {
+      fonts: {
+        services: ["system", "fonts.google.com"],
+      },
       ...config,
       // required (for safety, for consistant preview)
       disable_all_optimizations: true,

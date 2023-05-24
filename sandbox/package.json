@@ -1,0 +1,19 @@
+{
+  "name": "@scenes/sandbox-daemon",
+  "version": "0.0.0",
+  "author": "Grida Inc.",
+  "homepage": "https://github.com/gridaco/code",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "vite": "^4.3.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.2.3",
+    "ts-node": "^10.9.1",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.4"
+  }
+}

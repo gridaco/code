@@ -8,7 +8,7 @@ export const image_smallest_fallback_source_base_64 =
 
 export const user_agent_stylesheet_override_default = <CSSProperties>{
   margin: "0px",
-  "font-family": `Helvetica, "Helvetica Neue", Roboto, Noto, Arial, sans-serif`,
+  // we don't set default font-family here, because we don't want to add !important to every other font-family.
 };
 
 export const default_generic_fallback_font_family = "sans-serif";

@@ -1,0 +1,93 @@
+{
+  "Arial": {
+    "fallbacks": ["Helvetica Neue", "Helvetica", "sans-serif"]
+  },
+  "Arial Black": {
+    "fallbacks": ["Arial Black", "Arial Bold", "Gadget", "sans-serif"]
+  },
+  "Arial Narrow": {
+    "fallbacks": ["Arial", "sans-serif"]
+  },
+  "Baskerville": {
+    "fallbacks": [
+      "Baskerville Old Face",
+      "Hoefler Text",
+      "Garamond",
+      "Times New Roman",
+      "serif"
+    ]
+  },
+  "Brush Script MT": {
+    "fallbacks": ["cursive"]
+  },
+  "Century Gothic": {
+    "fallbacks": ["CenturyGothic", "AppleGothic", "sans-serif"]
+  },
+  "Copperplate": {
+    "fallbacks": ["Copperplate Gothic Light", "fantasy"]
+  },
+  "Courier New": {
+    "fallbacks": [
+      "Courier",
+      "Lucida Sans Typewriter",
+      "Lucida Typewriter",
+      "monospace"
+    ]
+  },
+  "Garamond": {
+    "fallbacks": [
+      "Baskerville",
+      "Baskerville Old Face",
+      "Hoefler Text",
+      "Times New Roman",
+      "serif"
+    ]
+  },
+  "Georgia": {
+    "fallbacks": ["Times", "Times New Roman", "serif"]
+  },
+  "Gill Sans": {
+    "fallbacks": ["Gill Sans MT", "Calibri", "sans-serif"]
+  },
+  "Lucida Bright": {
+    "fallbacks": ["Georgia", "serif"]
+  },
+  "Lucida Sans Typewriter": {
+    "fallbacks": [
+      "Lucida Console",
+      "monaco",
+      "Bitstream Vera Sans Mono",
+      "monospace"
+    ]
+  },
+  "Palatino": {
+    "fallbacks": [
+      "Palatino Linotype",
+      "Palatino LT STD",
+      "Book Antiqua",
+      "Georgia",
+      "serif"
+    ]
+  },
+  "Papyrus": {
+    "fallbacks": ["fantasy"]
+  },
+  "Tahoma": {
+    "fallbacks": ["Verdana", "Segoe", "sans-serif"]
+  },
+  "Times New Roman": {
+    "fallbacks": ["Times New Roman", "Times", "Baskerville", "Georgia", "serif"]
+  },
+  "Trebuchet MS": {
+    "fallbacks": [
+      "Lucida Grande",
+      "Lucida Sans Unicode",
+      "Lucida Sans",
+      "Tahoma",
+      "sans-serif"
+    ]
+  },
+  "Verdana": {
+    "fallbacks": ["Geneva", "sans-serif"]
+  }
+}
