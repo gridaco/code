@@ -1,12 +1,11 @@
-import os
-from pathlib import Path
+import sys
+import json
 from skimage import io, img_as_float, color
 from skimage.metrics import structural_similarity as ssim
 import matplotlib.pyplot as plt
-import numpy as np
+import click
 
-
-def compare_images(a, b):
+def ssim_diff(a, b):
     # Convert the images to float
     rgb_a = img_as_float(a)
     rgb_b = img_as_float(b)
@@ -39,23 +38,40 @@ def compare_images(a, b):
     return score, rgb_diff, grey_diff
 
 
-__dir = os.path.dirname(os.path.abspath(__file__))
-demo_dir = Path(__dir) / 'demo'
+@click.command()
+@click.option('--a', '-a', type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True), required=True)
+@click.option('--b', '-b', type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True), required=True)
+@click.option('--o', '-o', type=click.Path(exists=False, file_okay=False, dir_okay=True, resolve_path=True), required=True)
+@click.option('--plot', '-p', type=click.BOOL, default=False)
+def main(a, b, o, plot):
+    
+    # Read images
+    a = io.imread(a)
+    b = io.imread(b)
 
-# Read images
-a = io.imread(demo_dir / 'a.png')
-b = io.imread(demo_dir / 'b.png')
+    # Compare images
+    score, diff, gdiff = ssim_diff(a, b)
 
-# Compare images
-score, diff, gdiff = compare_images(a, b)
+    print("SSIM Score: {:.1f}".format(score * 100))
 
-print("SSIM Score: {:.1f}".format(score * 100))
+    if plot:
+      # Show diff image
+      plt.imshow(diff, cmap='gray')
+      plt.colorbar()
+      plt.show()
 
-# Show diff image
-plt.imshow(diff, cmap='gray')
-plt.colorbar()
-plt.show()
+    # Save the diff image
+    io.imsave(o / 'diff.png', diff)
+    io.imsave(o / 'diff-g.png', gdiff)
 
-# Save the diff image
-io.imsave(demo_dir / 'diff.png', diff)
-io.imsave(demo_dir / 'diff-g.png', gdiff)
+    # output (return) results for parent process
+    result = {
+        'score': score,
+        'diff': str(o / 'diff.png'),
+    }
+    sys.stdout.write(json.dumps(result))
+    sys.exit()
+
+
+if __name__ == '__main__':
+    main()
