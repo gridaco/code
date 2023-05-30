@@ -1,5 +1,6 @@
 import sys
 import json
+from pathlib import Path
 from skimage import io, img_as_float, color
 from skimage.metrics import structural_similarity as ssim
 import matplotlib.pyplot as plt
@@ -17,16 +18,11 @@ def ssim_diff(a, b):
     grey_a = color.rgb2gray(rgb_a)
     grey_b = color.rgb2gray(rgb_b)
 
-    print(f"RGB - Image A: {rgb_a.shape}, Image B: {rgb_b.shape}")
-    print(f"GREY - Image A: {grey_a.shape}, Image B: {grey_b.shape}")
-
     # Compute SSIM between two images
     rgb_score, rgb_diff = ssim(rgb_a, rgb_b, full=True,
                                multichannel=True, win_size=7, channel_axis=2, data_range=1.0)
     grey_score, grey_diff = ssim(grey_a, grey_b, full=True,
                                  multichannel=False, win_size=7, data_range=1.0)
-
-    print(f"RGB SSIM: {rgb_score}, GREY SSIM: {grey_score}")
 
     # The diff image contains the actual image differences between the two images
     # and is represented as a floating point data type in the range [-1,1]
@@ -44,6 +40,8 @@ def ssim_diff(a, b):
 @click.option('--o', '-o', type=click.Path(exists=False, file_okay=False, dir_okay=True, resolve_path=True), required=True)
 @click.option('--plot', '-p', type=click.BOOL, default=False)
 def main(a, b, o, plot):
+    o_diff_png = Path(o) / 'diff.png'
+    o_diff_g_png = Path(o) / 'diff-g.png'
     
     # Read images
     a = io.imread(a)
@@ -52,8 +50,6 @@ def main(a, b, o, plot):
     # Compare images
     score, diff, gdiff = ssim_diff(a, b)
 
-    print("SSIM Score: {:.1f}".format(score * 100))
-
     if plot:
       # Show diff image
       plt.imshow(diff, cmap='gray')
@@ -61,13 +57,15 @@ def main(a, b, o, plot):
       plt.show()
 
     # Save the diff image
-    io.imsave(o / 'diff.png', diff)
-    io.imsave(o / 'diff-g.png', gdiff)
+    io.imsave(o_diff_png, diff)
+    io.imsave(o_diff_g_png, gdiff)
 
     # output (return) results for parent process
     result = {
         'score': score,
-        'diff': str(o / 'diff.png'),
+        # file name only (drop path)
+        'diff': o_diff_png.name,
+        'diff_g': o_diff_g_png.name
     }
     sys.stdout.write(json.dumps(result))
     sys.exit()
