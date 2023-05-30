@@ -17,6 +17,7 @@
     "api",
     "editor-packages/*",
     "packages/*",
+    "testing/*",
     "ui/editor-ui/packages/*"
   ],
   "resolutions": {
