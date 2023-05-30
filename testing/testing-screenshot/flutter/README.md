@@ -1,0 +1,1 @@
+# Flutter web screenshot testing
