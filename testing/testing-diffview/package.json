@@ -1,4 +1,10 @@
 {
   "name": "@codetest/diffview",
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "dependencies": {
+    "resemblejs": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/resemblejs": "^4.1.0"
+  }
 }
