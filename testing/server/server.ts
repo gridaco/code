@@ -1,5 +1,12 @@
+import express from "express";
 import path from "path";
-import { ssim } from "./modules";
+import { ssim } from "@codetest/diffview";
+
+const app = express();
+
+app.listen(3000, () => {
+  console.log("listening on port 3000");
+});
 
 const demodir = path.join(__dirname, "../samples/demo");
 const a = path.join(demodir, "a.png");
