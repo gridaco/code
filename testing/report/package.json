@@ -5,18 +5,22 @@
   "bin": "./dist/index.js",
   "scripts": {
     "clean": "rm -rf ./dist",
-    "build": "tsup",
-    "dev": "ts-node-dev src/index.ts",
+    "build": "ncc build src/index.ts -o dist",
+    "dev": "ts-node src/index.ts",
     "start": "node dist/index.js"
   },
   "devDependencies": {
     "@types/node": "^20.2.5",
+    "@vercel/ncc": "^0.36.1",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "tsup": "^6.7.0",
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "minimist": "^1.2.8"
+    "@figma-api/community": "^0.0.0",
+    "axios-cache-interceptor": "^1.1.1",
+    "minimist": "^1.2.8",
+    "ora": "^5.4.0"
   }
 }
