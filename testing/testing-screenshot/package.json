@@ -1,4 +1,14 @@
 {
   "name": "@codetest/screenshot",
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsup"
+  },
+  "dependencies": {
+    "puppeteer": "^20.5.0"
+  },
+  "devDependencies": {
+    "tsup": "^6.7.0"
+  }
 }
