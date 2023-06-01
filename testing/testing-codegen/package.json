@@ -1,4 +1,11 @@
 {
   "name": "@codetest/codegen",
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsup"
+  },
+  "devDependencies": {
+    "tsup": "^6.7.0"
+  }
 }
