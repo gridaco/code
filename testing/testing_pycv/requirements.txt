@@ -2,3 +2,4 @@ matplotlib
 scikit-image
 numpy
 click
+Flask

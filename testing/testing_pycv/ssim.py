@@ -2,9 +2,10 @@ import sys
 import json
 from pathlib import Path
 from skimage import io, img_as_float, color
-from skimage.metrics import structural_similarity as ssim
+from skimage.metrics import structural_similarity
 import matplotlib.pyplot as plt
 import click
+
 
 def ssim_diff(a, b):
     # Convert the images to float
@@ -19,10 +20,10 @@ def ssim_diff(a, b):
     grey_b = color.rgb2gray(rgb_b)
 
     # Compute SSIM between two images
-    rgb_score, rgb_diff = ssim(rgb_a, rgb_b, full=True,
-                               multichannel=True, win_size=7, channel_axis=2, data_range=1.0)
-    grey_score, grey_diff = ssim(grey_a, grey_b, full=True,
-                                 multichannel=False, win_size=7, data_range=1.0)
+    rgb_score, rgb_diff = structural_similarity(rgb_a, rgb_b, full=True,
+                                                multichannel=True, win_size=7, channel_axis=2, data_range=1.0)
+    grey_score, grey_diff = structural_similarity(grey_a, grey_b, full=True,
+                                                  multichannel=False, win_size=7, data_range=1.0)
 
     # The diff image contains the actual image differences between the two images
     # and is represented as a floating point data type in the range [-1,1]
@@ -34,27 +35,16 @@ def ssim_diff(a, b):
     return score, rgb_diff, grey_diff
 
 
-@click.command()
-@click.option('--a', '-a', type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True), required=True)
-@click.option('--b', '-b', type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True), required=True)
-@click.option('--o', '-o', type=click.Path(exists=False, file_okay=False, dir_okay=True, resolve_path=True), required=True)
-@click.option('--plot', '-p', type=click.BOOL, default=False)
-def main(a, b, o, plot):
+def ssim(a, b, o):
     o_diff_png = Path(o) / 'diff.png'
     o_diff_g_png = Path(o) / 'diff-g.png'
-    
+
     # Read images
     a = io.imread(a)
     b = io.imread(b)
 
     # Compare images
     score, diff, gdiff = ssim_diff(a, b)
-
-    if plot:
-      # Show diff image
-      plt.imshow(diff, cmap='gray')
-      plt.colorbar()
-      plt.show()
 
     # Save the diff image
     io.imsave(o_diff_png, diff)
@@ -67,9 +57,27 @@ def main(a, b, o, plot):
         'diff': o_diff_png.name,
         'diff_g': o_diff_g_png.name
     }
+
+    return result, diff
+
+
+@click.command()
+@click.option('--a', '-a', type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True), required=True)
+@click.option('--b', '-b', type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True), required=True)
+@click.option('--o', '-o', type=click.Path(exists=False, file_okay=False, dir_okay=True, resolve_path=True), required=True)
+@click.option('--plot', '-p', type=click.BOOL, default=False)
+def main(a, b, o, plot):
+    result, diff = ssim(a, b, o)
+
+    if plot:
+        # Show diff image
+        plt.imshow(diff, cmap='gray')
+        plt.colorbar()
+        plt.show()
+
     sys.stdout.write(json.dumps(result))
-    sys.exit()
 
 
 if __name__ == '__main__':
     main()
+    sys.exit()
