@@ -9,7 +9,7 @@ import { convert } from "@design-sdk/figma-node-conversion";
 import { Client } from "@figma-api/community/fs";
 import type { Frame } from "@design-sdk/figma-remote-types";
 import { htmlcss } from "@codetest/codegen";
-import { screenshot } from "@codetest/screenshot";
+import { Worker as ScreenshotWorker } from "@codetest/screenshot";
 import { resemble } from "@codetest/diffview";
 import axios from "axios";
 import { setupCache } from "axios-cache-interceptor";
@@ -41,6 +41,9 @@ async function report() {
       image: "/Volumes/WDB2TB/Data/figma-image-samples-500",
     },
   });
+
+  const ssworker = new ScreenshotWorker();
+  await ssworker.launch();
 
   const spinner = ora("Running coverage").start();
 
@@ -119,7 +122,7 @@ async function report() {
         const html_file = path.join(coverage_node_path, "index.html");
         await fs.writeFile(html_file, code);
 
-        const screenshot_buffer = await screenshot({
+        const screenshot_buffer = await ssworker.screenshot({
           htmlcss: code,
           viewport: {
             width: Math.round(width),
@@ -135,19 +138,21 @@ async function report() {
         // download the exported image with url
         // if the exported is local fs path, then use copy instead
         if (exists(exported)) {
-          await fs.copyFile(exported, image_a);
-          continue;
+          // copy file with symlink
+          // unlink if exists
+          if (exists(image_a)) {
+            await fs.unlink(image_a);
+          }
+          await fs.symlink(exported, image_a);
         } else {
           const dl = await axios.get(exported, { responseType: "arraybuffer" });
           await fs.writeFile(image_a, dl.data);
         }
 
         const diff = await resemble(image_a, image_b);
+        const diff_file = path.join(coverage_node_path, "diff.png");
         // write diff.png
-        fs.writeFile(
-          path.join(coverage_node_path, "diff.png"),
-          diff.getBuffer(false)
-        );
+        await fs.writeFile(diff_file, diff.getBuffer(false));
         // const { diff, score } = await ssim(
         //   image_a,
         //   image_b,
@@ -161,8 +166,8 @@ async function report() {
           image_a: image_a,
           image_b: image_b,
           diff: {
-            hitmap: diff,
-            // score: score,
+            hitmap: diff_file,
+            percent: diff.misMatchPercentage,
           },
         };
 
@@ -174,6 +179,9 @@ async function report() {
       }
     }
   }
+
+  // cleaup
+  await ssworker.terminate();
 }
 
 report();
