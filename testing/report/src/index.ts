@@ -115,11 +115,19 @@ async function report() {
 
       try {
         // codegen
-        const code = await htmlcss({
-          id: frame.id,
-          name: frame.name,
-          entry: _converted,
-        });
+        const code = await htmlcss(
+          {
+            id: frame.id,
+            name: frame.name,
+            entry: _converted,
+          },
+          async ({ keys }) => {
+            const { data } = await client.fileImages(filekey, {
+              ids: keys,
+            });
+            return data.images;
+          }
+        );
 
         // write index.html
         const html_file = path.join(coverage_node_path, "index.html");

@@ -25,7 +25,7 @@ import assert from "assert";
 import { debug, debugIf } from "@designto/debugger";
 import { composePlugin } from "../plugin";
 
-type CustomAssetResolver = ({
+export type CustomAssetResolver = ({
   keys,
 }: {
   keys: string[];
