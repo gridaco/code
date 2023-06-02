@@ -167,7 +167,7 @@ async function report() {
           image_b: image_b,
           diff: {
             hitmap: diff_file,
-            percent: diff.misMatchPercentage,
+            percent: diff.rawMisMatchPercentage,
           },
         };
 
