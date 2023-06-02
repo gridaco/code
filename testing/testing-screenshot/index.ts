@@ -1,4 +1,4 @@
-import puppeteer, { Browser, Page } from "puppeteer";
+import puppeteer, { Browser, Page, PuppeteerLaunchOptions } from "puppeteer";
 
 interface ScreenshotOptions {
   htmlcss: string;
@@ -9,7 +9,7 @@ interface ScreenshotOptions {
 }
 
 export async function screenshot({ htmlcss, viewport }: ScreenshotOptions) {
-  const worker = new Worker();
+  const worker = new Worker({});
   await worker.launch();
   const buffer = worker.screenshot({ htmlcss, viewport });
   await worker.terminate();
@@ -19,18 +19,20 @@ export async function screenshot({ htmlcss, viewport }: ScreenshotOptions) {
 export class Worker {
   private browser: Browser;
   private page: Page;
+  private readonly options;
 
-  constructor() {
+  constructor({ options }: { options?: PuppeteerLaunchOptions }) {
     this.browser = null;
     this.page = null;
-  }
-
-  async launch() {
-    this.browser = await puppeteer.launch({
+    this.options = options ?? {
       headless: "new",
       args: ["--no-sandbox"],
       ignoreDefaultArgs: ["--disable-extensions"],
-    });
+    };
+  }
+
+  async launch() {
+    this.browser = await puppeteer.launch(this.options);
     this.page = await this.browser.newPage();
   }
 

@@ -42,7 +42,7 @@ async function report() {
     },
   });
 
-  const ssworker = new ScreenshotWorker();
+  const ssworker = new ScreenshotWorker({});
   await ssworker.launch();
 
   const spinner = ora("Running coverage").start();
@@ -61,6 +61,9 @@ async function report() {
     try {
       const { data } = await client.file(filekey);
       file = data;
+      if (!file) {
+        continue;
+      }
     } catch (e) {
       console.error("file not found", filekey);
       continue;
