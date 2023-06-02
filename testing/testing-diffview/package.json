@@ -2,6 +2,7 @@
   "name": "@codetest/diffview",
   "version": "0.0.0",
   "dependencies": {
+    "canvas": "^2.11.2",
     "resemblejs": "^4.1.0"
   },
   "devDependencies": {

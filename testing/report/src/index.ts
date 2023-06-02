@@ -6,7 +6,8 @@ import assert from "assert";
 import ora from "ora";
 import { mapper } from "@design-sdk/figma-remote";
 import { convert } from "@design-sdk/figma-node-conversion";
-import { Client, Frame } from "@figma-api/community";
+import { Client } from "@figma-api/community/fs";
+import type { Frame } from "@design-sdk/figma-remote-types";
 import { htmlcss } from "@codetest/codegen";
 import { screenshot } from "@codetest/screenshot";
 import { resemble } from "@codetest/diffview";
@@ -34,7 +35,12 @@ async function report() {
   const coverage_path = path.join(process.cwd(), ".coverage");
   mkdir(coverage_path);
 
-  const client = Client();
+  const client = Client({
+    paths: {
+      file: "/Volumes/WDB2TB/Data/figma-archives-v2",
+      image: "/Volumes/WDB2TB/Data/figma-image-samples-500",
+    },
+  });
 
   const spinner = ora("Running coverage").start();
 
@@ -127,8 +133,14 @@ async function report() {
         const exported = exports[frame.id];
         const image_a = path.join(coverage_node_path, "a.png");
         // download the exported image with url
-        const dl = await axios.get(exported, { responseType: "arraybuffer" });
-        await fs.writeFile(image_a, dl.data);
+        // if the exported is local fs path, then use copy instead
+        if (exists(exported)) {
+          await fs.copyFile(exported, image_a);
+          continue;
+        } else {
+          const dl = await axios.get(exported, { responseType: "arraybuffer" });
+          await fs.writeFile(image_a, dl.data);
+        }
 
         const diff = await resemble(image_a, image_b);
         // write diff.png
