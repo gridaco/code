@@ -32,8 +32,12 @@ export class Worker {
   }
 
   async launch() {
+    if (this.browser) {
+      return this.browser;
+    }
     this.browser = await puppeteer.launch(this.options);
     this.page = await this.browser.newPage();
+    return this.browser;
   }
 
   async screenshot({ htmlcss, viewport }: ScreenshotOptions) {
