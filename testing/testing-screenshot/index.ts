@@ -39,7 +39,11 @@ export class Worker {
   async screenshot({ htmlcss, viewport }: ScreenshotOptions) {
     this.page.setViewport(viewport);
     await this.page.setContent(htmlcss, { waitUntil: "networkidle0" });
-    const buffer = await this.page.screenshot({ type: "png" });
+    const buffer = await this.page.screenshot({
+      type: "png",
+      // support transparency
+      omitBackground: true,
+    });
     return buffer;
   }
 
