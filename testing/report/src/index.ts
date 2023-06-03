@@ -1,4 +1,3 @@
-import parseArgs from "minimist";
 import path from "path";
 import fs from "fs/promises";
 import { existsSync as exists } from "fs";
@@ -21,24 +20,36 @@ import { RemoteImageRepositories } from "@design-sdk/figma-remote/asset-reposito
 
 setupCache(axios);
 
-const args = parseArgs(process.argv.slice(2));
-
-assert(args.cov, "Missing --cov argument");
-
 const mkdir = (path: string) => !exists(path) && fs.mkdir(path);
 
+interface ReportConfig {
+  sample: string;
+  outDir?: string;
+  localarchive?: {
+    file: string;
+    image: string;
+  };
+}
+
 async function report() {
-  // load the coverage file
-  const coverage = JSON.parse(await fs.readFile(args.cov, "utf-8"));
+  const cwd = process.cwd();
+  // read the config
+  const config: ReportConfig = require(path.join(cwd, "report.config.js"));
+
+  // load the sample file
+  const samples_path = path.join(cwd, config.sample);
+  const samples = JSON.parse(await fs.readFile(samples_path, "utf-8"));
 
   // create .coverage folder
-  const coverage_path = path.join(process.cwd(), ".coverage");
+  const coverage_path = config.outDir ?? path.join(cwd, ".coverage");
   mkdir(coverage_path);
+
+  console.log("cp", coverage_path);
 
   const client = Client({
     paths: {
-      file: "/Volumes/WDB2TB/Data/figma-archives-v2",
-      image: "/Volumes/WDB2TB/Data/figma-image-samples-500",
+      file: config.localarchive.file,
+      image: config.localarchive.image,
     },
   });
 
@@ -47,7 +58,7 @@ async function report() {
 
   const spinner = ora("Running coverage").start();
 
-  for (const c of coverage) {
+  for (const c of samples) {
     // update the spinner
     spinner.text = `Running coverage for ${c.id}`;
 
@@ -185,6 +196,8 @@ async function report() {
         // write report.json
         const report_file = path.join(coverage_node_path, "report.json");
         await fs.writeFile(report_file, JSON.stringify(report, null, 2));
+
+        console.log("report file for", frame.id, report_file);
       } catch (e) {
         console.error(e);
       }
