@@ -1,0 +1,7 @@
+{
+  "name": "@codetest/editor-client",
+  "version": "0.0.0",
+  "dependencies": {
+    "axios": "^1.4.0"
+  }
+}
