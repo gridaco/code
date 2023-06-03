@@ -56,12 +56,7 @@ async function report() {
   const ssworker = new ScreenshotWorker({});
   await ssworker.launch();
 
-  const spinner = ora("Running coverage").start();
-
   for (const c of samples) {
-    // update the spinner
-    spinner.text = `Running coverage for ${c.id}`;
-
     // create .coverage/:id folder
     const coverage_set_path = path.join(coverage_path, c.id);
     mkdir(coverage_set_path);
@@ -98,7 +93,7 @@ async function report() {
     }
 
     for (const frame of frames) {
-      spinner.text = `Running coverage for ${c.id}/${frame.id}`;
+      const spinner = ora(`Running coverage for ${c.id}/${frame.id}`).start();
 
       // create .coverage/:id/:node folder
       const coverage_node_path = path.join(coverage_set_path, frame.id);
@@ -197,9 +192,11 @@ async function report() {
         const report_file = path.join(coverage_node_path, "report.json");
         await fs.writeFile(report_file, JSON.stringify(report, null, 2));
 
-        console.log("report file for", frame.id, report_file);
+        spinner.text = `report file for ${frame.id} ➡ ${report_file}`;
+        spinner.succeed();
       } catch (e) {
         console.error(e);
+        spinner.fail();
       }
     }
   }
