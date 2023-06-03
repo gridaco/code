@@ -29,7 +29,14 @@ interface ReportConfig {
     file: string;
     image: string;
   };
+  skipIfReportExists?: boolean;
 }
+
+// disable logging
+console.log = () => {};
+console.info = () => {};
+console.warn = () => {};
+console.error = () => {};
 
 async function report() {
   const cwd = process.cwd();
@@ -43,8 +50,6 @@ async function report() {
   // create .coverage folder
   const coverage_path = config.outDir ?? path.join(cwd, ".coverage");
   mkdir(coverage_path);
-
-  console.log("cp", coverage_path);
 
   const client = Client({
     paths: {
@@ -71,7 +76,7 @@ async function report() {
         continue;
       }
     } catch (e) {
-      console.error("file not found", filekey);
+      // file not found
       continue;
     }
 
@@ -98,6 +103,15 @@ async function report() {
       // create .coverage/:id/:node folder
       const coverage_node_path = path.join(coverage_set_path, frame.id);
       mkdir(coverage_node_path);
+
+      // report.json
+      const report_file = path.join(coverage_node_path, "report.json");
+      if (config.skipIfReportExists) {
+        if (exists(report_file)) {
+          spinner.succeed(`Skipping - report for ${frame.id} already exists`);
+          continue;
+        }
+      }
 
       const _mapped = mapper.mapFigmaRemoteToFigma(frame);
       const _converted = convert.intoReflectNode(
@@ -188,15 +202,14 @@ async function report() {
           },
         };
 
-        // write report.json
-        const report_file = path.join(coverage_node_path, "report.json");
+        // wrie report.json
         await fs.writeFile(report_file, JSON.stringify(report, null, 2));
 
         spinner.text = `report file for ${frame.id} ➡ ${report_file}`;
         spinner.succeed();
       } catch (e) {
-        console.error(e);
-        spinner.fail();
+        // could be codegen error
+        spinner.fail(`error on ${frame.id} : ${e.message}`);
       }
     }
   }
