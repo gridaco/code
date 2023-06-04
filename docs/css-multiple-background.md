@@ -96,6 +96,44 @@ no solid fill with multiple gradient fill
 }
 ```
 
+multiple images with different transforms
+
+Using array syntax
+
+```css
+._1 {
+  background-image: url("image1.jpg"), url("image2.jpg");
+  background-position: right bottom, left top;
+  background-size: 50% 50%, auto;
+}
+```
+
+Using pseudo elements - This is useful when there are less than 3 images - main, overlay, background
+
+```css
+._1::before,
+div::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+._1::before {
+  background: url("image1.jpg") no-repeat;
+  background-size: cover;
+  transform: rotate(45deg);
+  clip-path: circle(50% at 50% 50%);
+}
+
+._1::after {
+  background: url("image2.jpg") no-repeat;
+  background-size: cover;
+  transform: scale(0.5);
+}
+```
+
 ## Image resources management on SSG frameworks
 
 - Next.js (Docs not ready)
