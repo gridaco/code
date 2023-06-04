@@ -161,11 +161,13 @@ async function report() {
           },
         });
 
-        const image_b = path.join(coverage_node_path, "b.png");
+        const image_b_rel = "./b.png";
+        const image_b = path.join(coverage_node_path, image_b_rel);
         await fs.writeFile(image_b, screenshot_buffer);
 
         const exported = exports[frame.id];
-        const image_a = path.join(coverage_node_path, "a.png");
+        const image_a_rel = "./a.png";
+        const image_a = path.join(coverage_node_path, image_a_rel);
         // download the exported image with url
         // if the exported is local fs path, then use copy instead
         if (exists(exported)) {
@@ -191,14 +193,24 @@ async function report() {
         // );
 
         const report = {
-          id: filekey,
+          community_id: filekey,
+          filekey: "unknown",
+          type: "FRAME",
+          name: frame.name,
+          id: frame.id,
           width,
           height,
-          image_a: image_a,
-          image_b: image_b,
+          image_a: image_a_rel,
+          image_b: image_b_rel,
+          reported_at: new Date().toISOString(),
           diff: {
             hitmap: diff_file,
             percent: diff.rawMisMatchPercentage,
+          },
+          engine: {
+            name: "@codetest/codegen",
+            version: "2023.1.1",
+            framework: "preview",
           },
         };
 
