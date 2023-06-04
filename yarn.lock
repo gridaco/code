@@ -1479,10 +1479,10 @@
   resolved "https://registry.npmjs.org/@design-sdk/figma-auth-store/-/figma-auth-store-0.0.43.tgz"
   integrity sha512-5VF1EijfZwzOMq+r4ipQ0aDRk/JSUHOjg9cI7oaD+K+sw2YIjgxSBE05/tvncZhOpmFvDHSHTISYJfUsEWfSUQ==
 
-"@design-sdk/figma-core@^0.0.25":
-  version "0.0.25"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-core/-/figma-core-0.0.25.tgz#7fa28cc7d6e45cd713c5f268d42e4dd4f2b41590"
-  integrity sha512-6OF7eUbDOlR4/BFtd2FRyDvvUf777OGNbVbNScUOv3Fk/kUXBzMTXX6ZdoRlTx887v/vo3+Lh0D31SG1sm80aA==
+"@design-sdk/figma-core@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-core/-/figma-core-0.0.43.tgz#0d19d014daf398ed39046bfd4e7f3d2b78842943"
+  integrity sha512-7WQ29f4hUOxu4Mu8ZyqbBI5F4DsRJbIjGIcZAUmn7O9/SRR00upTYrl2hdlEnKdE0ImHTYqfISgxjkoYEQgZaQ==
 
 "@design-sdk/figma-node-conversion@^0.0.43":
   version "0.0.43"
@@ -1505,13 +1505,13 @@
     "@design-sdk/figma-node" "^0.0.43"
     "@design-sdk/figma-types" "^0.0.43"
 
-"@design-sdk/figma-node@0.0.25", "@design-sdk/figma-node@^0.0.43":
-  version "0.0.25"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-node/-/figma-node-0.0.25.tgz#c95484cc4b003667ae93e95fa3b585b9fa0b740a"
-  integrity sha512-GCA5cGDXhvGUQddmSIZgPMhH0eGip9S0yDSQiys1XiKnXsB/CM8/5C+JVosHR1WFMHSlJfU+ytA4IH2yhfysUQ==
+"@design-sdk/figma-node@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@design-sdk/figma-node/-/figma-node-0.0.43.tgz#5d468ae73e2b07a787d4e6447cdde7efb4f2ea43"
+  integrity sha512-Wo3jNL4S8NjqbwZZG4eXe2ut/HVM/vPGaEFoEa8MIJyTslwS+sobiU4TW2qDUYNVZW/L7fxYdHO+sBDQOx0TWw==
   dependencies:
-    "@design-sdk/figma-core" "^0.0.25"
-    "@design-sdk/figma-utils" "^0.0.25"
+    "@design-sdk/figma-core" "^0.0.43"
+    "@design-sdk/figma-utils" "^0.0.43"
     "@reflect-ui/font-utils" "^0.0.1"
 
 "@design-sdk/figma-remote-api@^0.0.43":
@@ -1554,11 +1554,6 @@
   version "0.0.46"
   resolved "https://registry.yarnpkg.com/@design-sdk/figma-url/-/figma-url-0.0.46.tgz#8cf8eecbb80685480822734bfa871af6e5fa0daa"
   integrity sha512-9d8Og45cPxRe3Oh8wzWHhFrxZYfaoBdfP/J0OfYs2yTK7XY/vhz1GGf78aBjGdBdmaShHwfI8RHIhhV03nYKkg==
-
-"@design-sdk/figma-utils@^0.0.25":
-  version "0.0.25"
-  resolved "https://registry.yarnpkg.com/@design-sdk/figma-utils/-/figma-utils-0.0.25.tgz#7b7f6632fd8689ef713b27b34a61257accc2052e"
-  integrity sha512-HarFMa14L9zqg8rhLaCTXhTKFd6tlBno1mnSc/vl8ZVilmdq32OFFlmqS4MjyvrTfyAvbwlEMAhxV1SUQhFhRg==
 
 "@design-sdk/figma-utils@^0.0.43":
   version "0.0.43"
@@ -6705,7 +6700,19 @@
   resolved "https://registry.npmjs.org/@reflect-ui/cg/-/cg-0.0.5.tgz"
   integrity sha512-rqqaumLDgk9dGtPgkYy9h5PLlNv8ZVEz/+ktOcJpJE6v9fAQOSH1Wh5WAehpiZTQtKe944GzrFMsb/g8pTabWg==
 
-"@reflect-ui/core@0.0.2-rc.7", "@reflect-ui/core@0.0.5", "@reflect-ui/core@0.0.9", "@reflect-ui/core@^0.0.5", "@reflect-ui/core@^0.0.9":
+"@reflect-ui/core@0.0.2-rc.7":
+  version "0.0.2-rc.7"
+  resolved "https://registry.yarnpkg.com/@reflect-ui/core/-/core-0.0.2-rc.7.tgz#9d531f5a0b9caab31e7563020044b753700e2bbc"
+  integrity sha512-EqF4SRU57bfa5DOPET1rv5lROFyMVHLv1xTEIlN6N2gDpXt71QceImWfQp3z3Khqnb4R/p9OhNK6DXGUpozWKw==
+
+"@reflect-ui/core@0.0.5", "@reflect-ui/core@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@reflect-ui/core/-/core-0.0.5.tgz#f50ae00e64300c4b698ab5c5374c6ac3bb5de873"
+  integrity sha512-lA6AYHCF8aSyOvGXbJZcmlB5ccxCaznhxvD8Hg1UjVdhcbLhMWDbzoYqbrkqh+R4im3KnYw5n6pWSSdoWioYhA==
+  dependencies:
+    "@reflect-ui/uiutils" "^0.1.2-1"
+
+"@reflect-ui/core@^0.0.9":
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/@reflect-ui/core/-/core-0.0.9.tgz#7283a2a3a1edde16282559d11f02e23d3bceda36"
   integrity sha512-MNJq+Pc45qZ0IvTYuvzCW2nxupVRfMtmin9vepABo2h1sTKdAmCK2kPfVLea6TNiF1baJDeQg7IyAN45JMuFdA==
@@ -9190,10 +9197,28 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@18.0.24", "@types/react@^17", "@types/react@^18.0.24", "@types/react@^18.0.25":
+"@types/react@*", "@types/react@^18.0.24":
   version "18.0.24"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.24.tgz#2f79ed5b27f08d05107aab45c17919754cc44c20"
   integrity sha512-wRJWT6ouziGUy+9uX0aW4YOJxAY0bG6/AOk5AW5QSvZqI7dk6VBIbXvcVgIw/W5Jrl24f77df98GEKTJGOLx7Q==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
+"@types/react@^17":
+  version "17.0.60"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.60.tgz#a4a97dcdbebad76612c188fc06440e4995fd8ad2"
+  integrity sha512-pCH7bqWIfzHs3D+PDs3O/COCQJka+Kcw3RnO9rFA2zalqoXg7cNjJDh6mZ7oRtY1wmY4LVwDdAbA1F7Z8tv3BQ==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
+"@types/react@^18.0.25":
+  version "18.2.8"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.8.tgz#a77dcffe4e9af148ca4aa8000c51a1e8ed99e2c8"
+  integrity sha512-lTyWUNrd8ntVkqycEEplasWy2OxNlShj3zqS0LuB1ENUGis5HodmhM7DtCoUGbxj3VW/WsGA0DUhpG6XrM7gPA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -10370,6 +10395,15 @@ axios@^0.21.0:
   integrity sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==
   dependencies:
     follow-redirects "^1.14.0"
+
+axios@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.4.0.tgz#38a7bf1224cd308de271146038b551d725f0be1f"
+  integrity sha512-S4XCWMEmzvo64T9GfvQDOXgYRDJ/wsSZc7Jvdgx5u1sd0JwsuPLqb3SYmusag+edF6ziyMensPVqLTSc1PiSEA==
+  dependencies:
+    follow-redirects "^1.15.0"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
 
 babel-code-frame@^6.26.0:
   version "6.26.0"
@@ -12394,10 +12428,15 @@ cssesc@^3.0.0:
   resolved "https://registry.npmjs.org/cssesc/-/cssesc-3.0.0.tgz"
   integrity sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==
 
-csstype@3.1.0, csstype@^3.0.10, csstype@^3.0.2, csstype@^3.0.4, csstype@^3.0.8, csstype@^3.1.1:
+csstype@^3.0.10, csstype@^3.0.2, csstype@^3.0.4, csstype@^3.0.8:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.0.tgz#4ddcac3718d787cf9df0d1b7d15033925c8f29f2"
   integrity sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==
+
+csstype@^3.1.1:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.2.tgz#1d4bf9d572f11c14031f0436e1c10bc1f571f50b"
+  integrity sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==
 
 cuid@^2.1.8:
   version "2.1.8"
@@ -14160,7 +14199,7 @@ follow-redirects@1.5.10:
   dependencies:
     debug "=3.1.0"
 
-follow-redirects@^1.14.0:
+follow-redirects@^1.14.0, follow-redirects@^1.15.0:
   version "1.15.2"
   resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.2.tgz"
   integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
@@ -14226,6 +14265,15 @@ form-data@^3.0.0:
   version "3.0.1"
   resolved "https://registry.npmjs.org/form-data/-/form-data-3.0.1.tgz"
   integrity sha512-RHkBKtLWUVwd7SqRIvCZMEvAMoGUp0XU+seQiZejj0COz3RI3hWP4sCv3gZWWLjJTd7rGwcsF5eKZGii0r/hbg==
+  dependencies:
+    asynckit "^0.4.0"
+    combined-stream "^1.0.8"
+    mime-types "^2.1.12"
+
+form-data@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.0.tgz#93919daeaf361ee529584b9b31664dc12c9fa452"
+  integrity sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==
   dependencies:
     asynckit "^0.4.0"
     combined-stream "^1.0.8"
