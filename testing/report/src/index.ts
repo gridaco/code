@@ -26,35 +26,47 @@ interface ReportConfig {
   sample: string;
   outDir?: string;
   localarchive?: {
-    file: string;
-    image: string;
+    files: string;
+    images: string;
   };
   skipIfReportExists?: boolean;
 }
 
 // disable logging
 console.log = () => {};
-console.info = () => {};
 console.warn = () => {};
 console.error = () => {};
 
 async function report() {
+  console.info("Starting report");
   const cwd = process.cwd();
   // read the config
   const config: ReportConfig = require(path.join(cwd, "report.config.js"));
 
   // load the sample file
-  const samples_path = path.join(cwd, config.sample);
+  const samples_path = (await exists(config.sample))
+    ? config.sample
+    : path.join(cwd, config.sample);
+
+  assert(
+    await exists(samples_path),
+    `sample file not found at ${config.sample} nor ${samples_path}`
+  );
+
   const samples = JSON.parse(await fs.readFile(samples_path, "utf-8"));
 
   // create .coverage folder
   const coverage_path = config.outDir ?? path.join(cwd, ".coverage");
+
+  console.info(`Loaded ${samples.length} samples`);
+  console.info(`Configuration used - ${JSON.stringify(config, null, 2)}`);
+
   mkdir(coverage_path);
 
   const client = Client({
     paths: {
-      file: config.localarchive.file,
-      image: config.localarchive.image,
+      files: config.localarchive.files,
+      images: config.localarchive.images,
     },
   });
 
@@ -93,7 +105,7 @@ async function report() {
         })
       ).data.images;
     } catch (e) {
-      console.error("exports not ready for", filekey);
+      console.error("exports not ready for", filekey, e.message);
       continue;
     }
 
@@ -134,6 +146,26 @@ async function report() {
       );
 
       try {
+        // image A (original)
+        const exported = exports[frame.id];
+        const image_a_rel = "./a.png";
+        const image_a = path.join(coverage_node_path, image_a_rel);
+        // download the exported image with url
+        // if the exported is local fs path, then use copy instead
+        if (exists(exported)) {
+          // copy file with symlink
+          // unlink if exists
+          if (exists(image_a)) {
+            await fs.unlink(image_a);
+          }
+          await fs.symlink(exported, image_a);
+        } else if (exported.startsWith("http")) {
+          const dl = await axios.get(exported, { responseType: "arraybuffer" });
+          await fs.writeFile(image_a, dl.data);
+        } else {
+          throw new Error(`File not found - ${exported}`);
+        }
+
         // codegen
         const code = await htmlcss(
           {
@@ -164,23 +196,6 @@ async function report() {
         const image_b_rel = "./b.png";
         const image_b = path.join(coverage_node_path, image_b_rel);
         await fs.writeFile(image_b, screenshot_buffer);
-
-        const exported = exports[frame.id];
-        const image_a_rel = "./a.png";
-        const image_a = path.join(coverage_node_path, image_a_rel);
-        // download the exported image with url
-        // if the exported is local fs path, then use copy instead
-        if (exists(exported)) {
-          // copy file with symlink
-          // unlink if exists
-          if (exists(image_a)) {
-            await fs.unlink(image_a);
-          }
-          await fs.symlink(exported, image_a);
-        } else {
-          const dl = await axios.get(exported, { responseType: "arraybuffer" });
-          await fs.writeFile(image_a, dl.data);
-        }
 
         const diff = await resemble(image_a, image_b);
         const diff_file = path.join(coverage_node_path, "diff.png");
