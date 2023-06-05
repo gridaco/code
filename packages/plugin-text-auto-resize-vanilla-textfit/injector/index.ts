@@ -71,6 +71,7 @@ function groupByProperty<T>(
 
     // @ts-ignore
     grouped[itemKey][arrayKey] = (grouped[itemKey][arrayKey] as any[]).concat(
+      // @ts-ignore
       item[arrayKey] as any[]
     );
   }
