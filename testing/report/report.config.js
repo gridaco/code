@@ -1,9 +1,13 @@
+const env = require("dotenv").config();
+
+const { OUTDIR, LOCAL_ARCHIVE_FILE, LOCAL_ARCHIVE_IMAGE } = env;
+
 module.exports = {
   sample: "../../data/figma-archives/dev/meta.json",
-  outDir: "/Volumes/WDB2TB/Artifects/codetest/.coverage",
+  outDir: OUTDIR,
   localarchive: {
-    file: "/Volumes/WDB2TB/Data/figma-archives-v2",
-    image: "/Volumes/WDB2TB/Data/figma-image-samples-500",
+    file: LOCAL_ARCHIVE_FILE,
+    image: LOCAL_ARCHIVE_IMAGE,
   },
   skipIfReportExists: true,
 };
