@@ -2374,10 +2374,10 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.17.19.tgz#8cfaf2ff603e9aabb910e9c0558c26cf32744061"
   integrity sha512-lAhycmKnVOuRYNtRtatQR1LPQf2oYCkRGkSFnseDAKPl8lu5SOsK/e1sXe5a0Pc5kHIHe6P2I/ilntNv2xf3cA==
 
-"@figma-api/community@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@figma-api/community/-/community-0.0.3.tgz#f0556beb72722a2051e70901e4b36661575e4028"
-  integrity sha512-F3SV7wTrVGQ+hBH/Wk8nmy96ZZ3rFqGhycEO8LCZZKf0LHQL84eH/DHe/P+mgZCBEIHQXUtWu3K5TwSiF+ycVw==
+"@figma-api/community@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@figma-api/community/-/community-0.0.5.tgz#bb747f8881e199ab9d28f53cfcd14af676a1d02a"
+  integrity sha512-cjr13Ku0kZypbCmcBIRMZAHTnMjQ+vfodoDDxAOreGNjaRA4jAoMILZImzVy8EmbcJccch+bHwsVrK/ibWacqg==
   dependencies:
     mime-types "^2.1.35"
 
