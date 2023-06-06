@@ -40,7 +40,17 @@ export class Worker {
     return this.browser;
   }
 
+  async relaunch() {
+    await this.close();
+    return this.launch();
+  }
+
   async screenshot({ htmlcss, viewport }: ScreenshotOptions) {
+    // check if page is available (try to avoid TargetClosedError)
+    if (!this.page || this.page.isClosed()) {
+      await this.relaunch();
+    }
+
     this.page.setViewport(viewport);
     await this.page.setContent(htmlcss, { waitUntil: "networkidle0" });
     const buffer = await this.page.screenshot({
@@ -52,7 +62,11 @@ export class Worker {
   }
 
   async close() {
-    await this.browser.close();
+    try {
+      await this.browser.close();
+    } catch (e) {}
+    this.browser = null;
+    this.page = null;
   }
 
   terminate() {
