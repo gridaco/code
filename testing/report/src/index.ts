@@ -1,6 +1,5 @@
 import path from "path";
 import fs from "fs/promises";
-import { existsSync as exists } from "fs";
 import assert from "assert";
 import ora from "ora";
 import { mapper } from "@design-sdk/figma-remote";
@@ -20,7 +19,17 @@ import { RemoteImageRepositories } from "@design-sdk/figma-remote/asset-reposito
 
 setupCache(axios);
 
-const mkdir = (path: string) => !exists(path) && fs.mkdir(path);
+const exists = async (path: string) => {
+  try {
+    await fs.access(path);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+const mkdir = async (path: string) =>
+  !(await exists(path)) && (await fs.mkdir(path));
 
 interface ReportConfig {
   sample: string;
@@ -61,7 +70,7 @@ async function report() {
   console.info(`Loaded ${samples.length} samples`);
   console.info(`Configuration used - ${JSON.stringify(config, null, 2)}`);
 
-  mkdir(coverage_path);
+  await mkdir(coverage_path);
 
   const client = Client({
     paths: {
@@ -73,10 +82,12 @@ async function report() {
   const ssworker = new ScreenshotWorker({});
   await ssworker.launch();
 
+  let i = 0;
   for (const c of samples) {
+    i++;
     // create .coverage/:id folder
     const coverage_set_path = path.join(coverage_path, c.id);
-    mkdir(coverage_set_path);
+    await mkdir(coverage_set_path);
 
     const { id: filekey } = c;
     let file;
@@ -109,17 +120,22 @@ async function report() {
       continue;
     }
 
+    let ii = 0;
     for (const frame of frames) {
-      const spinner = ora(`Running coverage for ${c.id}/${frame.id}`).start();
+      ii++;
+
+      const spinner = ora(
+        `[${i}/${samples.length}] Running coverage for ${c.id}/${frame.id} (${ii}/${frames.length})`
+      ).start();
 
       // create .coverage/:id/:node folder
       const coverage_node_path = path.join(coverage_set_path, frame.id);
-      mkdir(coverage_node_path);
+      await mkdir(coverage_node_path);
 
       // report.json
       const report_file = path.join(coverage_node_path, "report.json");
       if (config.skipIfReportExists) {
-        if (exists(report_file)) {
+        if (await exists(report_file)) {
           spinner.succeed(`Skipping - report for ${frame.id} already exists`);
           continue;
         }
@@ -152,18 +168,29 @@ async function report() {
         const image_a = path.join(coverage_node_path, image_a_rel);
         // download the exported image with url
         // if the exported is local fs path, then use copy instead
-        if (exists(exported)) {
-          // copy file with symlink
-          // unlink if exists
-          if (exists(image_a)) {
-            await fs.unlink(image_a);
+        if (await exists(exported)) {
+          try {
+            // copy file with symlink
+            // rempve if already exists before linking new one
+            if (await exists(image_a)) {
+              await fs.unlink(image_a);
+            }
+            await fs.symlink(exported, image_a);
+          } catch (e) {
+            // TODO: symlink still fails with "EEXIST: file already exists, symlink"
+            // we need to handle this.
+            // reason? - unknown
           }
-          await fs.symlink(exported, image_a);
         } else if (exported.startsWith("http")) {
           const dl = await axios.get(exported, { responseType: "arraybuffer" });
           await fs.writeFile(image_a, dl.data);
         } else {
           throw new Error(`File not found - ${exported}`);
+        }
+
+        if (!(await exists(image_a))) {
+          spinner.fail(`Image A not found - ${image_a}`);
+          continue;
         }
 
         // codegen
@@ -238,6 +265,13 @@ async function report() {
         // could be codegen error
         spinner.fail(`error on ${frame.id} : ${e.message}`);
       }
+    }
+
+    // cleaup
+    // if the coverage is empty, remove the folder
+    const files = await fs.readdir(coverage_set_path);
+    if (files.length === 0) {
+      await fs.rmdir(coverage_set_path);
     }
   }
 
