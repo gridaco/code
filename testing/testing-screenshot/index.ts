@@ -8,14 +8,6 @@ interface ScreenshotOptions {
   };
 }
 
-export async function screenshot({ htmlcss, viewport }: ScreenshotOptions) {
-  const worker = new Worker({});
-  await worker.launch();
-  const buffer = worker.screenshot({ htmlcss, viewport });
-  await worker.terminate();
-  return buffer;
-}
-
 export class Worker {
   private browser: Browser;
   private page: Page;
@@ -40,22 +32,53 @@ export class Worker {
     return this.browser;
   }
 
+  async relaunch() {
+    await this.close();
+    return this.launch();
+  }
+
   async screenshot({ htmlcss, viewport }: ScreenshotOptions) {
-    this.page.setViewport(viewport);
-    await this.page.setContent(htmlcss, { waitUntil: "networkidle0" });
-    const buffer = await this.page.screenshot({
-      type: "png",
-      // support transparency
-      omitBackground: true,
-    });
-    return buffer;
+    try {
+      if (!this.browser || !this.page || this.page.isClosed()) {
+        await this.relaunch();
+      }
+      await this.page.setViewport(viewport);
+      await this.page.setContent(htmlcss, { waitUntil: "networkidle0" });
+      const buffer = await this.page.screenshot({
+        type: "png",
+        // support transparency
+        omitBackground: true,
+      });
+      return buffer;
+    } catch (error) {
+      console.log(`Failed to take screenshot: ${error.message}`);
+      await this.relaunch();
+      // After relaunch, retry taking screenshot or rethrow the error
+      return this.screenshot({ htmlcss, viewport });
+    }
   }
 
   async close() {
-    await this.browser.close();
+    if (this.browser) {
+      try {
+        await this.browser.close();
+      } catch (e) {
+        console.log(`Failed to close browser: ${e.message}`);
+      }
+      this.browser = null;
+      this.page = null;
+    }
   }
 
   terminate() {
     this.close();
   }
+}
+
+export async function screenshot(options: ScreenshotOptions) {
+  const worker = new Worker({});
+  await worker.launch();
+  const buffer = await worker.screenshot(options);
+  await worker.terminate();
+  return buffer;
 }
