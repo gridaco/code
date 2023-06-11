@@ -1,3 +1,6 @@
 [submodule "ui/editor-ui"]
 	path = ui/editor-ui
 	url = https://github.com/reflect-ui/reflect-editor-ui
+[submodule "nothing"]
+	path = nothing
+	url = https://github.com/gridaco/nothing.git
