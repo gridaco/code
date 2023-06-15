@@ -8,11 +8,11 @@ import {
   ImageRepeat,
   cgr,
   Alignment,
-  ImageManifest,
+  ImageWidgetManifest,
 } from "@reflect-ui/core";
 import * as css from "@web-builder/styles";
 
-type HtmlImageElementProps = Omit<ImageManifest, "semanticLabel"> & {
+type HtmlImageElementProps = Omit<ImageWidgetManifest, "semanticLabel"> & {
   alt?: string;
 };
 
