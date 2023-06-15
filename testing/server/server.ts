@@ -1,26 +1,52 @@
 import express from "express";
 import path from "path";
-import { ssim } from "@codetest/diffview";
 import router_reports from "./reports";
 import router_screenshots from "./screenshots";
 
-const app = express();
+export interface ServerOptions {
+  /**
+   * port number
+   * @default 6627
+   */
+  port?: number;
+  /**
+   * reports artifect path
+   */
+  reports: string;
+}
 
-app.get("/", (req, res) => {
-  res.send("service is running");
-});
+export const defaultOptions: ServerOptions = {
+  port: 6627,
+  reports: path.join(__dirname, "..", "report", ".coverage"),
+};
 
-app.use("/reports", router_reports);
+export function start({
+  port = defaultOptions.port,
+  reports = defaultOptions.reports,
+}: ServerOptions) {
+  const app = express();
 
-app.use("/screenshots", router_screenshots);
+  // ping
+  app.get("/", (req, res) => {
+    res.send("service is running");
+  });
 
-app.listen(3000, () => {
-  console.log("listening on port 3000");
-});
+  // reports
+  app.use("/reports", router_reports);
+  app.use("/public/reports", express.static(reports));
 
-const demodir = path.join(__dirname, "../samples/demo");
-const a = path.join(demodir, "a.png");
-const b = path.join(demodir, "b.png");
-const o = demodir;
+  // take screenshots
+  app.use("/screenshots", router_screenshots);
 
-ssim(a, b, o).then(console.log);
+  app.listen(port, () => {
+    console.log(`listening on port ${port} => http://localhost:${port}`);
+    console.log({
+      port,
+      reports,
+    });
+  });
+}
+
+if (require.main === module) {
+  start(defaultOptions);
+}
