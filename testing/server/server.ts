@@ -26,6 +26,15 @@ export function start({
 }: ServerOptions) {
   const app = express();
 
+  // set env
+  app.set("reports", reports);
+
+  // set baseurl middleware
+  app.use((req, res, next) => {
+    res.locals.server = req.protocol + "://" + req.get("host");
+    next();
+  });
+
   // ping
   app.get("/", (req, res) => {
     res.send("service is running");
