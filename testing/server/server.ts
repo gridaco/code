@@ -1,26 +1,61 @@
 import express from "express";
 import path from "path";
-import { ssim } from "@codetest/diffview";
 import router_reports from "./reports";
 import router_screenshots from "./screenshots";
 
-const app = express();
+export interface ServerOptions {
+  /**
+   * port number
+   * @default 6627
+   */
+  port?: number;
+  /**
+   * reports artifect path
+   */
+  reports: string;
+}
 
-app.get("/", (req, res) => {
-  res.send("service is running");
-});
+export const defaultOptions: ServerOptions = {
+  port: 6627,
+  reports: path.join(__dirname, "..", "report", ".coverage"),
+};
 
-app.use("/reports", router_reports);
+export function start({
+  port = defaultOptions.port,
+  reports = defaultOptions.reports,
+}: ServerOptions) {
+  const app = express();
 
-app.use("/screenshots", router_screenshots);
+  // set env
+  app.set("reports", reports);
 
-app.listen(3000, () => {
-  console.log("listening on port 3000");
-});
+  // set baseurl middleware
+  app.use((req, res, next) => {
+    res.locals.server = req.protocol + "://" + req.get("host");
+    next();
+  });
 
-const demodir = path.join(__dirname, "../samples/demo");
-const a = path.join(demodir, "a.png");
-const b = path.join(demodir, "b.png");
-const o = demodir;
+  // ping
+  app.get("/", (req, res) => {
+    res.send("service is running");
+  });
 
-ssim(a, b, o).then(console.log);
+  // reports
+  app.use("/reports", router_reports);
+  app.use("/public/reports", express.static(reports));
+
+  // take screenshots
+  app.use("/screenshots", router_screenshots);
+
+  app.listen(port, () => {
+    console.log(`listening on port ${port} => http://localhost:${port}`);
+    console.log({
+      port,
+      reports,
+    });
+  });
+}
+
+if (require.main === module) {
+  start(defaultOptions);
+}
