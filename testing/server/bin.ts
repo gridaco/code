@@ -14,7 +14,7 @@ const argv = yargs(hideBin(process.argv))
   .option("reports", {
     description: "The path to the folder with the files",
     type: "string",
-    demandOption: true,
+    default: defaultOptions.reports,
   })
   .help()
   .alias("help", "h").argv as ServerOptions;
