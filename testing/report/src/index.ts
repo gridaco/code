@@ -85,9 +85,6 @@ async function report() {
   let i = 0;
   for (const c of samples) {
     i++;
-    // create .coverage/:id folder
-    const coverage_set_path = path.join(coverage_path, c.id);
-    await mkdir(coverage_set_path);
 
     const { id: filekey } = c;
     let file;
@@ -102,6 +99,10 @@ async function report() {
       // file not found
       continue;
     }
+
+    // create .coverage/:id folder
+    const coverage_set_path = path.join(coverage_path, c.id);
+    await mkdir(coverage_set_path);
 
     const frames: ReadonlyArray<Frame> = file.document.children
       .filter((c) => c.type === "CANVAS")
@@ -170,11 +171,17 @@ async function report() {
         // if the exported is local fs path, then use copy instead
         if (await exists(exported)) {
           try {
-            // copy file with symlink
-            // rempve if already exists before linking new one
-            if (await exists(image_a)) {
+            // Check if image_a exists and remove
+            try {
+              await fs.lstat(image_a); // use stat to check if file exists (even broken one)
               await fs.unlink(image_a);
+            } catch (e) {
+              // Handle file not found error
+              if (e.code !== "ENOENT") {
+                throw e;
+              }
             }
+
             await fs.symlink(exported, image_a);
           } catch (e) {
             // TODO: symlink still fails with "EEXIST: file already exists, symlink"
@@ -189,7 +196,7 @@ async function report() {
         }
 
         if (!(await exists(image_a))) {
-          spinner.fail(`Image A not found - ${image_a}`);
+          spinner.fail(`Image A not found - ${image_a} from (${exported})`);
           continue;
         }
 
