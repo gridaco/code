@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
+    "target": "es2020",
     "module": "commonjs",
-    "esModuleInterop": true,
-    "target": "es2017",
-    "noImplicitAny": false,
+    "lib": ["es2020", "dom"],
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "strict": false,
     "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "dist",
-    "baseUrl": "."
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true
   }
 }
