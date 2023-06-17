@@ -1,5 +1,7 @@
 # Design to tokens
 
+[**Learn more about token design in depth**](https://grida.co/docs/@designto-code/01-token-design.md)
+
 > We first convert the input design to tokens
 
 ## Tokenize = Detection + Formation
