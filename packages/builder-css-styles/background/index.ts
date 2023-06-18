@@ -1,3 +1,4 @@
+import { TokenNotHandledError } from "@engine/core";
 import { CSSProperties } from "@coli.codes/css";
 import { Background, BackgroundPaintLike } from "@reflect-ui/core";
 import { color } from "../color";
@@ -50,8 +51,12 @@ export function background(bg: Background | undefined): CSSProperties {
           // 'background-position' // todo
         };
       }
-      case "graphics": {
-        throw "graphics bg not supported";
+      case "image": {
+        // TODO:
+        throw "image bg not supported";
+      }
+      default: {
+        throw new TokenNotHandledError(`${_primary.type} not handled`);
       }
     }
   }

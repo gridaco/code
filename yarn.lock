@@ -6722,10 +6722,10 @@
   resolved "https://registry.npmjs.org/@reflect-ui/cg/-/cg-0.0.5.tgz"
   integrity sha512-rqqaumLDgk9dGtPgkYy9h5PLlNv8ZVEz/+ktOcJpJE6v9fAQOSH1Wh5WAehpiZTQtKe944GzrFMsb/g8pTabWg==
 
-"@reflect-ui/core@0.0.11", "@reflect-ui/core@0.0.2-rc.7", "@reflect-ui/core@0.0.5", "@reflect-ui/core@^0.0.5", "@reflect-ui/core@^0.0.9":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@reflect-ui/core/-/core-0.0.11.tgz#68bfbbdf2748d7766aad8889d144891c48baa6cd"
-  integrity sha512-uYTYOebxOzCsZe7wL9JyDa9EO6HS0d08kKNVLrlz9uf2Ch9wNpTItXuWkqh+Ri5y/VhZZrUAXHRvPoXFCMObiA==
+"@reflect-ui/core@0.0.12", "@reflect-ui/core@0.0.2-rc.7", "@reflect-ui/core@0.0.5", "@reflect-ui/core@^0.0.5", "@reflect-ui/core@^0.0.9":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@reflect-ui/core/-/core-0.0.12.tgz#f410ecef10ce4ecb2cffdda93056091d68ce2b87"
+  integrity sha512-Ae/2ImJ70d1PrcVLmQgJhxTr5RZA6wxLeTgxRaATA3nryjp4aiz7pznzd3EqX0zii+7N79Xpk20KCuXJByypuA==
   dependencies:
     "@reflect-ui/uiutils" "^0.1.2-1"
 
