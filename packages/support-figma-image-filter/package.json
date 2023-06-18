@@ -1,0 +1,8 @@
+{
+  "name": "@code-features/figma-image-filter",
+  "version": "0.0.0",
+  "description": "Figma Image Filter support",
+  "scripts": {
+    "test": "jest"
+  }
+}
