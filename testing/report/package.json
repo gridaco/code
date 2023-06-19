@@ -18,7 +18,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@figma-api/community": "^0.0.5",
+    "@figma-api/community": "^0.0.6",
     "axios-cache-interceptor": "^1.1.1",
     "minimist": "^1.2.8",
     "ora": "^5.4.0",
