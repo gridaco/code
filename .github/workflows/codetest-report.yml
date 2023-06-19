@@ -27,5 +27,5 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_S3_CODETEST_REPORTS }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_S3_CODETEST_REPORTS }}
           AWS_REGION: "us-west-1"
-          SOURCE_DIR: "/ci/report/.coverage"
-          DEST_DIR: "/${{ github.event.release.tag_name }}"
+          SOURCE_DIR: "ci/report/.coverage"
+          DEST_DIR: "${{ github.event.release.tag_name }}"
