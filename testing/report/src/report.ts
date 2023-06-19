@@ -1,7 +1,9 @@
-import path from "path";
 import fs from "fs/promises";
+import path from "path";
 import assert from "assert";
 import ora from "ora";
+import winston from "winston";
+import pMap from "p-map";
 import { mapper } from "@design-sdk/figma-remote";
 import { convert } from "@design-sdk/figma-node-conversion";
 import { Client as ClientFS } from "@figma-api/community/fs";
@@ -17,12 +19,15 @@ import {
   MainImageRepository,
 } from "@design-sdk/asset-repository";
 import { RemoteImageRepositories } from "@design-sdk/figma-remote/asset-repository";
-import winston from "winston";
 import { fsserver } from "./serve";
 import { sync } from "./utils/sync";
 import { exists } from "./utils/exists";
 
 const CI = process.env.CI;
+
+type ClientInterface =
+  | ReturnType<typeof ClientFS>
+  | ReturnType<typeof ClientS3>;
 
 export interface GenerateReportOptions {
   port: number;
@@ -67,6 +72,136 @@ function setImageRepository(filekey: string) {
       "grida://assets-reservation/images/"
     )
   );
+}
+
+async function reportNode({
+  node,
+  filekey,
+  out,
+  client,
+  ssworker,
+  exports,
+}: {
+  node: Frame;
+  filekey: string;
+  out: string;
+  client: ClientInterface;
+  ssworker: ScreenshotWorker;
+  exports: Record<string, string>;
+}) {
+  const report_file = path.join(out, "report.json");
+
+  const { x: width, y: height } = node.size;
+  const { id: fid } = node;
+
+  const _mapped = mapper.mapFigmaRemoteToFigma(node);
+  const _converted = convert.intoReflectNode(_mapped, null, "rest", filekey);
+
+  setImageRepository(filekey);
+
+  try {
+    // image A (original)
+    const exported = exports[fid];
+    const image_a_rel = "./a.png";
+    const image_a = path.join(out, image_a_rel);
+
+    await sync(exported, image_a);
+
+    if (!(await exists(image_a))) {
+      return {
+        error: `Image A not found - ${image_a} from (${exported})`,
+      };
+    }
+
+    // codegen
+    const code = await htmlcss(
+      {
+        id: fid,
+        name: node.name,
+        entry: _converted,
+      },
+      async ({ keys, hashes }) => {
+        const { data: exports } = await client.fileImages(filekey, {
+          ids: keys,
+        });
+
+        const { data: images } = await client.fileImageFills(filekey);
+
+        const map = {
+          ...exports.images,
+          ...images.meta.images,
+        };
+
+        // transform the path for local file url
+        return Object.keys(map).reduce((acc, key) => {
+          const path = map[key];
+          const url = path.startsWith("http") ? path : `file://${path}`;
+          return {
+            ...acc,
+            [key]: url,
+          };
+        }, {});
+      }
+    );
+
+    // write index.html
+    const html_file = path.join(out, "index.html");
+    await fs.writeFile(html_file, code);
+
+    const screenshot_buffer = await ssworker.screenshot({
+      htmlcss: code,
+      viewport: {
+        width: Math.round(width),
+        height: Math.round(height),
+      },
+    });
+
+    const image_b_rel = "./b.png";
+    const image_b = path.join(out, image_b_rel);
+    await fs.writeFile(image_b, screenshot_buffer);
+
+    const diff = await resemble(image_a, image_b);
+    const diff_file = path.join(out, "diff.png");
+    // write diff.png
+    await fs.writeFile(diff_file, diff.getBuffer(false));
+
+    const report = {
+      community_id: filekey,
+      filekey: "unknown",
+      type: "FRAME",
+      name: node.name,
+      id: fid,
+      width,
+      height,
+      image_a: image_a_rel,
+      image_b: image_b_rel,
+      reported_at: new Date().toISOString(),
+      diff: {
+        hitmap: diff_file,
+        percent: diff.rawMisMatchPercentage,
+      },
+      engine: {
+        name: "@codetest/codegen",
+        version: "2023.0.0.1",
+        framework: "preview",
+      },
+    };
+
+    // wrie report.json
+    await fs.writeFile(report_file, JSON.stringify(report, null, 2));
+
+    return { report };
+  } catch (e) {
+    logger.log("error", e);
+    console.info(e);
+    return {
+      error: e.message,
+    };
+  }
+}
+
+function reportFile() {
+  //
 }
 
 export async function report(options: GenerateReportOptions) {
@@ -166,133 +301,41 @@ export async function report(options: GenerateReportOptions) {
 
     let ii = 0;
     for (const frame of frames) {
-      const { x: width, y: height } = frame.size;
-      const { id: fid } = frame;
-
       ii++;
 
       const spinner = ora({
-        text: `[${i}/${samples.length}] Running coverage for ${c.id}/${fid} (${ii}/${frames.length})`,
+        text: `[${i}/${samples.length}] Running coverage for ${c.id}/${frame.id} (${ii}/${frames.length})`,
         isEnabled: !CI,
       }).start();
 
       // create .coverage/:id/:node folder
-      const coverage_node_path = path.join(coverage_set_path, fid);
+      const coverage_node_path = path.join(coverage_set_path, frame.id);
       await mkdir(coverage_node_path);
 
       // report.json
       const report_file = path.join(coverage_node_path, "report.json");
       if (config.skipIfReportExists) {
         if (await exists(report_file)) {
-          spinner.succeed(`Skipping - report for ${fid} already exists`);
+          spinner.succeed(`Skipping - report for ${frame.id} already exists`);
           continue;
         }
       }
 
-      const _mapped = mapper.mapFigmaRemoteToFigma(frame);
-      const _converted = convert.intoReflectNode(
-        _mapped,
-        null,
-        "rest",
-        filekey
-      );
+      const result = await reportNode({
+        filekey,
+        node: frame,
+        out: coverage_node_path,
+        exports,
+        client,
+        ssworker,
+      });
 
-      setImageRepository(filekey);
-
-      try {
-        // image A (original)
-        const exported = exports[fid];
-        const image_a_rel = "./a.png";
-        const image_a = path.join(coverage_node_path, image_a_rel);
-
-        await sync(exported, image_a);
-
-        if (!(await exists(image_a))) {
-          spinner.fail(`Image A not found - ${image_a} from (${exported})`);
-          continue;
-        }
-
-        // codegen
-        const code = await htmlcss(
-          {
-            id: fid,
-            name: frame.name,
-            entry: _converted,
-          },
-          async ({ keys, hashes }) => {
-            const { data: exports } = await client.fileImages(filekey, {
-              ids: keys,
-            });
-
-            const { data: images } = await client.fileImageFills(filekey);
-
-            const map = {
-              ...exports.images,
-              ...images.meta.images,
-            };
-
-            // transform the path for local file url
-            return Object.keys(map).reduce((acc, key) => {
-              const path = map[key];
-              const url = path.startsWith("http") ? path : `file://${path}`;
-              return {
-                ...acc,
-                [key]: url,
-              };
-            }, {});
-          }
-        );
-
-        // write index.html
-        const html_file = path.join(coverage_node_path, "index.html");
-        await fs.writeFile(html_file, code);
-
-        const screenshot_buffer = await ssworker.screenshot({
-          htmlcss: code,
-          viewport: {
-            width: Math.round(width),
-            height: Math.round(height),
-          },
-        });
-
-        const image_b_rel = "./b.png";
-        const image_b = path.join(coverage_node_path, image_b_rel);
-        await fs.writeFile(image_b, screenshot_buffer);
-
-        const diff = await resemble(image_a, image_b);
-        const diff_file = path.join(coverage_node_path, "diff.png");
-        // write diff.png
-        await fs.writeFile(diff_file, diff.getBuffer(false));
-
-        const report = {
-          community_id: filekey,
-          filekey: "unknown",
-          type: "FRAME",
-          name: frame.name,
-          id: fid,
-          width,
-          height,
-          image_a: image_a_rel,
-          image_b: image_b_rel,
-          reported_at: new Date().toISOString(),
-          diff: {
-            hitmap: diff_file,
-            percent: diff.rawMisMatchPercentage,
-          },
-          engine: {
-            name: "@codetest/codegen",
-            version: "2023.0.0.1",
-            framework: "preview",
-          },
-        };
-
-        // wrie report.json
-        await fs.writeFile(report_file, JSON.stringify(report, null, 2));
-        spinner.succeed(`report file for ${fid} ➡ ${report_file}`);
-      } catch (e) {
-        // could be codegen error
-        spinner.fail(`error on ${fid} : ${e.message}`);
-        logger.log("error", e);
+      if (result.report) {
+        spinner.succeed(`report file for ${frame.id} ➡ ${report_file}`);
+      } else if (result.error) {
+        spinner.fail(`error on ${frame.id} : ${result.error}`);
+      } else {
+        spinner.fail();
       }
     }
 
@@ -302,8 +345,6 @@ export async function report(options: GenerateReportOptions) {
     if (files.length === 0) {
       await fs.rmdir(coverage_set_path);
     }
-
-    console.info("");
   }
 
   // cleaup

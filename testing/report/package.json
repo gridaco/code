@@ -23,6 +23,7 @@
     "axios-cache-interceptor": "^1.1.1",
     "minimist": "^1.2.8",
     "ora": "^5.4.0",
+    "p-map": "^6.0.0",
     "serve-handler": "^6.1.5",
     "winston": "^3.9.0",
     "yargs": "^17.2.1"
