@@ -27,8 +27,10 @@ import { composePlugin } from "../plugin";
 
 export type CustomAssetResolver = ({
   keys,
+  hashes,
 }: {
   keys: string[];
+  hashes: string[];
 }) => Promise<{ [key: string]: string }>;
 
 interface AssetsConfig {
@@ -525,8 +527,25 @@ export async function designToVanilla({
 
 const resolve_assets = async ({ asset_repository, resolver }: AssetsConfig) => {
   if (resolver) {
-    const keys = Object.keys(asset_repository.mergeAll());
-    return (await resolver({ keys: keys })) || {};
+    const targets = Object.keys(asset_repository.mergeAll()).reduce(
+      (acc, k) => {
+        const i = asset_repository.find(k);
+        if (i.hash) {
+          acc.hashes.push(i.hash);
+        }
+
+        if (i.key) {
+          acc.keys.push(i.key);
+        }
+        return acc;
+      },
+      {
+        keys: [],
+        hashes: [],
+      }
+    );
+
+    return (await resolver(targets)) || {};
   } else {
     return await fetch_all_assets(asset_repository);
   }
