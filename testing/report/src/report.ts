@@ -1,3 +1,4 @@
+import os from "os";
 import fs from "fs/promises";
 import path from "path";
 import assert from "assert";
@@ -8,7 +9,7 @@ import { mapper } from "@design-sdk/figma-remote";
 import { convert } from "@design-sdk/figma-node-conversion";
 import { Client as ClientFS } from "@figma-api/community/fs";
 import { Client as ClientS3 } from "@figma-api/community";
-import type { Frame } from "@design-sdk/figma-remote-types";
+import type { Document, Frame } from "@design-sdk/figma-remote-types";
 import { htmlcss } from "@codetest/codegen";
 import { Worker as ScreenshotWorker } from "@codetest/screenshot";
 import { resemble } from "@codetest/diffview";
@@ -24,6 +25,8 @@ import { sync } from "./utils/sync";
 import { exists } from "./utils/exists";
 
 const CI = process.env.CI;
+
+setupCache(axios);
 
 type ClientInterface =
   | ReturnType<typeof ClientFS>
@@ -50,8 +53,6 @@ const logger = winston.createLogger({
   ],
 });
 
-setupCache(axios);
-
 const mkdir = async (path: string) =>
   !(await exists(path)) && (await fs.mkdir(path));
 
@@ -61,6 +62,13 @@ const noconsole = () => {
   console.warn = () => {};
   console.error = () => {};
 };
+
+async function cleanIfDirectoryEmpty(dir: string) {
+  const items = await fs.readdir(dir);
+  if (items.length === 0) {
+    await fs.rmdir(dir);
+  }
+}
 
 function setImageRepository(filekey: string) {
   // TODO:
@@ -200,14 +208,134 @@ async function reportNode({
   }
 }
 
-function reportFile() {
+async function reportFile({
+  fileinfo,
+  client,
+  ssworker,
+  out,
+  config,
+  metadata,
+}: {
+  fileinfo: {
+    id: string;
+    name: string;
+  };
+  out: string;
+  config: ReportConfig;
+  client: ClientInterface;
+  ssworker: ScreenshotWorker;
+  metadata: {
+    index: number;
+    sampleSize: number;
+  };
+}) {
+  const { id: filekey } = fileinfo;
+
+  const file = await getFile(client, filekey);
+  if (!file) {
+    return;
+  }
+
+  await mkdir(out);
+
+  const frames: ReadonlyArray<Frame> = filterFrames(file.document);
+
+  const exports = await exporedNodesMap(
+    client,
+    filekey,
+    ...frames.map((f) => f.id)
+  );
+
+  if (!exports) {
+    return;
+  }
+
+  let ii = 0;
+  for (const frame of frames) {
+    ii++;
+
+    const spinner = ora({
+      text: `[${metadata.index}/${metadata.sampleSize}] Running coverage for ${fileinfo.id}/${frame.id} (${ii}/${frames.length})`,
+      isEnabled: !CI,
+    }).start();
+
+    // create .coverage/:id/:node folder
+    const coverage_node_path = path.join(out, frame.id);
+    await mkdir(coverage_node_path);
+
+    // report.json
+    const report_file = path.join(coverage_node_path, "report.json");
+    if (config.skipIfReportExists) {
+      if (await exists(report_file)) {
+        spinner.succeed(`Skipping - report for ${frame.id} already exists`);
+        continue;
+      }
+    }
+
+    const result = await reportNode({
+      filekey,
+      node: frame,
+      out: coverage_node_path,
+      exports,
+      client,
+      ssworker,
+    });
+
+    if (result.report) {
+      spinner.succeed(`report file for ${frame.id} ➡ ${report_file}`);
+    } else if (result.error) {
+      spinner.fail(`error on ${frame.id} : ${result.error}`);
+    } else {
+      spinner.fail();
+    }
+  }
+
+  // cleaup
+  // if the coverage is empty, remove the folder
+  cleanIfDirectoryEmpty(out);
   //
+}
+
+async function exporedNodesMap(
+  client: ClientInterface,
+  filekey: string,
+  ...ids: string[]
+) {
+  try {
+    return (
+      await client.fileImages(filekey, {
+        ids,
+      })
+    ).data.images;
+  } catch (e) {
+    return;
+  }
+}
+
+async function getFile(client: ClientInterface, filekey: string) {
+  try {
+    const { data } = await client.file(filekey);
+    return data;
+  } catch (e) {
+    // file not found
+    return;
+  }
+}
+
+function filterFrames(document: Document) {
+  return document.children
+    .filter((c) => c.type === "CANVAS")
+    .map((c) => c["children"])
+    .flat()
+    .filter((c) => c.type === "FRAME");
 }
 
 export async function report(options: GenerateReportOptions) {
   if (CI) {
     noconsole();
   }
+
+  const concurrency = os.cpus().length;
 
   console.info("Starting report");
   const cwd = process.cwd();
@@ -265,86 +393,19 @@ export async function report(options: GenerateReportOptions) {
   for (const c of samples) {
     i++;
 
-    const { id: filekey } = c;
-    let file;
-    let exports: { [key: string]: string };
-    try {
-      const { data } = await client.file(filekey);
-      file = data;
-      if (!file) {
-        continue;
-      }
-    } catch (e) {
-      // file not found
-      continue;
-    }
-
     // create .coverage/:id folder
     const coverage_set_path = path.join(coverage_path, c.id);
-    await mkdir(coverage_set_path);
-
-    const frames: ReadonlyArray<Frame> = file.document.children
-      .filter((c) => c.type === "CANVAS")
-      .map((c) => c["children"])
-      .flat()
-      .filter((c) => c.type === "FRAME");
-
-    try {
-      exports = (
-        await client.fileImages(filekey, {
-          ids: frames.map((f) => f.id),
-        })
-      ).data.images;
-    } catch (e) {
-      continue;
-    }
-
-    let ii = 0;
-    for (const frame of frames) {
-      ii++;
-
-      const spinner = ora({
-        text: `[${i}/${samples.length}] Running coverage for ${c.id}/${frame.id} (${ii}/${frames.length})`,
-        isEnabled: !CI,
-      }).start();
-
-      // create .coverage/:id/:node folder
-      const coverage_node_path = path.join(coverage_set_path, frame.id);
-      await mkdir(coverage_node_path);
-
-      // report.json
-      const report_file = path.join(coverage_node_path, "report.json");
-      if (config.skipIfReportExists) {
-        if (await exists(report_file)) {
-          spinner.succeed(`Skipping - report for ${frame.id} already exists`);
-          continue;
-        }
-      }
-
-      const result = await reportNode({
-        filekey,
-        node: frame,
-        out: coverage_node_path,
-        exports,
-        client,
-        ssworker,
-      });
-
-      if (result.report) {
-        spinner.succeed(`report file for ${frame.id} ➡ ${report_file}`);
-      } else if (result.error) {
-        spinner.fail(`error on ${frame.id} : ${result.error}`);
-      } else {
-        spinner.fail();
-      }
-    }
-
-    // cleaup
-    // if the coverage is empty, remove the folder
-    const files = await fs.readdir(coverage_set_path);
-    if (files.length === 0) {
-      await fs.rmdir(coverage_set_path);
-    }
+    await reportFile({
+      fileinfo: c,
+      out: coverage_set_path,
+      config,
+      client,
+      ssworker,
+      metadata: {
+        index: i,
+        sampleSize: samples.length,
+      },
+    });
   }
 
   // cleaup
