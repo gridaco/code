@@ -213,11 +213,27 @@ async function report() {
             name: frame.name,
             entry: _converted,
           },
-          async ({ keys }) => {
-            const { data } = await client.fileImages(filekey, {
+          async ({ keys, hashes }) => {
+            const { data: exports } = await client.fileImages(filekey, {
               ids: keys,
             });
-            return data.images;
+
+            const { data: images } = await client.fileImageFills(filekey);
+
+            const map = {
+              ...exports.images,
+              ...images.meta.images,
+            };
+
+            // transform the path for local file url
+            return Object.keys(map).reduce((acc, key) => {
+              const path = map[key];
+              const url = path.startsWith("http") ? path : `file://${path}`;
+              return {
+                ...acc,
+                [key]: url,
+              };
+            }, {});
           }
         );
 
