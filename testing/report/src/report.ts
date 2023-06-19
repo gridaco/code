@@ -23,7 +23,20 @@ import { createServer } from "http";
 import { promisify } from "util";
 import handler from "serve-handler";
 
-const FS_SERVER_PORT = 8000;
+export interface GenerateReportOptions {
+  port: number;
+  config: string;
+}
+
+interface ReportConfig {
+  sample: string;
+  outDir?: string;
+  localarchive?: {
+    files: string;
+    images: string;
+  };
+  skipIfReportExists?: boolean;
+}
 
 const logger = winston.createLogger({
   transports: [
@@ -44,16 +57,6 @@ const exists = async (path: string) => {
 
 const mkdir = async (path: string) =>
   !(await exists(path)) && (await fs.mkdir(path));
-
-interface ReportConfig {
-  sample: string;
-  outDir?: string;
-  localarchive?: {
-    files: string;
-    images: string;
-  };
-  skipIfReportExists?: boolean;
-}
 
 // disable logging
 console.log = () => {};
@@ -79,11 +82,11 @@ function fsserver(path: string) {
   };
 }
 
-async function report() {
+export async function report(options: GenerateReportOptions) {
   console.info("Starting report");
   const cwd = process.cwd();
   // read the config
-  const config: ReportConfig = require(path.join(cwd, "report.config.js"));
+  const config: ReportConfig = require(options.config);
 
   // load the sample file
   const samples_path = (await exists(config.sample))
@@ -115,14 +118,14 @@ async function report() {
           files: config.localarchive.files,
           images: config.localarchive.images,
         },
-        baseURL: `http://localhost:${FS_SERVER_PORT}`,
+        baseURL: `http://localhost:${options.port}`,
       })
     : ClientS3();
 
   if (config.localarchive) {
     // Start the server
-    await fileserver_start(FS_SERVER_PORT);
-    console.info(`serve running at http://localhost:${FS_SERVER_PORT}/`);
+    await fileserver_start(options.port);
+    console.info(`serve running at http://localhost:${options.port}/`);
   }
 
   const ssworker = new ScreenshotWorker({});
@@ -365,5 +368,3 @@ async function report() {
     await fileserver_close();
   }
 }
-
-report();
