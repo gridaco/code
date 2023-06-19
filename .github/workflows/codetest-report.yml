@@ -19,7 +19,7 @@ jobs:
         run: |
           node ci/report
       - name: upload report to s3
-        uses: jakejarvis/s3-sync-action
+        uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
