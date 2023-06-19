@@ -40,7 +40,12 @@ function fromVector(vector: ReflectVectorNode) {
     key: _key,
     ...vector,
     data: vector?.vectorPaths[0].data,
-    fill: tokenizeBackground.fromFills(vector.fills),
+    fill: tokenizeBackground.fromFills(vector.fills, {
+      // TODO: we need to handle IMAGE type fills for Vector backgrounds
+      filter: (f) => f.type === "SOLID" || f.type.includes("GRADIENT"),
+      // TODO: we need to have multiple fill support for vector backgrounds
+      forceSingleFill: true,
+    }),
   });
 }
 
