@@ -34,6 +34,42 @@ const monokai: Theme = {
   base0F: "#cc6633",
 };
 
+export class JsonTreeFilter {
+  static containsTerm(obj: any, term: string): boolean {
+    try {
+      const objectString = JSON.stringify(obj, (key, value) =>
+        typeof value === "object" && value !== null ? undefined : value
+      ).toLowerCase();
+
+      return term ? objectString.includes(term.toLowerCase()) : false;
+    } catch (e) {
+      console.error("Error stringifying object:", e);
+      return false;
+    }
+  }
+
+  static renderHighlighted(raw: string, term: string) {
+    const lowercasedTerm = term?.toLowerCase()?.trim();
+    if (!lowercasedTerm) {
+      return <span>{raw}</span>;
+    }
+
+    if (raw.toLowerCase().includes(lowercasedTerm)) {
+      return (
+        <span>
+          <mark>{raw}</mark>
+        </span>
+      );
+    } else {
+      return <span>{raw}</span>;
+    }
+  }
+}
+
+interface JsonTreeFilterOptions {
+  q?: string;
+}
+
 export function JsonTree({
   data,
   hideRoot,
@@ -44,6 +80,7 @@ export function JsonTree({
   sortkeys = false,
   expandMaxLevel = 5,
   omitkeys = [],
+  q,
 }: {
   data: any;
   hideRoot?: boolean;
@@ -55,7 +92,7 @@ export function JsonTree({
   sortkeys?: ReadonlyArray<string> | boolean;
   // not used
   omitkeys?: ReadonlyArray<string>;
-}) {
+} & JsonTreeFilterOptions) {
   const sorter = (a: string, b: string) => {
     assert(sortkeys instanceof Array, "keysort must be an array");
     const aindex = sortkeys.indexOf(a);
@@ -81,9 +118,26 @@ export function JsonTree({
     return aindex - bindex;
   };
 
+  // Filter function for the data
+  const filterData = (obj: any, term: string): any => {
+    const lowercasedTerm = term?.toLowerCase()?.trim();
+
+    if (!lowercasedTerm) return obj;
+
+    return Object.keys(obj)
+      .filter(
+        (key) =>
+          JsonTreeFilter.containsTerm(obj[key], lowercasedTerm) ||
+          key.toLowerCase().includes(lowercasedTerm)
+      )
+      .reduce((res, key) => ({ ...res, [key]: obj[key] }), {});
+  };
+
+  const filteredData = filterData(data, q);
+
   return (
     <JSONTree
-      data={data}
+      data={filteredData}
       theme={{
         ...(theme as object),
         ...(backgroundColor ? { base00: backgroundColor } : {}),
@@ -95,17 +149,23 @@ export function JsonTree({
           },
         }),
       }}
+      labelRenderer={([raw]) =>
+        typeof raw === "string" && JsonTreeFilter.renderHighlighted(raw, q)
+      }
+      valueRenderer={(raw) =>
+        JsonTreeFilter.renderHighlighted(JSON.stringify(raw), q)
+      }
       invertTheme={false}
       hideRoot={hideRoot}
       sortObjectKeys={typeof sortkeys === "boolean" ? sortkeys : sorter}
-      shouldExpandNode={(keypath, data, level) => {
+      shouldExpandNode={([key], data, level) => {
         if (level === 0) {
           return expandRoot;
         }
         if (expandMaxLevel > 0 && level > expandMaxLevel) {
           return false;
         }
-        if (keypath[keypath.length - 1] === "parent") {
+        if (key === "parent") {
           return expandParent;
         }
         return true;

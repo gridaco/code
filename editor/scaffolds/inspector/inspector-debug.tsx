@@ -44,12 +44,23 @@ const figma_json_sortkeys = [
 export function DebugInspector() {
   const [ref, { width }] = useMeasure();
   const { target } = useTargetContainer();
+  const [q, setQ] = useState<string>("");
   // target
 
   return (
     <div ref={ref}>
       <EditorPropertyThemeProvider theme={one.dark}>
         <InfoSection />
+        <StickyFilter>
+          <input
+            type="search"
+            value={q}
+            onChange={(e) => {
+              setQ(e.target.value);
+            }}
+            placeholder="Filter"
+          />
+        </StickyFilter>
         <LayoutSection />
         <GraphInspectionSection>
           <h5>graph</h5>
@@ -91,8 +102,11 @@ export function DebugInspector() {
           <div>
             <JsonTree
               sortkeys={figma_json_sortkeys}
+              expandRoot
+              expandParent={false}
               backgroundColor="transparent"
               data={target}
+              q={q}
             />
           </div>
         </GraphInspectionSection>
@@ -161,4 +175,23 @@ const Section = styled.section`
   }
 
   transition: background-color 0.2s ease-in-out;
+`;
+
+const StickyFilter = styled.div`
+  position: sticky;
+  top: 0;
+  padding: 12px;
+  background: rgba(20, 20, 20, 0.05);
+  z-index: 1;
+  backdrop-filter: blur(24px);
+
+  input[type="search"] {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    transition: border 0.2s ease-in-out;
+  }
 `;
