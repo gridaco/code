@@ -16,6 +16,13 @@ import {
   MainImageRepository,
 } from "@design-sdk/asset-repository";
 import { RemoteImageRepositories } from "@design-sdk/figma-remote/asset-repository";
+import winston from "winston";
+
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.File({ filename: "error.log", level: "error" }),
+  ],
+});
 
 setupCache(axios);
 
@@ -44,7 +51,6 @@ interface ReportConfig {
 // disable logging
 console.log = () => {};
 console.warn = () => {};
-console.error = () => {};
 
 async function report() {
   console.info("Starting report");
@@ -271,6 +277,8 @@ async function report() {
       } catch (e) {
         // could be codegen error
         spinner.fail(`error on ${frame.id} : ${e.message}`);
+        logger.log("error", e);
+        console.error(e);
       }
     }
 
