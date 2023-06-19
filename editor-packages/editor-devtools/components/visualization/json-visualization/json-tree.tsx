@@ -48,20 +48,25 @@ export class JsonTreeFilter {
     }
   }
 
-  static renderHighlighted(raw: string, term: string) {
+  static renderHighlighted(raw: string | number, term: string, text?: string) {
     const lowercasedTerm = term?.toLowerCase()?.trim();
+    const display = text ?? raw.toString();
     if (!lowercasedTerm) {
-      return <span>{raw}</span>;
+      return <span>{display}</span>;
     }
 
-    if (raw.toLowerCase().includes(lowercasedTerm)) {
+    if (typeof raw === "string" && raw.toLowerCase().includes(lowercasedTerm)) {
       return (
-        <span>
-          <mark>{raw}</mark>
+        <span
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.2)",
+          }}
+        >
+          {display}
         </span>
       );
     } else {
-      return <span>{raw}</span>;
+      return <span>{display}</span>;
     }
   }
 }
@@ -149,11 +154,13 @@ export function JsonTree({
           },
         }),
       }}
-      labelRenderer={([raw]) =>
-        typeof raw === "string" && JsonTreeFilter.renderHighlighted(raw, q)
+      labelRenderer={
+        q
+          ? ([raw]) => JsonTreeFilter.renderHighlighted(raw, q, `${raw}:`)
+          : undefined
       }
-      valueRenderer={(raw) =>
-        JsonTreeFilter.renderHighlighted(JSON.stringify(raw), q)
+      valueRenderer={
+        q ? (raw) => JsonTreeFilter.renderHighlighted(raw, q) : undefined
       }
       invertTheme={false}
       hideRoot={hideRoot}
