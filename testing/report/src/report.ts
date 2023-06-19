@@ -2,7 +2,6 @@ import path from "path";
 import fs from "fs/promises";
 import assert from "assert";
 import ora from "ora";
-import Progress from "cli-progress";
 import { mapper } from "@design-sdk/figma-remote";
 import { convert } from "@design-sdk/figma-node-conversion";
 import { Client as ClientFS } from "@figma-api/community/fs";
@@ -22,6 +21,8 @@ import winston from "winston";
 import { createServer } from "http";
 import { promisify } from "util";
 import handler from "serve-handler";
+
+const CI = process.env.CI;
 
 export interface GenerateReportOptions {
   port: number;
@@ -108,9 +109,10 @@ export async function report(options: GenerateReportOptions) {
   console.info(`Loaded ${samples.length} samples`);
   console.info(`Configuration used - ${JSON.stringify(config, null, 2)}`);
 
-  const { listen: fileserver_start, close: fileserver_close } = fsserver(
-    config.localarchive.images
-  );
+  const { listen: fileserver_start, close: fileserver_close } =
+    config.localarchive
+      ? fsserver(config.localarchive.images)
+      : { listen: () => {}, close: () => {} };
 
   const client = config.localarchive
     ? ClientFS({
@@ -134,11 +136,6 @@ export async function report(options: GenerateReportOptions) {
   // setup the dir
   await mkdir(coverage_path);
 
-  const bar = new Progress.SingleBar({
-    forceRedraw: true,
-  });
-  bar.start(samples.length, 0);
-
   let i = 0;
   for (const c of samples) {
     i++;
@@ -150,12 +147,10 @@ export async function report(options: GenerateReportOptions) {
       const { data } = await client.file(filekey);
       file = data;
       if (!file) {
-        bar.increment();
         continue;
       }
     } catch (e) {
       // file not found
-      bar.increment();
       continue;
     }
 
@@ -176,7 +171,6 @@ export async function report(options: GenerateReportOptions) {
         })
       ).data.images;
     } catch (e) {
-      bar.increment();
       continue;
     }
 
@@ -186,6 +180,7 @@ export async function report(options: GenerateReportOptions) {
 
       const spinner = ora({
         text: `[${i}/${samples.length}] Running coverage for ${c.id}/${frame.id} (${ii}/${frames.length})`,
+        isEnabled: !CI,
       }).start();
 
       // create .coverage/:id/:node folder
@@ -355,7 +350,6 @@ export async function report(options: GenerateReportOptions) {
       await fs.rmdir(coverage_set_path);
     }
 
-    bar.increment();
     console.info("");
   }
 
