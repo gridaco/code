@@ -18,9 +18,9 @@ import {
 } from "@design-sdk/asset-repository";
 import { RemoteImageRepositories } from "@design-sdk/figma-remote/asset-repository";
 import winston from "winston";
-import { createServer } from "http";
-import { promisify } from "util";
-import handler from "serve-handler";
+import { fsserver } from "./serve";
+import { sync } from "./utils/sync";
+import { exists } from "./utils/exists";
 
 const CI = process.env.CI;
 
@@ -47,43 +47,33 @@ const logger = winston.createLogger({
 
 setupCache(axios);
 
-const exists = async (path: string) => {
-  try {
-    await fs.access(path);
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
-
 const mkdir = async (path: string) =>
   !(await exists(path)) && (await fs.mkdir(path));
 
-// disable logging
-console.log = () => {};
-console.warn = () => {};
-console.error = () => {};
+const noconsole = () => {
+  // disable logging
+  console.log = () => {};
+  console.warn = () => {};
+  console.error = () => {};
+};
 
-function fsserver(path: string) {
-  // fileserver for puppeteer to load local files
-  const fileserver = createServer((request, response) => {
-    return handler(request, response, {
-      public: path,
-      symlinks: true,
-    });
-  });
+function setImageRepository(filekey: string) {
+  // TODO:
 
-  // Promisify the listen and close methods
-  const listen = promisify(fileserver.listen.bind(fileserver));
-  const close = promisify(fileserver.close.bind(fileserver));
-
-  return {
-    listen,
-    close,
-  };
+  MainImageRepository.instance = new RemoteImageRepositories(filekey, {});
+  MainImageRepository.instance.register(
+    new ImageRepository(
+      "fill-later-assets",
+      "grida://assets-reservation/images/"
+    )
+  );
 }
 
 export async function report(options: GenerateReportOptions) {
+  if (CI) {
+    noconsole();
+  }
+
   console.info("Starting report");
   const cwd = process.cwd();
   // read the config
@@ -176,22 +166,25 @@ export async function report(options: GenerateReportOptions) {
 
     let ii = 0;
     for (const frame of frames) {
+      const { x: width, y: height } = frame.size;
+      const { id: fid } = frame;
+
       ii++;
 
       const spinner = ora({
-        text: `[${i}/${samples.length}] Running coverage for ${c.id}/${frame.id} (${ii}/${frames.length})`,
+        text: `[${i}/${samples.length}] Running coverage for ${c.id}/${fid} (${ii}/${frames.length})`,
         isEnabled: !CI,
       }).start();
 
       // create .coverage/:id/:node folder
-      const coverage_node_path = path.join(coverage_set_path, frame.id);
+      const coverage_node_path = path.join(coverage_set_path, fid);
       await mkdir(coverage_node_path);
 
       // report.json
       const report_file = path.join(coverage_node_path, "report.json");
       if (config.skipIfReportExists) {
         if (await exists(report_file)) {
-          spinner.succeed(`Skipping - report for ${frame.id} already exists`);
+          spinner.succeed(`Skipping - report for ${fid} already exists`);
           continue;
         }
       }
@@ -204,50 +197,15 @@ export async function report(options: GenerateReportOptions) {
         filekey
       );
 
-      const width = frame.size.x;
-      const height = frame.size.y;
-
-      // TODO:
-      MainImageRepository.instance = new RemoteImageRepositories(filekey, {});
-      MainImageRepository.instance.register(
-        new ImageRepository(
-          "fill-later-assets",
-          "grida://assets-reservation/images/"
-        )
-      );
+      setImageRepository(filekey);
 
       try {
         // image A (original)
-        const exported = exports[frame.id];
+        const exported = exports[fid];
         const image_a_rel = "./a.png";
         const image_a = path.join(coverage_node_path, image_a_rel);
-        // download the exported image with url
-        // if the exported is local fs path, then use copy instead
-        if (await exists(exported)) {
-          try {
-            // Check if image_a exists and remove
-            try {
-              await fs.lstat(image_a); // use stat to check if file exists (even broken one)
-              await fs.unlink(image_a);
-            } catch (e) {
-              // Handle file not found error
-              if (e.code !== "ENOENT") {
-                throw e;
-              }
-            }
 
-            await fs.symlink(exported, image_a);
-          } catch (e) {
-            // TODO: symlink still fails with "EEXIST: file already exists, symlink"
-            // we need to handle this.
-            // reason? - unknown
-          }
-        } else if (exported.startsWith("http")) {
-          const dl = await axios.get(exported, { responseType: "arraybuffer" });
-          await fs.writeFile(image_a, dl.data);
-        } else {
-          throw new Error(`File not found - ${exported}`);
-        }
+        await sync(exported, image_a);
 
         if (!(await exists(image_a))) {
           spinner.fail(`Image A not found - ${image_a} from (${exported})`);
@@ -257,7 +215,7 @@ export async function report(options: GenerateReportOptions) {
         // codegen
         const code = await htmlcss(
           {
-            id: frame.id,
+            id: fid,
             name: frame.name,
             entry: _converted,
           },
@@ -305,18 +263,13 @@ export async function report(options: GenerateReportOptions) {
         const diff_file = path.join(coverage_node_path, "diff.png");
         // write diff.png
         await fs.writeFile(diff_file, diff.getBuffer(false));
-        // const { diff, score } = await ssim(
-        //   image_a,
-        //   image_b,
-        //   coverage_node_path
-        // );
 
         const report = {
           community_id: filekey,
           filekey: "unknown",
           type: "FRAME",
           name: frame.name,
-          id: frame.id,
+          id: fid,
           width,
           height,
           image_a: image_a_rel,
@@ -328,17 +281,17 @@ export async function report(options: GenerateReportOptions) {
           },
           engine: {
             name: "@codetest/codegen",
-            version: "2023.1.1",
+            version: "2023.0.0.1",
             framework: "preview",
           },
         };
 
         // wrie report.json
         await fs.writeFile(report_file, JSON.stringify(report, null, 2));
-        spinner.succeed(`report file for ${frame.id} ➡ ${report_file}`);
+        spinner.succeed(`report file for ${fid} ➡ ${report_file}`);
       } catch (e) {
         // could be codegen error
-        spinner.fail(`error on ${frame.id} : ${e.message}`);
+        spinner.fail(`error on ${fid} : ${e.message}`);
         logger.log("error", e);
       }
     }
