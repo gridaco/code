@@ -17,6 +17,11 @@ import {
 } from "@design-sdk/asset-repository";
 import { RemoteImageRepositories } from "@design-sdk/figma-remote/asset-repository";
 import winston from "winston";
+import { createServer } from "http";
+import { promisify } from "util";
+import handler from "serve-handler";
+
+const FS_SERVER_PORT = 8000;
 
 const logger = winston.createLogger({
   transports: [
@@ -52,6 +57,25 @@ interface ReportConfig {
 console.log = () => {};
 console.warn = () => {};
 
+function fsserver(path: string) {
+  // fileserver for puppeteer to load local files
+  const fileserver = createServer((request, response) => {
+    return handler(request, response, {
+      public: path,
+      symlinks: true,
+    });
+  });
+
+  // Promisify the listen and close methods
+  const listen = promisify(fileserver.listen.bind(fileserver));
+  const close = promisify(fileserver.close.bind(fileserver));
+
+  return {
+    listen,
+    close,
+  };
+}
+
 async function report() {
   console.info("Starting report");
   const cwd = process.cwd();
@@ -76,17 +100,27 @@ async function report() {
   console.info(`Loaded ${samples.length} samples`);
   console.info(`Configuration used - ${JSON.stringify(config, null, 2)}`);
 
-  await mkdir(coverage_path);
+  const { listen: fileserver_start, close: fileserver_close } = fsserver(
+    config.localarchive.images
+  );
 
   const client = Client({
     paths: {
       files: config.localarchive.files,
       images: config.localarchive.images,
     },
+    baseURL: `http://localhost:${FS_SERVER_PORT}`,
   });
+
+  // Start the server
+  await fileserver_start(FS_SERVER_PORT);
+  console.info(`serve running at http://localhost:${FS_SERVER_PORT}/`);
 
   const ssworker = new ScreenshotWorker({});
   await ssworker.launch();
+
+  // setup the dir
+  await mkdir(coverage_path);
 
   let i = 0;
   for (const c of samples) {
@@ -308,6 +342,7 @@ async function report() {
 
   // cleaup
   await ssworker.terminate();
+  await fileserver_close();
 }
 
 report();
