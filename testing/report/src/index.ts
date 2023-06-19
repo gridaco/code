@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs/promises";
 import assert from "assert";
 import ora from "ora";
+import Progress from "cli-progress";
 import { mapper } from "@design-sdk/figma-remote";
 import { convert } from "@design-sdk/figma-node-conversion";
 import { Client as ClientFS } from "@figma-api/community/fs";
@@ -57,6 +58,7 @@ interface ReportConfig {
 // disable logging
 console.log = () => {};
 console.warn = () => {};
+console.error = () => {};
 
 function fsserver(path: string) {
   // fileserver for puppeteer to load local files
@@ -93,7 +95,9 @@ async function report() {
     `sample file not found at ${config.sample} nor ${samples_path}`
   );
 
-  const samples = JSON.parse(await fs.readFile(samples_path, "utf-8"));
+  const samples: Array<{ id: string; name: string }> = JSON.parse(
+    await fs.readFile(samples_path, "utf-8")
+  );
 
   // create .coverage folder
   const coverage_path = config.outDir ?? path.join(cwd, ".coverage");
@@ -115,15 +119,22 @@ async function report() {
       })
     : ClientS3();
 
-  // Start the server
-  await fileserver_start(FS_SERVER_PORT);
-  console.info(`serve running at http://localhost:${FS_SERVER_PORT}/`);
+  if (config.localarchive) {
+    // Start the server
+    await fileserver_start(FS_SERVER_PORT);
+    console.info(`serve running at http://localhost:${FS_SERVER_PORT}/`);
+  }
 
   const ssworker = new ScreenshotWorker({});
   await ssworker.launch();
 
   // setup the dir
   await mkdir(coverage_path);
+
+  const bar = new Progress.SingleBar({
+    forceRedraw: true,
+  });
+  bar.start(samples.length, 0);
 
   let i = 0;
   for (const c of samples) {
@@ -136,10 +147,12 @@ async function report() {
       const { data } = await client.file(filekey);
       file = data;
       if (!file) {
+        bar.increment();
         continue;
       }
     } catch (e) {
       // file not found
+      bar.increment();
       continue;
     }
 
@@ -160,7 +173,7 @@ async function report() {
         })
       ).data.images;
     } catch (e) {
-      console.error("exports not ready for", filekey, e.message);
+      bar.increment();
       continue;
     }
 
@@ -168,9 +181,9 @@ async function report() {
     for (const frame of frames) {
       ii++;
 
-      const spinner = ora(
-        `[${i}/${samples.length}] Running coverage for ${c.id}/${frame.id} (${ii}/${frames.length})`
-      ).start();
+      const spinner = ora({
+        text: `[${i}/${samples.length}] Running coverage for ${c.id}/${frame.id} (${ii}/${frames.length})`,
+      }).start();
 
       // create .coverage/:id/:node folder
       const coverage_node_path = path.join(coverage_set_path, frame.id);
@@ -324,14 +337,11 @@ async function report() {
 
         // wrie report.json
         await fs.writeFile(report_file, JSON.stringify(report, null, 2));
-
-        spinner.text = `report file for ${frame.id} ➡ ${report_file}`;
-        spinner.succeed();
+        spinner.succeed(`report file for ${frame.id} ➡ ${report_file}`);
       } catch (e) {
         // could be codegen error
         spinner.fail(`error on ${frame.id} : ${e.message}`);
         logger.log("error", e);
-        console.error(e);
       }
     }
 
@@ -341,11 +351,19 @@ async function report() {
     if (files.length === 0) {
       await fs.rmdir(coverage_set_path);
     }
+
+    bar.increment();
+    console.info("");
   }
 
   // cleaup
+  // terminate puppeteer
   await ssworker.terminate();
-  await fileserver_close();
+
+  // terminate local file server
+  if (config.localarchive) {
+    await fileserver_close();
+  }
 }
 
 report();
