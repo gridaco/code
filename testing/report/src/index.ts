@@ -4,7 +4,8 @@ import assert from "assert";
 import ora from "ora";
 import { mapper } from "@design-sdk/figma-remote";
 import { convert } from "@design-sdk/figma-node-conversion";
-import { Client } from "@figma-api/community/fs";
+import { Client as ClientFS } from "@figma-api/community/fs";
+import { Client as ClientS3 } from "@figma-api/community";
 import type { Frame } from "@design-sdk/figma-remote-types";
 import { htmlcss } from "@codetest/codegen";
 import { Worker as ScreenshotWorker } from "@codetest/screenshot";
@@ -104,13 +105,15 @@ async function report() {
     config.localarchive.images
   );
 
-  const client = Client({
-    paths: {
-      files: config.localarchive.files,
-      images: config.localarchive.images,
-    },
-    baseURL: `http://localhost:${FS_SERVER_PORT}`,
-  });
+  const client = config.localarchive
+    ? ClientFS({
+        paths: {
+          files: config.localarchive.files,
+          images: config.localarchive.images,
+        },
+        baseURL: `http://localhost:${FS_SERVER_PORT}`,
+      })
+    : ClientS3();
 
   // Start the server
   await fileserver_start(FS_SERVER_PORT);
