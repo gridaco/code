@@ -181,12 +181,14 @@ function handleNode(node: ReflectSceneNode, config: TokenizerConfig): Widget {
 
   // - image - // image detection is always enabled exceptionally.
   // TODO: separate image detection with static logic based and the smart one.
-  if (!handled) {
-    const _detect_if_image = detectIf.image(node);
-    if (_detect_if_image.result) {
-      return tokenizeGraphics.fromImage(node, _detect_if_image.data!);
-    }
-  }
+  // TODO: remove this block after proper background image support
+  // FIXME: legacy code - remove this and merge with standard background handler
+  // if (!handled) {
+  //   const _detect_if_image = detectIf.image(node);
+  //   if (_detect_if_image.result) {
+  //     return tokenizeGraphics.fromImage(node, _detect_if_image.data!);
+  //   }
+  // }
 
   if (!handled) {
     if (config.disable_detection) {
