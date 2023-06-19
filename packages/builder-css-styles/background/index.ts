@@ -20,8 +20,17 @@ export function background(bg: Background | undefined): CSSProperties {
   if (Array.isArray(bg)) {
     // filter out undefined
     bg = bg?.filter(array.filters.notEmpty);
+
+    if (bg.length === 0) {
+      return {};
+    }
+
     return background_multiple(...bg);
   } else {
+    if (!bg) {
+      return {};
+    }
+
     return background_single(bg);
   }
 }
