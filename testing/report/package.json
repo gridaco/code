@@ -5,7 +5,7 @@
   "bin": "./dist/index.js",
   "scripts": {
     "clean": "rm -rf ./dist",
-    "build": "ncc build src/index.ts -o dist",
+    "build": "ncc build src/index.ts -s -o dist",
     "dev": "ts-node src/index.ts",
     "start": "node dist/index.js"
   },
