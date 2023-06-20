@@ -256,6 +256,8 @@ async function reportFile({
   await pMap(
     frames,
     async (frame) => {
+      const logsuffix = fixStr(`${fileinfo.id}/${frame.id}`, 32);
+
       try {
         // create .coverage/:id/:node folder
         const coverage_node_path = path.join(out, frame.id);
@@ -266,9 +268,7 @@ async function reportFile({
         if (config.skipIfReportExists) {
           if (await exists(report_file)) {
             log(
-              chalk.green(
-                `☑ ${fileinfo.id}/${frame.id} Skipping - report for already exists`
-              )
+              chalk.green(`☑ ${logsuffix} Skipping - report for already exists`)
             );
             return;
           }
@@ -284,20 +284,14 @@ async function reportFile({
         });
 
         if (result.report) {
-          log(
-            chalk.green(
-              `☑ ${fileinfo.id}/${frame.id} Reported ➡ ${report_file}`
-            )
-          );
+          log(chalk.green(`☑ ${logsuffix} Reported ➡ ${report_file}`));
         } else if (result.error) {
-          log(chalk.red(`☒ ${fileinfo.id}/${frame.id} Error: ${result.error}`));
+          log(chalk.red(`☒ ${logsuffix} Error: ${result.error}`));
         } else {
-          log(chalk.red(`☒ ${fileinfo.id}/${frame.id} Unknown Error`));
+          log(chalk.red(`☒ ${logsuffix} Unknown Error`));
         }
       } catch (e) {
-        log(
-          chalk.red(`☒ ${fileinfo.id}/${frame.id} System Error: ${e.message}}`)
-        );
+        log(chalk.red(`☒ ${logsuffix} System Error: ${e.message}}`));
       }
     },
     { concurrency }
@@ -427,7 +421,7 @@ export async function report(options: GenerateReportOptions) {
         concurrency: concurrency,
       });
     },
-    { concurrency: concurrency }
+    { concurrency: 4 }
   );
 
   // cleaup
@@ -446,4 +440,8 @@ export async function report(options: GenerateReportOptions) {
       `✓ Done in ${(endtime - starttime) / 1000}s. Coverage at ${coverage_path}`
     )
   );
+}
+
+function fixStr(str, n = 80) {
+  return str.length > n ? str.substring(0, n) : str.padEnd(n);
 }
