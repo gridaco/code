@@ -5,46 +5,23 @@ import assert from "assert";
 import winston from "winston";
 import chalk from "chalk";
 import pMap from "p-map";
-import { mapper } from "@design-sdk/figma-remote";
-import { convert } from "@design-sdk/figma-node-conversion";
-import { Client as ClientFS } from "@figma-api/community/fs";
-import { Client as ClientS3 } from "@figma-api/community";
 import type { Document, Frame } from "@design-sdk/figma-remote-types";
-import { htmlcss } from "@codetest/codegen";
 import { Worker as ScreenshotWorker } from "@codetest/screenshot";
-import { resemble } from "@codetest/diffview";
 import axios from "axios";
 import { setupCache } from "axios-cache-interceptor";
-import {
-  ImageRepository,
-  MainImageRepository,
-} from "@design-sdk/asset-repository";
-import { RemoteImageRepositories } from "@design-sdk/figma-remote/asset-repository";
 import { fsserver } from "./serve";
-import { sync } from "./utils/sync";
 import { exists } from "./utils/exists";
+import { ReportConfig } from "./config";
+import { Client } from "./client";
+import { FrameReporter } from "./report-frame";
 
 const CI = process.env.CI;
 
 setupCache(axios);
 
-type ClientInterface =
-  | ReturnType<typeof ClientFS>
-  | ReturnType<typeof ClientS3>;
-
 export interface GenerateReportOptions {
   port: number;
   config: string;
-}
-
-interface ReportConfig {
-  sample: string;
-  outDir?: string;
-  localarchive?: {
-    files: string;
-    images: string;
-  };
-  skipIfReportExists?: boolean;
 }
 
 const logger = winston.createLogger({
@@ -72,143 +49,6 @@ async function cleanIfDirectoryEmpty(dir: string) {
   }
 }
 
-function setImageRepository(filekey: string) {
-  // TODO:
-
-  MainImageRepository.instance = new RemoteImageRepositories(filekey, {});
-  MainImageRepository.instance.register(
-    new ImageRepository(
-      "fill-later-assets",
-      "grida://assets-reservation/images/"
-    )
-  );
-}
-
-async function reportNode({
-  node,
-  filekey,
-  out,
-  client,
-  ssworker,
-  exports,
-}: {
-  node: Frame;
-  filekey: string;
-  out: string;
-  client: ClientInterface;
-  ssworker: ScreenshotWorker;
-  exports: Record<string, string>;
-}) {
-  const report_file = path.join(out, "report.json");
-
-  const { x: width, y: height } = node.size;
-  const { id: fid } = node;
-
-  const _mapped = mapper.mapFigmaRemoteToFigma(node);
-  const _converted = convert.intoReflectNode(_mapped, null, "rest", filekey);
-
-  setImageRepository(filekey);
-
-  try {
-    // image A (original)
-    const exported = exports[fid];
-    const image_a_rel = "./a.png";
-    const image_a = path.join(out, image_a_rel);
-
-    await sync(exported, image_a);
-
-    if (!(await exists(image_a))) {
-      return {
-        error: `Image A not found - ${image_a} from (${exported})`,
-      };
-    }
-
-    // codegen
-    const code = await htmlcss(
-      {
-        id: fid,
-        name: node.name,
-        entry: _converted,
-      },
-      async ({ keys, hashes }) => {
-        const { data: exports } = await client.fileImages(filekey, {
-          ids: keys,
-        });
-
-        const { data: images } = await client.fileImageFills(filekey);
-
-        const map = {
-          ...exports.images,
-          ...images.meta.images,
-        };
-
-        // transform the path for local file url
-        return Object.keys(map).reduce((acc, key) => {
-          const path = map[key];
-          const url = path.startsWith("http") ? path : `file://${path}`;
-          return {
-            ...acc,
-            [key]: url,
-          };
-        }, {});
-      }
-    );
-
-    // write index.html
-    const html_file = path.join(out, "index.html");
-    await fs.writeFile(html_file, code);
-
-    const image_b_rel = "./b.png";
-    const image_b = path.join(out, image_b_rel);
-    await ssworker.screenshot({
-      htmlcss: code,
-      viewport: {
-        width: Math.round(width),
-        height: Math.round(height),
-      },
-      path: image_b,
-    });
-
-    const diff = await resemble(image_a, image_b);
-    const diff_file = path.join(out, "diff.png");
-    // write diff.png
-    await fs.writeFile(diff_file, diff.getBuffer(false));
-
-    const report = {
-      community_id: filekey,
-      filekey: "unknown",
-      type: "FRAME",
-      name: node.name,
-      id: fid,
-      width,
-      height,
-      image_a: image_a_rel,
-      image_b: image_b_rel,
-      reported_at: new Date().toISOString(),
-      diff: {
-        hitmap: diff_file,
-        percent: diff.rawMisMatchPercentage,
-      },
-      engine: {
-        name: "@codetest/codegen",
-        version: "2023.0.0.1",
-        framework: "preview",
-      },
-    };
-
-    // wrie report.json
-    await fs.writeFile(report_file, JSON.stringify(report, null, 2));
-
-    return { report };
-  } catch (e) {
-    logger.log("error", e);
-    console.info(e);
-    return {
-      error: e.message,
-    };
-  }
-}
-
 async function reportFile({
   fileinfo,
   client,
@@ -224,7 +64,7 @@ async function reportFile({
   };
   out: string;
   config: ReportConfig;
-  client: ClientInterface;
+  client: Client;
   ssworker: ScreenshotWorker;
   concurrency?: number;
   metadata: {
@@ -234,7 +74,7 @@ async function reportFile({
 }) {
   const { id: filekey } = fileinfo;
 
-  const file = await getFile(client, filekey);
+  const file = await client.getFile(filekey);
   if (!file) {
     return;
   }
@@ -273,15 +113,16 @@ async function reportFile({
             return;
           }
         }
-
-        const result = await reportNode({
+        const reporter = new FrameReporter({
           filekey,
           node: frame,
           out: coverage_node_path,
-          exports,
+          exported: exports[frame.id],
           client,
           ssworker,
         });
+
+        const result = await reporter.report();
 
         if (result.report) {
           log(chalk.green(`☑ ${logsuffix} Reported ➡ ${report_file}`));
@@ -304,7 +145,7 @@ async function reportFile({
 }
 
 async function exporedNodesMap(
-  client: ClientInterface,
+  client: Client,
   filekey: string,
   ...ids: string[]
 ) {
@@ -319,15 +160,11 @@ async function exporedNodesMap(
   }
 }
 
-async function getFile(client: ClientInterface, filekey: string) {
-  try {
-    const { data } = await client.file(filekey);
-    return data;
-  } catch (e) {
-    // file not found
-    return;
-  }
-}
+// files fetcher process
+// once file is fetched, extract target nodes and put it to node queue
+//
+// downloader process
+// screenshot process
 
 function filterFrames(document: Document) {
   return document.children
@@ -378,15 +215,11 @@ export async function report(options: GenerateReportOptions) {
       ? fsserver(config.localarchive.images)
       : { listen: () => {}, close: () => {} };
 
-  const client = config.localarchive
-    ? ClientFS({
-        paths: {
-          files: config.localarchive.files,
-          images: config.localarchive.images,
-        },
-        baseURL: `http://localhost:${options.port}`,
-      })
-    : ClientS3();
+  const client = new Client(
+    config.localarchive
+      ? { paths: config.localarchive, port: options.port }
+      : null
+  );
 
   if (config.localarchive) {
     // Start the server
@@ -421,7 +254,7 @@ export async function report(options: GenerateReportOptions) {
         concurrency: concurrency,
       });
     },
-    { concurrency: 4 }
+    { concurrency: 1 }
   );
 
   // cleaup
