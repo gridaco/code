@@ -337,7 +337,6 @@ export async function report(options: GenerateReportOptions) {
 
   const concurrency = os.cpus().length;
 
-  console.info("Starting report");
   const cwd = process.cwd();
   // read the config
   const config: ReportConfig = require(options.config);
@@ -359,8 +358,11 @@ export async function report(options: GenerateReportOptions) {
   // create .coverage folder
   const coverage_path = config.outDir ?? path.join(cwd, ".coverage");
 
-  console.info(`Loaded ${samples.length} samples`);
-  console.info(`Configuration used - ${JSON.stringify(config, null, 2)}`);
+  console.info("Starting report", {
+    concurrency,
+    size: samples.length,
+    config: JSON.stringify(config, null, 2),
+  });
 
   const { listen: fileserver_start, close: fileserver_close } =
     config.localarchive
@@ -383,30 +385,34 @@ export async function report(options: GenerateReportOptions) {
     console.info(`serve running at http://localhost:${options.port}/`);
   }
 
-  const ssworker = new ScreenshotWorker({});
+  const ssworker = new ScreenshotWorker();
   await ssworker.launch();
 
   // setup the dir
   await mkdir(coverage_path);
 
   let i = 0;
-  for (const c of samples) {
-    i++;
 
-    // create .coverage/:id folder
-    const coverage_set_path = path.join(coverage_path, c.id);
-    await reportFile({
-      fileinfo: c,
-      out: coverage_set_path,
-      config,
-      client,
-      ssworker,
-      metadata: {
-        index: i,
-        sampleSize: samples.length,
-      },
-    });
-  }
+  await pMap(
+    samples,
+    async (c) => {
+      i++;
+      // create .coverage/:id folder
+      const coverage_set_path = path.join(coverage_path, c.id);
+      await reportFile({
+        fileinfo: c,
+        out: coverage_set_path,
+        config,
+        client,
+        ssworker,
+        metadata: {
+          index: i,
+          sampleSize: samples.length,
+        },
+      });
+    },
+    { concurrency }
+  );
 
   // cleaup
   // terminate puppeteer
