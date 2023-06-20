@@ -7,6 +7,7 @@ interface ScreenshotOptions {
     width: number;
     height: number;
   };
+  path?: string;
 }
 
 export class Worker {
@@ -19,7 +20,7 @@ export class Worker {
   constructor(
     options: PuppeteerLaunchOptions = {},
     // not the best way to determine max pages, but it's a start
-    maxPages: number = os.cpus().length * 4
+    maxPages: number = os.cpus().length * 8
   ) {
     this.maxPages = maxPages;
     this.options = {
@@ -32,9 +33,10 @@ export class Worker {
 
   async launch() {
     this.browser = await puppeteer.launch(this.options);
-    // Open the first page upfront
-    this.pages.push(await this.browser.newPage());
-    this.pageInUse.push(false);
+    (await this.browser.pages()).forEach((page) => {
+      this.pages.push(page);
+      this.pageInUse.push(false);
+    });
   }
 
   async allocatePage() {
@@ -65,9 +67,14 @@ export class Worker {
     const buffer = await page.screenshot({
       type: "png",
       omitBackground: true,
+      path: options.path,
     });
 
-    this.pageInUse[this.pages.indexOf(page)] = false; // Mark the page as no longer in use
+    // clear the page after use
+    page.setContent("", { timeout: 1000 }).finally(() => {
+      this.pageInUse[this.pages.indexOf(page)] = false; // Mark the page as no longer in use
+    });
+
     return buffer;
   }
 

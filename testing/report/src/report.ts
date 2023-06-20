@@ -2,8 +2,8 @@ import os from "os";
 import fs from "fs/promises";
 import path from "path";
 import assert from "assert";
-import ora from "ora";
 import winston from "winston";
+import chalk from "chalk";
 import pMap from "p-map";
 import { mapper } from "@design-sdk/figma-remote";
 import { convert } from "@design-sdk/figma-node-conversion";
@@ -62,6 +62,8 @@ const noconsole = () => {
   console.warn = () => {};
   console.error = () => {};
 };
+
+const log = console.info;
 
 async function cleanIfDirectoryEmpty(dir: string) {
   const items = await fs.readdir(dir);
@@ -156,17 +158,16 @@ async function reportNode({
     const html_file = path.join(out, "index.html");
     await fs.writeFile(html_file, code);
 
-    const screenshot_buffer = await ssworker.screenshot({
+    const image_b_rel = "./b.png";
+    const image_b = path.join(out, image_b_rel);
+    await ssworker.screenshot({
       htmlcss: code,
       viewport: {
         width: Math.round(width),
         height: Math.round(height),
       },
+      path: image_b,
     });
-
-    const image_b_rel = "./b.png";
-    const image_b = path.join(out, image_b_rel);
-    await fs.writeFile(image_b, screenshot_buffer);
 
     const diff = await resemble(image_a, image_b);
     const diff_file = path.join(out, "diff.png");
@@ -215,6 +216,7 @@ async function reportFile({
   out,
   config,
   metadata,
+  concurrency = 1,
 }: {
   fileinfo: {
     id: string;
@@ -224,6 +226,7 @@ async function reportFile({
   config: ReportConfig;
   client: ClientInterface;
   ssworker: ScreenshotWorker;
+  concurrency?: number;
   metadata: {
     index: number;
     sampleSize: number;
@@ -250,45 +253,55 @@ async function reportFile({
     return;
   }
 
-  let ii = 0;
-  for (const frame of frames) {
-    ii++;
+  await pMap(
+    frames,
+    async (frame) => {
+      try {
+        // create .coverage/:id/:node folder
+        const coverage_node_path = path.join(out, frame.id);
+        await mkdir(coverage_node_path);
 
-    const spinner = ora({
-      text: `[${metadata.index}/${metadata.sampleSize}] Running coverage for ${fileinfo.id}/${frame.id} (${ii}/${frames.length})`,
-      isEnabled: !CI,
-    }).start();
+        // report.json
+        const report_file = path.join(coverage_node_path, "report.json");
+        if (config.skipIfReportExists) {
+          if (await exists(report_file)) {
+            log(
+              chalk.green(
+                `☑ ${fileinfo.id}/${frame.id} Skipping - report for already exists`
+              )
+            );
+            return;
+          }
+        }
 
-    // create .coverage/:id/:node folder
-    const coverage_node_path = path.join(out, frame.id);
-    await mkdir(coverage_node_path);
+        const result = await reportNode({
+          filekey,
+          node: frame,
+          out: coverage_node_path,
+          exports,
+          client,
+          ssworker,
+        });
 
-    // report.json
-    const report_file = path.join(coverage_node_path, "report.json");
-    if (config.skipIfReportExists) {
-      if (await exists(report_file)) {
-        spinner.succeed(`Skipping - report for ${frame.id} already exists`);
-        continue;
+        if (result.report) {
+          log(
+            chalk.green(
+              `☑ ${fileinfo.id}/${frame.id} Reported ➡ ${report_file}`
+            )
+          );
+        } else if (result.error) {
+          log(chalk.red(`☒ ${fileinfo.id}/${frame.id} Error: ${result.error}`));
+        } else {
+          log(chalk.red(`☒ ${fileinfo.id}/${frame.id} Unknown Error`));
+        }
+      } catch (e) {
+        log(
+          chalk.red(`☒ ${fileinfo.id}/${frame.id} System Error: ${e.message}}`)
+        );
       }
-    }
-
-    const result = await reportNode({
-      filekey,
-      node: frame,
-      out: coverage_node_path,
-      exports,
-      client,
-      ssworker,
-    });
-
-    if (result.report) {
-      spinner.succeed(`report file for ${frame.id} ➡ ${report_file}`);
-    } else if (result.error) {
-      spinner.fail(`error on ${frame.id} : ${result.error}`);
-    } else {
-      spinner.fail();
-    }
-  }
+    },
+    { concurrency }
+  );
 
   // cleaup
   // if the coverage is empty, remove the folder
@@ -334,6 +347,8 @@ export async function report(options: GenerateReportOptions) {
   if (CI) {
     noconsole();
   }
+
+  const starttime = Date.now();
 
   const concurrency = os.cpus().length;
 
@@ -409,9 +424,10 @@ export async function report(options: GenerateReportOptions) {
           index: i,
           sampleSize: samples.length,
         },
+        concurrency: concurrency,
       });
     },
-    { concurrency }
+    { concurrency: concurrency }
   );
 
   // cleaup
@@ -422,4 +438,12 @@ export async function report(options: GenerateReportOptions) {
   if (config.localarchive) {
     await fileserver_close();
   }
+
+  const endtime = Date.now();
+
+  log(
+    chalk.bgGreen(
+      `✓ Done in ${(endtime - starttime) / 1000}s. Coverage at ${coverage_path}`
+    )
+  );
 }
