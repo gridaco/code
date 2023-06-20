@@ -33,7 +33,8 @@ function cvt(node: Frame, filekey: string) {
 }
 
 function setImageRepository(filekey: string) {
-  // TODO:
+  // FIXME: - using global instance is very dangerous since we are running on multiple threads.
+  // Somehow, for some reason, this approach is still valid - because we are using custom resolver.
 
   MainImageRepository.instance = new RemoteImageRepositories(filekey, {});
   MainImageRepository.instance.register(

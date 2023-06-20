@@ -11,6 +11,7 @@ import axios from "axios";
 import { setupCache } from "axios-cache-interceptor";
 import { fsserver } from "./serve";
 import { exists } from "./utils/exists";
+import { pad } from "./utils/padstr";
 import { ReportConfig } from "./config";
 import { Client } from "./client";
 import { FrameReporter } from "./report-frame";
@@ -96,7 +97,7 @@ async function reportFile({
   await pMap(
     frames,
     async (frame) => {
-      const logsuffix = fixStr(`${fileinfo.id}/${frame.id}`, 32);
+      const logsuffix = pad(`${fileinfo.id}/${frame.id}`, 32);
 
       try {
         // create .coverage/:id/:node folder
@@ -159,12 +160,6 @@ async function exporedNodesMap(
     return;
   }
 }
-
-// files fetcher process
-// once file is fetched, extract target nodes and put it to node queue
-//
-// downloader process
-// screenshot process
 
 function filterFrames(document: Document) {
   return document.children
@@ -273,8 +268,4 @@ export async function report(options: GenerateReportOptions) {
       `✓ Done in ${(endtime - starttime) / 1000}s. Coverage at ${coverage_path}`
     )
   );
-}
-
-function fixStr(str, n = 80) {
-  return str.length > n ? str.substring(0, n) : str.padEnd(n);
 }
