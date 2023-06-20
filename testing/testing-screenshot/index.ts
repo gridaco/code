@@ -1,3 +1,4 @@
+import os from "os";
 import puppeteer, { Browser, Page, PuppeteerLaunchOptions } from "puppeteer";
 
 interface ScreenshotOptions {
@@ -10,73 +11,74 @@ interface ScreenshotOptions {
 
 export class Worker {
   private browser: Browser;
-  private page: Page;
-  private readonly options;
+  private pages: Page[] = [];
+  private pageInUse: boolean[] = [];
+  private maxPages: number;
+  private readonly options: PuppeteerLaunchOptions;
 
-  constructor({ options }: { options?: PuppeteerLaunchOptions }) {
-    this.browser = null;
-    this.page = null;
-    this.options = options ?? {
+  constructor(
+    options: PuppeteerLaunchOptions = {},
+    // not the best way to determine max pages, but it's a start
+    maxPages: number = os.cpus().length * 4
+  ) {
+    this.maxPages = maxPages;
+    this.options = {
       headless: "new",
       args: ["--no-sandbox"],
       ignoreDefaultArgs: ["--disable-extensions"],
+      ...options,
     };
   }
 
   async launch() {
-    if (this.browser) {
-      return this.browser;
-    }
     this.browser = await puppeteer.launch(this.options);
-    this.page = await this.browser.newPage();
-    return this.browser;
+    // Open the first page upfront
+    this.pages.push(await this.browser.newPage());
+    this.pageInUse.push(false);
   }
 
-  async relaunch() {
-    await this.close();
-    return this.launch();
-  }
-
-  async screenshot({ htmlcss, viewport }: ScreenshotOptions) {
-    try {
-      if (!this.browser || !this.page || this.page.isClosed()) {
-        await this.relaunch();
+  async allocatePage() {
+    let pageIndex = this.pageInUse.findIndex((inUse) => !inUse);
+    if (pageIndex === -1) {
+      if (this.pages.length < this.maxPages) {
+        const newPage = await this.browser.newPage();
+        this.pages.push(newPage);
+        this.pageInUse.push(true); // The new page will be in use immediately
+        pageIndex = this.pages.length - 1;
+      } else {
+        // Wait for a page to be available
+        while (pageIndex === -1) {
+          await new Promise((resolve) => setTimeout(resolve, 100)); // Poll every 100ms
+          pageIndex = this.pageInUse.findIndex((inUse) => !inUse);
+        }
       }
-      await this.page.setViewport(viewport);
-      await this.page.setContent(htmlcss, { waitUntil: "networkidle0" });
-      const buffer = await this.page.screenshot({
-        type: "png",
-        // support transparency
-        omitBackground: true,
-      });
-      return buffer;
-    } catch (error) {
-      console.log(`Failed to take screenshot: ${error.message}`);
-      await this.relaunch();
-      // After relaunch, retry taking screenshot or rethrow the error
-      return this.screenshot({ htmlcss, viewport });
     }
+    this.pageInUse[pageIndex] = true; // Mark the page as in use
+    return this.pages[pageIndex];
   }
 
-  async close() {
-    if (this.browser) {
-      try {
-        await this.browser.close();
-      } catch (e) {
-        console.log(`Failed to close browser: ${e.message}`);
-      }
-      this.browser = null;
-      this.page = null;
-    }
+  async screenshot(options: ScreenshotOptions) {
+    const page = await this.allocatePage();
+
+    await page.setViewport(options.viewport);
+    await page.setContent(options.htmlcss, { waitUntil: "networkidle0" });
+    const buffer = await page.screenshot({
+      type: "png",
+      omitBackground: true,
+    });
+
+    this.pageInUse[this.pages.indexOf(page)] = false; // Mark the page as no longer in use
+    return buffer;
   }
 
-  terminate() {
-    this.close();
+  async terminate() {
+    await Promise.all(this.pages.map((page) => page.close()));
+    await this.browser.close();
   }
 }
 
 export async function screenshot(options: ScreenshotOptions) {
-  const worker = new Worker({});
+  const worker = new Worker();
   await worker.launch();
   const buffer = await worker.screenshot(options);
   await worker.terminate();
