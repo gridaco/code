@@ -10,10 +10,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-      - name: build report tools
+      - name: setup
         run: |
           yarn --frozen-lockfile
-          cd testing/report
+      - name: build report tools
+        working-directory: testing/report
+        run: |
           yarn build
       - name: run report
         run: |
