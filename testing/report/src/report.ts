@@ -4,8 +4,6 @@ import path from "path";
 import assert from "assert";
 import winston from "winston";
 import chalk from "chalk";
-import pMap from "p-map";
-import type { Document, Frame } from "@design-sdk/figma-remote-types";
 import { Worker as ScreenshotWorker } from "@codetest/screenshot";
 import axios from "axios";
 import { setupCache } from "axios-cache-interceptor";
@@ -15,6 +13,8 @@ import { pad } from "./utils/padstr";
 import { ReportConfig } from "./config";
 import { Client } from "./client";
 import { FrameReporter } from "./report-frame";
+import Queue from "better-queue";
+import { SamplesResolver, Task } from "./samples";
 
 const CI = process.env.CI;
 
@@ -32,7 +32,10 @@ const logger = winston.createLogger({
 });
 
 const mkdir = async (path: string) =>
-  !(await exists(path)) && (await fs.mkdir(path));
+  !(await exists(path)) &&
+  (await fs.mkdir(path, {
+    recursive: true,
+  }));
 
 const noconsole = () => {
   // disable logging
@@ -43,130 +46,89 @@ const noconsole = () => {
 
 const log = console.info;
 
-async function cleanIfDirectoryEmpty(dir: string) {
-  const items = await fs.readdir(dir);
-  if (items.length === 0) {
-    await fs.rmdir(dir);
-  }
-}
+class ReportsHandler {
+  public tasks: Queue;
 
-async function reportFile({
-  fileinfo,
-  client,
-  ssworker,
-  out,
-  config,
-  metadata,
-  concurrency = 1,
-}: {
-  fileinfo: {
-    id: string;
-    name: string;
-  };
-  out: string;
-  config: ReportConfig;
-  client: Client;
-  ssworker: ScreenshotWorker;
-  concurrency?: number;
-  metadata: {
-    index: number;
-    sampleSize: number;
-  };
-}) {
-  const { id: filekey } = fileinfo;
-
-  const file = await client.getFile(filekey);
-  if (!file) {
-    return;
+  constructor(
+    readonly config: ReportConfig,
+    readonly out: string,
+    readonly client: Client,
+    readonly ssworker: ScreenshotWorker,
+    readonly timeout: number,
+    readonly concurrency: number
+  ) {
+    this.tasks = new Queue(
+      (task: Task, cb: () => void) => this.handle(task, cb),
+      { concurrent: concurrency, maxTimeout: timeout }
+    );
+    // prevent from starting
+    this.tasks.pause();
   }
 
-  await mkdir(out);
+  async handle(task: Task, cb: () => void) {
+    if (task === null) {
+      // end-of-data token
+      console.log("End of data token received, no more tasks to process");
+      console.log("Closed reporter");
+      return;
+    }
 
-  const frames: ReadonlyArray<Frame> = filterFrames(file.document);
+    const { filekey, node, a } = task;
 
-  const exports = await exporedNodesMap(
-    client,
-    filekey,
-    ...frames.map((f) => f.id)
-  );
+    const logsuffix = pad(`${filekey}/${node.id}`, 32);
 
-  if (!exports) {
-    return;
-  }
+    try {
+      // create .coverage/:id/:node folder
+      const coverage_node_path = path.join(this.out, filekey, node.id);
+      await mkdir(coverage_node_path);
 
-  await pMap(
-    frames,
-    async (frame) => {
-      const logsuffix = pad(`${fileinfo.id}/${frame.id}`, 32);
-
-      try {
-        // create .coverage/:id/:node folder
-        const coverage_node_path = path.join(out, frame.id);
-        await mkdir(coverage_node_path);
-
-        // report.json
-        const report_file = path.join(coverage_node_path, "report.json");
-        if (config.skipIfReportExists) {
-          if (await exists(report_file)) {
-            log(
-              chalk.green(`☑ ${logsuffix} Skipping - report for already exists`)
-            );
-            return;
-          }
+      // report.json
+      const report_file = path.join(coverage_node_path, "report.json");
+      if (this.config.skipIfReportExists) {
+        if (await exists(report_file)) {
+          log(
+            chalk.green(`☑ ${logsuffix} Skipping - report for already exists`)
+          );
+          return;
         }
-        const reporter = new FrameReporter({
-          filekey,
-          node: frame,
-          out: coverage_node_path,
-          exported: exports[frame.id],
-          client,
-          ssworker,
-        });
-
-        const result = await reporter.report();
-
-        if (result.report) {
-          log(chalk.green(`☑ ${logsuffix} Reported ➡ ${report_file}`));
-        } else if (result.error) {
-          log(chalk.red(`☒ ${logsuffix} Error: ${result.error}`));
-        } else {
-          log(chalk.red(`☒ ${logsuffix} Unknown Error`));
-        }
-      } catch (e) {
-        log(chalk.red(`☒ ${logsuffix} System Error: ${e.message}}`));
       }
-    },
-    { concurrency }
-  );
 
-  // cleaup
-  // if the coverage is empty, remove the folder
-  cleanIfDirectoryEmpty(out);
-  //
-}
+      const reporter = new FrameReporter({
+        filekey: filekey,
+        node: node,
+        out: coverage_node_path,
+        exported: a,
+        client: this.client,
+        ssworker: this.ssworker,
+      });
 
-async function exporedNodesMap(
-  client: Client,
-  filekey: string,
-  ...ids: string[]
-) {
-  try {
-    return (
-      await client.fileImages(filekey, {
-        ids,
-      })
-    ).data.images;
-  } catch (e) {
-    return;
+      const result = await reporter.report();
+
+      if (result.report) {
+        log(chalk.green(`☑ ${logsuffix} Reported ➡ ${report_file}`));
+      } else if (result.error) {
+        log(chalk.red(`☒ ${logsuffix} Error: ${result.error}`));
+      } else {
+        log(chalk.red(`☒ ${logsuffix} Unknown Error`));
+      }
+    } catch (e) {
+      log(chalk.red(`☒ ${logsuffix} System Error: ${e.message}}`));
+    }
+
+    cb();
   }
-}
 
-function filterFrames(document: Document) {
-  return document.children
-    .filter((c) => c.type === "CANVAS")
-    .map((c) => c["children"])
-    .flat()
-    .filter((c) => c.type === "FRAME");
+  async start() {
+    this.tasks.resume();
+  }
+
+  async join() {
+    return new Promise<void>((resolve) => {
+      this.tasks.on("drain", () => {
+        resolve();
+      });
+    });
+  }
 }
 
 export async function report(options: GenerateReportOptions) {
@@ -222,35 +184,32 @@ export async function report(options: GenerateReportOptions) {
     console.info(`serve running at http://localhost:${options.port}/`);
   }
 
-  const ssworker = new ScreenshotWorker();
+  const ssworker = new ScreenshotWorker({}, 20);
   await ssworker.launch();
 
   // setup the dir
   await mkdir(coverage_path);
 
-  let i = 0;
-
-  await pMap(
-    samples,
-    async (c) => {
-      i++;
-      // create .coverage/:id folder
-      const coverage_set_path = path.join(coverage_path, c.id);
-      await reportFile({
-        fileinfo: c,
-        out: coverage_set_path,
-        config,
-        client,
-        ssworker,
-        metadata: {
-          index: i,
-          sampleSize: samples.length,
-        },
-        concurrency: concurrency,
-      });
-    },
-    { concurrency: 1 }
+  const reportHandler = new ReportsHandler(
+    config,
+    coverage_path,
+    client,
+    ssworker,
+    60 * 1000,
+    concurrency
   );
+
+  const samplesResolver = new SamplesResolver(
+    samples,
+    client,
+    reportHandler.tasks,
+    concurrency * 8
+  );
+
+  samplesResolver.start();
+  reportHandler.start();
+
+  await reportHandler.join();
 
   // cleaup
   // terminate puppeteer
