@@ -20,7 +20,7 @@ export class Worker {
   constructor(
     options: PuppeteerLaunchOptions = {},
     // not the best way to determine max pages, but it's a start
-    maxPages: number = os.cpus().length * 4
+    maxPages: number = os.cpus().length * 2
   ) {
     this.maxPages = maxPages;
     this.options = {
