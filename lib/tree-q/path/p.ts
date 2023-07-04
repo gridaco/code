@@ -20,7 +20,11 @@ interface Item {
 function p<T extends Item = Item>(id: string, { data }: { data: T }): string[] {
   let path: string[] = [];
 
-  function search(node: T, currentPath: string[]): boolean {
+  function search(node: T | undefined | null, currentPath: string[]): boolean {
+    if (node == null) {
+      return false;
+    }
+
     if (node.id === id) {
       path = [...currentPath, node.id];
       return true;
@@ -36,6 +40,7 @@ function p<T extends Item = Item>(id: string, { data }: { data: T }): string[] {
         return true;
       }
     }
+
     return false;
   }
 
