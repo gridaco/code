@@ -8670,10 +8670,10 @@
   resolved "https://registry.npmjs.org/@tootallnate/once/-/once-2.0.0.tgz"
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
 
-"@tree-/q@^0.0.0":
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/@tree-/q/-/q-0.0.0.tgz#c99033079e9c570102f124b27fb2c01b33a4be47"
-  integrity sha512-l67D4E+prLW/NOihNl709VRkpfpT3Xcx7n6x3d72dJrXNS9pdjoEHRnSoIIoFVEK79lBP4JFa4jXGcsKk6R+Tw==
+"@tree-/q@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@tree-/q/-/q-0.0.1.tgz#7d96ca4e5bd48e0afc9d2e1854f67812b3d7026e"
+  integrity sha512-aQOo/1gOZZsExTFj85EA1O06fWyGSYNUbXyF04FMDROQf4oMFPaYhFU7l70lQx/hlVNmDZ2oZPt3hLyXXLq0mg==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"
