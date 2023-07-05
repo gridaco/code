@@ -23,3 +23,8 @@ const argv = yargs(hideBin(process.argv))
 if (require.main === module) {
   report({ port: argv.port, config: argv.config });
 }
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.info("Unhandled Rejection at:", promise, "reason:", reason);
+  process.exit(1);
+});

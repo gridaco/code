@@ -138,15 +138,17 @@ export class FrameReporter {
 
   async report() {
     try {
+      let code: string;
       try {
-        await this.syncA();
+        // sync the 'a' image and generate the code at the same time.
+        const comparisons = Promise.all([this.syncA(), this.code()]);
+        code = (await comparisons)[1];
       } catch (e) {
         return {
           error: e.message,
         };
       }
 
-      const code = await this.code();
       // write index.html
       await fs.writeFile(this.htmlFilePath, code);
 
