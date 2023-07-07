@@ -18,8 +18,10 @@ jobs:
         run: |
           yarn build
       - name: run report
+        working-directory: ci/report
         run: |
-          node ci/report
+          npm ci
+          node report.js
       - name: upload report to s3
         uses: jakejarvis/s3-sync-action@master
         with:
