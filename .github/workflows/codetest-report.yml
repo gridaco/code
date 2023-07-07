@@ -20,11 +20,13 @@ jobs:
         run: |
           yarn build
       - name: run report
+        id: report
         working-directory: ci/report
         run: |
           npm ci
           node report.js
       - name: upload report to s3
+        id: upload
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read --follow-symlinks --delete
@@ -36,3 +38,11 @@ jobs:
           SOURCE_DIR: "ci/report/.coverage"
           # dest dir is commit hash
           DEST_DIR: "${{ github.sha }}"
+      - name: comment
+        id: comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: ci/report
+        run: |
+          npm ci
+          node comment.js
