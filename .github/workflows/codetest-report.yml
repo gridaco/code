@@ -42,6 +42,7 @@ jobs:
         id: comment
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          STATUS: ${{ steps.report.outputs.STATUS }}
         working-directory: ci/report
         run: |
           npm ci

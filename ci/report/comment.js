@@ -3,15 +3,12 @@ const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 const context = github.context;
 const { sha } = context;
 
-const STEP_REPORT = "report";
-const STEP_UPLOAD = "upload";
-
 const report_url = `https://code.grida.co/tests/reports/${sha}`;
 
 let message;
 
 if (context.payload.pull_request && context.eventName === "pull_request") {
-  const conclusion = steps[STEP_REPORT].conclusion;
+  const conclusion = process.env.STATUS || "unknown";
 
   switch (conclusion) {
     case "success":
@@ -21,6 +18,7 @@ if (context.payload.pull_request && context.eventName === "pull_request") {
       message = "Your PR failed some tests :x:";
       break;
     case "skipped":
+    case "unknown":
       break;
   }
 
