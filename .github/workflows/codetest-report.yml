@@ -3,6 +3,8 @@ name: "@codetest/report"
 on:
   release:
     types: [published]
+  pull_request:
+    types: [opened, synchronize, closed]
 
 jobs:
   report:
@@ -32,4 +34,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_S3_CODETEST_REPORTS }}
           AWS_REGION: "us-west-1"
           SOURCE_DIR: "ci/report/.coverage"
-          DEST_DIR: "${{ github.event.release.tag_name }}"
+          # dest dir is commit hash
+          DEST_DIR: "${{ github.sha }}"
