@@ -6,7 +6,7 @@ const { sha } = context;
 const STEP_REPORT = "report";
 const STEP_UPLOAD = "upload";
 
-const report_url = `https://code.grida.co/reports/${sha}`;
+const report_url = `https://code.grida.co/tests/reports/${sha}`;
 
 let message;
 
@@ -25,7 +25,7 @@ if (context.payload.pull_request && context.eventName === "pull_request") {
   }
 
   // add a comment to the PR
-  await octokit.issues.createComment({
+  octokit.issues.createComment({
     ...context.repo,
     issue_number: context.payload.pull_request.number,
     body: message,
