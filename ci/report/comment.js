@@ -23,7 +23,7 @@ if (context.payload.pull_request && context.eventName === "pull_request") {
   }
 
   // add a comment to the PR
-  octokit.issues.createComment({
+  octokit.rest.issues.createComment({
     ...context.repo,
     issue_number: context.payload.pull_request.number,
     body: message,
