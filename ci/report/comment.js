@@ -1,17 +1,21 @@
 const github = require("@actions/github");
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 const context = github.context;
+const { sha } = context;
 
-const STEP = "test";
+const STEP_REPORT = "report";
+const STEP_UPLOAD = "upload";
+
+const report_url = `https://code.grida.co/reports/${sha}`;
 
 let message;
 
 if (context.payload.pull_request && context.eventName === "pull_request") {
-  const conclusion = steps[STEP].conclusion;
+  const conclusion = steps[STEP_REPORT].conclusion;
 
   switch (conclusion) {
     case "success":
-      message = "Your PR passed all tests :tada:";
+      message = `Report available at ${report_url} :tada:`;
       break;
     case "failure":
       message = "Your PR failed some tests :x:";

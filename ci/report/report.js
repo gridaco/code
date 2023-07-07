@@ -4,7 +4,6 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 
 const context = github.context;
-const commitHash = context.sha;
 
 let releaseName, releaseVersion, pullRequestNumber;
 
