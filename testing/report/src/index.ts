@@ -16,6 +16,18 @@ import {
   MainImageRepository,
 } from "@design-sdk/asset-repository";
 import { RemoteImageRepositories } from "@design-sdk/figma-remote/asset-repository";
+import winston from "winston";
+import { createServer } from "http";
+import { promisify } from "util";
+import handler from "serve-handler";
+
+const FS_SERVER_PORT = 8000;
+
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.File({ filename: "error.log", level: "error" }),
+  ],
+});
 
 setupCache(axios);
 
@@ -44,7 +56,25 @@ interface ReportConfig {
 // disable logging
 console.log = () => {};
 console.warn = () => {};
-console.error = () => {};
+
+function fsserver(path: string) {
+  // fileserver for puppeteer to load local files
+  const fileserver = createServer((request, response) => {
+    return handler(request, response, {
+      public: path,
+      symlinks: true,
+    });
+  });
+
+  // Promisify the listen and close methods
+  const listen = promisify(fileserver.listen.bind(fileserver));
+  const close = promisify(fileserver.close.bind(fileserver));
+
+  return {
+    listen,
+    close,
+  };
+}
 
 async function report() {
   console.info("Starting report");
@@ -70,17 +100,27 @@ async function report() {
   console.info(`Loaded ${samples.length} samples`);
   console.info(`Configuration used - ${JSON.stringify(config, null, 2)}`);
 
-  await mkdir(coverage_path);
+  const { listen: fileserver_start, close: fileserver_close } = fsserver(
+    config.localarchive.images
+  );
 
   const client = Client({
     paths: {
       files: config.localarchive.files,
       images: config.localarchive.images,
     },
+    baseURL: `http://localhost:${FS_SERVER_PORT}`,
   });
+
+  // Start the server
+  await fileserver_start(FS_SERVER_PORT);
+  console.info(`serve running at http://localhost:${FS_SERVER_PORT}/`);
 
   const ssworker = new ScreenshotWorker({});
   await ssworker.launch();
+
+  // setup the dir
+  await mkdir(coverage_path);
 
   let i = 0;
   for (const c of samples) {
@@ -207,11 +247,27 @@ async function report() {
             name: frame.name,
             entry: _converted,
           },
-          async ({ keys }) => {
-            const { data } = await client.fileImages(filekey, {
+          async ({ keys, hashes }) => {
+            const { data: exports } = await client.fileImages(filekey, {
               ids: keys,
             });
-            return data.images;
+
+            const { data: images } = await client.fileImageFills(filekey);
+
+            const map = {
+              ...exports.images,
+              ...images.meta.images,
+            };
+
+            // transform the path for local file url
+            return Object.keys(map).reduce((acc, key) => {
+              const path = map[key];
+              const url = path.startsWith("http") ? path : `file://${path}`;
+              return {
+                ...acc,
+                [key]: url,
+              };
+            }, {});
           }
         );
 
@@ -271,6 +327,8 @@ async function report() {
       } catch (e) {
         // could be codegen error
         spinner.fail(`error on ${frame.id} : ${e.message}`);
+        logger.log("error", e);
+        console.error(e);
       }
     }
 
@@ -284,6 +342,7 @@ async function report() {
 
   // cleaup
   await ssworker.terminate();
+  await fileserver_close();
 }
 
 report();

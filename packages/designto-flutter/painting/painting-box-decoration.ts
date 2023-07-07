@@ -1,3 +1,4 @@
+import { TokenNotHandledError } from "@engine/core";
 import { BoxDecoration } from "@flutter-builder/flutter";
 import { Color, Gradient, GradientType } from "@reflect-ui/core";
 import { Background } from "@reflect-ui/core";
@@ -20,16 +21,18 @@ function fromBackground(b: Background): BoxDecoration {
     throw "multiple bg not supported";
   } else {
     switch (b.type) {
-      case "gradient": {
-        return fromGradient(b as Gradient);
-        break;
-      }
-      case "graphics": {
-        console.error("graphics bg not ready");
-        break;
-      }
       case "solid-color": {
         return fromColor(b as Color);
+      }
+      case "gradient": {
+        return fromGradient(b as Gradient);
+      }
+      case "image": {
+        console.error("image bg not ready");
+        break;
+      }
+      default: {
+        throw new TokenNotHandledError(`${b.type} not handled`);
       }
     }
   }

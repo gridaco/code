@@ -15,7 +15,7 @@ export function background(bg: Background): ViewStyle {
       };
     }
     case "gradient":
-    case "graphics":
+    case "image":
     default: {
       // gradient not supported by default on react-native
       // for graphics, we need to use ImageBackground element. this can't be done by StyleSheet modification.

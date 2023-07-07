@@ -1,3 +1,4 @@
+import { TokenNotHandledError } from "@engine/core";
 import { StylableJsxWidget } from "@web-builder/core/widget-tree/widget";
 import { CSSProperties } from "@coli.codes/css";
 import { StylableJSXElementConfig, WidgetKey } from "../..";
@@ -112,8 +113,8 @@ export class SvgElement extends StylableJsxWidget {
         case "solid-color": {
           return [this.path({ fill: css.color(this.fill as Color) })];
         }
-        case "graphics": {
-          console.error("graphics fill for svg not supported.");
+        case "image": {
+          console.error("image fill for svg not supported.");
           return [this.path({ fill: "black" })];
         }
         case "gradient": {
@@ -178,7 +179,7 @@ export class SvgElement extends StylableJsxWidget {
           }
         }
         default: {
-          throw "not supported background";
+          throw new TokenNotHandledError("not supported background");
         }
       }
     }

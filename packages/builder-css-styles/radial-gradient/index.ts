@@ -13,6 +13,6 @@ export function radialGradient(g: RadialGradientManifest): CSSProperty.Color {
   // 1. center support
   // 2. radius support
 
-  const colors = g.colors.map(color).join(", ");
+  const colors = g.colors.map((_) => color(_)).join(", ");
   return `radial-gradient(${colors})`;
 }
