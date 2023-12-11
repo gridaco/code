@@ -1,0 +1,49 @@
+name: "@codetest/report"
+
+on:
+  release:
+    types: [published]
+  pull_request:
+    types: [opened, synchronize, closed]
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: setup
+        run: |
+          yarn --frozen-lockfile
+      - name: build report tools
+        working-directory: testing/report
+        run: |
+          yarn build
+      - name: run report
+        id: report
+        working-directory: ci/report
+        run: |
+          npm ci
+          node report.js
+      - name: upload report to s3
+        id: upload
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks --delete
+        env:
+          AWS_S3_BUCKET: "codetest-reports"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_S3_CODETEST_REPORTS }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_S3_CODETEST_REPORTS }}
+          AWS_REGION: "us-west-1"
+          SOURCE_DIR: "ci/report/.coverage"
+          # dest dir is commit hash
+          DEST_DIR: "${{ github.sha }}"
+      - name: comment
+        id: comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          STATUS: ${{ steps.report.outputs.STATUS }}
+        working-directory: ci/report
+        run: |
+          npm ci
+          node comment.js

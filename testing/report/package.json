@@ -5,13 +5,14 @@
   "bin": "./dist/index.js",
   "scripts": {
     "clean": "rm -rf ./dist",
-    "build": "ncc build src/index.ts -s -o dist",
-    "dev": "ts-node src/index.ts",
-    "start": "node dist/index.js"
+    "build": "ncc build src/bin.ts -s -o dist",
+    "report": "node dist/index.js"
   },
   "devDependencies": {
+    "@types/better-queue": "^3.8.3",
     "@types/node": "^20.2.5",
     "@types/serve-handler": "^6.1.1",
+    "@types/yargs": "^17.0.24",
     "@vercel/ncc": "^0.36.1",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
@@ -21,9 +22,12 @@
   "dependencies": {
     "@figma-api/community": "^0.0.7",
     "axios-cache-interceptor": "^1.1.1",
+    "better-queue": "^3.8.12",
     "minimist": "^1.2.8",
     "ora": "^5.4.0",
+    "p-map": "^6.0.0",
     "serve-handler": "^6.1.5",
-    "winston": "^3.9.0"
+    "winston": "^3.9.0",
+    "yargs": "^17.2.1"
   }
 }
