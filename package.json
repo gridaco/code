@@ -1,37 +1,41 @@
 {
-    "name": "designto.codes",
-    "homepage": "https://designto.codes/",
-    "repository": "https://github.com/gridaco/designto-code",
-    "license": "Apache 2.0",
-    "private": true,
-    "scripts": {
-        "checkout:all": "git submodule update --init --recursive",
-        "clean": "yarn lerna clean -y && yarn lerna bootstrap && yarn lerna exec 'rm -rf ./dist'",
-        "editor": "turbo run editor#dev",
-        "build": "turbo run build",
-        "lerna": "lerna",
-        "tauri": "tauri"
-    },
-    "workspaces": [
-        "editor",
-        "desktop",
-        "editor-packages/*",
-        "packages/*",
-        "ui/editor-ui/packages/*"
-    ],
-    "resolutions": {
-        "@design-sdk/figma-node": "0.0.25",
-        "@reflect-ui/core": "0.0.9",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "@types/react": "18.0.24",
-        "@types/react-dom": "^18.0.8",
-        "csstype": "3.1.0"
-    },
-    "devDependencies": {
-        "@types/node": "^18.6.3",
-        "lerna": "^4.0.0",
-        "turbo": "^1.4.2",
-        "typescript": "^4.7.4"
-    }
+  "name": "designto.codes",
+  "homepage": "https://designto.codes/",
+  "repository": "https://github.com/gridaco/designto-code",
+  "license": "Apache 2.0",
+  "private": true,
+  "scripts": {
+    "checkout:all": "git submodule update --init --recursive",
+    "clean": "yarn lerna clean -y && yarn lerna bootstrap && yarn lerna exec 'rm -rf ./dist'",
+    "editor": "turbo run editor#dev",
+    "build": "turbo run build",
+    "lerna": "lerna"
+  },
+  "workspaces": [
+    "editor",
+    "code",
+    "api",
+    "editor-packages/*",
+    "packages/*",
+    "testing/*",
+    "ui/editor-ui/packages/*"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "resolutions": {
+    "@design-sdk/figma-node": "0.0.25",
+    "@reflect-ui/core": "0.0.12",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@types/react": "18.0.24",
+    "@types/react-dom": "^18.0.8",
+    "csstype": "3.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.6.3",
+    "lerna": "^4.0.0",
+    "turbo": "^1.4.2",
+    "typescript": "^4.7.4"
+  }
 }

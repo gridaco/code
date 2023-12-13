@@ -6,16 +6,19 @@ import {
   export_vanilla_preview_source,
 } from "@web-builder/vanilla";
 import { JsxWidget } from "@web-builder/core";
+import type { Plugin } from "@code-plugin/core";
 
 export function buildVanillaFile(
   widget: JsxWidget,
-  config: config.VanillaFrameworkConfig
+  config: config.VanillaFrameworkConfig,
+  plugins?: ReadonlyArray<Plugin>
 ): config.VanillaComponentOutput {
   if (!widget) {
     throw "A valid reflect widget manifest should be passed as an input. none was passed.";
   }
 
   const html = export_inlined_css_html_file(widget, {
+    plugins,
     additional_css_declarations:
       config.additional_css_declaration?.declarations,
   });
@@ -37,13 +40,15 @@ export function buildVanillaFile(
 
 export function buildVanillaPreviewFile(
   widget: JsxWidget,
-  config: prvconfig.VanillaPreviewFrameworkConfig
+  config: prvconfig.VanillaPreviewFrameworkConfig,
+  plugins?: ReadonlyArray<Plugin>
 ): config.VanillaComponentOutput {
   if (!widget) {
     throw "A valid reflect widget manifest should be passed as an input. none was passed.";
   }
 
   const html = export_vanilla_preview_source(widget, {
+    plugins,
     additional_css_declarations:
       config.additional_css_declaration?.declarations,
   });
@@ -72,6 +77,6 @@ export function buildVanillaWidget(
   }
 
   return compose(widget, {
-    img_no_alt: config.imgage_alt.no_alt,
+    img_no_alt: config.imgage_alt?.no_alt ?? false,
   });
 }

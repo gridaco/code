@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { SigninToContinuePrmoptProvider } from "components/prompt-banner-signin-to-continue";
-import { Editor, SetupEditor } from "scaffolds/editor";
+import { Editor, SetupFigmaFileEditor } from "scaffolds/editor";
 import { Workspace } from "scaffolds/workspace/workspace";
+import { EditorDefaultProviders } from "scaffolds/editor";
+import { EditorBrowserMetaHead } from "components/editor";
 
 export default function FileEntryEditor() {
   const router = useRouter();
@@ -14,14 +16,18 @@ export default function FileEntryEditor() {
   return (
     <SigninToContinuePrmoptProvider>
       <Workspace>
-        <SetupEditor
+        <SetupFigmaFileEditor
           key={filekey}
           filekey={filekey}
           nodeid={nodeid}
           router={router}
         >
-          <Editor />
-        </SetupEditor>
+          <EditorDefaultProviders>
+            <EditorBrowserMetaHead>
+              <Editor />
+            </EditorBrowserMetaHead>
+          </EditorDefaultProviders>
+        </SetupFigmaFileEditor>
       </Workspace>
     </SigninToContinuePrmoptProvider>
   );

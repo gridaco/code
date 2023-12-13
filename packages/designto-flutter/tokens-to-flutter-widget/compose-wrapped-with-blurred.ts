@@ -1,6 +1,6 @@
 import * as core from "@reflect-ui/core";
 import { Composer } from ".";
-import { ImageFiltered } from "@flutter-builder/flutter/dist/lib/widgets/image-filtered";
+import { ImageFiltered } from "@flutter-builder/flutter";
 import * as flutter from "@flutter-builder/flutter";
 import { rd } from "../_utils";
 

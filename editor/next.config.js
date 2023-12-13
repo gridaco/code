@@ -1,14 +1,28 @@
-const TerserPlugin = require("terser-webpack-plugin");
-const withTM = require("next-transpile-modules")([
+const IS_DEV = process.env.NODE_ENV === "development";
+
+const packages = [
+  "@engine/core",
   // region @editor-app
+  "@code-editor/analytics",
+  "@code-editor/ui",
   "@editor-app/live-session",
   "@code-editor/preview-pip", // TODO: remove me. this is for development. for production, use npm ver instead.
   "@code-editor/devtools",
   "@code-editor/canvas",
   "@code-editor/property",
+  "@code-editor/preferences",
+  "@code-editor/dashboard",
+  "@code-editor/isolated-inspection",
+  "@code-editor/node-icons",
+  "@code-editor/canvas-renderer-bitmap",
+  // "@code-editor/shortcuts",
+  "@code-editor/module-icons",
+  "use-sys-theme",
 
   // -----------------------------
   // region @designto-code
+  "@grida/api",
+  "@grida/code",
   "@designto/debugger",
   "@grida/builder-config",
   "@grida/builder-config-preset",
@@ -28,6 +42,11 @@ const withTM = require("next-transpile-modules")([
   "@code-features/documentation",
   "@code-features/component",
   "@code-features/flags",
+  "@code-features/fonts",
+  // -----------------------------
+  // plugins
+  "@code-plugin/core",
+  "@code-plugin/text-fit",
   // -----------------------------
 
   // reflect-ui ui framework
@@ -56,51 +75,74 @@ const withTM = require("next-transpile-modules")([
   "@web-builder/styles",
   // endregion web builders
   // -----------------------------
-]);
 
-module.exports = withTM({
-  webpack: (config) => {
-    config.module.rules.push({
-      type: "javascript/auto",
-      test: /\.mjs$/,
-      include: /node_modules/,
-    });
+  // region codetest
+  "@codetest/editor-client",
+];
 
-    config.resolve.fallback = {
-      fs: false, // used by handlebars
-      path: false, // used by handlebars
-      crypto: false, // or crypto-browserify (used for totp auth)
-      stream: false, // or stream-browserify (used for totp auth)
-    };
+const withPlugins = require("next-compose-plugins");
+const withTM = require("next-transpile-modules")(packages);
 
-    // -----------------------------
-    // for @flutter-builder classname issue
-    config.optimization.minimizer.push(
-      new TerserPlugin({
-        parallel: true,
-        terserOptions: {
-          // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
-          keep_classnames: true,
-        },
-      })
-    );
-    // -----------------------------
-
-    return config;
-  },
-  async redirects() {
-    return [
-      {
-        // typo gaurd
-        source: "/preference",
-        destination: "/preferences",
-        permanent: true,
-      },
-      {
-        source: "/files/:key/:id",
-        destination: "/files/:key?node=:id",
-        permanent: false,
-      },
-    ];
+const withPWA = require("next-pwa")({
+  register: true,
+  dest: "public",
+  disable: IS_DEV,
+  fallbacks: {
+    image: "/images/fallback.png",
+    document: "/_offline",
   },
 });
+
+module.exports = withPlugins(
+  [
+    [withTM],
+    [
+      withPWA,
+      {
+        pwa: {
+          dest: "public",
+          // swSrc: "sw.js",
+        },
+      },
+    ],
+  ],
+  {
+    webpack: (config) => {
+      config.resolve.fallback = {
+        fs: false, // used by handlebars
+        path: false, // used by handlebars
+      };
+
+      return config;
+    },
+    async rewrites() {
+      return [
+        // custom sitemaps
+        // TODO: add pagination
+        {
+          source: "/community/files/sitemap.xml",
+          destination: "/api/sitemap/community/files",
+        },
+        {
+          source: "/community/tag/sitemap.xml",
+          destination: "/api/sitemap/community/tag",
+        },
+      ];
+    },
+    async redirects() {
+      return [
+        {
+          // typo gaurd
+          source: "/preference",
+          destination: "/preferences",
+          permanent: true,
+        },
+        {
+          source: "/files/:key/:id",
+          destination: "/files/:key?node=:id",
+          permanent: false,
+        },
+      ];
+    },
+  }
+);

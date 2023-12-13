@@ -158,16 +158,16 @@ function handleNode(node: ReflectSceneNode, config: TokenizerConfig): Widget {
     );
   }
 
-  let tokenizedTarget: Widget | undefined;
+  let handled: Widget | undefined;
 
   // flags handler
-  if (!tokenizedTarget) {
+  if (!handled) {
     if (
       !config.disable_flags_support &&
       config.should_ignore_flag?.(node) !== true
     ) {
       try {
-        tokenizedTarget = flags_handling_gate(node);
+        handled = flags_handling_gate(node);
         // console.log("handled flags", tokenizedTarget);
       } catch (e) {
         console.error("error while interpreting flags.. skipping", e);
@@ -181,14 +181,16 @@ function handleNode(node: ReflectSceneNode, config: TokenizerConfig): Widget {
 
   // - image - // image detection is always enabled exceptionally.
   // TODO: separate image detection with static logic based and the smart one.
-  if (!tokenizedTarget) {
-    const _detect_if_image = detectIf.image(node);
-    if (_detect_if_image.result) {
-      return tokenizeGraphics.fromImage(node, _detect_if_image.data!);
-    }
-  }
+  // TODO: remove this block after proper background image support
+  // FIXME: legacy code - remove this and merge with standard background handler
+  // if (!handled) {
+  //   const _detect_if_image = detectIf.image(node);
+  //   if (_detect_if_image.result) {
+  //     return tokenizeGraphics.fromImage(node, _detect_if_image.data!);
+  //   }
+  // }
 
-  if (!tokenizedTarget) {
+  if (!handled) {
     if (config.disable_detection) {
       // skip detection
     } else {
@@ -224,7 +226,7 @@ function handleNode(node: ReflectSceneNode, config: TokenizerConfig): Widget {
 
   // masking handler
   if (containsMasking(node)) {
-    tokenizedTarget = tokenizeMasking.fromMultichild(
+    handled = tokenizeMasking.fromMultichild(
       node as MaskingItemContainingNode,
       config
     );
@@ -237,9 +239,9 @@ function handleNode(node: ReflectSceneNode, config: TokenizerConfig): Widget {
   // -------------------------------------------------------------------------
   // -------------------------- handle by types ------------------------------
   // -------------------------------------------------------------------------
-  if (!tokenizedTarget) {
+  if (!handled) {
     // if none handled by above gates, handle by type. this is the default tokenizer.
-    tokenizedTarget = handle_by_types(node, config);
+    handled = handle_by_types(node, config);
   }
   //
   // -------------------------------------------------------------------------
@@ -248,12 +250,12 @@ function handleNode(node: ReflectSceneNode, config: TokenizerConfig): Widget {
   // -------------------------------------------------------------------------
   // -------------------------- post wrap widget -----------------------------
   // -------------------------------------------------------------------------
-  tokenizedTarget = post_wrap(node, tokenizedTarget);
+  handled = post_wrap(node, handled);
   //
   // -------------------------------------------------------------------------
   //
 
-  return tokenizedTarget;
+  return handled;
 }
 
 export function post_wrap(

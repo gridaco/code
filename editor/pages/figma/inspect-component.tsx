@@ -17,12 +17,12 @@ import {
   WorkspaceContentPanelGridLayout,
 } from "layouts/panel";
 import { WorkspaceBottomPanelDockLayout } from "layouts/panel/workspace-bottom-panel-dock-layout";
-import { useDesign } from "hooks";
+import { useFigmaNode } from "hooks";
 import { make_instance_component_meta } from "@code-features/component";
 
 export default function InspectComponent() {
   //
-  const design = useDesign({ type: "use-router" });
+  const design = useFigmaNode({ type: "use-router" });
   if (!design) {
     return <LoadingLayout />;
   }
@@ -32,7 +32,7 @@ export default function InspectComponent() {
       <div style={{ margin: 60 }}>
         <h2>Not a component</h2>
         <p>
-          This page cannot hanlde other types than <code>COMPONENT</code> or
+          This page cannot handle other types than <code>COMPONENT</code> or
           <code>INSTANCE</code>
         </p>
         <p>

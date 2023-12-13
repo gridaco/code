@@ -1,0 +1,13 @@
+{
+  "name": "textfit",
+  "version": "0.0.0",
+  "main": "textfit.js",
+  "scripts": {
+    "prepack": "yarn run build",
+    "build": "uglifyjs textfit.js -o textfit.min.js"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "uglify-js": "^3.17.4"
+  }
+}

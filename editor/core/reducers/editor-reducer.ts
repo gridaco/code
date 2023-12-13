@@ -3,9 +3,8 @@ import type {
   Action,
   SelectNodeAction,
   SelectPageAction,
-  CodeEditorEditComponentCodeAction,
+  CodingUpdateFileAction,
   CanvasModeSwitchAction,
-  CanvasModeGobackAction,
   TranslateNodeAction,
   PreviewBuildingStateUpdateAction,
   PreviewSetAction,
@@ -15,44 +14,102 @@ import type {
   BackgroundTaskPopAction,
   BackgroundTaskUpdateProgressAction,
   EditorModeSwitchAction,
-  LocateNodeAction,
+  CanvasFocusNodeAction,
+  DesignerModeSwitchActon,
+  CodingInitialFilesSeedAction,
+  CodingNewTemplateSessionAction,
+  EnterIsolatedInspectionAction,
+  ExitIsolatedInspectionAction,
 } from "core/actions";
-import { EditorState } from "core/states";
+import { EditorState, EssentialWorkspaceInfo } from "core/states";
 import { NextRouter, useRouter } from "next/router";
 import { CanvasStateStore } from "@code-editor/canvas/stores";
 import q from "@design-sdk/query";
 import assert from "assert";
 import { getPageNode } from "utils/get-target-node";
+import { nanoid } from "nanoid";
+import { last_page_by_mode } from "core/stores";
+import { track } from "@code-editor/analytics";
 
-const _editor_path_name = "/files/[key]/";
+const _DEV_CLEAR_LOG = false;
 
-export function editorReducer(state: EditorState, action: Action): EditorState {
+const clearlog = (by: string) => {
+  if (_DEV_CLEAR_LOG) {
+    console.clear();
+    console.log(`cleard console by ${by}`);
+  }
+};
+
+export function editorReducer(
+  state: EditorState & EssentialWorkspaceInfo,
+  action: Action
+): EditorState {
   const router = useRouter();
   const filekey = state.design.key;
 
   switch (action.type) {
     case "mode": {
       const { mode } = <EditorModeSwitchAction>action;
-      return produce(state, (draft) => {
-        switch (mode) {
-          case "code":
-            draft.canvasMode = "isolated-view";
-            break;
-          case "inspect":
-          case "view":
-          default:
-            draft.canvasMode = "free";
-        }
+      if (mode === "goback") {
+        return produce(state, (draft) => {
+          const target = state.mode.last;
+          draft.mode = {
+            value: target,
+            last: state.mode.value,
+            updated: new Date(),
+          };
 
-        draft.mode = mode;
+          if (target === "design") {
+            draft.selectedPage =
+              last_page_by_mode.get(target) ||
+              state.pages.find((p) => p.type === "figma-canvas").id;
+          }
+        });
+      } else {
+        return produce(state, (draft) => {
+          draft.mode = {
+            value: mode,
+            last: state.mode.value,
+            updated: new Date(),
+          };
+
+          switch (mode) {
+            case "code": {
+              break;
+            }
+            case "design": {
+              // if previous mode was somehing else.
+              if (state.mode.value !== "design") {
+                draft.selectedPage =
+                  last_page_by_mode.get(mode) ||
+                  state.pages.find((p) => p.type === "figma-canvas").id;
+                break;
+              }
+            }
+            case "run":
+          }
+        });
+      }
+    }
+
+    case "designer-mode": {
+      const { mode } = <DesignerModeSwitchActon>action;
+      return produce(state, (draft) => {
+        draft.mode = {
+          value: "design",
+          last: state.mode.value,
+          updated: new Date(),
+        };
+        draft.designerMode = mode;
       });
     }
 
     case "select-node": {
       const { node } = <SelectNodeAction>action;
 
-      console.clear();
-      console.info("cleard console by editorReducer#select-node");
+      track("select-node", {});
+
+      clearlog("editorReducer#select-node");
 
       // update router
       update_route(router, {
@@ -62,8 +119,8 @@ export function editorReducer(state: EditorState, action: Action): EditorState {
       return reducers["select-node"](state, action);
     }
 
-    case "locate-node": {
-      const { node } = <LocateNodeAction>action;
+    case "canvas/focus": {
+      const { node } = <CanvasFocusNodeAction>action;
 
       update_route(router, { node });
 
@@ -80,21 +137,53 @@ export function editorReducer(state: EditorState, action: Action): EditorState {
           page: page.id,
         });
 
-        // TODO: move canvas to the node
+        const final = _2_select_page;
 
-        return { ..._1_select_node, ..._2_select_page };
+        return <EditorState>{
+          ...final,
+          canvas: {
+            // refresh canvas focus to the target.
+            focus: {
+              refreshkey: nanoid(4),
+              nodes: [node],
+            },
+            // update selection
+            selectedNodes: [node],
+          },
+        };
+      });
+    }
+
+    case "design/enter-isolation": {
+      const { node } = <EnterIsolatedInspectionAction>action;
+      return produce(state, (draft) => {
+        draft.isolation = {
+          isolated: true,
+          node: node,
+        };
+
+        // (todo: update router)
+        draft.selectedNodes = [node];
+      });
+    }
+
+    case "design/exit-isolation": {
+      const {} = <ExitIsolatedInspectionAction>action;
+      return produce(state, (draft) => {
+        draft.isolation = {
+          isolated: false,
+          node: null,
+        };
       });
     }
 
     case "select-page": {
       const { page } = <SelectPageAction>action;
 
-      console.clear();
-      console.info("cleard console by editorReducer#select-page");
+      clearlog("editorReducer#select-page");
 
       switch (page) {
         case "home": {
-          // update router
           update_route(router, { node: undefined });
         }
 
@@ -123,53 +212,108 @@ export function editorReducer(state: EditorState, action: Action): EditorState {
           });
       });
     }
-    case "code-editor-edit-component-code": {
-      const { ...rest } = <CodeEditorEditComponentCodeAction>action;
+
+    case "coding/new-template-session": {
+      const { template } = <CodingNewTemplateSessionAction>action;
+      const { type, target } = template;
+
       return produce(state, (draft) => {
-        draft.editingModule = {
-          ...rest,
-          type: "single-file-component",
-          lang: "unknown",
+        switch (type) {
+          case "d2c": {
+            // init new page if required
+            const code_default_drafts_page = "code-drafts";
+            if (
+              state.pages.some(
+                (p) => p.type === "code" && p.id === code_default_drafts_page
+              )
+            ) {
+              draft.selectedPage = code_default_drafts_page;
+            } else {
+              draft.pages.push({
+                id: code_default_drafts_page,
+                name: "Code",
+                type: "code",
+              });
+              draft.selectedPage = code_default_drafts_page;
+            }
+
+            // reset files
+            draft.code.files = {};
+            draft.code.loading = true;
+            draft.code.runner = {
+              type: "scene",
+              sceneId: target,
+            };
+            draft.mode = {
+              value: "code",
+              last: state.mode.value,
+              updated: new Date(),
+            };
+          }
+        }
+      });
+    }
+    case "coding/initial-seed": {
+      const { files, open, focus, entry } = <CodingInitialFilesSeedAction>(
+        action
+      );
+      return produce(state, (draft) => {
+        const keys = Object.keys(files);
+        if (keys.length > 0) {
+          draft.code.files = files;
+          draft.code.loading = false;
+          // const
+          draft.code.runner = {
+            ...state.code.runner,
+            entry,
+          };
+          draft.selectedNodes = [focus] ?? [keys[0]];
+        }
+      });
+    }
+    case "codeing/update-file": {
+      const { key, content } = <CodingUpdateFileAction>action;
+      return produce(state, (draft) => {
+        const file = state.code.files[key];
+        draft.code.files[key] = {
+          ...file,
+          content,
         };
       });
-      //
     }
 
-    case "canvas-mode-switch": {
+    case "canvas-mode": {
       const { mode } = <CanvasModeSwitchAction>action;
 
-      update_route(router, { mode: mode }, false); // shallow false
+      update_route(router, { mode }, false); // shallow false
 
-      return produce(state, (draft) => {
-        if (mode === "isolated-view") {
-          // on isolation mode, switch the editor mode to code.
-          draft.mode = "code";
-        } else {
-          // needs to be fixed once more modes are added.
-          draft.mode = "view";
-        }
+      if (mode === "goback") {
+        const dest = state.canvasMode.last ?? state.canvasMode.value;
 
-        draft.canvasMode_previous = draft.canvasMode;
-        draft.canvasMode = mode;
-      });
-    }
-    case "canvas-mode-goback": {
-      const { fallback } = <CanvasModeGobackAction>action;
-
-      const dest = state.canvasMode_previous ?? fallback;
-
-      update_route(router, { mode: dest }, false); // shallow false
-
-      return produce(state, (draft) => {
         assert(
           dest,
           "canvas-mode-goback: cannot resolve destination. (no fallback provided)"
         );
-        draft.canvasMode_previous = draft.canvasMode; // swap
-        draft.canvasMode = dest; // previous or fallback
-      });
+
+        return produce(state, (draft) => {
+          draft.canvasMode = {
+            value: dest,
+            last: state.canvasMode.value,
+            updated: new Date(),
+          };
+        });
+      } else {
+        return produce(state, (draft) => {
+          draft.canvasMode = {
+            value: mode,
+            last: state.canvasMode.value,
+            updated: new Date(),
+          };
+        });
+      }
     }
 
+    // todo move to other context
     case "preview-update-building-state": {
       const { isBuilding } = <PreviewBuildingStateUpdateAction>action;
       return produce(state, (draft) => {
@@ -192,6 +336,7 @@ export function editorReducer(state: EditorState, action: Action): EditorState {
       });
     }
 
+    // todo move to other context
     case "preview-set": {
       const { data } = <PreviewSetAction>action;
       return produce(state, (draft) => {
@@ -199,6 +344,7 @@ export function editorReducer(state: EditorState, action: Action): EditorState {
       });
     }
 
+    // todo: move to workspace state
     case "devtools-console": {
       const { log } = <DevtoolsConsoleAction>action;
       return produce(state, (draft) => {
@@ -214,6 +360,7 @@ export function editorReducer(state: EditorState, action: Action): EditorState {
       break;
     }
 
+    // todo: move to workspace state
     case "devtools-console-clear": {
       const {} = <DevtoolsConsoleClearAction>action;
       return produce(state, (draft) => {
@@ -226,54 +373,6 @@ export function editorReducer(state: EditorState, action: Action): EditorState {
             },
           ];
         }
-      });
-      break;
-    }
-
-    case "editor-task-push": {
-      const { task } = <BackgroundTaskPushAction>action;
-      const { id } = task;
-
-      return produce(state, (draft) => {
-        // todo:
-        // 1. handle debounce.
-
-        // check id duplication
-        const exists = draft.editorTaskQueue.tasks.find((t) => t.id === id);
-        if (exists) {
-          // pass
-        } else {
-          if (!task.createdAt) {
-            task.createdAt = new Date();
-          }
-          draft.editorTaskQueue.tasks.push(task);
-          draft.editorTaskQueue.isBusy = true;
-        }
-      });
-      break;
-    }
-
-    case "editor-task-pop": {
-      const { task } = <BackgroundTaskPopAction>action;
-      const { id } = task;
-
-      return produce(state, (draft) => {
-        draft.editorTaskQueue.tasks = draft.editorTaskQueue.tasks.filter(
-          (i) => i.id !== id
-        );
-
-        if (draft.editorTaskQueue.tasks.length === 0) {
-          draft.editorTaskQueue.isBusy = false;
-        }
-      });
-      break;
-    }
-
-    case "editor-task-update-progress": {
-      const { id, progress } = <BackgroundTaskUpdateProgressAction>action;
-      return produce(state, (draft) => {
-        draft.editorTaskQueue.tasks.find((i) => i.id !== id).progress =
-          progress;
       });
       break;
     }
@@ -297,10 +396,8 @@ function update_route(
 
   // remove undefined fields
   Object.keys(q).forEach((k) => q[k] === undefined && delete q[k]);
-
   router.push(
     {
-      pathname: _editor_path_name,
       query: { ...router.query, ...q },
     },
     undefined,
@@ -367,15 +464,44 @@ const reducers = {
     action: Omit<SelectPageAction, "type">
   ) => {
     return produce(state, (draft) => {
-      const { page } = <SelectPageAction>action;
+      const { page: pageid } = <SelectPageAction>action;
+      const page = state.pages.find((i) => i.id === pageid);
+
+      assert(page, "page not found");
+
       const filekey = state.design.key;
-      const _canvas_state_store = new CanvasStateStore(filekey, page);
+      const _canvas_state_store = new CanvasStateStore(filekey, pageid);
 
       const last_known_selections_of_this_page =
         _canvas_state_store.getLastSelection() ?? [];
 
-      draft.selectedPage = page;
+      last_page_by_mode.set(state.mode.value, pageid);
+      draft.selectedPage = pageid;
       draft.selectedNodes = last_known_selections_of_this_page;
+
+      // when page is seleced, force exit the isolation mode.
+      draft.isolation = {
+        isolated: false,
+        node: null,
+      };
+
+      // update editor mode by page selection
+      let nextmode = state.mode.value;
+      switch (page.type) {
+        case "code": {
+          nextmode = "code";
+          break;
+        }
+        case "home":
+        case "figma-canvas": {
+          nextmode = "design";
+        }
+      }
+      draft.mode = {
+        value: nextmode,
+        last: state.mode.value,
+        updated: new Date(),
+      };
     });
   },
 };

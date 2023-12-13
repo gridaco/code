@@ -1,12 +1,14 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { NextRouter } from "next/router";
-import { EditorDefaultProviders } from "scaffolds/editor";
-import { EditorSnapshot, useEditorState } from "core/states";
-import { useDesignFile } from "hooks";
+import { EditorPage, EditorSnapshot, useEditorState } from "core/states";
+import { useFigmaCommunityFile, useFigmaFile } from "hooks";
 import { warmup } from "scaffolds/editor";
-import { EditorBrowserMetaHead } from "components/editor";
 import type { FileResponse } from "@design-sdk/figma-remote-types";
 import { useWorkspaceInitializerContext } from "scaffolds/workspace";
+import { useDispatch } from "@code-editor/preferences";
+import { FigmaImageServiceProvider } from "./editor-figma-image-service-provider";
+import { Client as FigmaImageClient } from "@design-sdk/figma-remote-api";
+import { Client as FigmaCommunityImageClient } from "@figma-api/community";
 
 const action_fetchfile_id = "fetchfile" as const;
 
@@ -17,27 +19,33 @@ type EditorSetupState = {
   loading?: boolean;
 };
 
-export const EditorSetupContext = React.createContext<EditorSetupState>(null);
+const EditorSetupContext = React.createContext<EditorSetupState>(null);
 
 export function useEditorSetupContext() {
   return React.useContext(EditorSetupContext);
 }
 
-export function SetupEditor({
+interface EssentialEditorSetupProps {
+  nodeid: string;
+  filekey: string;
+  router: NextRouter;
+}
+
+function FigmaEditorBaseSetup({
+  file,
   filekey,
   nodeid,
   router,
   children,
-}: React.PropsWithChildren<{
-  nodeid: string;
-  filekey: string;
-  router: NextRouter;
-}>) {
+  loaded,
+}: React.PropsWithChildren<
+  EssentialEditorSetupProps & {
+    file: FileResponse;
+    loaded?: boolean;
+  }
+>) {
   const { provideEditorSnapshot: initialize } =
     useWorkspaceInitializerContext();
-
-  // background whole file fetching
-  const file = useDesignFile({ file: filekey });
 
   // todo background file fetching to task queue
   // useEffect(() => {
@@ -52,7 +60,6 @@ export function SetupEditor({
   //     };
   // }, [file]);
 
-  const [loading, setLoading] = useState<boolean>(true);
   const [state] = useEditorState();
 
   const initialCanvasMode = q_map_canvas_mode_from_query(
@@ -84,23 +91,42 @@ export function SetupEditor({
           pages.some((p) => p.id === nodeid) ? [] : nodeid ? [nodeid] : [];
 
         val = {
+          pages: [
+            {
+              id: "home",
+              name: "Home",
+              type: "home",
+            } as EditorPage,
+          ].concat(
+            pages.map(
+              (p) =>
+                ({
+                  id: p.id,
+                  name: p.name,
+                  type: "figma-canvas",
+                } as EditorPage)
+            )
+          ),
           selectedNodes: initialSelections,
           selectedNodesInitial: initialSelections,
           selectedPage: warmup.selectedPage(state, pages, nodeid && [nodeid]),
           selectedLayersOnPreview: [],
           design: {
             name: file.name,
+            version: file.version,
+            lastModified: new Date(file.lastModified),
             input: null,
             components: components,
             // styles: null,
             key: filekey,
             pages: pages,
           },
-          canvasMode: initialCanvasMode,
-          editorTaskQueue: {
-            isBusy: false,
-            tasks: [],
+          isolation: {
+            isolated: false,
+            node: null,
           },
+          code: { files: {}, loading: true },
+          canvasMode: initialCanvasMode,
         };
       }
 
@@ -110,29 +136,110 @@ export function SetupEditor({
   );
 
   useEffect(() => {
-    if (!loading) {
+    if (file) {
+      initWith(file);
+    }
+  }, [file]);
+
+  return (
+    <EditorSetupContext.Provider value={{ loading: !loaded }}>
+      {children}
+    </EditorSetupContext.Provider>
+  );
+}
+
+export function SetupFigmaCommunityFileEditor({
+  filekey,
+  nodeid,
+  router,
+  children,
+}: React.PropsWithChildren<EssentialEditorSetupProps>) {
+  const fig = useFigmaCommunityFile({ id: filekey });
+  const [file, setFile] = useState<FileResponse>(null);
+  const [loaded, setLoaded] = useState<boolean>(false);
+
+  useEffect(() => {
+    switch (fig.__type) {
+      case "error": {
+        // TODO: set error here
+        break;
+      }
+      case "loading": {
+        // Do nothing. the community file won't be having loading state though.
+        break;
+      }
+      case "file-fetched-for-app": {
+        // ready.
+        setLoaded(true);
+        setFile(fig);
+        break;
+      }
+    }
+  }, [fig]);
+
+  return (
+    <FigmaEditorBaseSetup
+      filekey={filekey}
+      nodeid={nodeid}
+      router={router}
+      file={file}
+      loaded={loaded}
+    >
+      <FigmaImageServiceProvider
+        filekey={filekey}
+        resolveApiClient={() => FigmaCommunityImageClient()}
+      >
+        {children}
+      </FigmaImageServiceProvider>
+    </FigmaEditorBaseSetup>
+  );
+}
+
+export function SetupFigmaFileEditor({
+  filekey,
+  nodeid,
+  router,
+  children,
+}: React.PropsWithChildren<EssentialEditorSetupProps>) {
+  const [file, setFile] = useState<FileResponse>(null);
+  const [loaded, setLoaded] = useState<boolean>(false);
+
+  // background whole file fetching
+  const fig = useFigmaFile({ file: filekey });
+
+  const prefDispatch = useDispatch();
+
+  const openFpatConfigurationPreference = useCallback(() => {
+    prefDispatch({
+      type: "open",
+      route: "/figma/personal-access-token",
+    });
+  }, [prefDispatch]);
+
+  useEffect(() => {
+    if (loaded) {
       return;
     }
 
-    if (file.__type === "loading") {
+    if (fig.__type === "loading") {
       return;
     }
 
-    if (file.__type === "error") {
+    if (fig.__type === "error") {
       // handle error by reason
-      switch (file.reason) {
+      switch (fig.reason) {
         case "unauthorized":
         case "no-auth": {
-          if (file.cached) {
-            initWith(file.cached);
-            setLoading(false);
+          if (fig.cached) {
+            setFile(fig.cached);
+            setLoaded(true);
             alert(
               "You will now see the cached version of this file. To view the latest version, setup your personall access token."
             );
             // TODO: show signin prompt
-            window.open("/preferences/access-tokens", "_blank");
+            openFpatConfigurationPreference();
           } else {
-            router.push("/preferences/access-tokens");
+            openFpatConfigurationPreference();
           }
           break;
         }
@@ -144,24 +251,38 @@ export function SetupEditor({
       return;
     }
 
-    if (!file.__initial) {
+    if (!fig.__initial) {
       // when full file is loaded, allow editor with user interaction.
-      setLoading(false);
+      setLoaded(true);
     }
 
-    initWith(file);
+    setFile(fig);
   }, [
     filekey,
-    file,
-    file.__type == "file-fetched-for-app" ? file.document?.children : null,
+    fig,
+    fig.__type == "file-fetched-for-app" ? fig.document?.children : null,
   ]);
 
   return (
-    <EditorSetupContext.Provider value={{ loading }}>
-      <EditorDefaultProviders>
-        <EditorBrowserMetaHead>{children}</EditorBrowserMetaHead>
-      </EditorDefaultProviders>
-    </EditorSetupContext.Provider>
+    <FigmaEditorBaseSetup
+      file={file}
+      filekey={filekey}
+      nodeid={nodeid}
+      router={router}
+      loaded={loaded}
+    >
+      <FigmaImageServiceProvider
+        filekey={filekey}
+        resolveApiClient={({ filekey, authentication }) => {
+          if (!filekey || !authentication) return "reject";
+          return FigmaImageClient({
+            ...authentication,
+          });
+        }}
+      >
+        {children}
+      </FigmaImageServiceProvider>
+    </FigmaEditorBaseSetup>
   );
 }
 
@@ -209,24 +330,13 @@ export function SetupEditor({
   }
  */
 
+/**
+ * legacy
+ * @deprecated - remove this, replace the url users with the new pattern
+ * @returns
+ */
 const q_map_canvas_mode_from_query = (
   mode: string
 ): EditorSnapshot["canvasMode"] => {
-  switch (mode) {
-    case "free":
-    case "isolated-view":
-    case "fullscreen-preview":
-      return mode;
-
-    // -------------------------
-    // legacy query param key
-    case "full":
-      return "free";
-    case "isolate":
-      return "isolated-view";
-    // -------------------------
-
-    default:
-      return "free";
-  }
+  return { value: "free" };
 };

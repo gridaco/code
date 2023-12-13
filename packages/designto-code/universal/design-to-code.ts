@@ -23,6 +23,15 @@ import {
 // import { reusable } from "@code-features/component";
 import assert from "assert";
 import { debug, debugIf } from "@designto/debugger";
+import { composePlugin } from "../plugin";
+
+export type CustomAssetResolver = ({
+  keys,
+  hashes,
+}: {
+  keys: string[];
+  hashes: string[];
+}) => Promise<{ [key: string]: string }>;
 
 interface AssetsConfig {
   asset_repository?: BaseImageRepositories<string>;
@@ -34,6 +43,11 @@ interface AssetsConfig {
    * this is currently only supported on vanilla framework - for preview.
    */
   custom_asset_replacement?: { type: "static"; resource: string };
+  /**
+   * If the resolver is set, this resolver will be used to resolve assets from asset repository, not using the built in resolver in the provided asset repository.
+   * @beta - the asset repository has legacy design, wich this field is required. this might be merged into built in asset repository.
+   */
+  resolver?: CustomAssetResolver;
 }
 
 export type Result = output.ICodeOutput & { widget: Widget } & {
@@ -45,15 +59,37 @@ export type DesignToCodeInput = {
   framework: config.FrameworkConfig;
   build_config?: config.BuildConfiguration;
   asset_config: AssetsConfig;
+  plugins?: config.Plugins;
 };
+
+const K_PLUGIN_SUPPORTED_FRAMEWORKS: Array<FrameworkConfig["framework"]> = [
+  "vanilla",
+  "preview",
+];
+
+function assert_plugin_supported_framework(
+  framework: FrameworkConfig["framework"],
+  plugins: config.Plugins
+) {
+  if (plugins?.length) {
+    assert(
+      K_PLUGIN_SUPPORTED_FRAMEWORKS.includes(framework),
+      "plugins are not supported for this framework"
+    );
+  }
+}
 
 export async function designToCode({
   input,
   framework: framework_config,
   asset_config,
   build_config = config.default_build_configuration,
+  plugins,
 }: DesignToCodeInput): Promise<Result> {
   assert(input, "input is required");
+
+  assert_plugin_supported_framework(framework_config["framework"], plugins);
+
   debugIf(
     // framework_config.framework !== "vanilla",
     false,
@@ -125,6 +161,7 @@ export async function designToCode({
           build_config: build_config,
           vanilla_config: framework_config,
           asset_config: asset_config,
+          plugins,
         })),
         ..._extend_result,
       };
@@ -135,6 +172,7 @@ export async function designToCode({
           build_config: build_config,
           vanilla_config: framework_config,
           asset_config: asset_config,
+          plugins,
         })),
         ..._extend_result,
       };
@@ -226,7 +264,7 @@ export async function designToReact({
       asset_config?.asset_repository &&
       !asset_config.skip_asset_replacement
     ) {
-      const assets = await fetch_all_assets(asset_config.asset_repository);
+      const assets = await resolve_assets(asset_config);
       res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
       res.scaffold.raw = dangerous_temporary_asset_replacer(
         res.scaffold.raw,
@@ -299,7 +337,7 @@ export async function designToFlutter({
   // finilize temporary assets
   // this should be placed somewhere else
   if (asset_config?.asset_repository && !asset_config.skip_asset_replacement) {
-    const assets = await fetch_all_assets(asset_config?.asset_repository);
+    const assets = await resolve_assets(asset_config);
     flutterapp.scaffold.raw = dangerous_temporary_asset_replacer(
       flutterapp.scaffold.raw,
       assets
@@ -352,7 +390,7 @@ export async function designToSolid({
       asset_config?.asset_repository &&
       !asset_config.skip_asset_replacement
     ) {
-      const assets = await fetch_all_assets(asset_config.asset_repository);
+      const assets = await resolve_assets(asset_config);
       res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
       res.scaffold.raw = dangerous_temporary_asset_replacer(
         res.scaffold.raw,
@@ -372,6 +410,7 @@ export async function designToVanillaPreview({
   asset_config,
   vanilla_config,
   build_config,
+  plugins,
 }: {
   input: { widget: Widget };
   /**
@@ -380,12 +419,18 @@ export async function designToVanillaPreview({
   build_config: config.BuildConfiguration;
   vanilla_config: config.VanillaPreviewFrameworkConfig;
   asset_config?: AssetsConfig;
+  plugins?: config.Plugins;
 }): Promise<output.ICodeOutput> {
   const vanillawidget = toVanilla.buildVanillaWidget(
     input.widget,
     vanilla_config as any as config.VanillaFrameworkConfig
   );
-  const res = toVanilla.buildVanillaPreviewFile(vanillawidget, vanilla_config);
+
+  const res = toVanilla.buildVanillaPreviewFile(
+    vanillawidget,
+    vanilla_config,
+    plugins?.map(composePlugin)
+  );
 
   // ------------------------------------------------------------------------
   // finilize temporary assets
@@ -407,7 +452,7 @@ export async function designToVanillaPreview({
       asset_config?.asset_repository &&
       !asset_config.skip_asset_replacement
     ) {
-      const assets = await fetch_all_assets(asset_config.asset_repository);
+      const assets = await resolve_assets(asset_config);
       res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
       res.scaffold.raw = dangerous_temporary_asset_replacer(
         res.scaffold.raw,
@@ -425,6 +470,7 @@ export async function designToVanilla({
   asset_config,
   vanilla_config,
   build_config,
+  plugins,
 }: {
   input: { widget: Widget };
   /**
@@ -433,12 +479,18 @@ export async function designToVanilla({
   build_config: config.BuildConfiguration;
   vanilla_config: config.VanillaFrameworkConfig;
   asset_config?: AssetsConfig;
+  plugins?: config.Plugins;
 }): Promise<output.ICodeOutput> {
   const vanillawidget = toVanilla.buildVanillaWidget(
     input.widget,
     vanilla_config
   );
-  const res = toVanilla.buildVanillaFile(vanillawidget, vanilla_config);
+
+  const res = toVanilla.buildVanillaFile(
+    vanillawidget,
+    vanilla_config,
+    plugins?.map(composePlugin)
+  );
 
   // ------------------------------------------------------------------------
   // finilize temporary assets
@@ -460,7 +512,7 @@ export async function designToVanilla({
       asset_config?.asset_repository &&
       !asset_config.skip_asset_replacement
     ) {
-      const assets = await fetch_all_assets(asset_config.asset_repository);
+      const assets = await resolve_assets(asset_config);
       res.code.raw = dangerous_temporary_asset_replacer(res.code.raw, assets);
       res.scaffold.raw = dangerous_temporary_asset_replacer(
         res.scaffold.raw,
@@ -472,6 +524,32 @@ export async function designToVanilla({
 
   return res;
 }
+
+const resolve_assets = async ({ asset_repository, resolver }: AssetsConfig) => {
+  if (resolver) {
+    const targets = Object.keys(asset_repository.mergeAll()).reduce(
+      (acc, k) => {
+        const i = asset_repository.find(k);
+        if (i.hash) {
+          acc.hashes.push(i.hash);
+        }
+
+        if (i.key) {
+          acc.keys.push(i.key);
+        }
+        return acc;
+      },
+      {
+        keys: [],
+        hashes: [],
+      }
+    );
+
+    return (await resolver(targets)) || {};
+  } else {
+    return await fetch_all_assets(asset_repository);
+  }
+};
 
 const default_asset_replacement_prefix = "grida://assets-reservation/images/";
 const dangerous_temporary_asset_replacer = (r, a) => {

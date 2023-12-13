@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "@emotion/styled";
-import { useEditorState } from "core/states";
+import { EditorState, useEditorState, useWorkspaceState } from "core/states";
 import { colors } from "theme";
 import { useTargetContainer } from "hooks/use-target-node";
-
+import { EditorPropertyThemeProvider, one } from "@editor-ui/property";
 import { InfoSection } from "./section-info";
 import { LayoutSection } from "./section-layout";
 import { ColorsSection } from "./section-colors";
@@ -12,33 +12,75 @@ import { TypographySection } from "./section-typography";
 import { AssetsSection } from "./section-assets";
 import { CodeSection } from "./section-code";
 import { Conversations } from "scaffolds/conversations";
+import { EditorAppbarFragments } from "components/editor";
+import { useDispatch } from "core/dispatch";
+import { EffectsSection } from "./section-effects";
+import { MixIcon, Cross1Icon } from "@radix-ui/react-icons";
+import { DebugInspector } from "./inspector-debug";
+import { IconToggleButton } from "@code-editor/ui";
 
-type Tab = "inspect" | "threads";
+type Tab = "inspect" | "comment";
 
 export function Inspector() {
-  const { target } = useTargetContainer();
+  const { debugMode } = useWorkspaceState();
+  const [debugView, setDebugView] = useState(false);
   const [state] = useEditorState();
-  const [tab, setTab] = useState<Tab>("inspect");
+  const dispatch = useDispatch();
 
-  if (target) {
-    return (
-      <InspectorContainer>
-        <Tabs selectedTab={tab} onTabChange={setTab} />
-        <InfoSection />
-        <div style={{ height: 16 }} />
-        <Body type={tab} />
-      </InspectorContainer>
-    );
-  }
+  const tab = __mode(state.designerMode);
 
-  return <></>;
+  const switchMode = useCallback(
+    (mode: Tab) => {
+      dispatch({
+        type: "designer-mode",
+        mode: mode,
+      });
+    },
+    [dispatch]
+  );
+
+  return (
+    <InspectorContainer>
+      <EditorAppbarFragments.RightSidebar flex={0} />
+      <div className="header">
+        <Tabs selectedTab={tab} onTabChange={switchMode} />
+        {debugMode && (
+          <IconToggleButton
+            on={<Cross1Icon color="white" />}
+            off={<MixIcon color="white" />}
+            onChange={(value) => {
+              setDebugView(value);
+            }}
+          />
+        )}
+      </div>
+      {/* <div style={{ height: 16, flexShrink: 0 }} /> */}
+      <Body type={tab} debug={debugView} />
+    </InspectorContainer>
+  );
 }
 
-function Body({ type }: { type: Tab }) {
+const __mode = (mode: EditorState["designerMode"]): Tab => {
+  switch (mode) {
+    case "comment":
+      return "comment";
+    case "inspect":
+    default:
+      return "inspect";
+  }
+};
+
+function Body({ type, debug }: { type: Tab; debug?: boolean }) {
+  const { target } = useTargetContainer();
+
   switch (type) {
     case "inspect":
-      return <InspectorBody />;
-    case "threads":
+      if (target) {
+        return <InspectorBody debug={debug} />;
+      } else {
+        return <EmptyState />;
+      }
+    case "comment":
       return <ConversationsBody />;
   }
 }
@@ -47,24 +89,51 @@ function ConversationsBody() {
   return <Conversations />;
 }
 
-function InspectorBody() {
+function InspectorBody({ debug }: { debug?: boolean }) {
+  if (debug) {
+    return <DebugInspector />;
+  }
+
   return (
-    <>
+    <EditorPropertyThemeProvider theme={one.dark}>
+      <InfoSection />
       <LayoutSection />
-      <ColorsSection />
       <AssetsSection />
       <TypographySection />
+      <ColorsSection />
+      <EffectsSection />
       <ContentSection />
       <CodeSection />
-    </>
+    </EditorPropertyThemeProvider>
   );
 }
+
+function EmptyState() {
+  return (
+    <EmptyStateContainer>
+      <EmptyStateText>No selection</EmptyStateText>
+    </EmptyStateContainer>
+  );
+}
+
+const EmptyStateContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+`;
+
+const EmptyStateText = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+`;
 
 function Tabs({
   onTabChange,
   selectedTab,
 }: {
-  selectedTab: string;
+  selectedTab: Tab;
   onTabChange: (tab: Tab) => void;
 }) {
   return (
@@ -78,9 +147,9 @@ function Tabs({
         Inspect
       </Tab>
       <Tab
-        selected={selectedTab === "threads"}
+        selected={selectedTab === "comment"}
         onClick={() => {
-          onTabChange("threads");
+          onTabChange("comment");
         }}
       >
         Conversations
@@ -93,7 +162,7 @@ const TabsContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   padding: 8px;
 `;
 
@@ -125,11 +194,13 @@ function Tab({
 }
 
 const TabContainer = styled.label`
-  padding: 4px;
+  padding: 6px;
   border-radius: 4px;
   color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
   &[data-selected="true"] {
-    color: white;
+    color: white !important;
+    font-weight: 500;
   }
 
   &[data-hover="true"] {
@@ -145,5 +216,13 @@ const InspectorContainer = styled.div`
   flex-direction: column;
   height: 100%;
   background-color: ${colors.color_editor_bg_on_dark};
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    padding-right: 16px;
+  }
 `;
 /* background-color: ${(props) => props.theme.colors.background}; */

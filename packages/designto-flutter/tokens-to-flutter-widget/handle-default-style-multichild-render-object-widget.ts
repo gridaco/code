@@ -1,3 +1,4 @@
+import { TokenNotHandledError } from "@engine/core";
 import type { IDefaultStyleWidget } from "@reflect-ui/core";
 import * as flutter from "@flutter-builder/flutter";
 import * as core from "@reflect-ui/core";
@@ -88,11 +89,13 @@ export function handle_default_style_multichild_render_object_widget(
         };
         break;
       }
-      case "graphics": {
+      case "image": {
         // flutter_background = {
         //   image: painting.image(pbg),
         // };
-        console.error("flutter graphics background not supported yet");
+        throw new TokenNotHandledError(
+          "flutter image background not supported yet"
+        );
       }
     }
   }

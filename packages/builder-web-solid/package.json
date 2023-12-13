@@ -14,7 +14,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@web-builder/react-core": "17.0.2"
+    "@web-builder/react-core": "18.2.0"
   },
   "files": [
     "dist"

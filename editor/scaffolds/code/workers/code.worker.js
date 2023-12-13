@@ -28,7 +28,6 @@ let initialized = false;
 let pages = [];
 
 function initialize({ filekey, authentication }) {
-  console.info("initializing.. code ww");
   // ------- setup image repo with auth + filekey -------
   MainImageRepository.instance = new RemoteImageRepositories(filekey, {
     authentication: authentication,
@@ -188,6 +187,10 @@ async function handle_code(event, type) {
   // requires all 2 data for faster query
   const { target } = event.data;
   const node = q.getNodeByIdFrom(target, pages);
+
+  if (!node) {
+    throw new Error("node not found");
+  }
 
   const _input = {
     id: node.id,

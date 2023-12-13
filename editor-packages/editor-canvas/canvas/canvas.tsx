@@ -16,11 +16,12 @@ import {
   target_of_area,
   boundingbox,
   is_point_inside_box,
+  zoomToFit,
 } from "../math";
 import q from "@design-sdk/query";
 import { LazyFrame } from "@code-editor/canvas/lazy-frame";
 import { HudCustomRenderers, HudSurface } from "../hud";
-import type { Box, XY, CanvasTransform, XYWH } from "../types";
+import type { Box, XY, CanvasTransform, XYWH, XYWHR } from "../types";
 import type { FrameOptimizationFactors } from "../frame";
 // import { TransformDraftingStore } from "../drafting";
 import {
@@ -29,8 +30,12 @@ import {
   CANVAS_INITIAL_SCALE,
   CANVAS_MIN_ZOOM,
 } from "../k";
-import { ContextMenuRoot as ContextMenu } from "@editor-ui/context-menu";
+import {
+  ContextMenuRoot as ContextMenu,
+  MenuItem,
+} from "@editor-ui/context-menu";
 import styled from "@emotion/styled";
+import toast from "react-hot-toast";
 
 interface CanvasState {
   pageid: string;
@@ -40,6 +45,10 @@ interface CanvasState {
   highlightedLayer?: string;
   selectedNodes: string[];
   readonly?: boolean;
+  /**
+   * displays the debug info on the canvas.
+   */
+  debug?: boolean;
   /**
    * when provided, it will override the saved value or centering logic and use this transform as initial instead.
    *
@@ -95,21 +104,51 @@ const default_canvas_preferences: CanvsPreferences = {
   },
 };
 
-type CanvasProps = CanvasCursorOptions & {
-  viewbound: Box;
-  onSelectNode?: (...node: ReflectSceneNode[]) => void;
-  onMoveNodeStart?: (...node: string[]) => void;
-  onMoveNode?: (delta: XY, ...node: string[]) => void;
-  onMoveNodeEnd?: (delta: XY, ...node: string[]) => void;
-  onClearSelection?: () => void;
-} & CanvasCustomRenderers &
+type CanvasProps = CanvasFocusProps &
+  CanvasCursorOptions & {
+    /**
+     * canvas view bound.
+     * [(x1) left, (y1) top, (x2) right, (y2) bottom]
+     */
+    viewbound: Box;
+    onSelectNode?: (...node: ReflectSceneNode[]) => void;
+    onMoveNodeStart?: (...node: string[]) => void;
+    onMoveNode?: (delta: XY, ...node: string[]) => void;
+    onMoveNodeEnd?: (delta: XY, ...node: string[]) => void;
+    onClearSelection?: () => void;
+  } & CanvasCustomRenderers &
   CanvasState & {
     config?: CanvsPreferences;
   };
 
+type CanvasFocusProps = {
+  /**
+   * IDs of focus nodes.
+   *
+   * @default []
+   */
+  focus?: string[];
+  focusRefreshkey?: string;
+};
+
+type CanvasFocusSnap = {
+  damping?: number;
+  bounds?: Box;
+};
+
 interface HovringNode {
   node: ReflectSceneNode;
   reason: "frame-title" | "raycast" | "external";
+}
+
+function xywhr_of(node: ReflectSceneNode): XYWHR {
+  return [
+    node.absoluteX,
+    node.absoluteY,
+    node.width,
+    node.height,
+    node.rotation,
+  ] as XYWHR;
 }
 
 export function Canvas({
@@ -123,15 +162,23 @@ export function Canvas({
   filekey,
   pageid,
   nodes,
+  focus = [],
+  focusRefreshkey: focusRefreshKey,
   initialTransform,
   highlightedLayer,
   selectedNodes,
+  debug,
   readonly = true,
   config = default_canvas_preferences,
   backgroundColor,
   cursor,
   ...props
 }: CanvasProps) {
+  const viewboundmeasured = useMemo(
+    () => !viewbound_not_measured(viewbound),
+    viewbound
+  );
+
   useEffect(() => {
     if (transformIntitialized) {
       return;
@@ -145,7 +192,7 @@ export function Canvas({
       return;
     }
 
-    if (viewbound_not_measured(viewbound)) {
+    if (!viewboundmeasured) {
       return;
     }
 
@@ -155,7 +202,42 @@ export function Canvas({
     setTransformInitialized(true);
   }, [viewbound]);
 
-  const [transformIntitialized, setTransformInitialized] = useState(false);
+  useEffect(() => {
+    // change the canvas transform to visually fit the focus nodes.
+
+    if (!viewboundmeasured) {
+      return;
+    }
+
+    if (focus.length == 0) {
+      return;
+    }
+
+    // TODO: currently only the root nodes are supported to be focused.
+    const _focus_nodes = nodes.filter((n) => focus.includes(n.id));
+    if (_focus_nodes.length == 0) {
+      return;
+    }
+
+    const _focus_center = centerOf(
+      viewbound,
+      200,
+      ..._focus_nodes.map((n) => ({
+        x: n.absoluteX,
+        y: n.absoluteY,
+        width: n.width,
+        height: n.height,
+        rotation: n.rotation,
+      }))
+    );
+
+    setOffset(_focus_center.translate);
+    setZoom(_focus_center.scale);
+  }, [...focus, focusRefreshKey, viewboundmeasured]);
+
+  const [transformIntitialized, setTransformInitialized] = useState(
+    !!initialTransform
+  );
   const [zoom, setZoom] = useState(initialTransform?.scale || 1);
   const [isZooming, setIsZooming] = useState(false);
   const [offset, setOffset] = useState<[number, number]>(
@@ -336,9 +418,7 @@ export function Canvas({
     const [x, y] = [cx / zoom, cy / zoom];
 
     const box = boundingbox(
-      selected_nodes.map((d) => {
-        return [d.absoluteX, d.absoluteY, d.width, d.height, d.rotation];
-      }),
+      selected_nodes.map((d) => xywhr_of(d)),
       2
     );
 
@@ -361,19 +441,25 @@ export function Canvas({
       onMoveNode?.([dx / zoom, dy / zoom], ...selectedNodes);
     }
 
-    if (marquee) {
-      const [w, h] = [
-        x1 - marquee[0], // w
-        y1 - marquee[1], // h
-      ];
-      setMarquee([marquee[0], marquee[1], w, h]);
-    }
+    if (config.marquee.disabled) {
+      // skip
+    } else {
+      // edge scrolling
+      // edge scrolling is only enabled when config#marquee is enabled
+      const [cx, cy] = [x, y];
+      const [dx, dy] = edge_scrolling(cx, cy, viewbound);
+      if (dx || dy) {
+        setOffset([ox + dx, oy + dy]);
+      }
 
-    // edge scrolling
-    const [cx, cy] = [x, y];
-    const [dx, dy] = edge_scrolling(cx, cy, viewbound);
-    if (dx || dy) {
-      setOffset([ox + dx, oy + dy]);
+      // update marquee & following selections via effect
+      if (marquee) {
+        const [w, h] = [
+          x1 - marquee[0], // w
+          y1 - marquee[1], // h
+        ];
+        setMarquee([marquee[0], marquee[1], w, h]);
+      }
     }
   };
 
@@ -435,7 +521,33 @@ export function Canvas({
 
   return (
     <>
-      <ContextMenuProvider>
+      <>
+        {debug === true && (
+          <Debug
+            infos={[
+              { label: "zoom", value: zoom },
+              { label: "offset", value: offset.join(", ") },
+              { label: "isPanning", value: isPanning },
+              { label: "isZooming", value: isZooming },
+              { label: "isDragging", value: isDragging },
+              { label: "isMovingSelections", value: isMovingSelections },
+              { label: "isTransforming", value: is_canvas_transforming },
+              { label: "selectedNodes", value: selectedNodes.join(", ") },
+              { label: "hoveringLayer", value: hoveringLayer?.node?.id },
+              { label: "marquee", value: marquee?.join(", ") },
+              { label: "viewbound", value: viewbound.join(", ") },
+              {
+                label: "initial-transform (xy)",
+                value: initialTransform ? initialTransform.xy.join(", ") : null,
+              },
+              {
+                label: "initial-transform (zoom)",
+                value: initialTransform ? initialTransform.scale : null,
+              },
+            ]}
+          />
+        )}
+        {/* <ContextMenuProvider> */}
         <Container
           width={viewbound[2] - viewbound[0]}
           height={viewbound[3] - viewbound[1]}
@@ -451,8 +563,10 @@ export function Canvas({
             }}
             onZoomToFit={() => {
               setZoom(1);
-              // setOffset([newx, newy]); // TODO: set offset to center of the viewport
+              // const newoffset = zoomToFit(viewbound, offset, zoom, 1);
+              // setOffset(newoffset);
               _canvas_state_store.saveLastTransform(cvtransform);
+              toast("Zoom to 100%");
             }}
             onZooming={onZooming}
             onZoomingStart={() => {
@@ -504,7 +618,8 @@ export function Canvas({
             />
           </CanvasEventTarget>
         </Container>
-      </ContextMenuProvider>
+        {/* </ContextMenuProvider> */}
+      </>
       <CanvasBackground backgroundColor={backgroundColor} />
       <CanvasTransformRoot scale={zoom} xy={nonscaled_offset}>
         <DisableBackdropFilter>{items}</DisableBackdropFilter>
@@ -514,8 +629,8 @@ export function Canvas({
 }
 
 const Container = styled.div<{ width: number; height: number }>`
-  width: ${(p) => p.width}px;
-  height: ${(p) => p.height}px;
+  /* width: ${(p) => p.width}px; */
+  /* height: ${(p) => p.height}px; */
 `;
 
 /**
@@ -535,29 +650,12 @@ function position_guide({
 
   const guides = [];
   const a = boundingbox(
-    selections.map((s) => [
-      s.absoluteX,
-      s.absoluteY,
-      s.width,
-      s.height,
-      s.rotation,
-    ]),
+    selections.map((s) => xywhr_of(s)),
     2
   );
 
   if (hover) {
-    const hover_box = boundingbox(
-      [
-        [
-          hover.absoluteX,
-          hover.absoluteY,
-          hover.width,
-          hover.height,
-          hover.rotation,
-        ],
-      ],
-      2
-    );
+    const hover_box = boundingbox([xywhr_of(hover)], 2);
 
     const guide_relative_to_hover = {
       a: a,
@@ -572,18 +670,7 @@ function position_guide({
   if (selections.length === 1) {
     const parent = selections[0].parent;
     if (parent) {
-      const parent_box = boundingbox(
-        [
-          [
-            parent.absoluteX,
-            parent.absoluteY,
-            parent.width,
-            parent.height,
-            parent.rotation,
-          ],
-        ],
-        2
-      );
+      const parent_box = boundingbox([xywhr_of(parent)], 2);
       const guide_relative_to_parent = {
         a: a,
         b: parent_box,
@@ -597,18 +684,20 @@ function position_guide({
 }
 
 function ContextMenuProvider({ children }: React.PropsWithChildren<{}>) {
+  const items: MenuItem<string>[] = [
+    { title: "Show all layers", value: "canvas-focus-all-to-fit" },
+    "separator",
+    { title: "Run", value: "run" },
+    { title: "Deploy", value: "deploy-to-vercel" },
+    { title: "Open in Figma", value: "open-in-figma" },
+    { title: "Get sharable link", value: "make-sharable-link" },
+    { title: "Copy CSS", value: "make-css" },
+    { title: "Refresh (fetch from origin)", value: "refresh" },
+  ];
+
   return (
     <ContextMenu
-      items={[
-        { title: "Show all layers", value: "canvas-focus-all-to-fit" },
-        "separator",
-        { title: "Run", value: "run" },
-        { title: "Deploy", value: "deploy-to-vercel" },
-        { title: "Open in Figma", value: "open-in-figma" },
-        { title: "Get sharable link", value: "make-sharable-link" },
-        { title: "Copy CSS", value: "make-css" },
-        { title: "Refresh (fetch from origin)", value: "refresh" },
-      ]}
+      items={items}
       onSelect={(v) => {
         console.log("exec canvas cmd", v);
       }}
@@ -665,9 +754,10 @@ function DisableBackdropFilter({ children }: { children: React.ReactNode }) {
 function CanvasBackground({ backgroundColor }: { backgroundColor?: string }) {
   return (
     <div
+      id="canvas-background"
       style={{
         zIndex: -2,
-        position: "fixed",
+        position: "absolute",
         top: 0,
         left: 0,
         width: "100%",
@@ -692,7 +782,7 @@ function auto_initial_transform(
   }
 
   const fit_single_node = (n: ReflectSceneNode) => {
-    return centerOf(viewbound, n);
+    return centerOf(viewbound, 0, n);
   };
 
   if (nodes.length === 0) {
@@ -706,7 +796,7 @@ function auto_initial_transform(
     };
   } else if (nodes.length < 20) {
     // fit bounds
-    const c = centerOf(viewbound, ...nodes);
+    const c = centerOf(viewbound, 0, ...nodes);
     return {
       xy: c.translate,
       scale: c.scale,
@@ -738,3 +828,39 @@ const viewbound_not_measured = (viewbound: Box) => {
       viewbound[3] === 0)
   );
 };
+
+function Debug({
+  infos,
+}: {
+  infos: { label: string; value: string | number | boolean }[];
+}) {
+  return (
+    <DebugInfoContainer>
+      {infos.map(({ label, value }, i) => {
+        if (value === undefined || value === null) {
+          return <></>;
+        }
+        return (
+          <div key={i}>
+            {label}: {JSON.stringify(value)}
+          </div>
+        );
+      })}
+    </DebugInfoContainer>
+  );
+}
+
+const DebugInfoContainer = styled.div`
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  color: white;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+  font-family: monospace;
+  line-height: 1.2;
+  white-space: pre;
+`;

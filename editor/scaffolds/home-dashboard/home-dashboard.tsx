@@ -34,18 +34,22 @@ export function HomeDashboard() {
       backgroundColor={colors.color_editor_bg_on_dark}
       leftbar={<HomeSidebar />}
     >
-      <div style={{ height: "100vh", overflow: "scroll" }}>
-        <div style={{ margin: 80 }}>
-          <HomeHeading>Home</HomeHeading>
-          <GroupsContainer>
-            <RecentDesignSection recents={recents} />
-            {files && !!files.length && <FilesSection files={files} />}
-            {scenes && !!scenes.length && <ScenesSection scenes={scenes} />}
-            {components && !!components.length && (
-              <ComponentsSection components={components} />
-            )}
-          </GroupsContainer>
-        </div>
+      <div
+        style={{
+          height: "100vh",
+          overflow: "scroll",
+          padding: 80,
+        }}
+      >
+        <HomeHeading>Home</HomeHeading>
+        <GroupsContainer>
+          <RecentDesignSection recents={recents} />
+          {files && !!files.length && <FilesSection files={files} />}
+          {scenes && !!scenes.length && <ScenesSection scenes={scenes} />}
+          {components && !!components.length && (
+            <ComponentsSection components={components} />
+          )}
+        </GroupsContainer>
       </div>
     </DefaultEditorWorkspaceLayout>
   );
@@ -62,7 +66,7 @@ function RecentDesignSection({ recents }: { recents }) {
     <HomeCardGroup
       anchor={"#recents"}
       label={"Recents"}
-      cards={[<RecentDesignCardList recents={recents} />]}
+      cards={[<RecentDesignCardList key="recents" recents={recents} />]}
     />
   );
 }

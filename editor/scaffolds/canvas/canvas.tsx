@@ -9,10 +9,9 @@ import {
 import useMeasure from "react-use-measure";
 import { useDispatch } from "core/dispatch";
 import { FrameTitleRenderer } from "./render/frame-title";
-import { IsolateModeCanvas } from "./isolate-mode";
-import { Dialog } from "@mui/material";
-import { FullScreenPreview } from "scaffolds/preview-full-screen";
-import { cursors } from "cursors";
+import { cursors } from "@code-editor/ui";
+import { usePreferences } from "@code-editor/preferences";
+import { useRenderItemWithPreference } from "./hooks";
 
 /**
  * Statefull canvas segment that contains canvas as a child, with state-data connected.
@@ -20,55 +19,41 @@ import { cursors } from "cursors";
 export function VisualContentArea() {
   const [state] = useEditorState();
   const [canvasSizingRef, canvasBounds] = useMeasure();
-
   const { highlightedLayer, highlightLayer } = useWorkspace();
   const dispatch = useDispatch();
+  const renderItem = useRenderItemWithPreference();
 
   const {
     selectedPage,
     design,
     selectedNodes,
+    canvas: canvasMeta,
     canvasMode,
-    canvasMode_previous,
   } = state;
+  const { focus } = canvasMeta;
 
   const thisPage = design?.pages?.find((p) => p.id == selectedPage);
-  const thisPageNodes = selectedPage ? thisPage.children.filter(Boolean) : [];
+  const thisPageNodes = selectedPage ? thisPage?.children?.filter(Boolean) : [];
 
   const isEmptyPage = thisPageNodes?.length === 0;
 
-  const startIsolatedViewMode = useCallback(
-    () =>
+  const startCodeSession = useCallback(
+    (target: string) =>
       dispatch({
-        type: "canvas-mode-switch",
-        mode: "isolated-view",
+        type: "coding/new-template-session",
+        template: {
+          type: "d2c",
+          target: target,
+        },
       }),
     [dispatch]
   );
 
-  const startFullscreenPreviewMode = useCallback(
-    () =>
+  const enterIsolation = useCallback(
+    (node: string) =>
       dispatch({
-        type: "canvas-mode-switch",
-        mode: "fullscreen-preview",
-      }),
-    [dispatch]
-  );
-
-  const endIsolatedViewMode = useCallback(
-    () =>
-      dispatch({
-        type: "canvas-mode-switch",
-        mode: "free",
-      }),
-    [dispatch]
-  );
-
-  const exitFullscreenPreview = useCallback(
-    () =>
-      dispatch({
-        type: "canvas-mode-goback",
-        fallback: "isolated-view",
+        type: "design/enter-isolation",
+        node,
       }),
     [dispatch]
   );
@@ -79,7 +64,7 @@ export function VisualContentArea() {
       thisPage.backgroundColor.g * 255
     }, ${thisPage.backgroundColor.b * 255}, ${thisPage.backgroundColor.a})`;
 
-  const cursor = state.mode === "comment" ? cursors.comment : "default";
+  const cursor = state.designerMode === "comment" ? cursors.comment : "default";
 
   return (
     <CanvasContainer ref={canvasSizingRef} id="canvas">
@@ -89,111 +74,63 @@ export function VisualContentArea() {
         <></>
       ) : (
         <>
-          <FullScreenPreviewContainer
-            show={canvasMode == "fullscreen-preview"}
-            onExit={exitFullscreenPreview}
-          />
-          {(canvasMode == "isolated-view" ||
-            (canvasMode == "fullscreen-preview" &&
-              canvasMode_previous === "isolated-view")) && (
-            <IsolateModeCanvas
-              hidden={
-                // if prev mode is this, hide, not remove.
-                canvasMode == "fullscreen-preview" &&
-                canvasMode_previous === "isolated-view"
-              }
-              onClose={endIsolatedViewMode}
-              onEnterFullscreen={startFullscreenPreviewMode}
-            />
-          )}
-          <div
-            style={{
-              display: canvasMode !== "free" && "none",
+          <Canvas
+            key={selectedPage}
+            viewbound={[
+              canvasBounds.left,
+              canvasBounds.top,
+              canvasBounds.right,
+              canvasBounds.bottom,
+            ]}
+            filekey={state.design.key}
+            pageid={selectedPage}
+            backgroundColor={_bg}
+            selectedNodes={selectedNodes}
+            focusRefreshkey={focus.refreshkey}
+            focus={focus.nodes}
+            highlightedLayer={highlightedLayer}
+            onSelectNode={(...nodes) => {
+              dispatch({ type: "select-node", node: nodes.map((n) => n.id) });
             }}
-          >
-            <Canvas
-              key={selectedPage}
-              viewbound={[
-                canvasBounds.left,
-                canvasBounds.top,
-                canvasBounds.bottom,
-                canvasBounds.right,
-              ]}
-              filekey={state.design.key}
-              pageid={selectedPage}
-              backgroundColor={_bg}
-              selectedNodes={selectedNodes}
-              highlightedLayer={highlightedLayer}
-              onSelectNode={(...nodes) => {
-                dispatch({ type: "select-node", node: nodes.map((n) => n.id) });
-              }}
-              onMoveNodeEnd={([x, y], ...nodes) => {
-                dispatch({
-                  type: "node-transform-translate",
-                  node: nodes,
-                  translate: [x, y],
-                });
-              }}
-              // onMoveNode={() => {}}
-              onClearSelection={() => {
-                dispatch({ type: "select-node", node: [] });
-              }}
-              nodes={thisPageNodes}
-              // initialTransform={ } // TODO: if the initial selection is provided from first load, from the query param, we have to focus to fit that node.
-              renderItem={(p) => {
-                return (
-                  // <WebWorkerD2CVanillaPreview
-                  //   key={p.node.id}
-                  //   target={p.node}
-                  //   {...p}
-                  // />
-                  // <D2CVanillaPreview key={p.node.id} target={p.node} {...p} />
-                  <OptimizedPreviewCanvas
-                    key={p.node.id}
-                    target={p.node}
-                    {...p}
-                  />
-                );
-              }}
-              // readonly={false}
-              readonly
-              config={{
-                can_highlight_selected_layer: true,
-                marquee: {
-                  disabled: false,
-                },
-                grouping: {
-                  disabled: false,
-                },
-              }}
-              cursor={cursor}
-              renderFrameTitle={(p) => (
-                <FrameTitleRenderer
-                  key={p.id}
-                  {...p}
-                  runnable={selectedNodes.length === 1}
-                  onRunClick={startIsolatedViewMode}
-                />
-              )}
-            />
-          </div>
+            onMoveNodeEnd={([x, y], ...nodes) => {
+              dispatch({
+                type: "node-transform-translate",
+                node: nodes,
+                translate: [x, y],
+              });
+            }}
+            // onMoveNode={() => {}}
+            onClearSelection={() => {
+              dispatch({ type: "select-node", node: [] });
+            }}
+            nodes={thisPageNodes}
+            // initialTransform={ } // TODO: if the initial selection is provided from first load, from the query param, we have to focus to fit that node.
+            renderItem={renderItem}
+            // readonly={false}
+            readonly
+            config={{
+              can_highlight_selected_layer: true,
+              marquee: {
+                disabled: false,
+              },
+              grouping: {
+                disabled: false,
+              },
+            }}
+            cursor={cursor}
+            renderFrameTitle={(p) => (
+              <FrameTitleRenderer
+                key={p.id}
+                {...p}
+                runnable={selectedNodes.length === 1}
+                onRunClick={() => startCodeSession(p.id)}
+                onDoubleClick={() => enterIsolation(p.id)}
+              />
+            )}
+          />
         </>
       )}
     </CanvasContainer>
-  );
-}
-
-function FullScreenPreviewContainer({
-  onExit,
-  show,
-}: {
-  onExit: () => void;
-  show: boolean;
-}) {
-  return (
-    <Dialog fullScreen onClose={onExit} open={show}>
-      <FullScreenPreview onClose={onExit} />
-    </Dialog>
   );
 }
 

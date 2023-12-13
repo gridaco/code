@@ -1,20 +1,23 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { EditorAppbarIconButton } from "./editor-appbar-icon-button";
-import { GithubIcon, NotificationBellIcon } from "icons";
+import { GitHubLogoIcon, BellIcon } from "@radix-ui/react-icons";
 import { EditorFrameworkConfigOnAppbar } from "../editor-framework-config-on-appbar";
 import { EditorProgressIndicator } from "scaffolds/editor-progress-indicator";
 import { colors } from "theme";
 
-export function AppbarFragmentForCodeEditor({
+export function AppbarFragmentForRightSidebar({
   background = false,
+  flex = 1,
 }: {
   background?: boolean;
+  flex?: number;
 }) {
   const hasNotification = false;
 
   return (
     <RootWrapperAppbarFragmentForCodeEditor
+      flex={flex}
       background={background ? colors.color_editor_bg_on_dark : "transparent"}
     >
       {/* disable temporarily */}
@@ -23,7 +26,7 @@ export function AppbarFragmentForCodeEditor({
       <AppbarActions>
         {hasNotification && (
           <EditorAppbarIconButton onClick={() => {}}>
-            <NotificationBellIcon size={24} color="#787878" />
+            <BellIcon width={24} color="#787878" />
           </EditorAppbarIconButton>
         )}
         <EditorProgressIndicator />
@@ -32,7 +35,7 @@ export function AppbarFragmentForCodeEditor({
             window.open("https://github.com/gridaco/designto-code/", "_blank");
           }}
         >
-          <GithubIcon size={18} color="#787878" />
+          <GitHubLogoIcon width={18} color="#787878" />
         </EditorAppbarIconButton>
       </AppbarActions>
     </RootWrapperAppbarFragmentForCodeEditor>
@@ -41,13 +44,14 @@ export function AppbarFragmentForCodeEditor({
 
 const RootWrapperAppbarFragmentForCodeEditor = styled.div<{
   background: React.CSSProperties["background"];
+  flex: number;
 }>`
   z-index: 10;
   display: flex;
-  justify-content: center;
+  justify-content: end;
   flex-direction: row;
   align-items: center;
-  flex: 1;
+  flex: ${(props) => props.flex};
   gap: 10px;
   align-self: stretch;
   box-sizing: border-box;

@@ -5,7 +5,24 @@ type HexColor = string;
 
 type CssColorInputLike = CssNamedColor | HexColor | ICssRGBA;
 
-export function color(input: CssColorInputLike | Color): string {
+type HexColorString = `#${string}`;
+type RgbColorString = `rgb(${number},${number},${number})`;
+type RgbaColorString = `rgba(${number},${number},${number},${number})`;
+type ColorString = HexColorString | RgbColorString | RgbaColorString | string;
+
+export type CSSColorOption = {
+  /**
+   * @default true
+   */
+  useNamedColor?: boolean;
+};
+
+export function color(
+  input: CssColorInputLike | Color,
+  option: CSSColorOption = {
+    useNamedColor: true,
+  }
+): ColorString {
   if (!input) {
     return;
     console.warn(
@@ -31,9 +48,12 @@ export function color(input: CssColorInputLike | Color): string {
     // no alpha
     else if ("r" in input && "a"! in input) {
       const rgb = input as RGB;
-      const named = namedcolor(rgb);
-      if (named) {
-        return named;
+
+      if (option.useNamedColor) {
+        const named = namedcolor(rgb);
+        if (named) {
+          return named;
+        }
       }
 
       return `rgb(${validColorValue(rgb.r) ?? 0}, ${

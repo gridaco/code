@@ -1,21 +1,25 @@
-import type { TargetImage, FigmaImageType, ImageHashMap } from "./types";
+import type { TargetImage, ImageHashMap } from "./types";
 import { FigmaNodeImageStore, ImageHashmapCache } from "./figma-image-store";
 import { Client } from "@design-sdk/figma-remote-api";
-import { fetchNodeAsImage } from "@design-sdk/figma-remote";
+
+type TClientInterface = ReturnType<typeof Client>;
+export type ImageClientInterface = {
+  fileImages: TClientInterface["fileImages"];
+  fileImageFills: TClientInterface["fileImageFills"];
+};
 
 /**
  * if the new request is made within 0.1 second (100ms), merge the requests.
  */
 const DEBOUNCE = 100;
 
+const ACTION_UPDATE_IMAGE_HASH_MAP = "update-image-hash-map";
+
 /**
  * Top level Figma image service to fetch images in a safe, promised and request efficient way.
  */
 export class FigmaImageService {
   private store = new FigmaNodeImageStore(this.filekey);
-  private api = Client({
-    ...this.authentication,
-  });
   private retries: number;
 
   /**
@@ -25,11 +29,13 @@ export class FigmaImageService {
 
   constructor(
     readonly filekey: string,
-    private readonly authentication: {
-      personalAccessToken?: string;
-      accessToken?: string;
-    },
-    readonly version?: string | null
+    readonly api: ImageClientInterface,
+    // private readonly authentication: {
+    //   personalAccessToken?: string;
+    //   accessToken?: string;
+    // },
+    readonly version?: string | null,
+    readonly maxQueue = 100
   ) {}
 
   warmup() {
@@ -77,11 +83,11 @@ export class FigmaImageService {
   // #endregion
 
   private async updateImageHashMap() {
-    if (this.hasTask("update-image-hash-map")) {
-      return this.tasks.get("update-image-hash-map");
+    if (this.hasTask(ACTION_UPDATE_IMAGE_HASH_MAP)) {
+      return this.tasks.get(ACTION_UPDATE_IMAGE_HASH_MAP);
     } else {
       const { data } = await this.pushTask(
-        "update-image-hash-map",
+        ACTION_UPDATE_IMAGE_HASH_MAP,
         this.api.fileImageFills(this.filekey)
       );
 
@@ -132,25 +138,25 @@ export class FigmaImageService {
       }
 
       const tasktargetsmap: {
-        bakes: string[];
+        exports: string[];
         images: string[];
       } = tasktargets.reduce(
         (acc, id) => {
           if (is_node_id(id)) {
-            acc["bakes"].push(id);
+            acc["exports"].push(id);
           } else {
             acc["images"].push(id);
           }
           return acc;
         },
         {
-          bakes: [],
+          exports: [],
           images: [],
         }
       );
 
       //
-      const { bakes, images } = tasktargetsmap;
+      const { exports, images } = tasktargetsmap;
       const tasks: { [key: string]: Promise<string> } = {};
 
       //
@@ -173,45 +179,53 @@ export class FigmaImageService {
           });
         }
       }
-      // fetch bakes (handle debounce)
-      if (bakes.length > 0) {
+      // fetch exports (handle debounce)
+      if (exports.length > 0) {
         if (do_debounce) {
           // fetch with merged queues
-          this.queue = new Set([...this.queue, ...bakes]);
+          this.queue = new Set([...this.queue, ...exports]);
 
-          if (this.timeout) {
-            clearTimeout(this.timeout);
-          }
+          const handle_queue = async () => {
+            const fetchtargets = async (...targets) => {
+              const data = await this.fetch(targets, {
+                ensure: true,
+                debounce: false,
+              });
+              return { ...data, ...results };
+            };
 
-          const handler = async (...targets) => {
-            const data = await this.fetch(targets, {
-              ensure: true,
-              debounce: false,
-            });
-            return { ...data, ...results };
-          };
-
-          this.timeout = setTimeout(async () => {
             // copy queue
             const targets = [...this.queue];
 
             // reset queue
             this.queue.clear();
 
-            const data = await handler(...targets);
+            const data = await fetchtargets(...targets);
 
             for (const key of targets) {
               const resolve = this.queuedResolvers.get(key);
               if (resolve) {
                 resolve(data[key]);
+                this.queuedResolvers.delete(key);
               } else {
-                throw new Error("no resolver found for " + key);
+                // throw new Error("no resolver found for " + key);
               }
-              this.queuedResolvers.delete(key);
             }
-          }, DEBOUNCE);
+          };
 
-          const promises = bakes.map((b) => {
+          if (this.timeout) {
+            clearTimeout(this.timeout);
+          }
+
+          // if the queue riched the max queue, run the queue immediately.
+          if (this.queue.size >= this.maxQueue) {
+            clearTimeout(this.timeout);
+            handle_queue();
+          } else {
+            this.timeout = setTimeout(handle_queue, DEBOUNCE);
+          }
+
+          const promises = exports.map((b) => {
             const key = b;
             const promise = new Promise<string>((resolve) => {
               this.queuedResolvers.set(key, resolve);
@@ -227,21 +241,25 @@ export class FigmaImageService {
             ).reduce((acc, data: string, i) => {
               return {
                 ...acc,
-                [bakes[i]]: data,
+                [exports[i]]: data,
               };
             }, {});
 
             resolve({ ...datas, ...results });
           });
         } else {
-          // this does not support format, scale, ... (todo)
-          const request = fetchNodeAsImage(
-            this.filekey,
-            this.authentication,
-            ...bakes
-          );
+          // fetcher promise with data un-wrapping
+          const request = new Promise(async (resolve) => {
+            this.api
+              .fileImages(this.filekey, {
+                ids: exports,
+              })
+              .then(({ data }) => {
+                resolve(data.images);
+              });
+          });
 
-          for (const t of bakes) {
+          for (const t of exports) {
             tasks[t] = this.pushTask(
               t,
               new Promise((resolve) => {
@@ -290,6 +308,8 @@ export class FigmaImageService {
             );
           }, retry_after)
         );
+      } else {
+        return {};
       }
     }
   }

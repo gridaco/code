@@ -23,6 +23,10 @@ import {
   StringLiteral,
 } from "coli";
 import { Framework } from "@grida/builder-platform-types";
+import { stringfy as stringfyHtmlMeta, HtmlMeta } from "../html-meta";
+import { TFontService } from "@code-features/fonts";
+import { htmlFontsMiddleware } from "./html-fonts-middleware";
+import type { Plugin } from "@code-plugin/core";
 
 interface CssDeclaration {
   key: {
@@ -35,6 +39,10 @@ interface CssDeclaration {
 export type HtmlModuleBuilderConfig = {
   disable_all_optimizations?: boolean;
   additional_css_declarations?: CssDeclaration[];
+  fonts?: {
+    services: ReadonlyArray<TFontService>;
+  };
+  plugins?: ReadonlyArray<Plugin>;
 };
 
 export class HtmlIdCssModuleBuilder {
@@ -43,6 +51,7 @@ export class HtmlIdCssModuleBuilder {
   private readonly stylesMapper: StylesConfigMapBuilder;
   private readonly stylesRepository: StylesRepository;
   private readonly namer: ScopedVariableNamer;
+  private readonly _head: string[] = [];
   readonly config: HtmlModuleBuilderConfig;
 
   constructor({
@@ -76,6 +85,24 @@ export class HtmlIdCssModuleBuilder {
         : // ALWAYS USE EXACT OVERLAPPING STYLE REDUCTION STRATEGY FOR PREVIEW VANILLA
           create_duplication_reduction_map
     );
+
+    if (config.fonts) {
+      htmlFontsMiddleware(this, config.fonts.services);
+    }
+  }
+
+  private afterVanillaCSSBundle() {
+    this.config.plugins?.forEach((p) => {
+      p.apply({
+        hooks: {
+          afterVanillaCSSBundle: {
+            tap: (name, fn) => {
+              fn({ builder: this });
+            },
+          },
+        },
+      });
+    });
   }
 
   private styledConfig(
@@ -95,6 +122,21 @@ export class HtmlIdCssModuleBuilder {
         self_closing_if_possible: false, // html cannot be self closed
       }
     );
+  }
+
+  /**
+   * adds literal string to <head> tag
+   */
+  head(...items: string[]) {
+    this._head.push(...items);
+    return this;
+  }
+
+  /**
+   * build the part head, excluding styles
+   */
+  partHead(): string {
+    return this._head.join("\n");
   }
 
   partStyles(): string {
@@ -179,8 +221,14 @@ export class HtmlIdCssModuleBuilder {
       indentation: "\t",
     });
 
+    const strfied_css = this.partStyles();
+
+    // hook TODO: (execution matters due to textfit plugin contributes to head. this is a design flaw. needs to be fixed.)
+    this.afterVanillaCSSBundle();
+
     const final = html_render({
-      css: this.partStyles(),
+      head: this.partHead(),
+      css: strfied_css,
       body: strfied_body,
     });
 
@@ -223,12 +271,29 @@ function injectIdToJsx(jsx: JSXElementLike, id: string) {
   }
 }
 
-const html_render = ({ css, body }: { css: string; body: string }) => {
+const html_render = ({
+  head,
+  css,
+  body,
+}: {
+  head: string;
+  css: string;
+  body: string;
+}) => {
+  // TODO: fixme - this is inacurate (the first line won't be indented)
   const indenter = (s: string, tabs: number = 0) =>
     s.replace(/\n/g, "\n" + "\t".repeat(tabs));
+
   return `<!DOCTYPE html>
 <html>
   <head>
+${indenter(
+  stringfyHtmlMeta({
+    charset: "utf-8",
+  }),
+  2
+)}
+${indenter(head, 2)}
     <style>
 ${indenter(css, 3)}
     </style>

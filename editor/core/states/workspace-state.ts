@@ -1,13 +1,18 @@
 import { config } from "@grida/builder-config";
 import { HistoryState } from "core/states/history-state";
 
-export interface WorkspaceState {
+export interface EssentialWorkspaceInfo {
+  // Add workspace seed data here, which cannot be automatically filled on initial state.
+}
+
+export interface WorkspaceState extends EssentialWorkspaceInfo {
   history: HistoryState;
   /**
    * hovered layer; single or none.
    */
   highlightedLayer?: string;
-  preferences: WorkspacePreferences;
+
+  taskQueue: TaskQueue;
 
   /**
    * figma authentication data store state
@@ -28,11 +33,29 @@ export interface WorkspaceState {
     /** URL link to the user's profile image */
     profile: string;
   };
+
+  debugMode?: boolean;
 }
 
-export interface WorkspacePreferences {
-  debug_mode: boolean;
-  framework_config: config.FrameworkConfig;
-  preview_runner_framework_config: config.FrameworkConfig;
-  enable_preview_feature_components_support: boolean;
+export interface TaskQueue {
+  isBusy: boolean;
+  tasks: BackgroundTask[];
+}
+
+export interface BackgroundTask {
+  id: string;
+  name: string;
+  /**
+   * If the task is short-lived, wait this much ms before displaying it.
+   * @default 200 (0.2s)
+   */
+  debounce?: number;
+  description?: string;
+  cancelable?: boolean;
+  onCancel?: () => void;
+  /**
+   * 0-1, if null, it is indeterminate
+   */
+  progress: number | null;
+  createdAt?: Date;
 }

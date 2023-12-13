@@ -6,6 +6,11 @@ import { keyFromNode } from "../key";
 import { tokenizeBackground } from "../token-background";
 import { tokenizeBitmap } from "./bitmap";
 
+/**
+ * @deprecated TODO: update the asset repository pattern.
+ */
+const _asset_key = "fill-later-assets";
+
 function fromStar(): VectorWidget {
   // return new VectorWidget("");
   return;
@@ -35,7 +40,12 @@ function fromVector(vector: ReflectVectorNode) {
     key: _key,
     ...vector,
     data: vector?.vectorPaths[0].data,
-    fill: tokenizeBackground.fromFills(vector.fills),
+    fill: tokenizeBackground.fromFills(vector.fills, {
+      // TODO: we need to handle IMAGE type fills for Vector backgrounds
+      filter: (f) => f.type === "SOLID" || f.type.includes("GRADIENT"),
+      // TODO: we need to have multiple fill support for vector backgrounds
+      forceSingleFill: true,
+    }),
   });
 }
 
@@ -44,12 +54,10 @@ function fromFrame() {
 }
 
 function fromImage(image: ReflectSceneNode, data: ImagePaint) {
-  const _tmp_img = MainImageRepository.instance
-    .get("fill-later-assets")
-    .addImage({
-      key: image.id,
-      hash: data.imageHash,
-    });
+  const _tmp_img = MainImageRepository.instance.get(_asset_key).addImage({
+    key: image.id,
+    hash: data.imageHash,
+  });
 
   const _key = keyFromNode(image);
   return new ImageWidget({

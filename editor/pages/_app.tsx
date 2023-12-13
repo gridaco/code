@@ -13,7 +13,6 @@ function GlobalCss() {
     <Global
       styles={css`
         html {
-          background-color: ${colors.color_editor_bg_on_dark};
           touch-action: none;
         }
       `}
@@ -25,24 +24,26 @@ function HeadInjection() {
   return (
     <Head>
       <GlobalCss />
-      <SeoMeta />
-      {/* safari 15 color */}
-      <meta
-        name="theme-color"
-        content="white"
-        media="(prefers-color-scheme: light)"
-      />
-      <meta
-        name="theme-color"
-        content={colors.color_editor_bg_on_dark}
-        media="(prefers-color-scheme: dark)"
-      />
+
+      <title>Grida Code</title>
+      <link rel="shortcut icon" href="/favicon.png" />
+      <link rel="icon" href="/favicon.png" />
+      <meta property="title" content="Design to Codes" />
+      <meta property="description" content="Design to Codes description" />
 
       {/* disable zoom */}
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
       />
+    </Head>
+  );
+}
+
+function DefaultScripts() {
+  return (
+    <>
+      {/* disable zoom */}
       <Script>
         {
           // wheel + ctrl        - disable zoom on chrome / safari
@@ -62,6 +63,17 @@ function HeadInjection() {
         }
       </Script>
 
+      {/* region segment.io */}
+      <Script>
+        {`
+          !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics._writeKey="5If7uflRdGBGyCiy7WpBBCSUUqe6YSwC";;analytics.SNIPPET_VERSION="4.15.3";
+          analytics.load("5If7uflRdGBGyCiy7WpBBCSUUqe6YSwC");
+          analytics.page();
+          }}();
+        `}
+      </Script>
+      {/* endregion */}
+
       {/* region Google analytics */}
       {/* https://stackoverflow.com/a/62552263 */}
       <Script
@@ -77,18 +89,6 @@ function HeadInjection() {
         `}
       </Script>
       {/* end region */}
-    </Head>
-  );
-}
-
-function SeoMeta() {
-  return (
-    <>
-      <title>Grida code</title>
-      <link rel="shortcut icon" href="/favicon.png" />
-      <link rel="icon" href="/favicon.png" />
-      <meta property="title" content="Design to Codes" />
-      <meta property="description" content="Design to Codes description" />
     </>
   );
 }
@@ -127,14 +127,15 @@ function EditorApp({ Component, pageProps }) {
   }, [analyzed]);
 
   return (
-    <React.Fragment>
+    <>
       <HeadInjection />
+      <DefaultScripts />
       <MuiThemeProvider>
         <EditorThemeProvider dark>
           <Component {...pageProps} />
         </EditorThemeProvider>
       </MuiThemeProvider>
-    </React.Fragment>
+    </>
   );
 }
 

@@ -8,10 +8,13 @@ export function compose_wrapped_with_positioned(
 ) {
   const child = child_composer(widget.child);
   // -------------------------------------
+  // TODO: check the version history and investigate why this was added
   // override w & h with position provided w/h
   child.extendStyle({
-    width: css.length(widget.width),
-    height: css.length(widget.height),
+    // unless it was cleared intentionally
+    width: child.width === undefined ? undefined : css.length(widget.width),
+    // unless it was cleared intentionally
+    height: child.height === undefined ? undefined : css.length(widget.height),
   });
   // -------------------------------------
   child.constraint = {

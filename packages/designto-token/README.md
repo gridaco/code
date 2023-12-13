@@ -1,5 +1,7 @@
 # Design to tokens
 
+[**Learn more about token design in depth**](https://grida.co/docs/@designto-code/01-token-design.md)
+
 > We first convert the input design to tokens
 
 ## Tokenize = Detection + Formation
@@ -28,9 +30,9 @@ For example,
 In this scenario, regardingless how much single pltform's design is exceptional, the data should follow the hierarchical shape to satisfy all platfrom.
 
 **The reason is..**
-all the processing logic should be handled on tokenizer and the tokens are the result of the decision tree. No heavy, decision changing logic should be hanlded after the tokenization.
+all the processing logic should be handled on tokenizer and the tokens are the result of the decision tree. No heavy, decision changing logic should be handled after the tokenization.
 
-e.g. All design elements has its position, but not all nodes are being placed statically on that posision. by wrapping (not as property) the position, we can tell the later hanlders that this is already decided to be positioned and have its static posision specified. - if we don't do this way each logic by frameworks will be fragmented and unable to maintain.
+e.g. All design elements has its position, but not all nodes are being placed statically on that posision. by wrapping (not as property) the position, we can tell the later handlers that this is already decided to be positioned and have its static posision specified. - if we don't do this way each logic by frameworks will be fragmented and unable to maintain.
 
 ### The first approach (noisy and accurate one)
 

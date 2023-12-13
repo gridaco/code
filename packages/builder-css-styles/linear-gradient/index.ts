@@ -22,6 +22,6 @@ export function linearGradient(g: LinearGradientManifest): CSSProperty.Color {
     // TODO: consider: extract this outside of the styles module?
     -90;
 
-  const colors = g.colors.map(color).join(", ");
+  const colors = g.colors.map((_) => color(_)).join(", ");
   return `linear-gradient(${gradient_angle}deg, ${colors})`;
 }

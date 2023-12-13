@@ -37,6 +37,10 @@ Integrated usage
 - [grida CLI](https://github.com/gridaco/cli)
 - [@designto/cli](./cli)
 
+## Supported Design Tools
+We support importing designs from Figma with our [figma-sdk](https://github.com/gridaco/figma-sdk). You can also design components with [scenes](https://github.com/gridaco/scenes) DSL, or use our built-in drag & drop editor.
+
+
 ## Platforms / Frameworks
 
 | **Frameworks**     |       | channel  | bundler         | reflect-ui | material-ui  | tailwind | packager               |
@@ -239,6 +243,10 @@ Visit project ([`./editor`](./editor/))
 
 </details>
 
-## Architecture
+## Contributing
 
-Read [architecture.md](./architecture.md)
+- See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
+
+**architecture**
+
+- See [architecture.md](./architecture.md)
