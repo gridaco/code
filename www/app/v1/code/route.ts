@@ -1,6 +1,6 @@
 import { code } from "@grida/code";
-import type { CodeRequest, FigmaToVanillaResponse } from "@grida/api/types";
-import { LICENSE_CE } from "@grida/api";
+import { LICENSE_CE } from "@/license";
+import type { CodeRequest, FigmaToVanillaResponse } from "@/types";
 import assert from "assert";
 import { FrameworkConfig, VanillaFrameworkConfig } from "@grida/builder-config";
 import { type NextRequest, NextResponse } from "next/server";

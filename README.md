@@ -156,12 +156,13 @@ We support importing designs from Figma with our [figma-sdk](https://github.com/
 
 ## Usage
 
-Linting
-Custom Tokenizer
-Custom Assets Repository
-Custom Cache
-Custom Cursor
-Plugins
+- [REST API](./www/README.md)
+- Linting (coming soon)
+- Custom Tokenizer (coming soon)
+- Custom Assets Repository (coming soon)
+- Custom Cache (coming soon)
+- Custom Cursor (coming soon)
+- Plugins (coming soon)
 
 ### Running locally
 
