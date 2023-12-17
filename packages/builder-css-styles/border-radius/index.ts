@@ -52,7 +52,7 @@ border-radius: unset;
  */
 export function borderRadius(
   r: BorderRadiusManifest | undefined
-): CSSProperties {
+): CSSProperties | undefined {
   if (!r) {
     return;
   }
