@@ -3,24 +3,20 @@ import type { CodeRequest, FigmaToVanillaResponse } from "@grida/api/types";
 import { LICENSE_CE } from "@grida/api";
 import assert from "assert";
 import { FrameworkConfig, VanillaFrameworkConfig } from "@grida/builder-config";
+import { type NextRequest, NextResponse } from "next/server";
 
 type FigmaAccessTokenType = "fat" | "fpat";
 
-export default async function handler(req, res) {
+export default async function POST(req: NextRequest) {
   try {
-    // accept only post request
-    if (req.method !== "POST") {
-      res.status(405).json({ message: "method not allowed" });
-      return;
-    }
-
-    const figma_access_token: string = req.headers["x-figma-token"];
+    const figma_access_token: string | null = req.headers.get("x-figma-token");
 
     if (!figma_access_token) {
-      res.status(401).json({
+      return NextResponse.json({
         message: "No figma access token provided.",
-      });
-      return;
+      }, {
+        status: 401,
+      })
     }
 
     const figma_access_token_type: FigmaAccessTokenType =
@@ -31,7 +27,7 @@ export default async function handler(req, res) {
       framework,
       plugins,
       raw,
-    } = req.body as CodeRequest;
+    } = await req.json() as CodeRequest;
 
     assert(typeof figmaInput === "string", "`body.figma` must be a string");
 
@@ -43,25 +39,25 @@ export default async function handler(req, res) {
         auth:
           figma_access_token_type === "fat"
             ? {
-                accessToken: figma_access_token,
-              }
+              accessToken: figma_access_token,
+            }
             : {
-                personalAccessToken: figma_access_token,
-              },
+              personalAccessToken: figma_access_token,
+            },
       });
 
-      const { src, figma, target } = coderes;
+      const { src, figma, target } = coderes!;
 
       const response: FigmaToVanillaResponse = {
         figma: {
           file:
+          {
             // null, // TODO:
-            {
-              name: undefined,
-              lastModified: undefined,
-              thumbnailUrl: undefined,
-              version: undefined,
-            },
+            name: '',
+            lastModified: '', // undefined,
+            thumbnailUrl: '', // undefined,
+            version: '' // undefined,
+          },
 
           filekey: figma.filekey,
           entry: figma.node,
@@ -70,12 +66,12 @@ export default async function handler(req, res) {
         },
         framework: framework as VanillaFrameworkConfig,
         src: null, // TODO:
-        srcdoc: src,
+        srcdoc: src!,
         srcmap: null, // TODO:
         files: {
-          "index.html": src,
+          "index.html": src!,
         },
-        thumbnail: null, // TODO:
+        thumbnail: undefined, // TODO:
         engine: {
           name: "code.grida.co/api/v1",
           version: "2023.1.1",
@@ -88,22 +84,31 @@ export default async function handler(req, res) {
 
       if (raw) {
         // if debug option raw is set, return raw html
-        res.status(200).send(src);
+        return new NextResponse(src, {
+          status: 200,
+          headers: {
+            "Content-Type": "text/html",
+          },
+        })
       } else {
-        res.status(200).json(response);
+        return NextResponse.json(response, { status: 200 })
       }
-    } catch (e) {
-      res.status(500).json({
-        message: e.message,
-        stacktrace: e.stack,
-      });
+    } catch (e: any) {
+      return NextResponse.json({
+        message: e?.message,
+        stacktrace: e?.stack,
+      }, {
+        status: 500,
+      })
 
       throw e;
     }
-  } catch (e) {
-    res.status(500).json({
-      message: e.message,
-      stacktrace: e.stack,
-    });
+  } catch (e: any) {
+    return NextResponse.json({
+      message: e?.message,
+      stacktrace: e?.stack,
+    }, {
+      status: 500,
+    })
   }
 }

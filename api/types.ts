@@ -51,8 +51,8 @@ export type FigmaInputPong = {
   /**
    * the full node tree, including only essential information. like size, position, etc.
    */
-  node: object;
-  json: object;
+  node?: object;
+  json?: object;
 };
 
 export interface BaseFigmaInputResponse {
@@ -68,14 +68,14 @@ export interface BaseResponse {
 }
 
 export interface BaseWebFrameworkResponse extends BaseResponse {
-  src: string;
-  srcdoc: string;
-  srcmap: D2CSourceMap;
+  src?: string | null;
+  srcdoc?: string | null;
+  srcmap?: D2CSourceMap | null;
   files: {
     [key: string]: string;
   };
 
-  thumbnail: string;
+  thumbnail?: string;
 }
 
 export interface VanillaCodeResponse extends BaseWebFrameworkResponse {
@@ -84,6 +84,6 @@ export interface VanillaCodeResponse extends BaseWebFrameworkResponse {
 
 export interface FigmaToVanillaResponse
   extends VanillaCodeResponse,
-    BaseFigmaInputResponse {
+  BaseFigmaInputResponse {
   figma: FigmaInputPong;
 }
