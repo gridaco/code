@@ -1382,6 +1382,14 @@
   dependencies:
     axios "^0.21.0"
 
+"@base-sdk/g11n@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@base-sdk/g11n/-/g11n-0.1.6.tgz#0e967b62fc3a6a240497d61f09b81067fa7b63a0"
+  integrity sha512-FCfElXSbQ7jrYdxDQN/Vj/TJ7lPP6Ki8ddPwVlDFvDj/WmrK/9lq7RzRaAvA+htveE2ldpwY4cc9ZIMzIMzTsQ==
+  dependencies:
+    "@base-sdk/assets" "0.1.5"
+    axios "^0.21.0"
+
 "@base-sdk/hosting@0.1.2", "@base-sdk/hosting@^0.1.2":
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/@base-sdk/hosting/-/hosting-0.1.2.tgz#24c627a309cc2d25e024b38eea00142f3a46585f"
