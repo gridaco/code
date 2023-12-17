@@ -12,10 +12,11 @@
     "lerna": "lerna"
   },
   "workspaces": [
-    "editor",
     "code",
     "api",
+    "editor",
     "editor-packages/*",
+    "www",
     "packages/*",
     "testing/*",
     "ui/editor-ui/packages/*"
