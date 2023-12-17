@@ -2,7 +2,7 @@ import { Language } from "@grida/builder-platform-types";
 import { code } from "@grida/code";
 import { NextResponse, type NextRequest } from "next/server";
 
-export default async function GET(req: NextRequest) {
+export async function GET(req: NextRequest) {
   // get the access token from the query string
   const figma = req.nextUrl.searchParams.get("figma") as string;
   const fpat = req.nextUrl.searchParams.get("fpat") as string;
@@ -11,6 +11,9 @@ export default async function GET(req: NextRequest) {
   if (!figma) {
     return new NextResponse("<h1>No figma file url is provided</h1>", {
       status: 400,
+      headers: {
+        "Content-Type": "text/html",
+      }
     });
   }
 
@@ -51,4 +54,12 @@ export default async function GET(req: NextRequest) {
       },
     });
   }
+
+
+  return new NextResponse("<h1>Something went wrong</h1>", {
+    status: 500,
+    headers: {
+      "Content-Type": "text/html",
+    },
+  });
 }

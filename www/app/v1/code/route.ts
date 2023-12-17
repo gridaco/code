@@ -7,7 +7,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 type FigmaAccessTokenType = "fat" | "fpat";
 
-export default async function POST(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
     const figma_access_token: string | null = req.headers.get("x-figma-token");
 

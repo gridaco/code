@@ -10,7 +10,6 @@ import { RemoteImageRepositories } from "@design-sdk/figma-remote/asset-reposito
 import type { FrameworkConfig } from "@grida/builder-config";
 import { defaultConfigByFramework } from "@grida/builder-config-preset";
 import { Language } from "@grida/builder-platform-types";
-import { formatCode } from "dart-style";
 import type { TPlugin } from "@code-plugin/core";
 
 export async function code({
@@ -20,10 +19,10 @@ export async function code({
   plugins,
 }: {
   auth:
-    | {
-        personalAccessToken: string;
-      }
-    | { accessToken: string };
+  | {
+    personalAccessToken: string;
+  }
+  | { accessToken: string };
   uri: string;
   framework: FrameworkConfig;
   plugins?: TPlugin[];
@@ -96,11 +95,24 @@ function filesrc(
 
 function postproc_src(src: string, language: Language) {
   if (language === Language.dart) {
-    const { code, error } = formatCode(src);
-    if (error) {
-      return src;
-    }
-    return code;
+    // TODO: disabling dart formatter due to run time error.
+    // ```
+    // dartException: TypeErrorImplementation {
+    //    message: "TypeError: Instance of 'JavaScriptFunction': type 'JavaScriptFunction' is not a subtype of type 'Function1'"
+    // }
+    // ```
+
+    // import { formatCode } from "dart-style";
+
+    // try {
+    //   const { code, error } = formatCode(src);
+    //   if (error) {
+    //     return src;
+    //   }
+    //   return code;
+    // } catch (e) {
+    //   return src;
+    // }
   }
 
   return src;
