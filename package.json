@@ -13,9 +13,6 @@
   },
   "workspaces": [
     "code",
-    "api",
-    "editor",
-    "editor-packages/*",
     "www",
     "packages/*",
     "testing/*",
