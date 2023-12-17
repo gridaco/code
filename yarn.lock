@@ -1331,7 +1331,7 @@
     "@base-sdk/resources" "0.1.4"
     "@base-sdk/url" "0.1.2"
 
-"@base-sdk/base@^0.1.3":
+"@base-sdk/base@^0.1.8":
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/@base-sdk/base/-/base-0.1.8.tgz#8eb128faeb3c2d6d9fd8b11afa9c9b4fbe32887f"
   integrity sha512-+I2ZMLsvKikSApBQ2159vSI4M0sH+EIohjAzx6dt0bF7pQdHzG5rht0W5ypE3oR1pKZ0bcGR85k4YJRqOHojsw==
