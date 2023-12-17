@@ -1,7 +1,7 @@
 {
-  "name": "designto.codes",
-  "homepage": "https://designto.codes/",
-  "repository": "https://github.com/gridaco/designto-code",
+  "name": "code",
+  "homepage": "https://grida.co/code/",
+  "repository": "https://github.com/gridaco/code",
   "license": "Apache 2.0",
   "private": true,
   "scripts": {
