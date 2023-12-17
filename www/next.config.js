@@ -3,7 +3,6 @@ const packages = [
 
   // -----------------------------
   // region @designto-code
-  "@grida/api",
   "@grida/code",
   "@designto/debugger",
   "@grida/builder-config",
