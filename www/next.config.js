@@ -48,9 +48,14 @@ const packages = [
   "@web-builder/styles",
   // endregion web builders
   // -----------------------------
+
+  // testing client
+  "@codetest/editor-client",
 ];
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  transpilePackages: ["@codetest/editor-client"],
+};
 
 module.exports = nextConfig;

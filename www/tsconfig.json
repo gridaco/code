@@ -6,6 +6,7 @@
     "skipLibCheck": true,
     "strict": false,
     "noEmit": true,
+    "noImplicitAny": false,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -20,7 +21,8 @@
     ],
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "strictNullChecks": false
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
