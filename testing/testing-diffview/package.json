@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "dependencies": {
     "canvas": "^2.11.2",
-    "resemblejs": "^4.1.0"
+    "resemblejs": "^5.0.0"
   },
   "devDependencies": {
-    "@types/resemblejs": "^4.1.0"
+    "@types/resemblejs": "^4.1.3"
   }
 }

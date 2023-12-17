@@ -38,8 +38,8 @@ Integrated usage
 - [@designto/cli](./cli)
 
 ## Supported Design Tools
-We support importing designs from Figma with our [figma-sdk](https://github.com/gridaco/figma-sdk). You can also design components with [scenes](https://github.com/gridaco/scenes) DSL, or use our built-in drag & drop editor.
 
+We support importing designs from Figma with our [figma-sdk](https://github.com/gridaco/figma-sdk). You can also design components with [scenes](https://github.com/gridaco/scenes) DSL, or use our built-in drag & drop editor.
 
 ## Platforms / Frameworks
 
@@ -163,16 +163,38 @@ Custom Cache
 Custom Cursor
 Plugins
 
-### Local development
+### Running locally
 
 ```
-git clone https://github.com/gridaco/designto-code.git
-cd designto-code
+git clone https://github.com/gridaco/code.git
+cd code
 
 yarn
 yarn editor
 # visit http://localhost:6626
 ```
+
+**Trouble shooting**
+
+Our visual testing library uses node-canvas, which requires some additional dependencies. If you run into issues, please see the [node-canvas documentation](https://github.com/Automattic/node-canvas)
+
+If you see error like this while installing dependencies,
+
+```txt
+node-pre-gyp ERR! node -v v18.17.0
+node-pre-gyp ERR! node-pre-gyp -v v1.0.10
+node-pre-gyp ERR! not ok
+```
+
+Try this
+
+```bash
+brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
+brew install python@2 # since python2 is no longer available on brw, you can also use this link. https://www.python.org/downloads/release/python-2718/
+```
+
+- [Reference#2 / node-canvas/issues/1733](https://github.com/Automattic/node-canvas/issues/1733#issuecomment-761703018)
+- [Reference#1 / node-canvas/issues/1662](https://github.com/Automattic/node-canvas/issues/1662#issuecomment-1465269869)
 
 <details>
 <summary>Trouble shooting</summary>
