@@ -8,5 +8,5 @@
     "esModuleInterop": true,
     "moduleResolution": "node"
   },
-  "exclude": ["dist", "node_modules", "**/*.spec.ts", "__test__"]
+  "exclude": ["dist", "node_modules", "**/*.spec.ts", "__test__", "scripts"]
 }

@@ -27,6 +27,7 @@ export async function login() {
     url = authUrl;
     await open(authUrl);
   } catch (e) {
+    throw new Error("Error while starting authentication session");
     exit(1);
   }
 

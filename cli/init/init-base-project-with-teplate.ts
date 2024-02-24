@@ -1,6 +1,7 @@
 import { spawnSync, SpawnSyncOptions } from "child_process";
 import { prompt } from "enquirer";
 import path from "path";
+import fs from "fs";
 import { binexists } from "../_utils/bin-exists";
 
 export async function init_base_project_with_template(
@@ -32,7 +33,6 @@ export async function init_base_project_with_template(
 
   const template: string = _["template"];
   if (template === "cancel") {
-    console.log("Please run `grida init` again after creating a project.");
     return "exit";
   }
 
@@ -43,9 +43,14 @@ export async function init_base_project_with_template(
     type: "input",
   });
 
-  // TODO: check if binary is installed first.
+  if (fs.existsSync(path.join(cwd, name))) {
+    throw new Error(
+      `Failed to create fresh project. directory with name "${name}" already exists.`
+    );
+  }
 
   create_cwd_if_not_exists(cwd);
+  // TODO: check if binary is installed first.
   const __spawan_cfg: SpawnSyncOptions = { stdio: "inherit", cwd };
   switch (template) {
     case "flutter": {

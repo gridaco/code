@@ -38,7 +38,9 @@ export function addDotEnv(
   const dotenv_content = fs.readFileSync(dotenv_file, "utf8");
   const dotenv_lines = dotenv_content.split("\n");
   const keys = dotenv_lines.map((l) => l.split("=")[0].trim());
-  const linetoadd = `${key}=${value}`;
+  // e.g
+  // FIGMA_PERSONAL_ACCESS_TOKEN="figd_YBXD5BQ6jle_qhG_fr_lxxxxxxxxxxxxxxxx"
+  const linetoadd = `${key}="${value}"`;
   if (keys.some((k) => k === key)) {
     // key already exists
     if (allowOverwrite) {

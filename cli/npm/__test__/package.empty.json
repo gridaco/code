@@ -1,0 +1,4 @@
+{
+  "name": "empty-package",
+  "description": "this file will be copied to package.test.empty.json for testing"
+}
