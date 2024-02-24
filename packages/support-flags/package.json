@@ -17,5 +17,9 @@
     ],
     "publishConfig": {
         "access": "public"
+    },
+    "dependencies": {
+        "@design-sdk/flags": "^0.0.53",
+        "@reflect-ui/core": "0.0.12"
     }
 }

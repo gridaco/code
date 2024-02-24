@@ -1,4 +1,7 @@
 {
   "name": "@code-plugin/core",
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "devDependencies": {
+    "@grida/builder-platform-types": "workspace:^"
+  }
 }

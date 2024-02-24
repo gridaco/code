@@ -2,5 +2,8 @@
     "name": "@designto/sanitized",
     "version": "0.0.0",
     "private": false,
-    "author": "Grida.co"
+    "author": "Grida.co",
+    "dependencies": {
+        "@design-sdk/figma-node": "0.0.25"
+    }
 }

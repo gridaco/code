@@ -19,5 +19,20 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@coli.codes/escape-string": "^0.0.24",
+    "@coli.codes/naming": "^0.0.34",
+    "@design-sdk/asset-repository": "^0.0.53",
+    "@design-sdk/core": "^0.0.53",
+    "@design-sdk/figma": "^0.0.53",
+    "@design-sdk/figma-node": "0.0.25",
+    "@design-sdk/figma-types": "^0.0.53",
+    "@designto/token": "workspace:^",
+    "@engine/core": "workspace:^",
+    "@flutter-builder/flutter": "^3.0.7",
+    "@grida/builder-config": "workspace:^",
+    "@reflect-ui/core": "0.0.12",
+    "@reflect-ui/uiutils": "0.1.2-2"
   }
 }

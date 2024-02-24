@@ -17,5 +17,14 @@
     ],
     "publishConfig": {
         "access": "public"
+    },
+    "dependencies": {
+        "@coli.codes/builder": "^0.0.34",
+        "@coli.codes/css": "^0.0.34",
+        "@coli.codes/jsx-core": "^0.0.34",
+        "@coli.codes/naming": "^0.0.34",
+        "@grida/builder-platform-types": "workspace:^",
+        "@web-builder/core": "workspace:^",
+        "coli": "^0.0.34"
     }
 }

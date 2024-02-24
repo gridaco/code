@@ -10,5 +10,14 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@coli.codes/export-string": "^0.0.34",
+    "@grida/builder-config": "workspace:^",
+    "@web-builder/module-es": "workspace:^",
+    "coli": "^0.0.34"
+  },
+  "devDependencies": {
+    "@code-features/documentation": "workspace:^"
   }
 }

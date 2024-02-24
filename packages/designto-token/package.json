@@ -16,13 +16,27 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
+    "@code-features/flags": "workspace:^",
+    "@code-features/module": "workspace:^",
+    "@design-sdk/asset-repository": "^0.0.53",
+    "@design-sdk/core": "^0.0.53",
+    "@design-sdk/figma-core": "^0.0.53",
+    "@design-sdk/figma-node": "0.0.25",
+    "@design-sdk/figma-node-conversion": "^0.0.53",
+    "@design-sdk/figma-types": "^0.0.53",
+    "@design-sdk/figma-utils": "^0.0.53",
+    "@designto/sanitized": "workspace:^",
     "@reflect-ui/core": "^0.0.9",
-    "@reflect-ui/detection": "0.1.6"
+    "@reflect-ui/detection": "0.1.6",
+    "@reflect-ui/uiutils": "0.1.2-2"
   },
   "files": [
     "dist"
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.20"
   }
 }

@@ -19,5 +19,16 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@code-features/component": "workspace:^",
+    "@code-features/module": "workspace:^",
+    "@coli.codes/css": "^0.0.34",
+    "@design-sdk/asset-repository": "^0.0.53",
+    "@designto/token": "workspace:^",
+    "@reflect-ui/core": "0.0.12",
+    "@web-builder/core": "workspace:^",
+    "@web-builder/styles": "workspace:^",
+    "coli": "^0.0.34"
   }
 }

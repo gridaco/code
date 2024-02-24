@@ -21,20 +21,15 @@ if (typeof window !== "undefined") {
   });
 }
 
-function debug(...messages) {
+export function debug(...messages) {
   if (!MUTED && IS_DEV) {
     console.log(...messages);
   }
 }
 
-function debugIf(condition, ...messages) {
+export function debugIf(condition, ...messages) {
   const _continue = typeof condition === "function" ? condition() : condition;
   if (_continue) {
     debug(...messages);
   }
 }
-
-module.exports = {
-  debug,
-  debugIf,
-};

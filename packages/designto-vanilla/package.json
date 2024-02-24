@@ -18,5 +18,13 @@
     ],
     "publishConfig": {
         "access": "public"
+    },
+    "dependencies": {
+        "@code-plugin/core": "workspace:^",
+        "@designto/web": "workspace:^",
+        "@grida/builder-config": "workspace:^",
+        "@reflect-ui/core": "0.0.12",
+        "@web-builder/core": "workspace:^",
+        "@web-builder/vanilla": "workspace:^"
     }
 }

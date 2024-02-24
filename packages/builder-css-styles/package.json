@@ -1,20 +1,27 @@
 {
-    "name": "@web-builder/styles",
-    "version": "0.0.0",
-    "private": false,
-    "scripts": {
-        "build": "tsc"
-    },
-    "dependencies": {
-        "camelcase-css": "^2.0.1"
-    },
-    "devDependencies": {
-        "@types/camelcase-css": "^2.0.0"
-    },
-    "files": [
-        "dist"
-    ],
-    "publishConfig": {
-        "access": "public"
-    }
+  "name": "@web-builder/styles",
+  "version": "0.0.0",
+  "private": false,
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@coli.codes/css": "^0.0.34",
+    "@design-sdk/figma-types": "^0.0.53",
+    "@engine/core": "workspace:^",
+    "@reflect-ui/core": "^0.0.12",
+    "@reflect-ui/uiutils": "0.1.2-2",
+    "@web-builder/core": "workspace:^",
+    "@web-builder/styles": "workspace:^",
+    "camelcase-css": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/camelcase-css": "^2.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

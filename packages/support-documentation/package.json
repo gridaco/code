@@ -17,5 +17,16 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@coli.codes/export-string": "^0.0.34",
+    "@design-sdk/asset-repository": "^0.0.53",
+    "@designto/code": "workspace:^",
+    "@grida/builder-config": "workspace:^",
+    "@web-builder/module-es": "workspace:^",
+    "@web-builder/react-core": "workspace:18.2.0",
+    "@web-builder/react-native": "workspace:0.67.0",
+    "@web-builder/solid-js": "workspace:^",
+    "coli": "^0.0.34"
   }
 }

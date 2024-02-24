@@ -1,4 +1,4 @@
-import { Framework } from "@grida/builder-platform-types";
+import type { Framework } from "@grida/builder-platform-types";
 import type { CodeLifeCycleContext } from "./types";
 
 export interface IPlugin {

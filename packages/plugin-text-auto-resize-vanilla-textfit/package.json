@@ -7,5 +7,10 @@
   "devDependencies": {
     "@types/css-tree": "^2.3.1",
     "css-tree": "^2.3.1"
+  },
+  "dependencies": {
+    "@code-plugin/core": "workspace:^",
+    "@grida/builder-platform-types": "workspace:^",
+    "@web-builder/vanilla": "workspace:^"
   }
 }

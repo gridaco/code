@@ -5,7 +5,7 @@ import {
   TextChildWidget,
   JsxWidget,
   StylableJsxWidget,
-} from "@web-builder/core";
+} from "..";
 import {
   NoStyleJSXElementConfig,
   StyledComponentJSXElementConfig,

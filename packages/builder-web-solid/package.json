@@ -14,7 +14,21 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@web-builder/react-core": "18.2.0"
+    "@code-features/documentation": "workspace:^",
+    "@coli.codes/css": "^0.0.34",
+    "@coli.codes/naming": "^0.0.34",
+    "@designto/token": "workspace:^",
+    "@grida/builder-config": "workspace:^",
+    "@grida/builder-platform-types": "workspace:^",
+    "@web-builder/core": "workspace:^",
+    "@web-builder/module-es": "workspace:^",
+    "@web-builder/module-jsx": "workspace:^",
+    "@web-builder/nodejs": "workspace:^",
+    "@web-builder/react-core": "18.2.0",
+    "@web-builder/solid-js": "workspace:^",
+    "@web-builder/styled": "workspace:^",
+    "@web-builder/styles": "workspace:^",
+    "coli": "^0.0.34"
   },
   "files": [
     "dist"

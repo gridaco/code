@@ -9,9 +9,26 @@
         "build": "tsc"
     },
     "dependencies": {
-        "@web-builder/react-core": "18.2.0"
+        "@coli.codes/css": "^0.0.34",
+        "@coli.codes/naming": "^0.0.34",
+        "@designto/token": "workspace:^",
+        "@grida/builder-config": "workspace:^",
+        "@grida/builder-platform-types": "workspace:^",
+        "@reflect-ui/core": "0.0.12",
+        "@web-builder/core": "workspace:^",
+        "@web-builder/module-es": "workspace:^",
+        "@web-builder/module-jsx": "workspace:^",
+        "@web-builder/nodejs": "workspace:^",
+        "@web-builder/react-core": "18.2.0",
+        "@web-builder/styled": "workspace:0.0.0",
+        "@web-builder/styles": "workspace:^",
+        "coli": "^0.0.34"
     },
     "devDependencies": {
+        "@code-features/documentation": "workspace:^",
         "@types/react-native": "^0.66.16"
+    },
+    "peerDependencies": {
+        "@code-features/documentation": "workspace:^"
     }
 }

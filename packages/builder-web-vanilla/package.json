@@ -12,7 +12,16 @@
     "scripts": {
         "build": "tsc"
     },
-    "dependencies": {},
+    "dependencies": {
+        "@code-features/fonts": "workspace:^",
+        "@code-plugin/core": "workspace:^",
+        "@coli.codes/css": "^0.0.34",
+        "@coli.codes/naming": "^0.0.34",
+        "@grida/builder-platform-types": "workspace:^",
+        "@web-builder/core": "workspace:^",
+        "@web-builder/styled": "workspace:^",
+        "coli": "^0.0.34"
+    },
     "files": [
         "dist"
     ],

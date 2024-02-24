@@ -6,7 +6,10 @@
     "scripts": {
         "build": "tsc"
     },
-    "dependencies": {},
+    "dependencies": {
+        "@grida/builder-config": "workspace:^",
+        "@grida/builder-platform-types": "workspace:^"
+    },
     "files": [
         "dist"
     ],

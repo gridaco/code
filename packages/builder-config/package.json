@@ -17,5 +17,23 @@
     ],
     "publishConfig": {
         "access": "public"
+    },
+    "dependencies": {
+        "@code-plugin/core": "workspace:^",
+        "@grida/builder-platform-types": "workspace:^"
+    },
+    "devDependencies": {
+        "@design-sdk/figma": "^0.0.53",
+        "@design-sdk/figma-node": "0.0.25",
+        "@design-sdk/figma-node-repository": "^0.0.53",
+        "@design-sdk/figma-remote": "^0.0.53",
+        "@design-sdk/figma-utils": "^0.0.53"
+    },
+    "peerDependencies": {
+        "@design-sdk/figma": "^0.0.53",
+        "@design-sdk/figma-node": "0.0.25",
+        "@design-sdk/figma-node-repository": "^0.0.53",
+        "@design-sdk/figma-remote": "^0.0.53",
+        "@design-sdk/figma-utils": "^0.0.53"
     }
 }

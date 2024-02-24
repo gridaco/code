@@ -1,6 +1,6 @@
 import { ScopedVariableNamer } from "@coli.codes/naming";
 import { ReservedKeywordPlatformPresets } from "@coli.codes/naming";
-import { BlockStatement, ImportDeclaration, Return } from "coli";
+import { BlockStatement, Declaration, ImportDeclaration, Return } from "coli";
 import {
   react_imports,
   ReactWidgetModuleExportable,
@@ -198,7 +198,7 @@ export class ReactNativeStyledComponentWidgetModuleExportable extends ReactWidge
       name: this.name,
       path: "src/components",
       imports: this.imports,
-      declarations: this.declarations,
+      declarations: this.declarations as Declaration[],
       body: this.body,
       documentation: this.documentation,
       config: {

@@ -17,5 +17,8 @@
     ],
     "publishConfig": {
         "access": "public"
+    },
+    "dependencies": {
+        "@design-sdk/asset-repository": "^0.0.53"
     }
 }

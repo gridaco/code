@@ -15,13 +15,27 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@web-builder/react": "18.2.0",
-    "@web-builder/react-native": "0.67.0"
+    "@code-features/component": "workspace:^",
+    "@design-sdk/asset-repository": "^0.0.53",
+    "@designto/token": "workspace:^",
+    "@grida/builder-config": "workspace:^",
+    "@reflect-ui/core": "0.0.12",
+    "@web-builder/core": "workspace:^",
+    "@web-builder/react": "workspace:*",
+    "@web-builder/react-native": "0.67.0",
+    "@web-builder/styles": "workspace:^",
+    "coli": "^0.0.34"
   },
   "files": [
     "dist"
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "react-native": "^0.73.4"
+  },
+  "peerDependencies": {
+    "react-native": "^0.73.4"
   }
 }

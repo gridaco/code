@@ -1,21 +1,35 @@
 {
-    "name": "@web-builder/core",
-    "version": "0.0.0",
-    "private": false,
-    "license": "Apache-2.0",
-    "repository": "https://github.com/gridaco/designto-code",
-    "homepage": "https://grida.co",
-    "authors": [
-        "grida.co <hello@grida.co>",
-        "softmarshmallow <universe@grida.co>"
-    ],
-    "scripts": {
-        "build": "tsc"
-    },
-    "files": [
-        "dist"
-    ],
-    "publishConfig": {
-        "access": "public"
-    }
+  "name": "@web-builder/core",
+  "version": "0.0.0",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": "https://github.com/gridaco/designto-code",
+  "homepage": "https://grida.co",
+  "authors": [
+    "grida.co <hello@grida.co>",
+    "softmarshmallow <universe@grida.co>"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@coli.codes/css": "^0.0.34",
+    "@coli.codes/naming": "^0.0.34",
+    "@engine/core": "workspace:^",
+    "@grida/builder-platform-types": "workspace:^",
+    "@reflect-ui/core": "0.0.12",
+    "@web-builder/core": "workspace:^",
+    "@web-builder/styled": "workspace:^",
+    "@web-builder/styles": "workspace:^",
+    "coli": "^0.0.34"
+  },
+  "devDependencies": {
+    "@coli.codes/builder": "^0.0.34"
+  }
 }

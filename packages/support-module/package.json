@@ -17,5 +17,8 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@reflect-ui/core": "0.0.12"
   }
 }
