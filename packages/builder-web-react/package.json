@@ -1,41 +1,41 @@
 {
-    "name": "@web-builder/react",
-    "description": "Grida's React code builder for development automation built uppon coli",
-    "version": "18.2.0",
-    "private": false,
-    "license": "Apache-2.0",
-    "repository": "https://github.com/gridaco/designto-code",
-    "homepage": "https://coli.codes/react",
-    "authors": [
-        "grida.co <hello@grida.co>",
-        "softmarshmallow <universe@grida.co>"
-    ],
-    "scripts": {
-        "build": "tsc"
-    },
-    "dependencies": {
-        "@code-features/component": "workspace:^",
-        "@code-features/documentation": "workspace:^",
-        "@coli.codes/builder": "^0.0.34",
-        "@coli.codes/css": "^0.0.34",
-        "@coli.codes/naming": "^0.0.34",
-        "@designto/token": "workspace:^",
-        "@designto/web": "workspace:0.0.0",
-        "@grida/builder-config": "workspace:^",
-        "@grida/builder-platform-types": "workspace:^",
-        "@web-builder/core": "workspace:^",
-        "@web-builder/module-es": "workspace:^",
-        "@web-builder/module-jsx": "workspace:^",
-        "@web-builder/react-core": "18.2.0",
-        "@web-builder/reflect-ui": "workspace:^",
-        "@web-builder/styled": "workspace:^",
-        "@web-builder/styles": "workspace:^",
-        "coli": "^0.0.34"
-    },
-    "files": [
-        "dist"
-    ],
-    "publishConfig": {
-        "access": "public"
-    }
+  "name": "@web-builder/react",
+  "description": "Grida's React code builder for development automation built uppon coli",
+  "version": "18.2.0",
+  "private": false,
+  "license": "Apache-2.0",
+  "repository": "https://github.com/gridaco/designto-code",
+  "homepage": "https://coli.codes/react",
+  "authors": [
+    "grida.co <hello@grida.co>",
+    "softmarshmallow <universe@grida.co>"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@code-features/component": "workspace:^",
+    "@code-features/documentation": "workspace:^",
+    "@coli.codes/builder": "^0.0.34",
+    "@coli.codes/css": "^0.0.34",
+    "@coli.codes/naming": "^0.0.34",
+    "@designto/token": "workspace:^",
+    "@designto/web": "workspace:^",
+    "@grida/builder-config": "workspace:^",
+    "@grida/builder-platform-types": "workspace:^",
+    "@web-builder/core": "workspace:^",
+    "@web-builder/module-es": "workspace:^",
+    "@web-builder/module-jsx": "workspace:^",
+    "@web-builder/react-core": "workspace:^",
+    "@web-builder/reflect-ui": "workspace:^",
+    "@web-builder/styled": "workspace:^",
+    "@web-builder/styles": "workspace:^",
+    "coli": "^0.0.34"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

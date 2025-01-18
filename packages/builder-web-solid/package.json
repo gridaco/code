@@ -24,7 +24,7 @@
     "@web-builder/module-es": "workspace:^",
     "@web-builder/module-jsx": "workspace:^",
     "@web-builder/nodejs": "workspace:^",
-    "@web-builder/react-core": "18.2.0",
+    "@web-builder/react-core": "workspace:^",
     "@web-builder/solid-js": "workspace:^",
     "@web-builder/styled": "workspace:^",
     "@web-builder/styles": "workspace:^",

@@ -1,34 +1,34 @@
 {
-    "name": "@web-builder/react-native",
-    "description": "Grida's React Native code builder for development automation built uppon coli",
-    "version": "0.67.0",
-    "license": "Apache 2.0",
-    "homepage": "https://coli.codes/react-native",
-    "author": "Grida Authors",
-    "scripts": {
-        "build": "tsc"
-    },
-    "dependencies": {
-        "@coli.codes/css": "^0.0.34",
-        "@coli.codes/naming": "^0.0.34",
-        "@designto/token": "workspace:^",
-        "@grida/builder-config": "workspace:^",
-        "@grida/builder-platform-types": "workspace:^",
-        "@reflect-ui/core": "0.0.12",
-        "@web-builder/core": "workspace:^",
-        "@web-builder/module-es": "workspace:^",
-        "@web-builder/module-jsx": "workspace:^",
-        "@web-builder/nodejs": "workspace:^",
-        "@web-builder/react-core": "18.2.0",
-        "@web-builder/styled": "workspace:0.0.0",
-        "@web-builder/styles": "workspace:^",
-        "coli": "^0.0.34"
-    },
-    "devDependencies": {
-        "@code-features/documentation": "workspace:^",
-        "@types/react-native": "^0.66.16"
-    },
-    "peerDependencies": {
-        "@code-features/documentation": "workspace:^"
-    }
+  "name": "@web-builder/react-native",
+  "description": "Grida's React Native code builder for development automation built uppon coli",
+  "version": "0.67.0",
+  "license": "Apache 2.0",
+  "homepage": "https://coli.codes/react-native",
+  "author": "Grida Authors",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@coli.codes/css": "^0.0.34",
+    "@coli.codes/naming": "^0.0.34",
+    "@designto/token": "workspace:^",
+    "@grida/builder-config": "workspace:^",
+    "@grida/builder-platform-types": "workspace:^",
+    "@reflect-ui/core": "0.0.12",
+    "@web-builder/core": "workspace:^",
+    "@web-builder/module-es": "workspace:^",
+    "@web-builder/module-jsx": "workspace:^",
+    "@web-builder/nodejs": "workspace:^",
+    "@web-builder/react-core": "workspace:^",
+    "@web-builder/styled": "workspace:^",
+    "@web-builder/styles": "workspace:^",
+    "coli": "^0.0.34"
+  },
+  "devDependencies": {
+    "@code-features/documentation": "workspace:^",
+    "@types/react-native": "^0.66.16"
+  },
+  "peerDependencies": {
+    "@code-features/documentation": "workspace:^"
+  }
 }

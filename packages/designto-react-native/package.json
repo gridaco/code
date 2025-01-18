@@ -22,7 +22,7 @@
     "@reflect-ui/core": "0.0.12",
     "@web-builder/core": "workspace:^",
     "@web-builder/react": "workspace:*",
-    "@web-builder/react-native": "0.67.0",
+    "@web-builder/react-native": "workspace:^",
     "@web-builder/styles": "workspace:^",
     "coli": "^0.0.34"
   },

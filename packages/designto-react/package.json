@@ -18,7 +18,7 @@
     "@designto/web": "workspace:^",
     "@grida/builder-config": "workspace:^",
     "@reflect-ui/core": "0.0.12",
-    "@web-builder/react": "18.2.0"
+    "@web-builder/react": "workspace:^"
   },
   "files": [
     "dist"
