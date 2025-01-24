@@ -298,6 +298,11 @@ function stackChild({
     height: _unwrappedChild.height,
   };
 
+  const _l = ogchild.x;
+  const _r = container.width - (ogchild.x + ogchild.width);
+  const _t = ogchild.y;
+  const _b = container.height - (ogchild.y + ogchild.height);
+
   /**
    * "MIN": Left or Top
    * "MAX": Right or Bottom
@@ -313,16 +318,31 @@ function stackChild({
     constraint.top = ogchild.y;
     // console.error("cannot add constraint to stack: group is not supported");
   } else if (!ogchild.constraints) {
-    console.error(
-      `${ogchild.toString()} has no constraints. this can happen when node under group item tokenization is incomplete. this is engine's error.`
-    );
+    if (ogchild.type == ReflectSceneNodeType.boolean_operation) {
+      // @platform override. on plugin version, the boolean operation does not have a constraints, just like group.
+      // TODO: make this recursive, get the root's constraint.
+      if (ogchild.children[0]?.constraints) {
+        const res = handlePositioning({
+          constraints: ogchild.children[0].constraints, // USE THE FIRST CHILD'S CONSTRAINT
+          pos: { l: _l, t: _t, b: _b, r: _r, x: ogchild.x, y: ogchild.y },
+          width: ogchild.width,
+          height: ogchild.height,
+          containerWidth: container.width,
+          containerHeight: container.height,
+        });
+        constraint = res.constraint;
+        wh = {
+          ...wh,
+          ...res.wh,
+        };
+      }
+    } else {
+      console.error(
+        `${ogchild.toString()} has no constraints. this can happen when node under group item tokenization is incomplete. this is engine's error.`
+      );
+    }
     // throw `${ogchild.toString()} has no constraints. this can happen when node under group item tokenization is incomplete. this is engine's error.`;
   } else {
-    const _l = ogchild.x;
-    const _r = container.width - (ogchild.x + ogchild.width);
-    const _t = ogchild.y;
-    const _b = container.height - (ogchild.y + ogchild.height);
-
     const res = handlePositioning({
       constraints: ogchild.constraints,
       pos: { l: _l, t: _t, b: _b, r: _r, x: ogchild.x, y: ogchild.y },
