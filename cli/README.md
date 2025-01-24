@@ -8,18 +8,23 @@ Visit https://grida.co/cli for more information.
 npm install -g grida
 ```
 
+## Documentation
+
+Visit https://grida.co/docs/cli
+
 ## Commands
 
-| Commands             |                                         |                                                      |
-| -------------------- | --------------------------------------- | ---------------------------------------------------- |
-| `grida code react`   | convert input uri (file or url) to code | `designto react https://www.figma.com/files/XXX`     |
-| `grida code rn`      | convert input uri (file or url) to code | `designto rn https://www.figma.com/files/XXX`        |
-| `grida code vue`     | convert input uri (file or url) to code | `grida code vue https://www.figma.com/files/XXX`     |
-| `grida code svelte`  | convert input uri (file or url) to code | `grida code svelte https://www.figma.com/files/XXX`  |
-| `grida code solid`   | convert input uri (file or url) to code | `grida code flutter https://www.figma.com/files/XXX` |
-| `grida code flutter` | help                                    | `designto flutter https://www.figma.com/files/XXX`   |
-| `grida code auth`    | signin to design services               | `auto` \| `figma` \| `sketch` \| `xd`                |
-| `grida code init`    | configure the preferences               |
+| Commands                |                                         |                                                       |
+| ----------------------- | --------------------------------------- | ----------------------------------------------------- |
+| `grida init`            | configure the preferences               |                                                       |
+| `grida login`           | signin to design services               | `auto` \| `figma` \| `sketch` \| `xd`                 |
+| `grida add [modules..]` | add new modules to existing project     | `grida add`                                           |
+| `grida code react`      | convert input uri (file or url) to code | `grida code react https://www.figma.com/files/XXX`    |
+| `grida code rn`         | convert input uri (file or url) to code | `grida code rn https://www.figma.com/files/XXX`       |
+| `grida code vue`        | convert input uri (file or url) to code | `grida code vue https://www.figma.com/files/XXX`      |
+| `grida code svelte`     | convert input uri (file or url) to code | `grida code svelte https://www.figma.com/files/XXX`   |
+| `grida code solid-js`   | convert input uri (file or url) to code | `grida code solid-js https://www.figma.com/files/XXX` |
+| `grida code flutter`    | help                                    | `grida code flutter https://www.figma.com/files/XXX`  |
 
 ## Args
 

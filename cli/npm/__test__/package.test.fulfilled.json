@@ -1,0 +1,10 @@
+{
+    "name": "package-with-deps",
+    "dependencies": {
+        "@emotion/react": "^11.10.0",
+        "@emotion/styled": "^11.10.0"
+    },
+    "devDependencies": {
+        "grida": "^0.0.15"
+    }
+}
