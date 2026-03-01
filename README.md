@@ -170,6 +170,9 @@ We support importing designs from Figma with our [figma-sdk](https://github.com/
 git clone https://github.com/gridaco/code.git
 cd code
 
+# If you cloned this project conventionally, you'll have to run
+git submodule update --init --recursive
+
 yarn
 yarn editor
 # visit http://localhost:6626
